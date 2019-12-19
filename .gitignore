@@ -18,6 +18,9 @@
 !/log/.keep
 !/tmp/.keep
 
+# Ignore database config
+/config/database.yml
+
 # Ignore uploaded files in development.
 /storage/*
 !/storage/.keep
