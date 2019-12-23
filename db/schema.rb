@@ -10,17 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_20_192022) do
+ActiveRecord::Schema.define(version: 2019_12_23_145416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "pull_requests", force: :cascade do |t|
+    t.integer "github_id"
+    t.integer "number"
+    t.string "state"
+    t.boolean "locked"
+    t.text "title"
+    t.text "body"
+    t.datetime "closed_at"
+    t.datetime "merged_at"
+    t.boolean "draft"
+    t.boolean "merged"
+    t.string "node_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["github_id"], name: "index_pull_requests_on_github_id", unique: true
+  end
 
   create_table "review_requests", force: :cascade do |t|
     t.text "data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "owner_id"
+    t.bigint "pull_request_id", null: false
     t.index ["owner_id"], name: "index_review_requests_on_owner_id"
+    t.index ["pull_request_id"], name: "index_review_requests_on_pull_request_id"
   end
 
   create_table "review_requests_users", id: false, force: :cascade do |t|
@@ -35,7 +54,10 @@ ActiveRecord::Schema.define(version: 2019_12_20_192022) do
     t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "github_id"
+    t.index ["github_id"], name: "index_users_on_github_id", unique: true
   end
 
+  add_foreign_key "review_requests", "pull_requests"
   add_foreign_key "review_requests", "users", column: "owner_id"
 end
