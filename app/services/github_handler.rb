@@ -38,15 +38,26 @@ class GithubHandler
 
 
   def create_or_find_user(json)
-    User.create_or_find_by(github_id: json['id'], node_id: json['node_id'],
-                           type: json['type'], login: json['login'])
+    User.create_or_find_by(
+      github_id: json['id'], 
+      node_id: json['node_id'],
+      type: json['type'], 
+      login: json['login']
+    )
   end
 
   def create_or_find_pr(json)
     pr = {
-      node_id: json['node_id'], number: json['number'], state: json['state'], locked: json['locked'],
-      title: json['title'], body: json['body'], closed_at: json['closed_at'],
-      merged_at: json['merged_at'], draft: json['draft'], merged: json['merged'],
+      node_id: json['node_id'], 
+      number: json['number'], 
+      state: json['state'], 
+      locked: json['locked'],
+      title: json['title'], 
+      body: json['body'], 
+      closed_at: json['closed_at'],
+      merged_at: json['merged_at'], 
+      merged: json['merged'],
+      draft: json['draft'], 
       github_id: json['id']
     }
     PullRequest.create_or_find_by(pr)
