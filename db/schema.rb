@@ -10,22 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_23_145416) do
+ActiveRecord::Schema.define(version: 2019_12_26_195441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "pull_requests", force: :cascade do |t|
-    t.integer "github_id"
+    t.bigint "github_id"
     t.integer "number"
     t.string "state"
-    t.boolean "locked"
+    t.boolean "locked", null: false
     t.text "title"
     t.text "body"
     t.datetime "closed_at"
     t.datetime "merged_at"
-    t.boolean "draft"
-    t.boolean "merged"
+    t.boolean "draft", null: false
+    t.boolean "merged", null: false
     t.string "node_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -33,11 +33,12 @@ ActiveRecord::Schema.define(version: 2019_12_23_145416) do
   end
 
   create_table "review_requests", force: :cascade do |t|
-    t.text "data"
+    t.jsonb "data"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "owner_id"
     t.bigint "pull_request_id", null: false
+    t.string "event_type"
     t.index ["owner_id"], name: "index_review_requests_on_owner_id"
     t.index ["pull_request_id"], name: "index_review_requests_on_pull_request_id"
   end
