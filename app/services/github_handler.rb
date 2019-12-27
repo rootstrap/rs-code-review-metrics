@@ -36,7 +36,6 @@ class GithubHandler
     ActiveSupport::SecurityUtils.secure_compare("sha1=#{digest}", @signature)
   end
 
-
   def create_or_find_user(json)
     User.create_or_find_by(
       github_id: json['id'], 
