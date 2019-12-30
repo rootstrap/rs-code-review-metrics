@@ -4,7 +4,6 @@
 #
 #  id         :bigint           not null, primary key
 #  login      :string           not null
-#  type       :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
@@ -25,6 +24,6 @@ class User < ApplicationRecord
   validates :github_id,
             :login,
             :node_id,
-            :type,
             presence: true
+  validates :github_id, uniqueness: true
 end

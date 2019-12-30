@@ -23,9 +23,9 @@
 #
 
 class PullRequest < ApplicationRecord
-  has_many :review_requests, dependent: :destroy, inverse_of: :pull_requests
+  has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
   validates :github_id,
-            :status,
+            :state,
             :node_id,
             :title,
             :number,
