@@ -8,6 +8,7 @@ AllCops:
     - 'bin/webpack'
     - 'bin/yarn'
     - 'bin/webpack-dev-server'
+    - 'lib/tasks/auto_annotate_models.rake'
 
 Documentation:
   Enabled: false

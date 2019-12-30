@@ -10,23 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_26_195441) do
+ActiveRecord::Schema.define(version: 2019_12_27_203014) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "pull_requests", force: :cascade do |t|
-    t.bigint "github_id"
-    t.integer "number"
-    t.string "state"
+    t.bigint "github_id", null: false
+    t.integer "number", null: false
+    t.string "state", null: false
     t.boolean "locked", null: false
-    t.text "title"
+    t.text "title", null: false
     t.text "body"
     t.datetime "closed_at"
     t.datetime "merged_at"
     t.boolean "draft", null: false
     t.boolean "merged", null: false
-    t.string "node_id"
+    t.string "node_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["github_id"], name: "index_pull_requests_on_github_id", unique: true
@@ -50,12 +50,12 @@ ActiveRecord::Schema.define(version: 2019_12_26_195441) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "login"
-    t.string "node_id"
-    t.string "type"
+    t.string "login", null: false
+    t.string "node_id", null: false
+    t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "github_id"
+    t.bigint "github_id", null: false
     t.index ["github_id"], name: "index_users_on_github_id", unique: true
   end
 

@@ -30,7 +30,9 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-gem 'github_api'
+gem 'github_api', '~> 0.18'
+
+gem 'annotate', '~> 3.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

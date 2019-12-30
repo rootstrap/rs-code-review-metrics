@@ -58,6 +58,9 @@ GEM
       zeitwerk (~> 2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    annotate (3.0.3)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 14.0)
     bindex (0.8.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
@@ -221,10 +224,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate (~> 3.0)
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
-  github_api
+  github_api (~> 0.18)
   jbuilder (~> 2.7)
   listen (>= 3.0.5, < 3.2)
   pg (~> 1.1)
