@@ -29,8 +29,10 @@ class PullRequest < ApplicationRecord
             :node_id,
             :title,
             :number,
-            :draft,
+            presence: true
+  validates :draft,
             :merged,
             :locked,
-            presence: true
+            inclusion: { in: [true, false] }
+  validates :github_id, uniqueness: true
 end

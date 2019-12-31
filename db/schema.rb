@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_30_180053) do
+ActiveRecord::Schema.define(version: 2019_12_31_134130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,14 +39,10 @@ ActiveRecord::Schema.define(version: 2019_12_30_180053) do
     t.bigint "owner_id"
     t.bigint "pull_request_id", null: false
     t.string "event_type"
+    t.bigint "reviewer_id", null: false
     t.index ["owner_id"], name: "index_review_requests_on_owner_id"
     t.index ["pull_request_id"], name: "index_review_requests_on_pull_request_id"
-  end
-
-  create_table "review_requests_users", id: false, force: :cascade do |t|
-    t.bigint "review_request_id", null: false
-    t.bigint "user_id", null: false
-    t.index ["review_request_id", "user_id"], name: "index_review_requests_users_on_review_request_id_and_user_id"
+    t.index ["reviewer_id"], name: "index_review_requests_on_reviewer_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -60,4 +56,5 @@ ActiveRecord::Schema.define(version: 2019_12_30_180053) do
 
   add_foreign_key "review_requests", "pull_requests"
   add_foreign_key "review_requests", "users", column: "owner_id"
+  add_foreign_key "review_requests", "users", column: "reviewer_id"
 end

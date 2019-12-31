@@ -1,4 +1,10 @@
 class GithubHandler
+  RETURNS = [
+    SUCCESS = :success,
+    FORBIDDEN = :forbidden,
+    BAD_REQUEST = :bad_request
+  ].freeze
+
   attr_reader :event, :payload, :raw_payload, :signature
 
   def initialize(event, payload, signature)
@@ -9,7 +15,7 @@ class GithubHandler
   end
 
   def handle
-    return unless webhook_verified?
+    return FORBIDDEN unless webhook_verified?
 
     case event
     when 'pull_request'
@@ -18,20 +24,25 @@ class GithubHandler
         handle_review_request
         # when "review_request_removed"
         # TODO: Call the method to handle a review request removal
-        # else unsupported
+      else
+        return BAD_REQUEST
       end
-      # else unsupported
+    else
+      return BAD_REQUEST
     end
-    true
+    SUCCESS
+  rescue ActiveRecord::RecordInvalid
+    BAD_REQUEST
   end
 
   def handle_review_request
     owner = create_or_find_user(payload['pull_request']['user'])
     pr = create_or_find_pr(payload['pull_request'])
-    # Even if you select multiple reviewers at once, the webhook sends a post for every person selected
+    # Even if you select multiple reviewers at once,
+    # the webhook sends a post for every person selected
     # we can assume it is going to be a single user obj "requested_reviewer"
-    participants = [create_or_find_user(payload['requested_reviewer'])]
-    pr.review_requests.create!(data: payload, owner: owner, users: participants)
+    reviewer = create_or_find_user(payload['requested_reviewer'])
+    pr.review_requests.create!(data: payload, owner: owner, reviewer: reviewer)
   end
 
   def webhook_verified?
@@ -40,17 +51,21 @@ class GithubHandler
   end
 
   def create_or_find_user(json)
-    User.find_by(github_id: json['id']) ||
-      User.create!(
+    user = User.find_by(github_id: json['id'])
+    if user.nil?
+      user = User.create!(
         node_id: json['node_id'],
         login: json['login'],
         github_id: json['id']
       )
+    end
+    user
   end
 
   def create_or_find_pr(json)
-    PullRequest.find_by(json['github_id']) ||
-      PullRequest.create!(
+    pr = PullRequest.find_by(json['github_id'])
+    if pr.nil?
+      pr = PullRequest.create!(
         node_id: json['node_id'],
         number: json['number'],
         state: json['state'],
@@ -63,5 +78,7 @@ class GithubHandler
         merged: json['merged'],
         github_id: json['id']
       )
+    end
+    pr
   end
 end

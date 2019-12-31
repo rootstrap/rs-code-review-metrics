@@ -7,13 +7,13 @@ class WebhookController < ApplicationController
     # this is needed because the action attr is replaced by rails' action param
     # and is lost on the params hash
     @payload = request.raw_post
-    if GithubHandler.new(@event, @payload, @signature).handle.nil?
-      head :forbidden
-    else
+    case GithubHandler.new(@event, @payload, @signature).handle
+    when GithubHandler::SUCCESS
       head :ok
+    when GithubHandler::FORBIDDEN
+      head :forbidden
+    when GithubHandler::BAD_REQUEST
+      head :bad_request
     end
-    
-  rescue ActiveRecord::RecordInvalid
-    head :bad_request
   end
 end
