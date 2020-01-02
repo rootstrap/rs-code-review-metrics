@@ -39,7 +39,7 @@ describe GithubHandler do
 
     describe 'one user existing' do
       let(:user) do
-        FactoryBot.create(
+        create(
           :user,
           github_id: 1001,
           login: 'pentacat',
@@ -65,7 +65,7 @@ describe GithubHandler do
 
     describe 'pull request existing' do
       let(:pr) do
-        FactoryBot.create(
+        create(
           :pull_request,
           github_id: 1000,
           number: 4,

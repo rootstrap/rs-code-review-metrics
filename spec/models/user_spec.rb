@@ -18,7 +18,7 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   before do
-    @user = FactoryBot.build(:user)
+    @user = build(:user)
   end
 
   it 'has a valid factory' do
@@ -32,9 +32,9 @@ RSpec.describe User, type: :model do
     expect(@user.valid?).to eq(false)
   end
 
-  it 'should have a unique github_id' do
-    FactoryBot.create(:user, github_id: '0001')
-    duplicate = FactoryBot.build(:user, github_id: '0001')
+  it 'has a unique github_id' do
+    create(:user, github_id: '0001')
+    duplicate = build(:user, github_id: '0001')
     expect(duplicate.valid?).to eq(false)
   end
 end

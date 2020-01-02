@@ -25,7 +25,7 @@
 require 'rails_helper'
 
 RSpec.describe PullRequest, type: :model do
-  let(:pr) { FactoryBot.build(:pull_request) }
+  let(:pr) { build(:pull_request) }
   context 'validation' do
     it 'does not allow empty github_id' do
       pr.github_id = nil
@@ -67,9 +67,9 @@ RSpec.describe PullRequest, type: :model do
       expect(pr.valid?).to eq(false)
     end
 
-    it 'should have a unique github_id' do
-      FactoryBot.create(:pull_request, github_id: '0001')
-      duplicate = FactoryBot.build(:pull_request, github_id: '0001')
+    it 'has a unique github_id' do
+      create(:pull_request, github_id: '0001')
+      duplicate = build(:pull_request, github_id: '0001')
       expect(duplicate.valid?).to eq(false)
     end
   end

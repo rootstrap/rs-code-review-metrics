@@ -51,21 +51,17 @@ class GithubHandler
   end
 
   def create_or_find_user(json)
-    user = User.find_by(github_id: json['id'])
-    if user.nil?
-      user = User.create!(
+    User.find_by(github_id: json['id']) ||
+      User.create!(
         node_id: json['node_id'],
         login: json['login'],
         github_id: json['id']
       )
-    end
-    user
   end
 
   def create_or_find_pr(json)
-    pr = PullRequest.find_by(json['github_id'])
-    if pr.nil?
-      pr = PullRequest.create!(
+    PullRequest.find_by(github_id: json['id']) ||
+      PullRequest.create!(
         node_id: json['node_id'],
         number: json['number'],
         state: json['state'],
@@ -78,7 +74,5 @@ class GithubHandler
         merged: json['merged'],
         github_id: json['id']
       )
-    end
-    pr
   end
 end
