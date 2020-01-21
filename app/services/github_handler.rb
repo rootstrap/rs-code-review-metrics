@@ -46,7 +46,9 @@ class GithubHandler
   end
 
   def handle_review_removal
-    PullRequest.find_by!(github_id: payload['pull_request']['id']).destroy!
+    reviewer = User.find_by(github_id: payload['requested_reviewer']['id'])
+    pr = PullRequest.find_by(github_id: payload['pull_request']['id'])
+    pr.review_requests.find_by!(reviewer: reviewer).destroy!
   end
 
   def webhook_verified?

@@ -93,10 +93,6 @@ describe GithubHandler do
       let!(:review_requests) { ReviewRequest.create(
                                 pull_request: pull_request, owner: user, reviewer: user
                               ) }
-  
-      it 'deletes specific pull request' do
-        expect { github_handler.handle_review_removal }.to change(PullRequest, :count).by(-1)
-      end
 
       it 'deletes review requests' do
         expect { github_handler.handle_review_removal }.to change(ReviewRequest, :count).by(-1)
