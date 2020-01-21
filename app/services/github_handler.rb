@@ -22,8 +22,8 @@ class GithubHandler
       case payload['action']
       when 'review_requested'
         handle_review_request
-        # when "review_request_removed"
-        # TODO: Call the method to handle a review request removal
+      when 'review_request_removed'
+        handle_review_removal
       else
         return BAD_REQUEST
       end
@@ -43,6 +43,14 @@ class GithubHandler
     # we can assume it is going to be a single user obj "requested_reviewer"
     reviewer = create_or_find_user(payload['requested_reviewer'])
     pr.review_requests.create!(data: payload, owner: owner, reviewer: reviewer)
+  end
+
+  def handle_review_removal
+    pr = PullRequest.find_by!(github_id: payload['pull_request']['id'])
+    pr.transaction do
+      pr.review_requests = []
+      pr.destroy!
+    end
   end
 
   def webhook_verified?
