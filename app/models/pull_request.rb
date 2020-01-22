@@ -10,7 +10,7 @@
 #  merged     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
-#  state      :string           not null
+#  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -35,4 +35,7 @@ class PullRequest < ApplicationRecord
             :locked,
             inclusion: { in: [true, false] }
   validates :github_id, uniqueness: true
+
+  enum state: { open: 'open', closed: 'closed' }
+  validates :state, inclusion: { in: states.keys }
 end

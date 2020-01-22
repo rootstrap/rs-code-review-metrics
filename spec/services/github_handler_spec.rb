@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe GithubHandler do
   context 'handling review request' do
-    let(:payload) do
+    let(:raw_payload) do
       {
         action: 'review_requested',
         pull_request: {
@@ -25,20 +25,21 @@ describe GithubHandler do
           login: 'octocat',
           id: 1001
         }
-      }.with_indifferent_access
+      }
     end
-    let(:github_handler) { GithubHandler.new('pull_request', payload.to_json, 'stub') }
+    let(:payload) { JSON.parse(raw_payload.to_json, object_class: OpenStruct) }
+    let(:github_handler) { GithubHandler.new('pull_request', raw_payload, 'stub') }
 
     describe 'users not existing' do
       it 'adds user to the DB' do
         expect {
-          github_handler.create_or_find_user(payload['requested_reviewer'])
+          github_handler.create_or_find_user(payload.requested_reviewer)
         }.to change(User, :count).by(1)
       end
     end
 
     describe 'one user existing' do
-      let(:user) do
+      let!(:user) do
         create(
           :user,
           github_id: 1001,
@@ -48,9 +49,8 @@ describe GithubHandler do
       end
 
       it 'does not duplicate same user with different login' do
-        user
         expect {
-          github_handler.create_or_find_user(payload['requested_reviewer'])
+          github_handler.create_or_find_user(payload.requested_reviewer)
         }.to change(User, :count).by(0)
       end
     end
@@ -58,13 +58,26 @@ describe GithubHandler do
     describe 'pull request not existing' do
       it 'adds pr to the DB' do
         expect {
-          github_handler.create_or_find_pr(payload['pull_request'])
+          github_handler.opened
         }.to change(PullRequest, :count).by(1)
       end
     end
 
+    describe 'pull request close' do
+      let!(:pull_request) { create :pull_request, github_id: 1000 }
+
+      before do
+        github_handler.closed
+        pull_request.reload
+      end
+
+      it 'sets status closed' do
+        expect(pull_request.closed?).to be true
+      end
+    end
+
     describe 'pull request existing' do
-      let(:pr) do
+      let!(:pr) do
         create(
           :pull_request,
           github_id: 1000,
@@ -74,11 +87,8 @@ describe GithubHandler do
         )
       end
 
-      it 'does not duplicate existing pr, even if data has changed' do
-        pr
-        expect {
-          github_handler.create_or_find_pr(payload['pull_request'])
-        }.to change(PullRequest, :count).by(0)
+      it 'raises an exception when there is a duplicated record' do
+        expect { github_handler.opened }.to raise_error(ActiveRecord::RecordInvalid)
       end
     end
 
@@ -98,7 +108,7 @@ describe GithubHandler do
       end
 
       before do
-        github_handler.handle_review_removal
+        github_handler.review_removal
         review_request.reload
       end
 

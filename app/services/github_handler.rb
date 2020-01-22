@@ -9,8 +9,8 @@ class GithubHandler
 
   def initialize(event, payload, signature)
     @event = event
-    @payload = JSON.parse(payload)
     @raw_payload = payload
+    @payload = parse_payload
     @signature = signature
   end
 
@@ -19,11 +19,15 @@ class GithubHandler
 
     case event
     when 'pull_request'
-      case payload['action']
+      case payload.action
+      when 'opened'
+        opened
       when 'review_requested'
-        handle_review_request
+        review_request
+      when 'closed'
+        closed
       when 'review_request_removed'
-        handle_review_removal
+        review_removal
       else
         return BAD_REQUEST
       end
@@ -35,50 +39,59 @@ class GithubHandler
     BAD_REQUEST
   end
 
-  def handle_review_request
-    owner = create_or_find_user(payload['pull_request']['user'])
-    pr = create_or_find_pr(payload['pull_request'])
-    # Even if you select multiple reviewers at once,
-    # the webhook sends a post for every person selected
-    # we can assume it is going to be a single user obj "requested_reviewer"
-    reviewer = create_or_find_user(payload['requested_reviewer'])
-    pr.review_requests.create!(data: payload, owner: owner, reviewer: reviewer)
-  end
-
-  def handle_review_removal
-    reviewer = User.find_by(github_id: payload['requested_reviewer']['id'])
-    pr = PullRequest.find_by(github_id: payload['pull_request']['id'])
-    pr.review_requests.find_by!(reviewer: reviewer)&.removed!
-  end
-
   def webhook_verified?
     digest = OpenSSL::HMAC.hexdigest('SHA1', ENV['GITHUB_ANALYZER_WEBHOOK_SECRET'], raw_payload)
     ActiveSupport::SecurityUtils.secure_compare("sha1=#{digest}", signature)
   end
 
-  def create_or_find_user(json)
-    User.find_by(github_id: json['id']) ||
+  def opened
+    pr_data = payload.pull_request
+    PullRequest.create!(
+      node_id: pr_data.node_id,
+      number: pr_data.number,
+      state: pr_data.state,
+      locked: pr_data.locked,
+      draft: pr_data.draft,
+      title: pr_data.title,
+      body: pr_data.body,
+      closed_at: pr_data.closed_at,
+      merged_at: pr_data.merged_at,
+      merged: pr_data.merged,
+      github_id: pr_data.id
+    )
+  rescue ActiveRecord::RecordNotUnique => e
+    errors.add(:base, 'This pull request already exists!')
+  end
+
+  def closed
+    find_pr.closed!
+  end
+
+  def review_request
+    owner = create_or_find_user(payload.pull_request.user)
+    reviewer = create_or_find_user(payload.requested_reviewer)
+    find_pr.review_requests.create!(data: payload, owner: owner, reviewer: reviewer)
+  end
+
+  def review_removal
+    reviewer = create_or_find_user(payload.requested_reviewer)
+    find_pr.review_requests.find_by!(reviewer: reviewer).removed!
+  end
+
+  def create_or_find_user(user_data)
+    User.find_by(github_id: user_data.id) ||
       User.create!(
-        node_id: json['node_id'],
-        login: json['login'],
-        github_id: json['id']
+        node_id: user_data.node_id,
+        login: user_data.login,
+        github_id: user_data.id
       )
   end
 
-  def create_or_find_pr(json)
-    PullRequest.find_by(github_id: json['id']) ||
-      PullRequest.create!(
-        node_id: json['node_id'],
-        number: json['number'],
-        state: json['state'],
-        locked: json['locked'],
-        draft: json['draft'],
-        title: json['title'],
-        body: json['body'],
-        closed_at: json['closed_at'],
-        merged_at: json['merged_at'],
-        merged: json['merged'],
-        github_id: json['id']
-      )
+  def find_pr
+    PullRequest.find_by!(github_id: payload.pull_request.id)
+  end
+
+  def parse_payload
+    JSON.parse(raw_payload.to_json, object_class: OpenStruct)
   end
 end

@@ -10,7 +10,7 @@
 #  merged     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
-#  state      :string           not null
+#  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
