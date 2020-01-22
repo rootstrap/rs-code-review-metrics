@@ -1,4 +1,4 @@
-class AddTypeStatus < ActiveRecord::Migration[6.0]
+class AddStatusTypeAndColumn < ActiveRecord::Migration[6.0]
   def change
     execute <<-SQL
       CREATE TYPE status AS ENUM ('active', 'removed');
