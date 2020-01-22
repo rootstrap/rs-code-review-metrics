@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_31_134130) do
+ActiveRecord::Schema.define(version: 2020_01_22_143238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 2019_12_31_134130) do
     t.bigint "pull_request_id", null: false
     t.string "event_type"
     t.bigint "reviewer_id", null: false
+    t.string "status"
     t.index ["owner_id"], name: "index_review_requests_on_owner_id"
     t.index ["pull_request_id"], name: "index_review_requests_on_pull_request_id"
     t.index ["reviewer_id"], name: "index_review_requests_on_reviewer_id"
