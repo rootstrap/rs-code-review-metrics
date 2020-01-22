@@ -4,8 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  data            :jsonb
-#  event_type      :string
-#  status          :string
+#  status          :enum
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  owner_id        :bigint
@@ -32,6 +31,9 @@ class ReviewRequest < ApplicationRecord
              foreign_key: :reviewer_id,
              inverse_of: :received_review_requests
   belongs_to :pull_request, inverse_of: :review_requests
+
+  enum status: { active: 'active', removed: 'removed' }
+  validates :status, inclusion: { in: statuses.keys }
 
   def remove
     update!(status: 'removed')
