@@ -81,5 +81,30 @@ describe GithubHandler do
         }.to change(PullRequest, :count).by(0)
       end
     end
+
+    describe 'review removal request' do
+      let!(:pull_request) { create :pull_request, github_id: 1000 }
+      let!(:user) do
+        create :user,
+          github_id: 1001,
+          login: 'pentacat',
+          node_id: 'MDExOlB1bGxc5MTQ3NDM3'
+      end
+      let!(:review_request) do
+        create :review_request,
+          pull_request: pull_request,
+          owner: user,
+          reviewer: user
+      end
+
+      before do
+        github_handler.handle_review_removal
+        review_request.reload
+      end
+
+      it 'sets status to removed' do
+        expect(review_request.removed?).to be true
+      end
+    end
   end
 end
