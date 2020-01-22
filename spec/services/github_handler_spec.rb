@@ -90,9 +90,12 @@ describe GithubHandler do
           login: 'pentacat',
           node_id: 'MDExOlB1bGxc5MTQ3NDM3'
       end
-      let!(:review_request) { ReviewRequest.create(
-                                pull_request: pull_request, owner: user, reviewer: user
-                              ) }
+      let!(:review_request) do
+        create :review_request,
+          pull_request: pull_request,
+          owner: user,
+          reviewer: user
+      end
 
       before do
         github_handler.handle_review_removal
@@ -100,7 +103,7 @@ describe GithubHandler do
       end
 
       it 'sets status to removed' do
-        expect(review_request.status).to eq('removed')
+        expect(review_request.removed?).to be true
       end
     end
   end

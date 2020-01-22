@@ -34,8 +34,4 @@ class ReviewRequest < ApplicationRecord
 
   enum status: { active: 'active', removed: 'removed' }
   validates :status, inclusion: { in: statuses.keys }
-
-  def remove
-    update!(status: 'removed')
-  end
 end
