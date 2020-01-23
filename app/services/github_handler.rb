@@ -1,5 +1,4 @@
 class GithubHandler
-  include PayloadParser
 
   RETURNS = [
     SUCCESS = :success,
@@ -7,12 +6,11 @@ class GithubHandler
     BAD_REQUEST = :bad_request
   ].freeze
 
-  attr_reader :event, :payload, :raw_payload, :signature
+  attr_reader :event, :payload, :signature
 
   def initialize(event, payload, signature)
     @event = event
-    @raw_payload = payload
-    @payload = parse_payload(payload)
+    @payload = payload
     @signature = signature
   end
 
@@ -21,7 +19,7 @@ class GithubHandler
 
     case event
     when 'pull_request'
-      case payload.action
+      case payload['action']
       when 'opened'
         opened
       when 'review_requested'
@@ -42,23 +40,23 @@ class GithubHandler
   end
 
   def webhook_verified?
-    digest = OpenSSL::HMAC.hexdigest('SHA1', ENV['GITHUB_ANALYZER_WEBHOOK_SECRET'], raw_payload)
+    digest = OpenSSL::HMAC.hexdigest('SHA1', ENV['GITHUB_ANALYZER_WEBHOOK_SECRET'], payload)
     ActiveSupport::SecurityUtils.secure_compare("sha1=#{digest}", signature)
   end
 
   def opened
-    GithubJobs::OpenedJob.perform_later(raw_payload)
+    GithubJobs::OpenedJob.perform_later(payload)
   end
 
   def closed
-    GithubJobs::ClosedJob.perform_later(raw_payload)
+    GithubJobs::ClosedJob.perform_later(payload)
   end
 
   def review_request
-    GithubJobs::ReviewRequestJob.perform_later(raw_payload)
+    GithubJobs::ReviewRequestJob.perform_later(payload)
   end
 
   def review_removal
-    GithubJobs::ReviewRemovalJob.perform_later(raw_payload)
+    GithubJobs::ReviewRemovalJob.perform_later(payload)
   end
 end
