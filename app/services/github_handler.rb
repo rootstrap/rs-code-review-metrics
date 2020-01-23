@@ -59,8 +59,8 @@ class GithubHandler
       merged: pr_data.merged,
       github_id: pr_data.id
     )
-  rescue ActiveRecord::RecordNotUnique => e
-    errors.add(:base, 'This pull request already exists!')
+  rescue ActiveRecord::RecordNotUnique
+    Rails.logger.error('This pull request already exists!')
   end
 
   def closed

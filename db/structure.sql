@@ -98,7 +98,7 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    status public.status
+    status public.status DEFAULT 'active'::public.status
 );
 
 
