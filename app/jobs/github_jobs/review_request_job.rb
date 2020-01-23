@@ -1,5 +1,5 @@
 module GithubJobs
-  class ReviewRequestJob < ActiveJob::Base
+  class ReviewRequestJob < ApplicationJob
     queue_as :review_request
 
     def perform(payload)

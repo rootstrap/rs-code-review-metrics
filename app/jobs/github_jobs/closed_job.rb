@@ -1,5 +1,5 @@
 module GithubJobs
-  class ClosedJob < ActiveJob::Base
+  class ClosedJob < ApplicationJob
     queue_as :closed
 
     def perform(payload)

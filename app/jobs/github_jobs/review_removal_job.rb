@@ -1,5 +1,5 @@
 module GithubJobs
-  class ReviewRemovalJob < ActiveJob::Base
+  class ReviewRemovalJob < ApplicationJob
     queue_as :review_removal
 
     def perform(payload)
