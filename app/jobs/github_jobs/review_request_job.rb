@@ -1,6 +1,6 @@
 module GithubJobs
   class ReviewRequestJob < ApplicationJob
-    queue_as :review_request
+    queue_as :default
 
     def perform(payload)
       GithubService.call(payload).review_request

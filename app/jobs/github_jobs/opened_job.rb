@@ -1,6 +1,6 @@
 module GithubJobs
   class OpenedJob < ApplicationJob
-    queue_as :opened
+    queue_as :default
 
     def perform(payload)
       GithubService.call(payload).opened

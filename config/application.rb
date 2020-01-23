@@ -19,7 +19,7 @@ module GithubAnalyzer
     # Generates a "structure.sql" and allow raw sql
     config.active_record.schema_format = :sql
     # ActiveJob abstraction
-    config.active_job.queue_adapter = :sidekiq
+    config.active_job.queue_adapter = :inline
     # Autoload lib folder
     config.autoload_paths << "#{Rails.root}/lib"
   end

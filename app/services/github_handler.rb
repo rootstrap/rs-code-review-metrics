@@ -1,5 +1,4 @@
 class GithubHandler
-
   RETURNS = [
     SUCCESS = :success,
     FORBIDDEN = :forbidden,
