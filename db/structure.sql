@@ -10,6 +10,16 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: state; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.state AS ENUM (
+    'open',
+    'closed'
+);
+
+
+--
 -- Name: status; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -43,7 +53,6 @@ CREATE TABLE public.pull_requests (
     id bigint NOT NULL,
     github_id bigint NOT NULL,
     number integer NOT NULL,
-    state character varying NOT NULL,
     locked boolean NOT NULL,
     title text NOT NULL,
     body text,
@@ -53,7 +62,8 @@ CREATE TABLE public.pull_requests (
     merged boolean NOT NULL,
     node_id character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    state public.state
 );
 
 
@@ -88,7 +98,7 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    status public.status
+    status public.status DEFAULT 'active'::public.status
 );
 
 
@@ -297,6 +307,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191230180053'),
 ('20191231130959'),
 ('20191231134130'),
-('20200122143238');
+('20200122143238'),
+('20200122180806');
 
 

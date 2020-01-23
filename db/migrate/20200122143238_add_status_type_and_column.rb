@@ -4,6 +4,6 @@ class AddStatusTypeAndColumn < ActiveRecord::Migration[6.0]
       CREATE TYPE status AS ENUM ('active', 'removed');
     SQL
 
-    add_column :review_requests, :status, :status
+    add_column :review_requests, :status, :status, default: 'active'
   end
 end

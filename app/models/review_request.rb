@@ -4,7 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  data            :jsonb
-#  status          :enum
+#  status          :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  owner_id        :bigint
