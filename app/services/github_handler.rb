@@ -47,18 +47,18 @@ class GithubHandler
   end
 
   def opened
-    GithubService::OpenedWorker.perform_async(raw_payload)
+    GithubJobs::OpenedJob.perform_later(raw_payload)
   end
 
   def closed
-    GithubService::ClosedWorker.perform_async(raw_payload)
+    GithubJobs::ClosedJob.perform_later(raw_payload)
   end
 
   def review_request
-    GithubService::ReviewRequestWorker.perform_async(raw_payload)
+    GithubJobs::ReviewRequestJob.perform_later(raw_payload)
   end
 
   def review_removal
-    GithubService::ReviewRemovalWorker.perform_async(raw_payload)
+    GithubJobs::ReviewRemovalJob.perform_later(raw_payload)
   end
 end
