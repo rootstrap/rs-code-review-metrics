@@ -270,7 +270,7 @@ DEPENDENCIES
   rspec-rails (~> 3.9)
   sass-rails (>= 6)
   selenium-webdriver
-  sidekiq
+  sidekiq (~> 6.0.2)
   spring
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
