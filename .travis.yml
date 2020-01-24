@@ -7,7 +7,6 @@ services:
   - postgresql
 
 before_install: 
-  - gem install rails
   - gem install bundler
 
 before_script:
