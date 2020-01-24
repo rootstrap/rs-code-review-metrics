@@ -21,9 +21,12 @@
 #
 #  index_pull_requests_on_github_id  (github_id) UNIQUE
 #
-
 class PullRequest < ApplicationRecord
   has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
+
+  enum state: { open: 'open', closed: 'closed' }
+
+  validates :state, inclusion: { in: states.keys }
   validates :github_id,
             :state,
             :node_id,
@@ -35,7 +38,4 @@ class PullRequest < ApplicationRecord
             :locked,
             inclusion: { in: [true, false] }
   validates :github_id, uniqueness: true
-
-  enum state: { open: 'open', closed: 'closed' }
-  validates :state, inclusion: { in: states.keys }
 end

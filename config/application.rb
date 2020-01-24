@@ -16,6 +16,9 @@ module GithubAnalyzer
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
+    # Generates a "structure.sql" and allow raw sql
     config.active_record.schema_format = :sql
+    # Autoload lib folder
+    config.autoload_paths << "#{Rails.root}/lib"
   end
 end

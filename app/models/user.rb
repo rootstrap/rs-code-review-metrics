@@ -13,7 +13,6 @@
 #
 #  index_users_on_github_id  (github_id) UNIQUE
 #
-
 class User < ApplicationRecord
   has_many :owned_review_requests,
            class_name: 'ReviewRequest',
