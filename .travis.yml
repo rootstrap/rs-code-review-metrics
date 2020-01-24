@@ -5,6 +5,8 @@ rvm:
   - 2.6.3
 services:
   - postgresql
+addons:
+  postgresql: "12.1"
 
 before_install: 
   - gem install bundler
