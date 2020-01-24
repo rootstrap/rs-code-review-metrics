@@ -1,0 +1,19 @@
+sudo: false
+language: ruby
+cache: bundler
+rvm:
+  - 2.6.3
+services:
+  - postgresql
+
+before_install: 
+  - gem install rails
+  - gem install bundler
+
+before_script:
+  - "./script/travis/setup_database.sh"
+
+script:
+  - bundle exec rake db:create
+  - bundle exec rake db:migrate
+  - bundle exec rspec
