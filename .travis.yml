@@ -3,19 +3,13 @@ language: ruby
 cache: bundler
 rvm:
   - 2.6.3
-services:
-  - postgresql
-addons:
-  postgresql: "12.1"
-apt:
-  packages:
-    - postgresql
-    - postgresql-client
-env:
-  global:
-  - PGPORT=5433
 
-before_install: 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get --yes remove postgresql\*
+  - sudo apt-get install -y postgresql-11 postgresql-client-11
+  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+  - sudo service postgresql restart 11
   - gem install bundler
 
 before_script:
@@ -27,3 +21,8 @@ script:
   - bundle exec rake db:create
   - bundle exec rake db:migrate
   - bundle exec rspec
+
+services:
+  - postgresql
+addons:
+  postgresql: "11.2"
