@@ -1,5 +1,4 @@
 require: rubocop-rails
-This conversation was marked as resolved by hdamico
 
 AllCops:
   Exclude:
