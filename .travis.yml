@@ -7,6 +7,13 @@ services:
   - postgresql
 addons:
   postgresql: "12.1"
+apt:
+  packages:
+    - postgresql
+    - postgresql-client
+env:
+  global:
+  - PGPORT=5433
 
 before_install: 
   - gem install bundler
