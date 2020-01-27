@@ -5,6 +5,11 @@ rvm:
   - 2.6.3
 
 before_install:
+  - sudo apt-get update
+  - sudo apt-get --yes remove postgresql\*
+  - sudo apt-get install -y postgresql-12 postgresql-client-12
+  - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+  - sudo service postgresql restart 12
   - gem install bundler
   - gem install database_yml
 
@@ -13,3 +18,8 @@ script:
   - bundle exec rake db:create
   - bundle exec rake db:migrate
   - bundle exec rspec
+
+services:
+  - postgresql
+addons:
+  postgresql: "12.1"
