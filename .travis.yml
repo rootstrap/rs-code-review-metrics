@@ -15,8 +15,6 @@ addons:
 
 env:
   - PGPORT=5433
-  global:
-    - CC_TEST_REPORTER_ID=ABC123
 
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
