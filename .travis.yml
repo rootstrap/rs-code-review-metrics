@@ -5,11 +5,16 @@ rvm:
   - 2.6.3
 
 before_install:
+  - sudo apt-get update
+  - sudo apt-get --yes remove postgresql\*
+  - sudo apt-get install -y postgresql-12 postgresql-client-12
+  - sudo cp /etc/postgresql/{9.6,12}/main/pg_hba.conf
+  - sudo service postgresql restart 12
   - gem install bundler
 
-
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database code_review_metrics_development;' -U postgres
+  - psql -U postgres -q -d code_review_metrics_development -f db/structure.sql
   - cp config/database.yml.travis config/database.yml
 
 script:
@@ -19,13 +24,5 @@ script:
 
 services:
   - postgresql
-
 addons:
   postgresql: "12.1"
-  apt:
-    packages:
-    - postgresql-12
-    - postgresql-client-12
-env:
-  global:
-  - PGPORT=5433
