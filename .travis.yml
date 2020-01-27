@@ -22,5 +22,4 @@ before_script:
   - cp config/database.yml.travis config/database.yml
 
 script:
-  - bundle exec rake db:migrate
   - bundle exec rspec
