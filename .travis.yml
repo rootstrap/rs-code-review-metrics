@@ -6,8 +6,10 @@ rvm:
 
 before_install:
   - gem install bundler
+  - gem install database_yml
 
 script:
+  - database_yml -d postgresql
   - bundle exec rake db:create
   - bundle exec rake db:migrate
   - bundle exec rspec
