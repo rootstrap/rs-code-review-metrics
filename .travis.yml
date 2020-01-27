@@ -14,12 +14,20 @@ addons:
       - postgresql-client-12
 
 env:
-  - PGPORT=5433
+  global:
+    - PGPORT=5433
+    - CC_TEST_REPORTER_ID=e54f24c60ea55d00f23cba6796704ec633938d432fde7da52a872511496a36b8
 
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
   - psql -U travis -q -d code_review_metrics_travis -f db/structure.sql
   - cp config/database.yml.travis config/database.yml
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
   - bundle exec rspec
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
