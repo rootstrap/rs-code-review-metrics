@@ -37,9 +37,8 @@ gem 'annotate', '~> 3.0'
 # Use Sidekiq to enqueue job in the background
 gem 'sidekiq', '~> 6.0.2'
 
-gem 'brakeman'
-
 group :development, :test do
+  gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails', '~> 5.1'
@@ -60,6 +59,6 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'webdrivers'
   gem 'simplecov', require: false
+  gem 'webdrivers'
 end

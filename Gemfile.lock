@@ -266,7 +266,7 @@ PLATFORMS
 DEPENDENCIES
   annotate (~> 3.0)
   bootsnap (>= 1.4.2)
-  brakeman
+  brakeman (~> 4.7, >= 4.7.2)
   byebug
   capybara (>= 2.15)
   factory_bot_rails (~> 5.1)
