@@ -38,11 +38,12 @@ class GithubService < BaseService
   end
 
   def create_or_find_user(user_data)
-    User.find_by(github_id: user_data.id) ||
+    github_id = user_data.id
+    User.find_by(github_id: github_id) ||
       User.create!(
         node_id: user_data.node_id,
         login: user_data.login,
-        github_id: user_data.id
+        github_id: github_id
       )
   end
 
