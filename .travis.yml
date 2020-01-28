@@ -29,6 +29,7 @@ before_script:
 script:
   - bundle exec rspec
   - bundle exec brakeman --exit-on-warn --quiet -f plain
+  - bundle exec rake code_analysis
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
