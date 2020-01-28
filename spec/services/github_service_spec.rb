@@ -98,15 +98,15 @@ describe GithubService do
     let!(:pull_request) { create :pull_request, github_id: 1000 }
     let!(:user) do
       create :user,
-              github_id: 1001,
-              login: 'pentacat',
-              node_id: 'MDExOlB1bGxc5MTQ3NDM3'
+             github_id: 1001,
+             login: 'pentacat',
+             node_id: 'MDExOlB1bGxc5MTQ3NDM3'
     end
     let!(:review_request) do
       create :review_request,
-              pull_request: pull_request,
-              owner: user,
-              reviewer: user
+             pull_request: pull_request,
+             owner: user,
+             reviewer: user
     end
 
     it 'sets status to removed' do

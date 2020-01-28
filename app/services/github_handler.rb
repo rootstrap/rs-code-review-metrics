@@ -18,24 +18,28 @@ class GithubHandler
 
     case event
     when 'pull_request'
-      case payload['action']
-      when 'opened'
-        opened
-      when 'review_requested'
-        review_request
-      when 'closed'
-        closed
-      when 'review_request_removed'
-        review_removal
-      else
-        return BAD_REQUEST
-      end
+      pull_request_event
     else
-      return BAD_REQUEST
+      BAD_REQUEST
     end
     SUCCESS
   rescue ActiveRecord::RecordInvalid
     BAD_REQUEST
+  end
+
+  def pull_request_event
+    case payload['action']
+    when 'opened'
+      opened
+    when 'review_requested'
+      review_request
+    when 'closed'
+      closed
+    when 'review_request_removed'
+      review_removal
+    else
+      BAD_REQUEST
+    end
   end
 
   def webhook_verified?
