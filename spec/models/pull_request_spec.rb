@@ -24,8 +24,8 @@
 
 require 'rails_helper'
 
-RSpec.describe PullRequest, type: :model do
-  let(:pr) { build(:pull_request) }
+RSpec.describe Events::PullRequest, type: :model do
+  let(:pr) { build :pull_request }
   context 'validation' do
     it 'does not allow empty github_id' do
       pr.github_id = nil

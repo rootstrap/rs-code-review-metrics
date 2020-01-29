@@ -23,7 +23,7 @@
 #
 
 FactoryBot.define do
-  factory :pull_request do
+  factory :pull_request, class: Events::PullRequest do
     sequence(:github_id, 1000)
     sequence(:number, 2)
     sequence(:title) { |n| "Pull Request-#{n}" }

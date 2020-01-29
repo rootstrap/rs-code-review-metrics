@@ -6,12 +6,12 @@ class GithubService < BaseService
   end
 
   def closed
-    PullRequest.find_by!(github_id: @payload.pull_request.id).closed!
+    Events::PullRequest.find_by!(github_id: @payload.pull_request.id).closed!
   end
 
   def opened
     pr_data = @payload.pull_request
-    PullRequest.create!(
+    Events::PullRequest.create!(
       node_id: pr_data.node_id,
       number: pr_data.number,
       state: pr_data.state,
@@ -48,6 +48,6 @@ class GithubService < BaseService
   end
 
   def find_pr
-    PullRequest.find_by!(github_id: @payload.pull_request.id)
+    Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
   end
 end

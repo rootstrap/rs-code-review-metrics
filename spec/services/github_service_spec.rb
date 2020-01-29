@@ -74,7 +74,7 @@ describe GithubService do
 
   describe '#opened' do
     it 'adds pr to the DB' do
-      expect { github_service.opened }.to change(PullRequest, :count).by(1)
+      expect { github_service.opened }.to change(Events::PullRequest, :count).by(1)
     end
 
     context 'when duplicated pr' do

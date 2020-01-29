@@ -24,7 +24,9 @@
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord
-  belongs_to :owner, class_name: 'User', foreign_key: :owner_id, inverse_of: :owned_review_requests
+  belongs_to :owner, class_name: 'User',
+                     foreign_key: :owner_id,
+                     inverse_of: :owned_review_requests
   belongs_to :reviewer,
              class_name: 'User',
              foreign_key: :reviewer_id,
