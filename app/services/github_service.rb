@@ -6,7 +6,14 @@ class GithubService < BaseService
   end
 
   def closed
-    Events::PullRequest.find_by!(github_id: @payload.pull_request.id).closed!
+    Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
+                       .update!(closed_at: Time.now)
+                       .closed!
+  end
+
+  def merged
+    Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
+                       .update!(merged_at: Time.now, merged: true)
   end
 
   def opened
@@ -26,12 +33,12 @@ class GithubService < BaseService
     )
   end
 
-  def review_removal
+  def review_request_removed
     reviewer = User.find_by!(github_id: @payload.requested_reviewer.id)
     find_pr.review_requests.find_by!(reviewer: reviewer).removed!
   end
 
-  def review_request
+  def review_requested
     owner = create_or_find_user(@payload.pull_request.user)
     reviewer = create_or_find_user(@payload.requested_reviewer)
     find_pr.review_requests.create!(data: @payload, owner: owner, reviewer: reviewer)

@@ -1,4 +1,4 @@
-module GithubJobs
+module PullRequestJobs
   class ClosedJob < ApplicationJob
     queue_as :default
 

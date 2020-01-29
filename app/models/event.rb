@@ -20,6 +20,9 @@ class Event < ApplicationRecord
   belongs_to :handleable, polymorphic: true, required: false
   validates :name, :data, presence: true
 
+  EVENTS = %w[pull_request].freeze
+  private_constant :EVENTS
+
   def resolve
     return handle if handleable?
 
@@ -27,8 +30,6 @@ class Event < ApplicationRecord
   end
 
   private
-
-  EVENTS = %w[pull_request].freeze
 
   def handle
     Event.create!(build_attributes)
