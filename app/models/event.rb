@@ -20,28 +20,26 @@ class Event < ApplicationRecord
   belongs_to :handleable, polymorphic: true, required: false
   validates :name, :data, presence: true
 
-  EVENTS = %w[pull_request].freeze
-  private_constant :EVENTS
+  class << self
+    def resolve(payload)
+      handle(payload) if handleable?(payload[:event])
+    end
 
-  def resolve
-    handle if handleable?
-  end
+    private
 
-  private
+    EVENTS = %w[pull_request].freeze
+    private_constant :EVENTS
 
-  def handle
-    const_event.resolve(build_payload)
-  end
+    def handle(payload)
+      const_event(payload[:event]).resolve(payload)
+    end
 
-  def build_payload
-    data.merge(event_id: id)
-  end
+    def const_event(event)
+      Events.const_get(event.classify)
+    end
 
-  def const_event
-    Events.const_get(name.classify)
-  end
-
-  def handleable?
-    EVENTS.include?(name)
+    def handleable?(event)
+      EVENTS.include?(event)
+    end
   end
 end

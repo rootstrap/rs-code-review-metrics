@@ -1,18 +1,18 @@
 class WebhookController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_params
+  before_action :format_params
 
   def handle
-    Event.create!(data: @payload, name: @event).resolve if webhook_verified?
+    Event.resolve(@payload) if webhook_verified?
   end
 
   private
 
-  def set_params
+  def format_params
     @headers = request.headers
-    @event = @headers['X-GitHub-Event']
     @signature = @headers['X-Hub-Signature']
     @payload = JSON.parse(request.raw_post)
+                   .merge(event: @headers['X-GitHub-Event'])
   end
 
   def webhook_verified?

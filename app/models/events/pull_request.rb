@@ -41,10 +41,6 @@ module Events
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
 
-    ACTIONS = %w[opened review_requested closed \
-                 merged review_request_removed].freeze
-    private_constant :ACTIONS
-
     class << self
       def resolve(payload)
         action = payload['action']
@@ -74,6 +70,10 @@ module Events
       end
 
       private
+
+      ACTIONS = %w[opened review_requested closed \
+                   merged review_request_removed].freeze
+      private_constant :ACTIONS
 
       def handleable?(action)
         ACTIONS.include?(action)

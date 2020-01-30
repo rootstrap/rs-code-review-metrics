@@ -62,7 +62,9 @@ module Github
     end
 
     def assign_event(pull_request)
-      pull_request.events << Event.find(@payload.event_id)
+      Event.create!(handleable: pull_request,
+                    name: @payload.event,
+                    data: @payload)
     end
   end
 end
