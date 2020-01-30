@@ -11,12 +11,12 @@ class WebhookController < ApplicationController
   private
 
   def set_params
+    head 403 && return unless webhook_verified?
+
     @headers = request.headers
     @signature = @headers['X-Hub-Signature']
     @payload = JSON.parse(request.raw_post)
                    .merge(event: @headers['X-GitHub-Event'])
-
-    head 403 && return unless payload_verified?(payload, signature)
   end
 
   def webhook_verified?
