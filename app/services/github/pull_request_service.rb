@@ -1,21 +1,58 @@
 module Github
   class PullRequestService < GithubService
     def closed
-      pr = Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
-                              .update!(closed_at: Time.now)
-                              .closed!
-      assign_event(pr)
+      assign_event(close_pr)
     end
 
     def merged
-      pr = Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
-                              .update!(merged_at: Time.current, merged: true)
-      assign_event(pr)
+      assign_event(merge_pr)
     end
 
     def opened
+      assign_event(open_pr)
+    end
+
+    def review_request_removed
+      assign_event(remove_review_request)
+    end
+
+    def review_requested
+      assign_event(assign_review_request)
+    end
+
+    private
+
+    def merge_pr
+      pr = find_pr
+      pr.update!(merged_at: Time.current, merged: true)
+      pr
+    end
+
+    def remove_review_request
+      reviewer = User.find_by!(github_id: @payload.requested_reviewer.id)
+      pr = find_pr
+      pr.review_requests.find_by!(reviewer: reviewer).removed!
+      pr
+    end
+
+    def assign_review_request
+      owner = create_or_find_user(@payload.pull_request.user)
+      reviewer = create_or_find_user(@payload.requested_reviewer)
+      pr = find_pr
+      pr.review_requests.create!(data: @payload, owner: owner,
+                                 reviewer: reviewer)
+    end
+
+    def close_pr
+      pr = find_pr
+      pr.closed!
+      pr.update!(closed_at: Time.current)
+      pr
+    end
+
+    def open_pr
       pr_data = @payload.pull_request
-      pr = Events::PullRequest.create!(
+      Events::PullRequest.create!(
         node_id: pr_data.node_id,
         number: pr_data.number,
         state: pr_data.state,
@@ -28,23 +65,6 @@ module Github
         merged: pr_data.merged,
         github_id: pr_data.id
       )
-      assign_event(pr)
-    end
-
-    def review_request_removed
-      reviewer = User.find_by!(github_id: @payload.requested_reviewer.id)
-      pr = find_pr
-      pr.review_requests.find_by!(reviewer: reviewer).removed!
-      assign_event(pr)
-    end
-
-    def review_requested
-      owner = create_or_find_user(@payload.pull_request.user)
-      reviewer = create_or_find_user(@payload.requested_reviewer)
-      pr = find_pr
-      pr.review_requests.create!(data: @payload, owner: owner,
-                                 reviewer: reviewer)
-      assign_event(pr)
     end
 
     def create_or_find_user(user_data)

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe GithubService do
+describe Github::PullRequestService do
   let(:raw_payload) do
     {
       action: 'review_requested',
@@ -23,24 +23,25 @@ describe GithubService do
         node_id: 'MDExOlB1bGxc5MTQ3NDM3',
         login: 'octocat',
         id: 1001
-      }
+      },
+      event: 'pull_request'
     }
   end
   let(:payload) { JSON.parse(raw_payload.to_json, object_class: OpenStruct) }
-  let(:github_service) { GithubService.call(raw_payload) }
+  let(:github_service) { described_class.call(raw_payload) }
 
   describe '#review_request' do
     let!(:pull_request) { create :pull_request, github_id: 1000 }
 
     it 'creates a review request' do
       expect {
-        github_service.review_request
+        github_service.review_requested
       }.to change(ReviewRequest, :count).by(1)
     end
 
     it 'adds user to the DB' do
       expect {
-        github_service.create_or_find_user(payload.requested_reviewer)
+        github_service.send(:create_or_find_user, payload.requested_reviewer)
       }.to change(User, :count).by(1)
     end
 
@@ -56,7 +57,7 @@ describe GithubService do
 
       it 'does not duplicate same user with different login' do
         expect {
-          github_service.create_or_find_user(payload.requested_reviewer)
+          github_service.send(:create_or_find_user, payload.requested_reviewer)
         }.to change(User, :count).by(0)
       end
     end
@@ -111,7 +112,7 @@ describe GithubService do
 
     it 'sets status to removed' do
       expect {
-        github_service.review_removal
+        github_service.review_request_removed
       }.to change { review_request.reload.removed? }.from(false).to(true)
     end
   end

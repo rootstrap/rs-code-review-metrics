@@ -24,7 +24,7 @@
 module Events
   class PullRequest < ApplicationRecord
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
-    has_many :events, as: :handleable
+    has_many :events, as: :handleable, dependent: :destroy
 
     enum state: { open: 'open', closed: 'closed' }
 
@@ -43,7 +43,7 @@ module Events
 
     class << self
       def resolve(payload)
-        action = payload['action']
+        action = payload[:action]
         public_send(action, payload) if handleable?(action)
       end
 

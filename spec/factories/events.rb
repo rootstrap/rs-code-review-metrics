@@ -18,7 +18,6 @@
 
 FactoryBot.define do
   factory :event do
-    name { "MyString" }
-    data { "" }
+    name { 'pull_request' }
   end
 end

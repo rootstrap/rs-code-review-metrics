@@ -17,12 +17,15 @@
 #
 
 class Event < ApplicationRecord
-  belongs_to :handleable, polymorphic: true, required: false
+  belongs_to :handleable, polymorphic: true, optional: true
   validates :name, :data, presence: true
 
   class << self
     def resolve(payload)
-      handle(payload) if handleable?(payload[:event])
+      event = payload[:event]
+      return handle(payload) if handleable?(event)
+
+      EventJob.perform_later(payload, event)
     end
 
     private

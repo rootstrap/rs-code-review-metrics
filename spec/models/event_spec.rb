@@ -19,5 +19,21 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context 'validations' do
+    it { should_not allow_value(nil).for(:name) }
+    it { should_not allow_value(nil).for(:data) }
+  end
+
+  describe '#resolve' do
+    it 'enqueues job' do
+      expect {
+        described_class.resolve(event: '')
+      }.to have_enqueued_job(EventJob)
+    end
+
+    it 'calls event class' do
+      expect(Events::PullRequest).to receive(:resolve).with(event: 'pull_request')
+      described_class.resolve(event: 'pull_request')
+    end
+  end
 end
