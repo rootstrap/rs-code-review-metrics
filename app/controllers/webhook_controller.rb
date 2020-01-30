@@ -1,18 +1,22 @@
 class WebhookController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :format_params
+  before_action :set_params
 
   def handle
-    Event.resolve(@payload) if webhook_verified?
+    return head :ok if Event.resolve(@payload)
+
+    head 400
   end
 
   private
 
-  def format_params
+  def set_params
     @headers = request.headers
     @signature = @headers['X-Hub-Signature']
     @payload = JSON.parse(request.raw_post)
                    .merge(event: @headers['X-GitHub-Event'])
+
+    head 403 && return unless payload_verified?(payload, signature)
   end
 
   def webhook_verified?
