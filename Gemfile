@@ -63,6 +63,6 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'simplecov', require: false
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers', '~> 4.2.0', require: false
   gem 'webdrivers'
 end

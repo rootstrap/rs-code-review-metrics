@@ -23,10 +23,14 @@
 #
 module Events
   class PullRequest < ApplicationRecord
-    has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
-    has_many :events, as: :handleable, dependent: :destroy
+    ACTIONS = %w[opened review_requested closed \
+                 merged review_request_removed].freeze
+    private_constant :ACTIONS
 
     enum state: { open: 'open', closed: 'closed' }
+
+    has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
+    has_many :events, as: :handleable, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id,
@@ -70,10 +74,6 @@ module Events
       end
 
       private
-
-      ACTIONS = %w[opened review_requested closed \
-                   merged review_request_removed].freeze
-      private_constant :ACTIONS
 
       def handleable?(action)
         ACTIONS.include?(action)

@@ -338,7 +338,7 @@ DEPENDENCIES
   rubocop-rails (~> 2.3, >= 2.3.2)
   sass-rails (>= 6)
   selenium-webdriver
-  shoulda-matchers
+  shoulda-matchers (~> 4.2.0)
   sidekiq (~> 6.0.2)
   simplecov
   spring

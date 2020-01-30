@@ -17,6 +17,9 @@
 #
 
 class Event < ApplicationRecord
+  EVENTS = %w[pull_request].freeze
+  private_constant :EVENTS
+
   belongs_to :handleable, polymorphic: true, optional: true
   validates :name, :data, presence: true
 
@@ -29,9 +32,6 @@ class Event < ApplicationRecord
     end
 
     private
-
-    EVENTS = %w[pull_request].freeze
-    private_constant :EVENTS
 
     def handle(payload)
       const_event(payload[:event]).resolve(payload)
