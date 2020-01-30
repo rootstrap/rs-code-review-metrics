@@ -3,5 +3,5 @@ module EventAssociator
     Event.create!(handleable: event,
                   name: payload.event,
                   data: payload)
-    end
+  end
 end
