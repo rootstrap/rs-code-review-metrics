@@ -24,27 +24,17 @@ class Event < ApplicationRecord
   private_constant :EVENTS
 
   def resolve
-    return handle if handleable?
-
-    save!
+    handle if handleable?
   end
 
   private
 
   def handle
-    Event.create!(build_attributes)
+    const_event.resolve(build_payload)
   end
 
-  def build_attributes
-    {
-      handleable: resolve_event,
-      data: data,
-      name: name
-    }
-  end
-
-  def resolve_event
-    const_event.new(payload).resolve
+  def build_payload
+    data.merge(event_id: id)
   end
 
   def const_event

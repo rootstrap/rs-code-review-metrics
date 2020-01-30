@@ -3,7 +3,7 @@ module PullRequestJobs
     queue_as :default
 
     def perform(payload)
-      GithubService.call(payload).merged
+      Github::PullRequestService.call(payload).merged
     end
   end
 end

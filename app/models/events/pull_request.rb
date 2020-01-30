@@ -45,38 +45,39 @@ module Events
                  merged review_request_removed].freeze
     private_constant :ACTIONS
 
-    attr_accessor :pull_request, :action, :requested_reviewer
+    class << self
+      def resolve(payload)
+        action = payload['action']
+        public_send(action, payload) if handleable?(action)
+      end
 
-    def resolve
-      public_send(action) if handleable?
-    end
+      # Actions
 
-    # Actions
+      def merged(payload)
+        PullRequestJobs::MergedJob.perform_later(payload)
+      end
 
-    def merged
-      PullRequestJobs::MergedJob.perform_later(pull_request)
-    end
+      def opened(payload)
+        PullRequestJobs::OpenedJob.perform_later(payload)
+      end
 
-    def opened
-      PullRequestJobs::OpenedJob.perform_later(pull_request)
-    end
+      def closed(payload)
+        PullRequestJobs::ClosedJob.perform_later(payload)
+      end
 
-    def closed
-      PullRequestJobs::ClosedJob.perform_later(pull_request)
-    end
+      def review_requested(payload)
+        PullRequestJobs::ReviewRequestedJob.perform_later(payload)
+      end
 
-    def review_requested
-      PullRequestJobs::ReviewRequestedJob.perform_later(pull_request)
-    end
+      def review_request_removed(payload)
+        PullRequestJobs::ReviewRequestRemovedJob.perform_later(payload)
+      end
 
-    def review_request_removed
-      PullRequestJobs::ReviewRequestRemovedJob.perform_later(pull_request)
-    end
+      private
 
-    private
-
-    def handleable?
-      ACTIONS.include?(action)
+      def handleable?(action)
+        ACTIONS.include?(action)
+      end
     end
   end
 end

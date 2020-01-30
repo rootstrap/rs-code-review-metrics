@@ -31,7 +31,8 @@ class ReviewRequest < ApplicationRecord
              class_name: 'User',
              foreign_key: :reviewer_id,
              inverse_of: :received_review_requests
-  belongs_to :pull_request, inverse_of: :review_requests
+  belongs_to :pull_request, class_name: Events::PullRequest,
+                            inverse_of: :review_requests
 
   enum status: { active: 'active', removed: 'removed' }
 

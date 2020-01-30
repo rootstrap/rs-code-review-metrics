@@ -3,7 +3,7 @@ module PullRequestJobs
     queue_as :default
 
     def perform(payload)
-      GithubService.call(payload).opened
+      Github::PullRequestService.call(payload).opened
     end
   end
 end
