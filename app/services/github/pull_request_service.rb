@@ -1,23 +1,25 @@
 module Github
   class PullRequestService < GithubService
+    include EventAssociator
+
     def closed
-      assign_event(close_pr)
+      assign_event(@payload, close_pr)
     end
 
     def merged
-      assign_event(merge_pr)
+      assign_event(@payload, merge_pr)
     end
 
     def opened
-      assign_event(open_pr)
+      assign_event(@payload, open_pr)
     end
 
     def review_request_removed
-      assign_event(remove_review_request)
+      assign_event(@payload, remove_review_request)
     end
 
     def review_requested
-      assign_event(assign_review_request)
+      assign_event(@payload, assign_review_request)
     end
 
     private
@@ -79,12 +81,6 @@ module Github
 
     def find_pr
       Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
-    end
-
-    def assign_event(pull_request)
-      Event.create!(handleable: pull_request,
-                    name: @payload.event,
-                    data: @payload)
     end
   end
 end
