@@ -5,7 +5,7 @@ class WebhookController < ApplicationController
   def handle
     return head :ok if Event.resolve(@payload)
 
-    head 400
+    head :bad_request
   end
 
   private
@@ -16,7 +16,7 @@ class WebhookController < ApplicationController
     @payload = JSON.parse(request.raw_post)
                    .merge(event: @headers['X-GitHub-Event'])
 
-    head 403 && return unless webhook_verified?
+    head :forbidden && return unless webhook_verified?
   end
 
   def webhook_verified?
