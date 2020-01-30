@@ -9,7 +9,7 @@ module Github
 
     def merged
       pr = Events::PullRequest.find_by!(github_id: @payload.pull_request.id)
-                              .update!(merged_at: Time.now, merged: true)
+                              .update!(merged_at: Time.current, merged: true)
       assign_event(pr)
     end
 
