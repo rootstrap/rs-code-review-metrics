@@ -1,9 +1,9 @@
 module PullRequestJobs
-  class MergedJob < ApplicationJob
+  class Opened < ApplicationJob
     queue_as :default
 
     def perform(payload)
-      Github::PullRequestService.call(payload).merged
+      Events::PullRequestService.call(payload).opened
     end
   end
 end

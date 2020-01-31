@@ -54,23 +54,23 @@ module Events
       # Actions
 
       def merged(payload)
-        PullRequestJobs::MergedJob.perform_later(payload)
+        PullRequestJobs::Merged.perform_later(payload)
       end
 
       def opened(payload)
-        PullRequestJobs::OpenedJob.perform_later(payload)
+        PullRequestJobs::Opened.perform_later(payload)
       end
 
       def closed(payload)
-        PullRequestJobs::ClosedJob.perform_later(payload)
+        PullRequestJobs::Closed.perform_later(payload)
       end
 
       def review_requested(payload)
-        PullRequestJobs::ReviewRequestedJob.perform_later(payload)
+        PullRequestJobs::ReviewRequested.perform_later(payload)
       end
 
       def review_request_removed(payload)
-        PullRequestJobs::ReviewRequestRemovedJob.perform_later(payload)
+        PullRequestJobs::ReviewRequestRemoved.perform_later(payload)
       end
 
       private

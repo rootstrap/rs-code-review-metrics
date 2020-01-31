@@ -1,4 +1,4 @@
-module Github
+module Events
   class PullRequestService < GithubService
     def closed
       assign_event(@payload, close_pr)

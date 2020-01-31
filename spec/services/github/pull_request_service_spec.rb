@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Github::PullRequestService do
+describe Events::PullRequestService do
   let(:raw_payload) do
     {
       action: 'review_requested',

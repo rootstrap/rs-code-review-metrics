@@ -81,7 +81,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'enqueues opened' do
         expect {
           described_class.resolve(action: 'opened')
-        }.to have_enqueued_job(PullRequestJobs::OpenedJob)
+        }.to have_enqueued_job(PullRequestJobs::Opened)
       end
     end
 
@@ -89,7 +89,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'enqueues closed' do
         expect {
           described_class.resolve(action: 'closed')
-        }.to have_enqueued_job(PullRequestJobs::ClosedJob)
+        }.to have_enqueued_job(PullRequestJobs::Closed)
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'enqueues review requested' do
         expect {
           described_class.resolve(action: 'review_requested')
-        }.to have_enqueued_job(PullRequestJobs::ReviewRequestedJob)
+        }.to have_enqueued_job(PullRequestJobs::ReviewRequested)
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'enqueues review removal' do
         expect {
           described_class.resolve(action: 'review_request_removed')
-        }.to have_enqueued_job(PullRequestJobs::ReviewRequestRemovedJob)
+        }.to have_enqueued_job(PullRequestJobs::ReviewRequestRemoved)
       end
     end
 
@@ -113,7 +113,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'enqueues merged' do
         expect {
           described_class.resolve(action: 'merged')
-        }.to have_enqueued_job(PullRequestJobs::MergedJob)
+        }.to have_enqueued_job(PullRequestJobs::Merged)
       end
     end
   end
