@@ -24,14 +24,17 @@
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord
-  belongs_to :owner, class_name: 'User', foreign_key: :owner_id, inverse_of: :owned_review_requests
+  enum status: { active: 'active', removed: 'removed' }
+
+  belongs_to :owner, class_name: 'User',
+                     foreign_key: :owner_id,
+                     inverse_of: :owned_review_requests
   belongs_to :reviewer,
              class_name: 'User',
              foreign_key: :reviewer_id,
              inverse_of: :received_review_requests
-  belongs_to :pull_request, inverse_of: :review_requests
-
-  enum status: { active: 'active', removed: 'removed' }
+  belongs_to :pull_request, class_name: 'Events::PullRequest',
+                            inverse_of: :review_requests
 
   validates :status, inclusion: { in: statuses.keys }
 end
