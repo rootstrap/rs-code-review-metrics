@@ -1,7 +1,5 @@
 module Github
   class PullRequestService < GithubService
-    include EventAssociator
-
     def closed
       assign_event(@payload, close_pr)
     end

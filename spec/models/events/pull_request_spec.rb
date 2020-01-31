@@ -26,17 +26,54 @@ require 'rails_helper'
 
 RSpec.describe Events::PullRequest, type: :model do
   context 'validations' do
-    subject { create :pull_request }
+    subject { build :pull_request }
 
-    it { should_not allow_value(nil).for(:github_id) }
-    it { should_not allow_value(nil).for(:title) }
-    it { should_not allow_value(nil).for(:state) }
-    it { should_not allow_value(nil).for(:number) }
-    it { should_not allow_value(nil).for(:node_id) }
-    it { should_not allow_value(nil).for(:locked) }
-    it { should_not allow_value(nil).for(:merged) }
-    it { should_not allow_value(nil).for(:draft) }
+    it 'is valid with valid attributes' do
+      expect(subject).to be_valid
+    end
+
+    it 'is not valid without github id' do
+      subject.github_id = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without title' do
+      subject.title = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without state' do
+      subject.state = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without number' do
+      subject.number = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without node id' do
+      subject.node_id = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without locked' do
+      subject.locked = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without merged' do
+      subject.merged = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without draft' do
+      subject.draft = nil
+      expect(subject).to_not be_valid
+    end
+
     it { should validate_uniqueness_of(:github_id) }
+    it { should have_many(:events) }
   end
 
   context 'jobs' do

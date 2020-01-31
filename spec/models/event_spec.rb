@@ -20,8 +20,17 @@ require 'rails_helper'
 
 RSpec.describe Event, type: :model do
   context 'validations' do
-    it { should_not allow_value(nil).for(:name) }
-    it { should_not allow_value(nil).for(:data) }
+    subject { build :event }
+
+    it 'is not valid without data' do
+      subject.data = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without name' do
+      subject.name = nil
+      expect(subject).to_not be_valid
+    end
   end
 
   describe '#resolve' do
