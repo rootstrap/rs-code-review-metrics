@@ -34,6 +34,77 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.active_admin_comments (
+    id bigint NOT NULL,
+    namespace character varying,
+    body text,
+    resource_type character varying,
+    resource_id bigint,
+    author_type character varying,
+    author_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: active_admin_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.active_admin_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: active_admin_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.active_admin_comments_id_seq OWNED BY public.active_admin_comments.id;
+
+
+--
+-- Name: admin_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_users (
+    id bigint NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_users_id_seq OWNED BY public.admin_users.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -127,7 +198,6 @@ ALTER SEQUENCE public.pull_requests_id_seq OWNED BY public.pull_requests.id;
 
 CREATE TABLE public.review_requests (
     id bigint NOT NULL,
-    data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     owner_id bigint,
@@ -199,6 +269,20 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: active_admin_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_admin_comments ALTER COLUMN id SET DEFAULT nextval('public.active_admin_comments_id_seq'::regclass);
+
+
+--
+-- Name: admin_users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.admin_users_id_seq'::regclass);
+
+
+--
 -- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -224,6 +308,22 @@ ALTER TABLE ONLY public.review_requests ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: active_admin_comments active_admin_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.active_admin_comments
+    ADD CONSTRAINT active_admin_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_users admin_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_users
+    ADD CONSTRAINT admin_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -272,6 +372,41 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_active_admin_comments_on_author_type_and_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_active_admin_comments_on_author_type_and_author_id ON public.active_admin_comments USING btree (author_type, author_id);
+
+
+--
+-- Name: index_active_admin_comments_on_namespace; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_active_admin_comments_on_namespace ON public.active_admin_comments USING btree (namespace);
+
+
+--
+-- Name: index_active_admin_comments_on_resource_type_and_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_active_admin_comments_on_resource_type_and_resource_id ON public.active_admin_comments USING btree (resource_type, resource_id);
+
+
+--
+-- Name: index_admin_users_on_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_users_on_email ON public.admin_users USING btree (email);
+
+
+--
+-- Name: index_admin_users_on_reset_password_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_users USING btree (reset_password_token);
 
 
 --
@@ -366,6 +501,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191231134130'),
 ('20200122143238'),
 ('20200122180806'),
-('20200128190806');
+('20200128190806'),
+('20200131153049'),
+('20200131153056'),
+('20200203141336');
 
 

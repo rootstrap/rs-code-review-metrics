@@ -39,8 +39,8 @@ module Events
       owner = create_or_find_user(@payload.pull_request.user)
       reviewer = create_or_find_user(@payload.requested_reviewer)
       pr = find_pr
-      pr.review_requests.create!(data: @payload, owner: owner,
-                                 reviewer: reviewer)
+      pr.review_requests.create!(owner: owner, reviewer: reviewer)
+      pr
     end
 
     def close_pr

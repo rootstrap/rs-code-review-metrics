@@ -30,36 +30,15 @@ describe Events::PullRequestService do
   let(:payload) { JSON.parse(raw_payload.to_json, object_class: OpenStruct) }
   let(:github_service) { described_class.call(raw_payload) }
 
+  after { expect(Event.count).to eq(1) }
+
   describe '#review_request' do
     let!(:pull_request) { create :pull_request, github_id: 1000 }
 
     it 'creates a review request' do
       expect {
         github_service.review_requested
-      }.to change(ReviewRequest, :count).by(1)
-    end
-
-    it 'adds user to the DB' do
-      expect {
-        github_service.send(:create_or_find_user, payload.requested_reviewer)
-      }.to change(User, :count).by(1)
-    end
-
-    context 'when user already exists' do
-      let!(:user) do
-        create(
-          :user,
-          github_id: 1001,
-          login: 'pentacat',
-          node_id: 'MDExOlB1bGxc5MTQ3NDM3'
-        )
-      end
-
-      it 'does not duplicate same user with different login' do
-        expect {
-          github_service.send(:create_or_find_user, payload.requested_reviewer)
-        }.to change(User, :count).by(0)
-      end
+      }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
     end
   end
 
@@ -74,24 +53,10 @@ describe Events::PullRequestService do
   end
 
   describe '#opened' do
-    it 'adds pr to the DB' do
-      expect { github_service.opened }.to change(Events::PullRequest, :count).by(1)
-    end
-
-    context 'when duplicated pr' do
-      let!(:pr) do
-        create(
-          :pull_request,
-          github_id: 1000,
-          number: 4,
-          node_id: 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3',
-          title: 'Renamed Pull req'
-        )
-      end
-
-      it 'raises an exception' do
-        expect { github_service.opened }.to raise_error(ActiveRecord::RecordInvalid)
-      end
+    it 'adds pr and event to the DB' do
+      expect {
+        github_service.opened
+      }.to change(Events::PullRequest, :count).by(1)
     end
   end
 

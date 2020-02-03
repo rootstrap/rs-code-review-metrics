@@ -3,7 +3,6 @@
 # Table name: review_requests
 #
 #  id              :bigint           not null, primary key
-#  data            :jsonb
 #  status          :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
