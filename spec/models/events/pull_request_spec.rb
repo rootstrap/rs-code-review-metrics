@@ -72,8 +72,8 @@ RSpec.describe Events::PullRequest, type: :model do
       expect(subject).to_not be_valid
     end
 
-    it { should validate_uniqueness_of(:github_id) }
-    it { should have_many(:events) }
+    it { is_expected.to validate_uniqueness_of(:github_id) }
+    it { is_expected.to have_many(:events) }
   end
 
   context 'jobs' do

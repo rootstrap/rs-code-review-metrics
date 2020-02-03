@@ -37,6 +37,9 @@ gem 'annotate', '~> 3.0'
 # Use Sidekiq to enqueue job in the background
 gem 'sidekiq', '~> 6.0.2'
 
+gem 'activeadmin', '~> 2.6.0'
+gem 'devise', '~> 4.7.1'
+
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

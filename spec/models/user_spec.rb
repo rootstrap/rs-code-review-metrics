@@ -17,24 +17,26 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  before do
-    @user = build(:user)
+  subject { build :user }
+
+  it 'is valid with valid attributes' do
+    expect(subject).to be_valid
   end
 
-  it 'has a valid factory' do
-    expect(@user.valid?).to eq(true)
+  it 'is not valid without node id' do
+    subject.node_id = nil
+    expect(subject).to_not be_valid
   end
 
-  it 'does not allow empty data' do
-    @user.node_id = nil
-    @user.github_id = nil
-    @user.login = nil
-    expect(@user.valid?).to eq(false)
+  it 'is not valid without github id' do
+    subject.github_id = nil
+    expect(subject).to_not be_valid
   end
 
-  it 'has a unique github_id' do
-    create(:user, github_id: '0001')
-    duplicate = build(:user, github_id: '0001')
-    expect(duplicate.valid?).to eq(false)
+  it 'is not valid without login' do
+    subject.login = nil
+    expect(subject).to_not be_valid
   end
+
+  it { is_expected.to validate_uniqueness_of(:github_id) }
 end
