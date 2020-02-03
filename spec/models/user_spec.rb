@@ -38,5 +38,5 @@ RSpec.describe User, type: :model do
     expect(subject).to_not be_valid
   end
 
-  it { should validate_uniqueness_of(:github_id) }
+  it { is_expected.to validate_uniqueness_of(:github_id) }
 end
