@@ -52,30 +52,10 @@ module Events
       handle_action
     end
 
-    def open
-      opened
-    end
-
-    def closed
-      close
-    end
-
-    def merged
-      merge
-    end
-
-    def review_requested
-      review_request
-    end
-
-    def review_request_removed
-      review_request_remove
-    end
-
     private
 
     def handle_action
-      public_send(payload[:action])
+      send(payload[:action])
     end
 
     def find_or_create_user(user_data)
@@ -106,27 +86,27 @@ module Events
 
     # Actions
 
-    def opened
+    def open
       open!
       save!(opened_at: Time.current)
     end
 
-    def merge
+    def merged
       merged!
       save!(merged_at: Time.current)
     end
 
-    def close
+    def closed
       closed!
       save!(closed_at: Time.current)
     end
 
-    def review_request_remove
+    def review_request_removed
       reviewer = find_or_create_user(payload[:requested_reviewer])
       review_requests.find_by!(reviewer: reviewer).removed!
     end
 
-    def review_request
+    def review_requested
       owner = find_or_create_user(payload[:pull_request][:user])
       reviewer = find_or_create_user(payload[:requested_reviewer])
       review_requests.create!(owner: owner, reviewer: reviewer)

@@ -47,10 +47,5 @@ RSpec.describe Event, type: :model do
         subject.resolve
       }.to change(Event, :count).by(1)
     end
-
-    it 'calls event class' do
-      expect(subject).to receive(:resolve)
-      subject.resolve
-    end
   end
 end

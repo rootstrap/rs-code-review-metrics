@@ -102,7 +102,7 @@ RSpec.describe Events::PullRequest, type: :model do
     describe '#review_request' do
       it 'creates a review request' do
         expect {
-          subject.review_requested
+          subject.send(:review_requested)
         }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe Events::PullRequest, type: :model do
     describe '#closed' do
       it 'sets status closed' do
         expect {
-          subject.closed
+          subject.send(:closed)
         }.to change { subject.reload.closed? }.from(false).to(true)
       end
     end
@@ -120,7 +120,7 @@ RSpec.describe Events::PullRequest, type: :model do
         subject.closed!
 
         expect {
-          subject.open
+          subject.send(:open)
         }.to change { subject.reload.open? }.from(false).to(true)
       end
     end
@@ -128,7 +128,7 @@ RSpec.describe Events::PullRequest, type: :model do
     describe '#merged' do
       it 'sets status merged' do
         expect {
-          subject.merged
+          subject.send(:merged)
         }.to change { subject.reload.merged? }.from(false).to(true)
       end
     end
@@ -140,7 +140,7 @@ RSpec.describe Events::PullRequest, type: :model do
         review_request = User.find_by!(github_id: raw_payload[:requested_reviewer][:id])
                              .received_review_requests.first
         expect {
-          pull_request.review_request_removed
+          pull_request.send(:review_request_removed)
         }.to change { review_request.reload.removed? }.from(false).to(true)
       end
     end
