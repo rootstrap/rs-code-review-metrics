@@ -7,9 +7,9 @@
 #  closed_at  :datetime
 #  draft      :boolean          not null
 #  locked     :boolean          not null
-#  merged     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
+#  opened_at  :datetime
 #  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
@@ -29,8 +29,29 @@ FactoryBot.define do
     sequence(:title) { |n| "Pull Request-#{n}" }
     node_id { 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3' }
     state { 'open' }
-    merged { false }
     locked { false }
     draft { false }
+
+    factory :pull_request_with_events do
+      transient do
+        events_count { 5 }
+      end
+
+      after(:create) do |pull_request, evaluator|
+        create_list(:event, evaluator.events_count, pull_request: pull_request)
+      end
+    end
+
+    factory :pull_request_with_review_requests do
+      transient do
+        review_requests_count { 5 }
+      end
+
+      after(:create) do |pull_request, evaluator|
+        create_list(:review_request,
+                    evaluator.review_requests_count,
+                    pull_request: pull_request)
+      end
+    end
   end
 end

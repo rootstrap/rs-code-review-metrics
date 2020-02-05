@@ -3,9 +3,9 @@ class WebhookController < ApplicationController
   before_action :set_params
 
   def handle
-    return head :ok if Event.resolve(@payload)
+    RequestHandlerJob.perform_later(@payload)
 
-    head :bad_request
+    head :ok
   end
 
   private

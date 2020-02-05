@@ -1,7 +1,7 @@
 class ChangeStateToEnum < ActiveRecord::Migration[6.0]
   def change
     execute <<-SQL
-      CREATE TYPE state AS ENUM ('open', 'closed');
+      CREATE TYPE state AS ENUM ('open', 'closed', 'merged');
     SQL
 
     remove_column :pull_requests, :state

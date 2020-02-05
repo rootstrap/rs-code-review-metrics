@@ -10,18 +10,20 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  handleable_id   :bigint
+#  project_id      :bigint           not null
 #
 # Indexes
 #
 #  index_events_on_handleable_type_and_handleable_id  (handleable_type,handleable_id)
+#  index_events_on_project_id                         (project_id)
 #
 
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  context 'validations' do
-    subject { build :event }
+  subject { build :event }
 
+  context 'validations' do
     it 'is not valid without data' do
       subject.data = nil
       expect(subject).to_not be_valid
@@ -34,15 +36,21 @@ RSpec.describe Event, type: :model do
   end
 
   describe '#resolve' do
-    it 'enqueues job' do
+    let(:project) { create :project }
+    before do
+      subject.name = 'comment'
+      subject.data = { pull_request: { id: 1000 } }
+    end
+
+    it 'creates a event' do
       expect {
-        described_class.resolve(event: '')
-      }.to have_enqueued_job(EventJob)
+        subject.resolve
+      }.to change(Event, :count).by(1)
     end
 
     it 'calls event class' do
-      expect(Events::PullRequest).to receive(:resolve).with(event: 'pull_request')
-      described_class.resolve(event: 'pull_request')
+      expect(subject).to receive(:resolve)
+      subject.resolve
     end
   end
 end
