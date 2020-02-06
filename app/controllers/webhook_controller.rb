@@ -13,8 +13,8 @@ class WebhookController < ApplicationController
   def set_params
     @headers = request.headers
     @signature = @headers['X-Hub-Signature']
-    @payload = JSON.parse(request.raw_post)
-                   .merge(event: @headers['X-GitHub-Event'])
+    puts "#{request.raw_post}".red
+    @payload = request.raw_post.merge(event: @headers['X-GitHub-Event'])
 
     head :forbidden && return unless webhook_verified?
   end
