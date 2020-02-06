@@ -47,7 +47,7 @@ RSpec.describe Events::PullRequest, type: :model do
         login: 'octocat',
         id: 1004
       }
-    }
+    }.deep_stringify_keys
   end
 
   context 'validations' do
@@ -137,7 +137,7 @@ RSpec.describe Events::PullRequest, type: :model do
       let!(:pull_request) { create :pull_request_with_review_requests, payload: raw_payload }
 
       it 'sets status to removed' do
-        review_request = User.find_by!(github_id: raw_payload[:requested_reviewer][:id])
+        review_request = User.find_by!(github_id: raw_payload['requested_reviewer']['id'])
                              .received_review_requests.first
         expect {
           pull_request.send(:review_request_removed)
@@ -156,7 +156,7 @@ RSpec.describe Events::PullRequest, type: :model do
     end
 
     it 'finds a pull request' do
-      subject.github_id = raw_payload[:pull_request][:id]
+      subject.github_id = raw_payload['pull_request']['id']
       subject.save!
 
       expect(subject.send(:find_or_create_pull_request, raw_payload)).to eq(subject)

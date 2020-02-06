@@ -40,6 +40,8 @@ gem 'sidekiq', '~> 6.0.2'
 gem 'activeadmin', '~> 2.6.0'
 gem 'devise', '~> 4.7.1'
 
+gem 'dotenv-rails'
+
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
