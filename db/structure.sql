@@ -31,8 +31,7 @@ CREATE TYPE public.lang AS ENUM (
 
 CREATE TYPE public.state AS ENUM (
     'open',
-    'closed',
-    'merged'
+    'closed'
 );
 
 

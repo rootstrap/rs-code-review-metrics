@@ -129,7 +129,7 @@ RSpec.describe Events::PullRequest, type: :model do
       it 'sets status merged' do
         expect {
           subject.send(:merged)
-        }.to change { subject.reload.merged? }.from(false).to(true)
+        }.to change { subject.reload.merged_at }
       end
     end
 

@@ -24,10 +24,10 @@
 module Events
   class PullRequest < ApplicationRecord
     ACTIONS = %w[open review_requested closed \
-                 merged review_request_removed].freeze
+                 review_request_removed].freeze
     private_constant :ACTIONS
 
-    enum state: { open: 'open', closed: 'closed', merged: 'merged' }
+    enum state: { open: 'open', closed: 'closed' }
 
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
@@ -55,7 +55,12 @@ module Events
     private
 
     def handle_action
+      check_merged
       send(payload['action'])
+    end
+
+    def check_merged
+      merged if payload['pull_request']['merged'] == true
     end
 
     def find_or_create_user(user_data)
@@ -88,17 +93,19 @@ module Events
 
     def open
       open!
-      save!(opened_at: Time.current)
+      self.opened_at = Time.current
+      save!
     end
 
     def merged
-      merged!
-      save!(merged_at: Time.current)
+      self.merged_at = Time.current
+      save!
     end
 
     def closed
       closed!
-      save!(closed_at: Time.current)
+      self.closed_at = Time.current
+      save!
     end
 
     def review_request_removed
