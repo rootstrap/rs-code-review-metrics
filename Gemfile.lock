@@ -101,6 +101,7 @@ GEM
       virtus (~> 1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    colorize (0.8.1)
     concurrent-ruby (1.1.5)
     connection_pool (2.2.2)
     crass (1.0.5)
@@ -386,6 +387,7 @@ DEPENDENCIES
   brakeman (~> 4.7, >= 4.7.2)
   byebug
   capybara (>= 2.15)
+  colorize
   devise (~> 4.7.1)
   factory_bot_rails (~> 5.1)
   github_api (~> 0.18)

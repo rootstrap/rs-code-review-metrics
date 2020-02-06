@@ -40,7 +40,7 @@ class Event < ApplicationRecord
   end
 
   def find_or_create_event
-    const_event.send("find_or_create_#{name}", payload)
+    const_event.new.send("find_or_create_#{name}", data)
   end
 
   def const_event
