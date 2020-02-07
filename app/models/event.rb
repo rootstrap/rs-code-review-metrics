@@ -10,10 +10,12 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  handleable_id   :bigint
+#  project_id      :bigint           not null
 #
 # Indexes
 #
 #  index_events_on_handleable_type_and_handleable_id  (handleable_type,handleable_id)
+#  index_events_on_project_id                         (project_id)
 #
 
 class Event < ApplicationRecord
@@ -21,28 +23,31 @@ class Event < ApplicationRecord
   private_constant :EVENTS
 
   belongs_to :handleable, polymorphic: true, optional: true
+  belongs_to :project
   validates :name, :data, presence: true
 
-  class << self
-    def resolve(payload)
-      event = payload[:event]
-      return handle(payload) if handleable?(event)
+  def resolve
+    return handle if handleable?
 
-      EventJob.perform_later(payload, event)
-    end
+    save!
+  end
 
-    private
+  private
 
-    def handle(payload)
-      const_event(payload[:event]).resolve(payload)
-    end
+  def handle
+    event = find_or_create_event.resolve
+    save!(handleable: event)
+  end
 
-    def const_event(event)
-      Events.const_get(event.classify)
-    end
+  def find_or_create_event
+    const_event.new.send("find_or_create_#{name}", data)
+  end
 
-    def handleable?(event)
-      EVENTS.include?(event)
-    end
+  def const_event
+    Events.const_get(name.classify)
+  end
+
+  def handleable?
+    EVENTS.include?(name)
   end
 end
