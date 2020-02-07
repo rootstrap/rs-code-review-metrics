@@ -393,7 +393,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   colorize
   devise (~> 4.7.1)
-  dotenv-rails
+  dotenv-rails (~> 2.7.5)
   factory_bot_rails (~> 5.1)
   github_api (~> 0.18)
   jbuilder (~> 2.7)

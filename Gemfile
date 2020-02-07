@@ -40,7 +40,7 @@ gem 'sidekiq', '~> 6.0.2'
 gem 'activeadmin', '~> 2.6.0'
 gem 'devise', '~> 4.7.1'
 
-gem 'dotenv-rails'
+gem 'dotenv-rails', '~> 2.7.5'
 
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
