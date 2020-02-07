@@ -10,6 +10,22 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: lang; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.lang AS ENUM (
+    'ruby',
+    'python',
+    'nodejs',
+    'react',
+    'ios',
+    'android',
+    'others',
+    'unassigned'
+);
+
+
+--
 -- Name: state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -128,7 +144,8 @@ CREATE TABLE public.events (
     type character varying,
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    project_id bigint NOT NULL
 );
 
 
@@ -152,6 +169,40 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 
 --
+-- Name: projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.projects (
+    id bigint NOT NULL,
+    github_id integer NOT NULL,
+    name character varying,
+    description character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    lang public.lang DEFAULT 'unassigned'::public.lang
+);
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
+
+
+--
 -- Name: pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -165,11 +216,11 @@ CREATE TABLE public.pull_requests (
     closed_at timestamp without time zone,
     merged_at timestamp without time zone,
     draft boolean NOT NULL,
-    merged boolean NOT NULL,
     node_id character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    state public.state
+    state public.state,
+    opened_at timestamp without time zone
 );
 
 
@@ -290,6 +341,13 @@ ALTER TABLE ONLY public.events ALTER COLUMN id SET DEFAULT nextval('public.event
 
 
 --
+-- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
+
+
+--
 -- Name: pull_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -340,6 +398,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -414,6 +480,13 @@ CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_us
 --
 
 CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events USING btree (handleable_type, handleable_id);
+
+
+--
+-- Name: index_events_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id);
 
 
 --
@@ -504,6 +577,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200128190806'),
 ('20200131153049'),
 ('20200131153056'),
-('20200203141336');
+('20200203141336'),
+('20200204134248'),
+('20200204134315'),
+('20200204140453'),
+('20200204201145'),
+('20200204202145');
 
 

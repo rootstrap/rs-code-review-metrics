@@ -3,9 +3,9 @@ class WebhookController < ApplicationController
   before_action :set_params
 
   def handle
-    return head :ok if Event.resolve(@payload)
+    RequestHandlerJob.perform_later(@payload)
 
-    head :bad_request
+    head :ok
   end
 
   private
@@ -13,14 +13,14 @@ class WebhookController < ApplicationController
   def set_params
     @headers = request.headers
     @signature = @headers['X-Hub-Signature']
-    @payload = JSON.parse(request.raw_post)
-                   .merge(event: @headers['X-GitHub-Event'])
+    @payload = JSON.parse(request.request_parameters['payload'])
+                   .merge(event: @headers['X-GitHub-Event']).stringify_keys
 
     head :forbidden && return unless webhook_verified?
   end
 
   def webhook_verified?
-    digest = OpenSSL::HMAC.hexdigest('SHA1', ENV['GITHUB_ANALYZER_WEBHOOK_SECRET'], @payload)
+    digest = OpenSSL::HMAC.hexdigest('SHA1', ENV['GITHUB_ANALYZER_WEBHOOK_SECRET'], @payload.to_s)
     ActiveSupport::SecurityUtils.secure_compare("sha1=#{digest}", @signature)
   end
 end

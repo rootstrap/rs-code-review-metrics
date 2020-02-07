@@ -7,9 +7,9 @@
 #  closed_at  :datetime
 #  draft      :boolean          not null
 #  locked     :boolean          not null
-#  merged     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
+#  opened_at  :datetime
 #  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
@@ -25,6 +25,31 @@
 require 'rails_helper'
 
 RSpec.describe Events::PullRequest, type: :model do
+  let(:raw_payload) do
+    {
+      pull_request: {
+        id: 1001,
+        number: 2,
+        state: 'open',
+        node_id: 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3',
+        title: 'Pull Request 2',
+        locked: false,
+        merged: false,
+        draft: false,
+        user: {
+          node_id: 'MDQ6NlcjE4',
+          login: 'heptacat',
+          id: 1006
+        }
+      },
+      requested_reviewer: {
+        node_id: 'MDExOlB1bGxc5MTQ3NDM3',
+        login: 'octocat',
+        id: 1004
+      }
+    }.deep_stringify_keys
+  end
+
   context 'validations' do
     subject { build :pull_request }
 
@@ -62,11 +87,6 @@ RSpec.describe Events::PullRequest, type: :model do
       expect(subject).to_not be_valid
     end
 
-    it 'is not valid without merged' do
-      subject.merged = nil
-      expect(subject).to_not be_valid
-    end
-
     it 'is not valid without draft' do
       subject.draft = nil
       expect(subject).to_not be_valid
@@ -76,45 +96,70 @@ RSpec.describe Events::PullRequest, type: :model do
     it { is_expected.to have_many(:events) }
   end
 
-  context 'jobs' do
-    describe '#opened' do
-      it 'enqueues opened' do
+  describe 'actions' do
+    subject { create :pull_request, payload: raw_payload }
+
+    describe '#review_request' do
+      it 'creates a review request' do
         expect {
-          described_class.resolve(action: 'opened')
-        }.to have_enqueued_job(PullRequestJobs::Opened)
+          subject.send(:review_requested)
+        }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
       end
     end
 
     describe '#closed' do
-      it 'enqueues closed' do
+      it 'sets status closed' do
         expect {
-          described_class.resolve(action: 'closed')
-        }.to have_enqueued_job(PullRequestJobs::Closed)
+          subject.send(:closed)
+        }.to change { subject.reload.closed? }.from(false).to(true)
       end
     end
 
-    describe '#review_requested' do
-      it 'enqueues review requested' do
-        expect {
-          described_class.resolve(action: 'review_requested')
-        }.to have_enqueued_job(PullRequestJobs::ReviewRequested)
-      end
-    end
+    describe '#open' do
+      it 'sets status open' do
+        subject.closed!
 
-    describe '#review_request_removed' do
-      it 'enqueues review removal' do
         expect {
-          described_class.resolve(action: 'review_request_removed')
-        }.to have_enqueued_job(PullRequestJobs::ReviewRequestRemoved)
+          subject.send(:open)
+        }.to change { subject.reload.open? }.from(false).to(true)
       end
     end
 
     describe '#merged' do
-      it 'enqueues merged' do
+      it 'sets status merged' do
         expect {
-          described_class.resolve(action: 'merged')
-        }.to have_enqueued_job(PullRequestJobs::Merged)
+          subject.send(:merged)
+        }.to change { subject.reload.merged_at }
       end
+    end
+
+    describe '#review_request_removed' do
+      let!(:pull_request) { create :pull_request_with_review_requests, payload: raw_payload }
+
+      it 'sets status to removed' do
+        review_request = User.find_by!(github_id: raw_payload['requested_reviewer']['id'])
+                             .received_review_requests.first
+        expect {
+          pull_request.send(:review_request_removed)
+        }.to change { review_request.reload.removed? }.from(false).to(true)
+      end
+    end
+  end
+
+  describe '#find_or_create_pull_request' do
+    subject { build :pull_request }
+
+    it 'creates a pull request' do
+      expect {
+        subject.send(:find_or_create_pull_request, raw_payload)
+      }.to change(described_class, :count).by(1)
+    end
+
+    it 'finds a pull request' do
+      subject.github_id = raw_payload['pull_request']['id']
+      subject.save!
+
+      expect(subject.send(:find_or_create_pull_request, raw_payload)).to eq(subject)
     end
   end
 end

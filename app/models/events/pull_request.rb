@@ -7,9 +7,9 @@
 #  closed_at  :datetime
 #  draft      :boolean          not null
 #  locked     :boolean          not null
-#  merged     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
+#  opened_at  :datetime
 #  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
@@ -23,8 +23,8 @@
 #
 module Events
   class PullRequest < ApplicationRecord
-    ACTIONS = %w[opened review_requested closed \
-                 merged review_request_removed].freeze
+    ACTIONS = %w[open review_requested closed \
+                 review_request_removed].freeze
     private_constant :ACTIONS
 
     enum state: { open: 'open', closed: 'closed' }
@@ -40,44 +40,79 @@ module Events
               :number,
               presence: true
     validates :draft,
-              :merged,
               :locked,
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
 
-    class << self
-      def resolve(payload)
-        action = payload[:action]
-        public_send(action, payload) if handleable?(action)
+    attr_accessor :payload
+
+    def resolve
+      return unless handleable?
+
+      handle_action
+    end
+
+    private
+
+    def handle_action
+      send(payload['action'])
+    end
+
+    def find_or_create_user(user_data)
+      User.find_or_create_by!(github_id: user_data['id']) do |user|
+        user.node_id = user_data['node_id']
+        user.login = user_data['login']
       end
+    end
 
-      # Actions
-
-      def merged(payload)
-        PullRequestJobs::Merged.perform_later(payload)
+    def find_or_create_pull_request(payload)
+      pr_data = payload['pull_request']
+      pr = Events::PullRequest.find_or_create_by!(github_id: pr_data['id']) do |preq|
+        preq.node_id = pr_data['node_id']
+        preq.number = pr_data['number']
+        preq.state = pr_data['state']
+        preq.locked = pr_data['locked']
+        preq.draft = pr_data['draft']
+        preq.title = pr_data['title']
+        preq.body = pr_data['body']
       end
+      pr.assign_attributes(payload: payload)
+      pr
+    end
 
-      def opened(payload)
-        PullRequestJobs::Opened.perform_later(payload)
-      end
+    def handleable?
+      ACTIONS.include?(payload['action'])
+    end
 
-      def closed(payload)
-        PullRequestJobs::Closed.perform_later(payload)
-      end
+    # Actions
 
-      def review_requested(payload)
-        PullRequestJobs::ReviewRequested.perform_later(payload)
-      end
+    def open
+      open!
+      self.opened_at = Time.current
+      save!
+    end
 
-      def review_request_removed(payload)
-        PullRequestJobs::ReviewRequestRemoved.perform_later(payload)
-      end
+    def merged
+      self.merged_at = Time.current
+      save!
+    end
 
-      private
+    def closed
+      merged if payload['pull_request']['merged'] == true
+      closed!
+      self.closed_at = Time.current
+      save!
+    end
 
-      def handleable?(action)
-        ACTIONS.include?(action)
-      end
+    def review_request_removed
+      reviewer = find_or_create_user(payload['requested_reviewer'])
+      review_requests.find_by!(reviewer: reviewer).removed!
+    end
+
+    def review_requested
+      owner = find_or_create_user(payload['pull_request']['user'])
+      reviewer = find_or_create_user(payload['requested_reviewer'])
+      review_requests.create!(owner: owner, reviewer: reviewer)
     end
   end
 end
