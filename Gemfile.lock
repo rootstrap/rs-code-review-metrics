@@ -391,7 +391,7 @@ DEPENDENCIES
   brakeman (~> 4.7, >= 4.7.2)
   byebug
   capybara (>= 2.15)
-  colorize
+  colorize (~> 0.8.1)
   devise (~> 4.7.1)
   dotenv-rails (~> 2.7.5)
   factory_bot_rails (~> 5.1)
