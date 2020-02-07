@@ -59,13 +59,13 @@ module Events
     end
 
     def find_or_create_review_comment(payload)
-      rc_data = payload['comment']
-      rc = Events::ReviewComment.find_or_create_by!(github_id: rc_data['id']) do |rcom|
-        rcom.owner = find_or_create_user(rc_data['user'])
-        rcom.pull_request = Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
+      comment_data = payload['comment']
+      comment = Events::ReviewComment.find_or_create_by!(github_id: comment_data['id']) do |rc|
+        rc.owner = find_or_create_user(comment_data['user'])
+        rc.pull_request = Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
       end
-      rc.assign_attributes(payload: payload)
-      rc
+      comment.assign_attributes(payload: payload)
+      comment
     end
 
     def handleable?
