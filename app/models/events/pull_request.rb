@@ -55,12 +55,7 @@ module Events
     private
 
     def handle_action
-      check_merged
       send(payload['action'])
-    end
-
-    def check_merged
-      merged if payload['pull_request']['merged'] == true
     end
 
     def find_or_create_user(user_data)
@@ -103,6 +98,7 @@ module Events
     end
 
     def closed
+      merged if payload['pull_request']['merged'] == true
       closed!
       self.closed_at = Time.current
       save!
