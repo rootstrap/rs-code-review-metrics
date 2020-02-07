@@ -193,6 +193,41 @@ ALTER SEQUENCE public.pull_requests_id_seq OWNED BY public.pull_requests.id;
 
 
 --
+-- Name: review_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.review_comments (
+    id bigint NOT NULL,
+    github_id integer,
+    body character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    status public.status DEFAULT 'active'::public.status,
+    pull_request_id bigint NOT NULL,
+    owner_id bigint
+);
+
+
+--
+-- Name: review_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.review_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: review_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.review_comments_id_seq OWNED BY public.review_comments.id;
+
+
+--
 -- Name: review_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -297,6 +332,13 @@ ALTER TABLE ONLY public.pull_requests ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: review_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_comments ALTER COLUMN id SET DEFAULT nextval('public.review_comments_id_seq'::regclass);
+
+
+--
 -- Name: review_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -348,6 +390,14 @@ ALTER TABLE ONLY public.events
 
 ALTER TABLE ONLY public.pull_requests
     ADD CONSTRAINT pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT review_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -424,6 +474,20 @@ CREATE UNIQUE INDEX index_pull_requests_on_github_id ON public.pull_requests USI
 
 
 --
+-- Name: index_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_comments_on_owner_id ON public.review_comments USING btree (owner_id);
+
+
+--
+-- Name: index_review_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_comments_on_pull_request_id ON public.review_comments USING btree (pull_request_id);
+
+
+--
 -- Name: index_review_requests_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -449,6 +513,22 @@ CREATE INDEX index_review_requests_on_reviewer_id ON public.review_requests USIN
 --
 
 CREATE UNIQUE INDEX index_users_on_github_id ON public.users USING btree (github_id);
+
+
+--
+-- Name: review_comments fk_rails_04feb57025; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT fk_rails_04feb57025 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+
+
+--
+-- Name: review_comments fk_rails_4a92157916; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT fk_rails_4a92157916 FOREIGN KEY (owner_id) REFERENCES public.users(id);
 
 
 --
@@ -504,6 +584,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200128190806'),
 ('20200131153049'),
 ('20200131153056'),
-('20200203141336');
+('20200203141336'),
+('20200204134248'),
+('20200204134315'),
+('20200204140453'),
+('20200204201145'),
+('20200204202145'),
+('20200206203510'),
+('20200206203850');
 
 

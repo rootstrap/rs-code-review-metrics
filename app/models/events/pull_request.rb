@@ -30,6 +30,8 @@ module Events
     enum state: { open: 'open', closed: 'closed' }
 
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
+    has_many :review_comments, class_name: 'Events::ReviewComment',
+                               dependent: :destroy, inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }
@@ -61,17 +63,22 @@ module Events
         PullRequestJobs::Opened.perform_later(payload)
       end
 
-      def closed(payload)
-        PullRequestJobs::Closed.perform_later(payload)
-      end
+    # Actions
 
-      def review_requested(payload)
-        PullRequestJobs::ReviewRequested.perform_later(payload)
-      end
+    def open
+      open!
+      update!(opened_at: Time.current)
+    end
 
-      def review_request_removed(payload)
-        PullRequestJobs::ReviewRequestRemoved.perform_later(payload)
-      end
+    def merged
+      update!(merged_at: Time.current)
+    end
+
+    def closed
+      merged if payload['pull_request']['merged'] == true
+      closed!
+      update!(closed_at: Time.current)
+    end
 
       private
 

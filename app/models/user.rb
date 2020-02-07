@@ -19,6 +19,11 @@ class User < ApplicationRecord
            foreign_key: :owner_id,
            dependent: :destroy,
            inverse_of: :owner
+  has_many :owned_review_comments,
+           class_name: 'Events::ReviewComment',
+           foreign_key: :owner_id,
+           dependent: :destroy,
+           inverse_of: :owner
   has_many :received_review_requests,
            class_name: 'ReviewRequest',
            foreign_key: :reviewer_id,
