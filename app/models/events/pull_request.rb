@@ -90,20 +90,17 @@ module Events
 
     def open
       open!
-      self.opened_at = Time.current
-      save!
+      update!(opened_at: Time.current)
     end
 
     def merged
-      self.merged_at = Time.current
-      save!
+      update!(merged_at: Time.current)
     end
 
     def closed
       merged if payload['pull_request']['merged'] == true
       closed!
-      self.closed_at = Time.current
-      save!
+      update!(closed_at: Time.current)
     end
 
     def review_request_removed

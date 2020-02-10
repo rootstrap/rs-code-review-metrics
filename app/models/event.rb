@@ -35,8 +35,9 @@ class Event < ApplicationRecord
   private
 
   def handle
-    event = find_or_create_event.resolve
+    event = find_or_create_event
     update!(handleable: event)
+    event.resolve
   end
 
   def find_or_create_event
