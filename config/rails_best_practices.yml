@@ -32,7 +32,11 @@ RemoveUnusedMethodsInModelsCheck: {
     'Events::PullRequest#merged',
     'Events::PullRequest#review_requested',
     'Events::PullRequest#review_request_removed',
-    'Events::PullRequest#find_or_create_pull_request'
+    'Events::PullRequest#find_or_create_pull_request',
+    'Events::ReviewComment#find_or_create_review_comment',
+    'Events::ReviewComment#created',
+    'Events::ReviewComment#edited',
+    'Events::ReviewComment#deleted'
   ]
 }
 ReplaceComplexCreationWithFactoryMethodCheck: { attribute_assignment_count: 2 }
