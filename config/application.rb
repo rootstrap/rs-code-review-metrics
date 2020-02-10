@@ -21,6 +21,6 @@ module GithubAnalyzer
     # Autoload lib folder
     config.autoload_paths << "#{Rails.root}/lib"
 
-    config.hosts << 'code-review-metrics.herokuapp.com'
+    config.hosts << ENV.fetch('HEROKU_URL', '')
   end
 end
