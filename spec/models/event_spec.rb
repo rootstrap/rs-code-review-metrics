@@ -50,7 +50,8 @@ RSpec.describe Event, type: :model do
       let(:pull_request) { build :pull_request }
 
       it 'creates an event and gets associated' do
-        allow_any_instance_of(Events::PullRequest).to receive(:find_or_create_pull_request).and_return(pull_request)
+        allow_any_instance_of(Events::PullRequest).to receive(:find_or_create_pull_request)
+          .and_return(pull_request)
         allow_any_instance_of(Events::PullRequest).to receive(:resolve).and_return(pull_request)
 
         expect {

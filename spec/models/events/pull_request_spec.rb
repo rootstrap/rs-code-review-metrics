@@ -100,7 +100,7 @@ RSpec.describe Events::PullRequest, type: :model do
     subject { create :pull_request, payload: raw_payload }
 
     describe '#review_request' do
-      before { subject.payload['action'] =  'review_requested' }
+      before { subject.payload['action'] = 'review_requested' }
 
       it 'creates a review request' do
         expect {
@@ -110,7 +110,7 @@ RSpec.describe Events::PullRequest, type: :model do
     end
 
     describe '#closed' do
-      before { subject.payload['action'] =  'closed' }
+      before { subject.payload['action'] = 'closed' }
 
       it 'sets status closed' do
         expect {
@@ -120,7 +120,7 @@ RSpec.describe Events::PullRequest, type: :model do
     end
 
     describe '#open' do
-      before { subject.payload['action'] =  'open' }
+      before { subject.payload['action'] = 'open' }
 
       it 'sets status open' do
         subject.closed!
@@ -134,7 +134,7 @@ RSpec.describe Events::PullRequest, type: :model do
     describe '#merged' do
       before do
         subject.payload['action'] =  'closed'
-        subject.payload['pull_request']['merged'] =  true
+        subject.payload['pull_request']['merged'] = true
       end
 
       it 'sets status merged' do
@@ -145,7 +145,7 @@ RSpec.describe Events::PullRequest, type: :model do
     end
 
     describe '#review_request_removed' do
-      before { subject.payload['action'] =  'review_request_removed' }
+      before { subject.payload['action'] = 'review_request_removed' }
       let!(:pull_request) { create :pull_request_with_review_requests, payload: raw_payload }
 
       it 'sets status to removed' do
