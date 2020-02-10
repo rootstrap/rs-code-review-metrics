@@ -36,16 +36,31 @@ RSpec.describe Event, type: :model do
   end
 
   describe '#resolve' do
-    let(:project) { create :project }
-    before do
-      subject.name = 'comment'
-      subject.data = { pull_request: { id: 1000 } }
+    context 'not handleable event' do
+      before { subject.name = 'comment' }
+
+      it 'creates an event ' do
+        expect {
+          subject.resolve
+        }.to change(Event, :count).by(1)
+      end
     end
 
-    it 'creates a event' do
-      expect {
-        subject.resolve
-      }.to change(Event, :count).by(1)
+    context 'handleable event' do
+      let(:pull_request) { build :pull_request }
+
+      it 'creates an event and gets associated' do
+        allow_any_instance_of(Events::PullRequest).to receive(:find_or_create_pull_request).and_return(pull_request)
+        allow_any_instance_of(Events::PullRequest).to receive(:resolve).and_return(pull_request)
+
+        expect {
+          subject.resolve
+        }.to change(described_class, :count).by(1)
+
+        expect(
+          subject.handleable
+        ).to eq(pull_request)
+      end
     end
   end
 end

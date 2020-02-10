@@ -21,6 +21,7 @@
 FactoryBot.define do
   factory :event do
     name { 'pull_request' }
+    data { 'json' }
 
     association :project, strategy: :build
     association :handleable, factory: :pull_request, strategy: :build

@@ -100,47 +100,59 @@ RSpec.describe Events::PullRequest, type: :model do
     subject { create :pull_request, payload: raw_payload }
 
     describe '#review_request' do
+      before { subject.payload['action'] =  'review_requested' }
+
       it 'creates a review request' do
         expect {
-          subject.send(:review_requested)
+          subject.resolve
         }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
       end
     end
 
     describe '#closed' do
+      before { subject.payload['action'] =  'closed' }
+
       it 'sets status closed' do
         expect {
-          subject.send(:closed)
+          subject.resolve
         }.to change { subject.reload.closed? }.from(false).to(true)
       end
     end
 
     describe '#open' do
+      before { subject.payload['action'] =  'open' }
+
       it 'sets status open' do
         subject.closed!
 
         expect {
-          subject.send(:open)
+          subject.resolve
         }.to change { subject.reload.open? }.from(false).to(true)
       end
     end
 
     describe '#merged' do
+      before do
+        subject.payload['action'] =  'closed'
+        subject.payload['pull_request']['merged'] =  true
+      end
+
       it 'sets status merged' do
         expect {
-          subject.send(:merged)
+          subject.resolve
         }.to change { subject.reload.merged_at }
       end
     end
 
     describe '#review_request_removed' do
+      before { subject.payload['action'] =  'review_request_removed' }
       let!(:pull_request) { create :pull_request_with_review_requests, payload: raw_payload }
 
       it 'sets status to removed' do
         review_request = User.find_by!(github_id: raw_payload['requested_reviewer']['id'])
                              .received_review_requests.first
         expect {
-          pull_request.send(:review_request_removed)
+          pull_request.resolve
         }.to change { review_request.reload.removed? }.from(false).to(true)
       end
     end
