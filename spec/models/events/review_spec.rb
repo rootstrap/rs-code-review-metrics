@@ -116,4 +116,3 @@ RSpec.describe Events::Review, type: :model do
     end
   end
 end
-
