@@ -32,6 +32,8 @@ module Events
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',
                                dependent: :destroy, inverse_of: :pull_request
+    has_many :reviews, class_name: 'Events::Reviews', dependent: :destroy,
+                       inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }

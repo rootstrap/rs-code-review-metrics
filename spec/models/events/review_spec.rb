@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: review_comments
+# Table name: reviews
 #
 #  id              :bigint           not null, primary key
 #  body            :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_review_comments_on_owner_id         (owner_id)
-#  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_owner_id         (owner_id)
+#  index_reviews_on_pull_request_id  (pull_request_id)
 #
 # Foreign Keys
 #
@@ -24,9 +24,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Events::ReviewComment, type: :model do
+RSpec.describe Events::Review, type: :model do
   describe 'validations' do
-    subject { build :review_comment }
+    subject { build :review }
 
     it 'is valid with valid attributes' do
       expect(subject).to be_valid
@@ -41,12 +41,12 @@ RSpec.describe Events::ReviewComment, type: :model do
   end
 
   describe 'actions' do
-    subject { create :review_comment, payload: payload }
+    subject { create :review, payload: payload }
 
     let(:payload) do
       {
         action: 'created',
-        comment: {
+        review: {
           pull_request_review_id: 237_895_671,
           id: 284_312_630,
           user: {
@@ -65,31 +65,31 @@ RSpec.describe Events::ReviewComment, type: :model do
       }.deep_stringify_keys
     end
 
-    describe '#find_or_create_review_comment' do
-      subject { build :review_comment }
+    describe '#find_or_create_review' do
+      subject { build :review }
       before { create :pull_request, github_id: payload['pull_request']['id'] }
 
-      it 'creates a review comment' do
+      it 'creates a review' do
         expect {
-          subject.send(:find_or_create_review_comment, payload)
+          subject.send(:find_or_create_review, payload)
         }.to change(described_class, :count).by(1)
       end
 
       it 'finds a pull request' do
-        subject.github_id = payload['comment']['id']
+        subject.github_id = payload['review']['id']
         subject.save!
 
-        expect(subject.send(:find_or_create_review_comment, payload)).to eq(subject)
+        expect(subject.send(:find_or_create_review, payload)).to eq(subject)
       end
     end
 
-    describe '#created' do
-      before { subject.payload['action'] = 'created' }
+    describe '#submitted' do
+      before { subject.payload['action'] = 'submitted' }
 
       it 'sets body' do
         expect {
           subject.resolve
-        }.to change { subject.reload.body }.from(nil).to(payload['comment']['body'])
+        }.to change { subject.reload.body }.from(nil).to(payload['review']['body'])
       end
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Events::ReviewComment, type: :model do
       before { subject.payload['action'] = 'edited' }
 
       it 'edits body' do
-        body = payload['comment']['body']
+        body = payload['review']['body']
         subject.update!(body: body)
         expect {
           subject.resolve
@@ -105,8 +105,8 @@ RSpec.describe Events::ReviewComment, type: :model do
       end
     end
 
-    describe '#deleted' do
-      before { subject.payload['action'] = 'deleted' }
+    describe '#dismissed' do
+      before { subject.payload['action'] = 'dismissed' }
 
       it 'sets removed' do
         expect {
@@ -116,3 +116,4 @@ RSpec.describe Events::ReviewComment, type: :model do
     end
   end
 end
+
