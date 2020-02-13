@@ -16,6 +16,9 @@
 # Ignore database config
 /config/database.yml
 
+# Ignore .env file
+.env
+
 # Ignore uploaded files in development.
 /storage/*
 !/storage/.keep
