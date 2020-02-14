@@ -37,6 +37,11 @@ RSpec.describe Events::ReviewComment, type: :model do
       expect(subject).to_not be_valid
     end
 
+    it 'is not valid without body' do
+      subject.body = nil
+      expect(subject).to_not be_valid
+    end
+
     it { is_expected.to belong_to(:pull_request) }
   end
 
@@ -80,16 +85,6 @@ RSpec.describe Events::ReviewComment, type: :model do
         subject.save!
 
         expect(subject.send(:find_or_create_review_comment, payload)).to eq(subject)
-      end
-    end
-
-    describe '#created' do
-      before { change_action_to 'created' }
-
-      it 'sets body' do
-        expect {
-          subject.resolve
-        }.to change { subject.reload.body }.from(nil).to(payload['comment']['body'])
       end
     end
 

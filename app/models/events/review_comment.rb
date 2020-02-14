@@ -24,7 +24,7 @@
 
 module Events
   class ReviewComment < ApplicationRecord
-    ACTIONS = %w[created edited deleted].freeze
+    ACTIONS = %w[edited deleted].freeze
 
     enum status: { active: 'active', removed: 'removed' }
 
@@ -36,7 +36,7 @@ module Events
                               inverse_of: :review_requests
 
     validates :status, inclusion: { in: statuses.keys }
-    validates :github_id, presence: true
+    validates :github_id, :body, presence: true
 
     attr_accessor :payload
 
@@ -64,6 +64,7 @@ module Events
       comment = Events::ReviewComment.find_or_create_by!(github_id: comment_data['id']) do |rc|
         rc.owner = find_or_create_user(comment_data['user'])
         rc.pull_request = Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
+        rc.body = comment_data['body']
       end
       comment.assign_attributes(payload: payload)
       comment
@@ -74,10 +75,6 @@ module Events
     end
 
     # Actions
-
-    def created
-      update!(body: payload['comment']['body'])
-    end
 
     def edited
       update!(body: payload['changes']['body'])
