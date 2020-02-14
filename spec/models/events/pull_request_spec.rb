@@ -133,7 +133,7 @@ RSpec.describe Events::PullRequest, type: :model do
 
     describe '#merged' do
       before do
-        change_action_to  'closed'
+        change_action_to 'closed'
         subject.payload['pull_request']['merged'] = true
       end
 
