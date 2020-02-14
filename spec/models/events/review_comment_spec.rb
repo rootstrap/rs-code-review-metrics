@@ -84,7 +84,7 @@ RSpec.describe Events::ReviewComment, type: :model do
     end
 
     describe '#created' do
-      before { subject.payload['action'] = 'created' }
+      before { change_action_to 'created' }
 
       it 'sets body' do
         expect {
@@ -94,7 +94,7 @@ RSpec.describe Events::ReviewComment, type: :model do
     end
 
     describe '#edited' do
-      before { subject.payload['action'] = 'edited' }
+      before { change_action_to 'edited' }
 
       it 'edits body' do
         body = payload['comment']['body']
@@ -106,7 +106,7 @@ RSpec.describe Events::ReviewComment, type: :model do
     end
 
     describe '#deleted' do
-      before { subject.payload['action'] = 'deleted' }
+      before { change_action_to 'deleted' }
 
       it 'sets removed' do
         expect {

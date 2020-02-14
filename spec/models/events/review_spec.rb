@@ -84,7 +84,7 @@ RSpec.describe Events::Review, type: :model do
     end
 
     describe '#submitted' do
-      before { subject.payload['action'] = 'submitted' }
+      before { change_action_to 'submitted' }
 
       it 'sets body' do
         expect {
@@ -94,7 +94,7 @@ RSpec.describe Events::Review, type: :model do
     end
 
     describe '#edited' do
-      before { subject.payload['action'] = 'edited' }
+      before { change_action_to 'edited' }
 
       it 'edits body' do
         body = payload['review']['body']
@@ -106,7 +106,7 @@ RSpec.describe Events::Review, type: :model do
     end
 
     describe '#dismissed' do
-      before { subject.payload['action'] = 'dismissed' }
+      before { change_action_to 'dismissed' }
 
       it 'sets removed' do
         expect {
