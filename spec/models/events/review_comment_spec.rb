@@ -97,11 +97,11 @@ RSpec.describe Events::ReviewComment, type: :model do
       before { change_action_to 'edited' }
 
       it 'edits body' do
-        body = payload['comment']['body']
-        subject.update!(body: body)
+        comment_body = payload['comment']['body']
+        subject.update!(body: comment_body)
         expect {
           subject.resolve
-        }.to change { subject.reload.body }.from(body).to(payload['changes']['body'])
+        }.to change { subject.reload.body }.from(comment_body).to(payload['changes']['body'])
       end
     end
 
