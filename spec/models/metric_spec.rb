@@ -33,19 +33,8 @@ RSpec.describe Metric, type: :model do
     it { should validate_presence_of(:entity_key)  }
     it { should validate_length_of(:entity_key) .is_at_most(255) }
 
-    describe 'of metric_key' do
-      it 'fails with a missing value' do
-        subject.metric_key = nil
-
-        expect(subject).to_not be_valid
-      end
-
-      it 'fails with a value too long' do
-        subject.metric_key = 'a' * 256
-
-        expect(subject).to_not be_valid
-      end
-    end
+    it { should validate_presence_of(:metric_key)  }
+    it { should validate_length_of(:metric_key) .is_at_most(255) }
 
     describe 'of the metric value' do
       it 'does not fail with a missing value since the metric could have not been run yet' do
