@@ -20,23 +20,4 @@ class Project < ApplicationRecord
 
   validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true
-
-  class << self
-    def resolve(payload)
-      handle_event(payload)
-    end
-
-    private
-
-    def handle_event(payload)
-      repo = payload['repository']
-      project = find_or_create_by!(github_id: repo['id']) do |pj|
-        pj.name = repo['name']
-        pj.description = repo['description']
-      end
-
-      Event.new(project: project, data: payload, name: payload['event'])
-           .resolve
-    end
-  end
 end
