@@ -36,20 +36,16 @@ RSpec.describe Metric, type: :model do
     it { should validate_presence_of(:metric_key)  }
     it { should validate_length_of(:metric_key) .is_at_most(255) }
 
-    describe 'of the metric value' do
-      it 'does not fail with a missing value since the metric could have not been run yet' do
-        subject.value = nil
+    it 'does not fail with a missing Metric.value since the metric could have not been run yet' do
+      subject = build :metric, value: nil
 
-        expect(subject).to be_valid
-      end
+      expect(subject).to be_valid
     end
 
-    describe 'of the metric value_timestamp' do
-      it 'does not fail with a missing timestamp since the metric could have not been run yet' do
-        subject.value_timestamp = nil
+    it 'does not fail with a missing Metric.value_timestamp since the metric could have not been run yet' do
+      subject = build :metric, value_timestamp: nil
 
-        expect(subject).to be_valid
-      end
+      expect(subject).to be_valid
     end
   end
 end
