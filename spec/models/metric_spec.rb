@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: metrics
+#
+#  id              :bigint           not null, primary key
+#  entity_key      :string           not null
+#  metric_key      :string           not null
+#  value           :decimal(, )
+#  value_timestamp :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#
+
 require 'rails_helper'
 
 RSpec.describe Metric, type: :model do
