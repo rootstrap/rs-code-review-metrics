@@ -29,16 +29,9 @@ RSpec.describe Metric, type: :model do
     end
   end
 
-  describe 'validation' do
-    it { should validate_presence_of(:entity_key) }
-
-    describe 'of entity_key' do
-      it 'fails with a value too long' do
-        subject.entity_key = 'a' * 256
-
-        expect(subject).to_not be_valid
-      end
-    end
+  describe 'validations' do
+    it { should validate_presence_of(:entity_key)  }
+    it { should validate_length_of(:entity_key) .is_at_most(255) }
 
     describe 'of metric_key' do
       it 'fails with a missing value' do
