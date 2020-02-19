@@ -72,6 +72,29 @@ FactoryBot.define do
     end
   end
 
+  factory :pull_request_review_comment_payload, class: Hash do
+    id { 1001 }
+    node_id { 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3' }
+    pull_request_review_id { 1002 }
+    body { 'You might need to fix this.' }
+
+    association :comment_owner,
+                factory: :user_payload,
+                id: 21_031_067,
+                node_id: 'MDQ6VXNlcjIxMDMxMDY3',
+                login: 'Codertocat'
+
+    initialize_with do
+      {
+        id: id,
+        node_id: node_id,
+        pull_request_review_id: pull_request_review_id,
+        user: comment_owner,
+        body: body
+      }.deep_stringify_keys
+    end
+  end
+
   factory :repository_event_payload, class: Hash do
     action { 'created' }
 
@@ -143,6 +166,25 @@ FactoryBot.define do
         },
         pull_request: pull_request,
         repository: repository
+      }.deep_stringify_keys
+    end
+  end
+
+  factory :pull_request_review_comment_event_payload, class: Hash do
+    action { 'created' }
+
+    association :comment, factory: :pull_request_review_comment_payload
+
+    association :pull_request, factory: :pull_request_payload
+
+    changes { { body: 'Please fix this.' } }
+
+    initialize_with do
+      {
+        action: action,
+        comment: comment,
+        pull_request: pull_request,
+        changes: changes
       }.deep_stringify_keys
     end
   end

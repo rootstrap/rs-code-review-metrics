@@ -32,30 +32,11 @@ RSpec.describe Events::ReviewComment, type: :model do
   describe 'actions' do
     subject { create :review_comment, payload: payload }
 
-    let(:payload) do
-      {
-        action: 'created',
-        comment: {
-          pull_request_review_id: 237_895_671,
-          id: 284_312_630,
-          user: {
-            login: 'Codertocat',
-            id: 21_031_067,
-            node_id: 'MDQ6VXNlcjIxMDMxMDY3'
-          },
-          body: 'You might need to fix this.'
-        },
-        pull_request: {
-          id: 279_147_437
-        },
-        changes: {
-          body: 'Please fix this.'
-        }
-      }.deep_stringify_keys
-    end
+    let(:payload) { build :pull_request_review_comment_event_payload }
 
     describe '#find_or_create_review_comment' do
       subject { build :review_comment }
+
       before { create :pull_request, github_id: payload['pull_request']['id'] }
 
       it 'creates a review comment' do
