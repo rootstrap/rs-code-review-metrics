@@ -35,7 +35,11 @@ RSpec.describe GithubService do
         before { payload.merge!('action' => 'review_request_removed') }
         let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
         let!(:reviewer) { create :user, github_id: payload['requested_reviewer']['id'] }
-        let!(:review_request) { create :review_request, reviewer: reviewer, pull_request: pull_request }
+        let!(:review_request) do
+          create :review_request,
+                 reviewer: reviewer,
+                 pull_request: pull_request
+        end
 
         it 'sets status to removed' do
           subject
@@ -87,9 +91,11 @@ RSpec.describe GithubService do
     end
 
     context 'review comment' do
-      let(:payload) { (create :review_comment_payload)
-        .merge((create :repository_payload))
-        .merge((create :pull_request_payload)) }
+      let(:payload) do
+        (create :review_comment_payload)
+          .merge((create :repository_payload))
+          .merge((create :pull_request_payload))
+      end
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
