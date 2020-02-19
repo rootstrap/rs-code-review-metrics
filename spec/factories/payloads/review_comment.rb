@@ -6,6 +6,9 @@ FactoryBot.define do
       body: 'Please fix this.',
       user: (attributes_for :user, id: rand(1..1000)).as_json
     } }
+    changes { {
+      body: 'Please don\'t fix this.'
+    } }
     initialize_with { attributes.deep_stringify_keys }
   end
 end

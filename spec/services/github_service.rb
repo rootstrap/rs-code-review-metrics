@@ -57,18 +57,67 @@ RSpec.describe GithubService do
     context 'review' do
       let(:payload) { (create :review_payload).merge((create :repository_payload)) }
       let(:event) { 'review' }
+      let!(:review) { create :review, github_id: payload['review']['id'] }
 
-      it 'ss' do
-        subject
+      it 'sets body' do
+        payload.merge!('action' => 'submitted')
+
+        expect {
+          subject
+        }.to change { review.reload.body }.from(nil).to(payload['review']['body'])
+      end
+
+      it 'edits body' do
+        payload.merge!('action' => 'edited')
+        body = payload['review']['body']
+        review.update!(body: body)
+
+        expect {
+          subject
+        }.to change { review.reload.body }.from(body).to(payload['changes']['body'])
+      end
+
+      it 'sets status to removed' do
+        payload.merge!('action' => 'dismissed')
+
+        expect {
+          subject
+        }.to change { review.reload.status }.from('active').to('removed')
       end
     end
 
     context 'review comment' do
-      let(:payload) { (create :review_comment_payload).merge((create :repository_payload)) }
+      let(:payload) { (create :review_comment_payload)
+        .merge((create :repository_payload))
+        .merge((create :pull_request_payload)) }
+      let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
+      let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
 
-      it 'ss' do
-        subject
+      it 'sets body' do
+        payload.merge!('action' => 'created')
+
+        expect {
+          subject
+        }.to change { review_comment.reload.body }.from(nil).to(payload['comment']['body'])
+      end
+
+      it 'edits body' do
+        payload.merge!('action' => 'edited')
+        body = payload['comment']['body']
+        review_comment.update!(body: body)
+
+        expect {
+          subject
+        }.to change { review_comment.reload.body }.from(body).to(payload['changes']['body'])
+      end
+
+      it 'sets removed' do
+        payload.merge!('action' => 'deleted')
+
+        expect {
+          subject
+        }.to change { review_comment.reload.status }.from('active').to('removed')
       end
     end
   end

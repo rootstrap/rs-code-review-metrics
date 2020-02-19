@@ -26,7 +26,7 @@ class GithubService < BaseService
 
   def handle_event
     event = Event.create!(project: @project, data: @payload, name: @event)
-    return unless handleable_event?
+    raise StandardError unless handleable_event?
 
     @event_type = find_or_create_event_type
     event.update!(handleable: find_or_create_event_type)

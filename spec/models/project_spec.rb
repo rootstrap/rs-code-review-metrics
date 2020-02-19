@@ -29,16 +29,4 @@ RSpec.describe Project, type: :model do
     it { is_expected.to validate_uniqueness_of(:github_id) }
     it { is_expected.to have_many(:events) }
   end
-
-  context '#resolve' do
-    let(:payload) { { repository: { name: 'rs-code-review-metrics', id: 1 } }.deep_stringify_keys }
-
-    it 'creates a project' do
-      allow_any_instance_of(Event).to receive(:resolve)
-
-      expect {
-        described_class.resolve(payload)
-      }.to change(described_class, :count).by(1)
-    end
-  end
 end

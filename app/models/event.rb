@@ -19,7 +19,7 @@
 #
 
 class Event < ApplicationRecord
-  TYPES = %w[pull_request].freeze
+  TYPES = %w[pull_request review review_comment].freeze
 
   belongs_to :handleable, polymorphic: true, optional: true
   belongs_to :project

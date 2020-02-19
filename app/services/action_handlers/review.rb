@@ -16,15 +16,15 @@ module ActionHandlers
     end
 
     def submitted
-      update!(body: @payload['review']['body'])
+      @event_type.update!(body: @payload['review']['body'])
     end
 
     def edited
-      update!(body: @payload['changes']['body'])
+      @event_type.update!(body: @payload['changes']['body'])
     end
 
     def dismissed
-      removed!
+      @event_type.removed!
     end
   end
 end
