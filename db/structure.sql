@@ -289,7 +289,9 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    status public.status DEFAULT 'active'::public.status
+    status public.status DEFAULT 'active'::public.status,
+    node_id character varying NOT NULL,
+    login character varying NOT NULL
 );
 
 
@@ -745,6 +747,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200204202145'),
 ('20200206203510'),
 ('20200206203850'),
-('20200212151614');
+('20200212151614'),
+('20200219141137');
 
 

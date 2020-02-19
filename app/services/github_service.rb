@@ -28,6 +28,7 @@ class GithubService < BaseService
     event = Event.create!(project: @project, data: @payload, name: @event)
     return unless handleable_event?
 
+    @event_type = find_or_create_event_type
     event.update!(handleable: find_or_create_event_type)
   end
 
@@ -40,6 +41,8 @@ class GithubService < BaseService
   end
 
   def handle_action
-    ActionHandlers.const_get(@event.classify).call(payload: @payload, event: @event)
+    ActionHandlers.const_get(@event.classify).call(payload: @payload,
+                                                   event: @event,
+                                                   event_type: @event_type)
   end
 end

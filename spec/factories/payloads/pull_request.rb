@@ -9,9 +9,9 @@ FactoryBot.define do
       state: 'open',
       locked: 'false',
       draft: 'false',
-      user: (attributes_for :user, id: rand(1..1000)).as_json,
-      requested_reviewer: (attributes_for :review_request, id: rand(1..1000)).as_json
+      user: (attributes_for :user, id: rand(1..1000)).as_json
     } }
+    requested_reviewer { (attributes_for :review_request, id: rand(1..1000)).as_json }
     initialize_with { attributes.deep_stringify_keys }
   end
 end
