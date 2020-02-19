@@ -25,29 +25,13 @@
 require 'rails_helper'
 
 RSpec.describe Events::PullRequest, type: :model do
+  let(:requested_reviewer) do
+    build :user_payload,
+      id: 1004, node_id: 'MDExOlB1bGxc5MTQ3NDM3', login: 'octocat'
+  end
+
   let(:raw_payload) do
-    {
-      pull_request: {
-        id: 1001,
-        number: 2,
-        state: 'open',
-        node_id: 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3',
-        title: 'Pull Request 2',
-        locked: false,
-        merged: false,
-        draft: false,
-        user: {
-          node_id: 'MDQ6NlcjE4',
-          login: 'heptacat',
-          id: 1006
-        }
-      },
-      requested_reviewer: {
-        node_id: 'MDExOlB1bGxc5MTQ3NDM3',
-        login: 'octocat',
-        id: 1004
-      }
-    }.deep_stringify_keys
+    build :pull_request_event_payload, requested_reviewer: requested_reviewer
   end
 
   context 'validations' do

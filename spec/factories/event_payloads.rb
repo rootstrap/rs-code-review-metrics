@@ -66,7 +66,26 @@ FactoryBot.define do
     end
   end
 
-  factory :pull_request_review_payload, class: Hash do
+  factory :pull_request_event_payload, class: Hash do
+    action { 'opened' }
+    number { 2 }
+
+    requested_reviewer { nil }
+
+    association :pull_request, factory: :pull_request_payload
+
+    initialize_with do
+      {
+        action: action,
+        number: number,
+        pull_request: pull_request,
+      }.tap do |payload|
+        payload['requested_reviewer'] = requested_reviewer unless requested_reviewer.nil?
+      end.deep_stringify_keys
+    end
+  end
+
+  factory :pull_request_review_event_payload, class: Hash do
     action { 'submitted' }
     id { 237895671 }
     node_id { 'MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MjM3ODk1Njcx' }
@@ -82,9 +101,11 @@ FactoryBot.define do
     trait :submitted do
         action { 'submitted' }
     end
+
     trait :edited do
         action { 'edited' }
     end
+
     trait :dismissed do
         action { 'dismissed' }
     end
@@ -100,7 +121,6 @@ FactoryBot.define do
         },
         pull_request: pull_request,
         repository: repository,
-        requested_reviewer: requested_reviewer
       }.deep_stringify_keys
     end
   end
