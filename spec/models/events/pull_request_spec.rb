@@ -27,12 +27,12 @@ require 'rails_helper'
 RSpec.describe Events::PullRequest, type: :model do
   let(:requested_reviewer) do
     build :user_payload,
-      id: 1004, node_id: 'MDExOlB1bGxc5MTQ3NDM3', login: 'octocat'
+          id: 1004,
+          node_id: 'MDExOlB1bGxc5MTQ3NDM3',
+          login: 'octocat'
   end
 
-  let(:raw_payload) do
-    build :pull_request_event_payload, requested_reviewer: requested_reviewer
-  end
+  let(:raw_payload) { build :pull_request_event_payload, requested_reviewer: requested_reviewer }
 
   context 'validations' do
     subject { build :pull_request }

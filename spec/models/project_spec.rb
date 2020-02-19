@@ -31,7 +31,8 @@ RSpec.describe Project, type: :model do
   end
 
   context '#resolve' do
-    let(:payload) { { repository: { name: 'rs-code-review-metrics', id: 1 } }.deep_stringify_keys }
+    let(:repository_payload) { build :repository_payload, name: 'rs-code-review-metrics', id: 1 }
+    let(:payload) { build :repository_event_payload, repository: repository_payload }
 
     it 'creates a project' do
       allow_any_instance_of(Event).to receive(:resolve)
