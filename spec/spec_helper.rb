@@ -94,3 +94,60 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+##
+# This custom matcher allows to write Rspec expectations using mocks with
+# the following idiom:
+#
+#     expect {
+#       code_to_test_here
+#     } .to satisfy proc {
+#       mocks expectations here
+#     }
+#
+# instead of
+#
+#     mocks expectations here
+#     code_to_test_here
+#
+# The rationale for this idiom is:
+#
+#   - it inverts the order of the statements and puts the block to evaluate
+#     before the expectations block
+#
+#   - it groups the code to evaluate in the :expect block following the
+#     same pattern as { ... } .to raise_error() does
+#
+#   - it groups the expectations in a block to state that the expectations
+#     are on the other block
+#
+# Example:
+#
+#      expect {
+#        User.new
+#      } .to satisfy proc {
+#        expect_any_instance_of(User).to receive(:initialize).once
+#      }
+#
+# instead of
+#
+#       expect_any_instance_of(User).to receive(:initialize).once
+#
+#       User.new
+#
+# Implementation note:
+#   note the 'proc' call in the statement
+#
+#     .to satisfy proc { ... }
+#
+#   Custom matchers do not handle yield block arguments (&block) as regular
+#   methods do so instead of expecting a yield block the matcher expects a
+#   Process argument.
+RSpec::Matchers.define :satisfy do |expectations_block|
+  match do |evaluation_block|
+    expectations_block.call
+    evaluation_block.call
+  end
+
+  supports_block_expectations
+end
