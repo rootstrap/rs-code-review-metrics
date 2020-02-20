@@ -3,12 +3,6 @@ module ActionHandlers
     ACTIONS = %w[created edited deleted].freeze
     private_constant :ACTIONS
 
-    def resolve
-      return unless handleable?
-
-      handle_action
-    end
-
     private
 
     def handleable?

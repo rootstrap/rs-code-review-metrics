@@ -3,14 +3,14 @@ FactoryBot.define do
     skip_create
     comment do
       {
-        id: rand(1000..1100),
-        body: 'Please fix this.',
-        user: (attributes_for :user, id: rand(1..1000)).as_json
+        id: Faker::Number.number(digits: 4),
+        body: Faker::Quote.matz,
+        user: (attributes_for :user, id: Faker::Number.number).as_json
       }
     end
     changes do
       {
-        body: 'Please don\'t fix this.'
+        body: Faker::Quote.matz
       }
     end
     initialize_with { attributes.deep_stringify_keys }

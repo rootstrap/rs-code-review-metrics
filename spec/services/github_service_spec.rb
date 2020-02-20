@@ -5,34 +5,31 @@ RSpec.describe GithubService do
 
   describe 'events' do
     context 'pull request' do
-      let!(:payload) { (create :pull_request_payload).merge((create :repository_payload)) }
+      let!(:payload) { (create :pull_request_payload_with_repository) }
       let!(:event) { 'pull_request' }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
 
       it 'sets state to open' do
-        payload.merge!('action' => 'open')
+        change_action_to('open')
         pull_request.closed!
-
         expect { subject }.to change { pull_request.reload.open? }.from(false).to(true)
       end
 
       it 'sets state closed' do
-        payload.merge!('action' => 'closed')
-
+        change_action_to('closed')
         expect {
           subject
         }.to change { pull_request.reload.closed? }.from(false).to(true)
       end
 
       it 'sets state merged' do
-        payload.merge!('action' => 'closed')
+        change_action_to('closed')
         payload['pull_request']['merged'] = true
 
         expect { subject }.to change { pull_request.reload.merged_at }.from(nil).to(Time)
       end
 
       describe '#review_request_removed' do
-        before { payload.merge!('action' => 'review_request_removed') }
         let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
         let!(:reviewer) { create :user, github_id: payload['requested_reviewer']['id'] }
         let!(:review_request) do
@@ -42,19 +39,17 @@ RSpec.describe GithubService do
         end
 
         it 'sets status to removed' do
+          change_action_to('review_request_removed')
           subject
           expect(ReviewRequest.where(status: 'removed').count).to eq(1)
         end
       end
 
-      describe '#review_request' do
-        before { payload.merge!('action' => 'review_requested') }
-
-        it 'creates a review request' do
-          expect {
-            subject
-          }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
-        end
+      it 'creates a review request' do
+        change_action_to('review_requested')
+        expect {
+          subject
+        }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
       end
     end
 
@@ -64,15 +59,14 @@ RSpec.describe GithubService do
       let!(:review) { create :review, github_id: payload['review']['id'] }
 
       it 'sets body' do
-        payload.merge!('action' => 'submitted')
-
+        change_action_to('submitted')
         expect {
           subject
         }.to change { review.reload.body }.from(nil).to(payload['review']['body'])
       end
 
       it 'edits body' do
-        payload.merge!('action' => 'edited')
+        change_action_to('edited')
         body = payload['review']['body']
         review.update!(body: body)
 
@@ -82,8 +76,7 @@ RSpec.describe GithubService do
       end
 
       it 'sets status to removed' do
-        payload.merge!('action' => 'dismissed')
-
+        change_action_to('dismissed')
         expect {
           subject
         }.to change { review.reload.status }.from('active').to('removed')
@@ -101,26 +94,23 @@ RSpec.describe GithubService do
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
 
       it 'sets body' do
-        payload.merge!('action' => 'created')
-
+        change_action_to('created')
         expect {
           subject
         }.to change { review_comment.reload.body }.from(nil).to(payload['comment']['body'])
       end
 
       it 'edits body' do
-        payload.merge!('action' => 'edited')
+        change_action_to('edited')
         body = payload['comment']['body']
         review_comment.update!(body: body)
-
         expect {
           subject
         }.to change { review_comment.reload.body }.from(body).to(payload['changes']['body'])
       end
 
       it 'sets removed' do
-        payload.merge!('action' => 'deleted')
-
+        change_action_to('deleted')
         expect {
           subject
         }.to change { review_comment.reload.status }.from('active').to('removed')

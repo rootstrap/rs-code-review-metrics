@@ -4,12 +4,6 @@ module ActionHandlers
                  review_request_removed].freeze
     private_constant :ACTIONS
 
-    def resolve
-      return unless handleable?
-
-      handle_action
-    end
-
     private
 
     def handleable?
@@ -32,7 +26,7 @@ module ActionHandlers
     end
 
     def review_request_removed
-      reviewer = User.find_by!(github_id: @payload['requested_reviewer']['id'])
+      reviewer = find_user
       @event_type.review_requests.find_by!(reviewer: reviewer).removed!
     end
 

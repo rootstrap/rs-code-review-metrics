@@ -38,6 +38,7 @@ Shoulda::Matchers.configure do |config|
 end
 
 RSpec.configure do |config|
+  include ActionHelper
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

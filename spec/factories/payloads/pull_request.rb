@@ -3,17 +3,23 @@ FactoryBot.define do
     skip_create
     pull_request do
       {
-        id: rand(1000..1100),
-        number: rand(1..100),
-        title: "Pull Request-#{rand(1..100)}",
-        node_id: 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3',
+        id: Faker::Number.unique.number(digits: 4),
+        number: Faker::Number.number,
+        title: "Pull Request-#{Faker::Number.number}",
+        node_id: "#{Faker::Alphanumeric.alphanumeric}=",
         state: 'open',
         locked: 'false',
         draft: 'false',
-        user: (attributes_for :user, id: rand(1..1000)).as_json
+        user: (attributes_for :user, id: Faker::Number.unique.number).as_json
       }
     end
-    requested_reviewer { (attributes_for :review_request, id: rand(1..1000)).as_json }
+    requested_reviewer { (attributes_for :review_request, id: Faker::Number.unique.number).as_json }
     initialize_with { attributes.deep_stringify_keys }
+
+    factory :pull_request_payload_with_repository do
+      after(:create) do |pull_request_payload|
+        pull_request_payload.merge!((create :repository_payload))
+      end
+    end
   end
 end

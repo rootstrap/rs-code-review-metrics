@@ -4,11 +4,8 @@ module EventBuilders
                          title: 'title', locked: 'locked', draft: 'draft' }.freeze
     def build
       pr_data = @payload['pull_request']
-
       Events::PullRequest.find_or_create_by!(github_id: pr_data['id']) do |pr|
-        pr.attributes = ATTR_PAYLOAD_MAP.inject({}) do |hash, (key, _v)|
-          hash.merge!(key => pr_data.fetch(ATTR_PAYLOAD_MAP.fetch(key)))
-        end
+        ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
       end
     end
   end

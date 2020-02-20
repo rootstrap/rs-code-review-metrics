@@ -3,8 +3,8 @@ FactoryBot.define do
     skip_create
     repository do
       {
-        id: rand(1000..1100),
-        name: 'rs-code-review-metrics',
+        id: Faker::Number.number(digits: 4),
+        name: Faker::App.name,
         description: ''
       }
     end
