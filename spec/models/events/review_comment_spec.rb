@@ -37,6 +37,11 @@ RSpec.describe Events::ReviewComment, type: :model do
       expect(subject).to_not be_valid
     end
 
+    it 'is not valid without body' do
+      subject.body = nil
+      expect(subject).to_not be_valid
+    end
+
     it { is_expected.to belong_to(:pull_request) }
   end
 end

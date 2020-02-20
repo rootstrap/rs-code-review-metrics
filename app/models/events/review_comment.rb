@@ -34,6 +34,6 @@ module Events
                               inverse_of: :review_requests
 
     validates :status, inclusion: { in: statuses.keys }
-    validates :github_id, presence: true
+    validates :github_id, :body, presence: true
   end
 end
