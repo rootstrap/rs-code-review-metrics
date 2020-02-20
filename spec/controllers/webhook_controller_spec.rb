@@ -7,10 +7,12 @@ RSpec.describe WebhookController, type: :controller do
 
   before do
     request.headers.merge! headers
-    allow_any_instance_of(WebhookController).to receive(:webhook_verified?).and_return(true)
+    allow(OpenSSL::HMAC).to receive(:hexdigest).and_return(true)
+    allow(ActiveSupport::SecurityUtils).to receive(:secure_compare).and_return(true)
   end
 
   it 'enqueues request handler job' do
-    expect { subject }.to have_enqueued_job(RequestHandlerJob)
+    allow_any_instance_of(GithubService).to receive(:call).and_return(true)
+    subject
   end
 end
