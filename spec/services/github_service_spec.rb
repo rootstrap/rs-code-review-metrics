@@ -7,7 +7,11 @@ RSpec.describe GithubService do
     context 'pull request' do
       let!(:payload) { (create :pull_request_payload_with_repository) }
       let!(:event) { 'pull_request' }
-      let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+
+      it 'creates a pull request' do
+        expect { subject }.to change(Events::PullRequest, :count).by(1)
+      end
 
       it 'sets state to open' do
         change_action_to('open')
@@ -54,9 +58,14 @@ RSpec.describe GithubService do
     end
 
     context 'review' do
-      let(:payload) { (create :review_payload).merge((create :repository_payload)) }
+      let(:payload) { (create :full_review_payload) }
       let(:event) { 'review' }
-      let!(:review) { create :review, github_id: payload['review']['id'] }
+      let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      let(:review) { create :review, github_id: payload['review']['id'] }
+
+      it 'creates a review' do
+        expect { subject }.to change(Events::Review, :count).by(1)
+      end
 
       it 'sets body' do
         change_action_to('submitted')
@@ -84,14 +93,14 @@ RSpec.describe GithubService do
     end
 
     context 'review comment' do
-      let(:payload) do
-        (create :review_comment_payload)
-          .merge((create :repository_payload))
-          .merge((create :pull_request_payload))
-      end
+      let(:payload) { create :full_review_comment_payload }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
+
+      it 'creates a review comment' do
+        expect { subject }.to change(Events::ReviewComment, :count).by(1)
+      end
 
       it 'sets body' do
         change_action_to('created')

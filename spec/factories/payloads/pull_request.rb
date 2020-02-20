@@ -4,13 +4,13 @@ FactoryBot.define do
     pull_request do
       {
         id: Faker::Number.unique.number(digits: 4),
-        number: Faker::Number.number,
-        title: "Pull Request-#{Faker::Number.number}",
+        number: Faker::Number.number(digits: 1),
+        title: "Pull Request-#{Faker::Number.number(digits: 1)}",
         node_id: "#{Faker::Alphanumeric.alphanumeric}=",
         state: 'open',
         locked: 'false',
         draft: 'false',
-        user: (attributes_for :user, id: Faker::Number.unique.number).as_json
+        user: (attributes_for :user, id: Faker::Number.unique.number(digits: 2)).as_json
       }
     end
     requested_reviewer { (attributes_for :review_request, id: Faker::Number.unique.number).as_json }

@@ -14,5 +14,12 @@ FactoryBot.define do
       }
     end
     initialize_with { attributes.deep_stringify_keys }
+
+    factory :full_review_comment_payload do
+      after(:create) do |review_payload|
+        review_payload.merge!((create :pull_request_payload))
+        review_payload.merge!((create :repository_payload))
+      end
+    end
   end
 end
