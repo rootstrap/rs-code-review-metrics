@@ -13,6 +13,7 @@ class ProcessMetricsJob < ApplicationJob
   #
   # It takes care of processing only the metrics that are pending to be
   # processed.
-  def perform()
+  def perform
+    # todo
   end
 end
