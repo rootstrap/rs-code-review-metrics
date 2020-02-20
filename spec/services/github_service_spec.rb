@@ -106,7 +106,8 @@ RSpec.describe GithubService do
         change_action_to('created')
         expect {
           subject
-        }.to change { review_comment.reload.body }.from(nil).to(payload['comment']['body'])
+        }.to change { review_comment.reload.body }.from(review_comment.body)
+                                                  .to(payload['comment']['body'])
       end
 
       it 'edits body' do

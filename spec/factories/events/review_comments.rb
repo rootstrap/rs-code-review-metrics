@@ -24,8 +24,8 @@
 
 FactoryBot.define do
   factory :review_comment, class: Events::ReviewComment do
-    sequence(:github_id, 1000)
-    body { 'You might need to fix this.' }
+    github_id { Faker::Number.unique.number(digits: 4) }
+    body { Faker::Quote.matz }
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build
