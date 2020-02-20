@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: review_comments
+# Table name: reviews
 #
 #  id              :bigint           not null, primary key
 #  body            :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_review_comments_on_owner_id         (owner_id)
-#  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_owner_id         (owner_id)
+#  index_reviews_on_pull_request_id  (pull_request_id)
 #
 # Foreign Keys
 #
@@ -23,20 +23,20 @@
 #
 
 module Events
-  class ReviewComment < ApplicationRecord
-    ACTIONS = %w[edited deleted].freeze
+  class Review < ApplicationRecord
+    ACTIONS = %w[submitted edited dismissed].freeze
 
     enum status: { active: 'active', removed: 'removed' }
 
     has_many :events, as: :handleable, dependent: :destroy
     belongs_to :owner, class_name: 'User',
                        foreign_key: :owner_id,
-                       inverse_of: :owned_review_comments
+                       inverse_of: :owned_reviews
     belongs_to :pull_request, class_name: 'Events::PullRequest',
-                              inverse_of: :review_requests
+                              inverse_of: :reviews
 
     validates :status, inclusion: { in: statuses.keys }
-    validates :github_id, :body, presence: true
+    validates :github_id, presence: true
 
     attr_accessor :payload
 
@@ -59,15 +59,14 @@ module Events
       end
     end
 
-    def find_or_create_review_comment(payload)
-      comment_data = payload['comment']
-      comment = Events::ReviewComment.find_or_create_by!(github_id: comment_data['id']) do |rc|
-        rc.owner = find_or_create_user(comment_data['user'])
+    def find_or_create_review(payload)
+      review_data = payload['review']
+      review = Events::Review.find_or_create_by!(github_id: review_data['id']) do |rc|
+        rc.owner = find_or_create_user(review_data['user'])
         rc.pull_request = Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
-        rc.body = comment_data['body']
       end
-      comment.assign_attributes(payload: payload)
-      comment
+      review.assign_attributes(payload: payload)
+      review
     end
 
     def handleable?
@@ -76,11 +75,15 @@ module Events
 
     # Actions
 
+    def submitted
+      update!(body: payload['review']['body'])
+    end
+
     def edited
       update!(body: payload['changes']['body'])
     end
 
-    def deleted
+    def dismissed
       removed!
     end
   end
