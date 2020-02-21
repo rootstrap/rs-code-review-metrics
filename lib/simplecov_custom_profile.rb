@@ -1,4 +1,3 @@
-require 'simplecov'
 SimpleCov.profiles.define 'default' do
   add_group 'Services', 'app/services'
   add_group 'Entities', 'app/models/events'
