@@ -26,7 +26,7 @@ module ActionHandlers
     end
 
     def review_request_removed
-      reviewer = find_user
+      reviewer = User.find_by!(github_id: @payload['requested_reviewer']['id'])
       @entity.review_requests.find_by!(reviewer: reviewer).removed!
     end
 

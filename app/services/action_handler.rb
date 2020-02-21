@@ -13,10 +13,6 @@ class ActionHandler < BaseService
 
   private
 
-  def find_user
-    User.find_by!(github_id: @payload['requested_reviewer']['id'])
-  end
-
   def handle_action
     send(@payload['action'])
   end
