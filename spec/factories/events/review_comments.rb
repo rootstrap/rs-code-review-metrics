@@ -22,18 +22,12 @@
 #  fk_rails_...  (pull_request_id => pull_requests.id)
 #
 
-module Events
-  class ReviewComment < ApplicationRecord
-    enum status: { active: 'active', removed: 'removed' }
+FactoryBot.define do
+  factory :review_comment, class: Events::ReviewComment do
+    github_id { Faker::Number.unique.number(digits: 4) }
+    body { Faker::Quote.matz }
 
-    has_many :events, as: :handleable, dependent: :destroy
-    belongs_to :owner, class_name: 'User',
-                       foreign_key: :owner_id,
-                       inverse_of: :owned_review_comments
-    belongs_to :pull_request, class_name: 'Events::PullRequest',
-                              inverse_of: :review_requests
-
-    validates :status, inclusion: { in: statuses.keys }
-    validates :github_id, :body, presence: true
+    association :pull_request, strategy: :build
+    association :owner, factory: :user, strategy: :build
   end
 end

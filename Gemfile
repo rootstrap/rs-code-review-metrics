@@ -68,7 +68,8 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
-  gem 'simplecov', require: false
   gem 'shoulda-matchers', '~> 4.2.0', require: false
+  gem 'simplecov', require: false
+  gem 'faker', '~> 2.10', '>= 2.10.2'
   gem 'webdrivers'
 end

@@ -3,9 +3,11 @@
 # Table name: review_requests
 #
 #  id              :bigint           not null, primary key
+#  login           :string           not null
 #  status          :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  node_id         :string           not null
 #  owner_id        :bigint
 #  pull_request_id :bigint           not null
 #  reviewer_id     :bigint           not null
@@ -36,4 +38,5 @@ class ReviewRequest < ApplicationRecord
                             inverse_of: :review_requests
 
   validates :status, inclusion: { in: statuses.keys }
+  validates :node_id, :login, presence: true
 end

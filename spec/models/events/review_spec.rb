@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: review_comments
+# Table name: reviews
 #
 #  id              :bigint           not null, primary key
 #  body            :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_review_comments_on_owner_id         (owner_id)
-#  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_owner_id         (owner_id)
+#  index_reviews_on_pull_request_id  (pull_request_id)
 #
 # Foreign Keys
 #
@@ -24,9 +24,9 @@
 
 require 'rails_helper'
 
-RSpec.describe Events::ReviewComment, type: :model do
+RSpec.describe Events::Review, type: :model do
   describe 'validations' do
-    subject { build :review_comment }
+    subject { build :review }
 
     it 'is valid with valid attributes' do
       expect(subject).to be_valid
@@ -34,11 +34,6 @@ RSpec.describe Events::ReviewComment, type: :model do
 
     it 'is not valid without github id' do
       subject.github_id = nil
-      expect(subject).to_not be_valid
-    end
-
-    it 'is not valid without body' do
-      subject.body = nil
       expect(subject).to_not be_valid
     end
 

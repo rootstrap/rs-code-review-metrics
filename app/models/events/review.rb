@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: review_comments
+# Table name: reviews
 #
 #  id              :bigint           not null, primary key
 #  body            :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_review_comments_on_owner_id         (owner_id)
-#  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_owner_id         (owner_id)
+#  index_reviews_on_pull_request_id  (pull_request_id)
 #
 # Foreign Keys
 #
@@ -23,17 +23,17 @@
 #
 
 module Events
-  class ReviewComment < ApplicationRecord
+  class Review < ApplicationRecord
     enum status: { active: 'active', removed: 'removed' }
 
     has_many :events, as: :handleable, dependent: :destroy
     belongs_to :owner, class_name: 'User',
                        foreign_key: :owner_id,
-                       inverse_of: :owned_review_comments
+                       inverse_of: :owned_reviews
     belongs_to :pull_request, class_name: 'Events::PullRequest',
-                              inverse_of: :review_requests
+                              inverse_of: :reviews
 
     validates :status, inclusion: { in: statuses.keys }
-    validates :github_id, :body, presence: true
+    validates :github_id, presence: true
   end
 end

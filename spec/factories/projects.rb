@@ -13,19 +13,9 @@
 
 FactoryBot.define do
   factory :project do
-    sequence(:github_id, 1000)
-    name { 'rs-code-review-metrics' }
-    description { 'Github metrics' }
-    lang { 'ruby' }
-
-    factory :project_with_events do
-      transient do
-        events_count { 5 }
-      end
-
-      after(:create) do |project, evaluator|
-        create_list(:event, evaluator.events_count, project: project)
-      end
-    end
+    github_id { Faker::Number.unique.number(digits: 4) }
+    name { Faker::App.name }
+    description { Faker::FunnyName.name }
+    lang { %w[ruby python nodejs react ios android others unassigned].sample }
   end
 end

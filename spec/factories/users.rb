@@ -16,32 +16,8 @@
 
 FactoryBot.define do
   factory :user do
-    sequence(:github_id, 1000)
-    sequence(:login, 100) { |n| "octocat#{n}" }
-    node_id { 'MDQ6VXNlcjE=' }
-
-    factory :user_with_owned_review_requests do
-      transient do
-        owned_review_requests_count { 5 }
-      end
-
-      after(:create) do |user, evaluator|
-        create_list(:owned_review_request,
-                    evaluator.owned_review_requests_count,
-                    user: user)
-      end
-    end
-
-    factory :user_with_received_review_requests do
-      transient do
-        received_review_requests_count { 5 }
-      end
-
-      after(:create) do |user, evaluator|
-        create_list(:received_review_request,
-                    evaluator.received_review_requests_count,
-                    user: user)
-      end
-    end
+    github_id { Faker::Number.unique.number(digits: 4) }
+    login { "octocat#{Faker::Number.number}" }
+    node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
   end
 end

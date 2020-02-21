@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: review_comments
+# Table name: reviews
 #
 #  id              :bigint           not null, primary key
 #  body            :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_review_comments_on_owner_id         (owner_id)
-#  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_owner_id         (owner_id)
+#  index_reviews_on_pull_request_id  (pull_request_id)
 #
 # Foreign Keys
 #
@@ -23,8 +23,8 @@
 #
 
 FactoryBot.define do
-  factory :review_comment, class: Events::ReviewComment do
-    sequence(:github_id, 1000)
+  factory :review, class: Events::Review do
+    github_id { Faker::Number.unique.number(digits: 4) }
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

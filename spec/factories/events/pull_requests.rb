@@ -24,34 +24,12 @@
 
 FactoryBot.define do
   factory :pull_request, class: Events::PullRequest do
-    sequence(:github_id, 1000)
-    sequence(:number, 2)
-    sequence(:title) { |n| "Pull Request-#{n}" }
-    node_id { 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3' }
+    github_id { Faker::Number.unique.number(digits: 4) }
+    number { Faker::Number.number(digits: 1) }
+    title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
+    node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
     state { 'open' }
     locked { false }
     draft { false }
-
-    factory :pull_request_with_events do
-      transient do
-        events_count { 5 }
-      end
-
-      after(:create) do |pull_request, evaluator|
-        create_list(:event, evaluator.events_count, pull_request: pull_request)
-      end
-    end
-
-    factory :pull_request_with_review_requests do
-      transient do
-        review_requests_count { 5 }
-      end
-
-      after(:create) do |pull_request, evaluator|
-        create_list(:review_request,
-                    evaluator.review_requests_count,
-                    pull_request: pull_request)
-      end
-    end
   end
 end
