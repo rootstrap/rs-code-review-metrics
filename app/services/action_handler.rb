@@ -1,8 +1,8 @@
 class ActionHandler < BaseService
-  def initialize(payload:, event:, event_type:)
+  def initialize(payload:, event:, entity:)
     @payload = payload
     @event = event
-    @event_type = event_type
+    @entity = entity
   end
 
   def call

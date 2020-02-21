@@ -10,15 +10,15 @@ module ActionHandlers
     end
 
     def created
-      @event_type.update!(body: @payload['comment']['body'])
+      @entity.update!(body: @payload['comment']['body'])
     end
 
     def edited
-      @event_type.update!(body: @payload['changes']['body'])
+      @entity.update!(body: @payload['changes']['body'])
     end
 
     def deleted
-      @event_type.removed!
+      @entity.removed!
     end
   end
 end
