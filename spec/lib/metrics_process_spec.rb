@@ -16,8 +16,8 @@ RSpec.describe 'running the rake task metrics:process' do
   end
 
   it 'creates a ProcessMetricsJob and invokes it' do
-      expect_any_instance_of(ProcessMetricsJob).to receive(:perform).once
+    expect_any_instance_of(ProcessMetricsJob).to receive(:perform).once
 
-      rake_process_metrics
+    rake_process_metrics
   end
 end
