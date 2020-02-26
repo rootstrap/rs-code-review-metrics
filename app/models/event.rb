@@ -26,4 +26,5 @@ class Event < ApplicationRecord
 
   validates :name, presence: true, inclusion: { in: TYPES }
   validates :data, presence: true
+  validates :handleable, presence: true
 end
