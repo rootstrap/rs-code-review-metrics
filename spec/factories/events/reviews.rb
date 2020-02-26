@@ -31,7 +31,7 @@ FactoryBot.define do
     github_id { generate(:review_id) }
     state { generate(:review_state) }
 
-    association :pull_request, strategy: :build
-    association :owner, factory: :user, strategy: :build
+    association :pull_request
+    association :owner, factory: :user
   end
 end

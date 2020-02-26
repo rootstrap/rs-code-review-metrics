@@ -27,4 +27,16 @@ class Event < ApplicationRecord
   validates :name, presence: true, inclusion: { in: TYPES }
   validates :data, presence: true
   validates :handleable, presence: true
+
+  validate :name_matches_handleable_type, if: :handleable
+
+  ##
+  # Validates that the receiver name matches the class of the handleable Event.
+  # For example if the handleable is a Events::PullRequest object the name is
+  # expected to be 'pull_request'
+  def name_matches_handleable_type
+    return if name == handleable.event_name
+
+    errors.add(:name_matches_handleable_type, 'event name must match event type')
+  end
 end

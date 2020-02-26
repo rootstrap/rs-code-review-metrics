@@ -30,7 +30,7 @@ FactoryBot.define do
     github_id { generate(:review_comment_id) }
     body
 
-    association :pull_request, strategy: :build
-    association :owner, factory: :user, strategy: :build
+    association :pull_request
+    association :owner, factory: :user
   end
 end

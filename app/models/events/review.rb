@@ -25,6 +25,8 @@
 
 module Events
   class Review < ApplicationRecord
+    include EventRecord
+
     enum state: { approved: 'approved',
                   commented: 'commented',
                   changes_requested: 'changes_requested',

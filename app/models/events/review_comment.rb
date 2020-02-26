@@ -25,6 +25,8 @@
 
 module Events
   class ReviewComment < ApplicationRecord
+    include EventRecord
+
     enum state: { active: 'active', removed: 'removed' }
 
     has_many :events, as: :handleable, dependent: :destroy

@@ -22,7 +22,21 @@ FactoryBot.define do
   sequence(:body) { |n| "Please change line #{n}" }
 
   factory :event do
-    name { %w[pull_request review review_comment].sample }
+    name { handleable.event_name }
     data { Faker::Json.shallow_json(width: 3) }
+
+    association :project, factory: :project
+
+    trait :for_pull_request do
+      association :handleable, factory: :pull_request
+    end
+
+    trait :for_review do
+      association :handleable, factory: :review
+    end
+
+    trait :review_comment do
+      association :handleable, factory: :review_comment
+    end
   end
 end

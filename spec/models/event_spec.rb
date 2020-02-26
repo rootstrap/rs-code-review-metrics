@@ -21,7 +21,7 @@
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  subject { build :event }
+  subject { create(:event, :for_pull_request) }
 
   context 'validations' do
     it { should validate_presence_of(:name) }
@@ -32,5 +32,10 @@ RSpec.describe Event, type: :model do
 
     it { should validate_presence_of(:data) }
     it { should validate_presence_of(:handleable) }
+
+    it 'should validate the name to match the event type' do
+      subject = build(:event, :for_pull_request, name: 'review')
+      expect(subject).not_to be_valid
+    end
   end
 end
