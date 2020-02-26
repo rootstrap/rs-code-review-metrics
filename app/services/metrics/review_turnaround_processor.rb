@@ -22,7 +22,7 @@ module Metrics
     end
 
     def process_event?(event:)
-      %w[pull_request review].include?(event.name)
+      event.name == 'review'
     end
 
     ##
@@ -32,16 +32,18 @@ module Metrics
       update_metric(
         entity_key: event.project.name,
         metric_key: 'review_turnaround',
-        value: review_turnaround_value(event: event),
+        value: review_turnaround_as_seconds(event: event),
         value_timestamp: nil
       )
     end
 
     ##
     # Returns the review turnaround value for the given event.
-    def review_turnaround_value(event:)
-      # Placeholder until the handling of the PullRequestReviewEvent
-      3600
+    def review_turnaround_as_seconds(event:)
+      review_event = event.handleable
+      pull_request = review_event.pull_request
+
+      review_event.created_at - pull_request.created_at
     end
   end
 end
