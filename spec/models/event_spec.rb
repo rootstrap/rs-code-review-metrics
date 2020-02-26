@@ -25,8 +25,9 @@ RSpec.describe Event, type: :model do
 
   context 'validations' do
     it { should validate_presence_of(:name) }
-    it { should validate_inclusion_of(:name)
-      .in_array(%w[pull_request review review_comment])
+    it {
+      should validate_inclusion_of(:name)
+        .in_array(%w[pull_request review review_comment])
     }
 
     it { should validate_presence_of(:data) }

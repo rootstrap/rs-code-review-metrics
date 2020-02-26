@@ -8,11 +8,12 @@ module Metrics
 
     ##
     # Processes the given events to generate the metrics.
-    def call()
-      process_events()
+    def call
+      process_events
     end
 
-private
+    private
+
     ##
     # Creates or updates the value of the metric with the key (entity_key, metric_key).
     def update_metric(entity_key:, metric_key:, value:, value_timestamp:)

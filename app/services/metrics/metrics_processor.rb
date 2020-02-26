@@ -14,7 +14,8 @@ module Metrics
       process_all_metrics
     end
 
-  private
+    private
+
     ##
     # Returns the collection of all metrics to be processed.
     def all_metrics

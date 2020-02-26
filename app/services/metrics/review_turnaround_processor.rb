@@ -11,18 +11,18 @@ module Metrics
   #   - the instant when a PullRequestReviewEvent for that same PullRequestReview
   #     is received.
   class ReviewTurnaroundProcessor < Metric
+    private
 
-  private
     ##
     # Processes the given events to generate the review_turnaround metrics.
-    def process_events()
+    def process_events
       @events.each do |event|
         process_event(event: event) if process_event?(event: event)
       end
     end
 
     def process_event?(event: event)
-      ['pull_request', 'review'].include?(event.name)
+      %w[pull_request review].include?(event.name)
     end
 
     ##
