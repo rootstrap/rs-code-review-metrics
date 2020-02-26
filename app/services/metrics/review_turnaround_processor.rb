@@ -21,7 +21,7 @@ module Metrics
       end
     end
 
-    def process_event?(event: event)
+    def process_event?(event:)
       %w[pull_request review].include?(event.name)
     end
 
