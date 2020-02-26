@@ -5,10 +5,8 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
 
   let(:project) { create :project, name: 'Project A' }
 
-  let(:review_event) { create :review }
-
   let(:create_one_review_event) do
-    create :event, project: project, handleable: review_event
+    create :event, :of_type_review, project: project
   end
 
   let(:events_to_process) { Event.all }
@@ -96,7 +94,7 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
     let(:another_project) { create :project, name: 'Project B' }
 
     let(:create_one_review_event_for_another_project) do
-      create :event, project: another_project, handleable: review_event
+      create :event, :of_type_review, project: another_project
     end
 
     let(:create_test_events) do
