@@ -13,34 +13,36 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
 
   let(:events_to_process) { Event.all }
 
+  let(:create_test_events) {}
+
   let(:generated_metrics) { Metric.all }
 
   let(:generated_metrics_count) { generated_metrics.size }
 
-  describe 'for an empty collection of events to process' do
-    before do
-      create_one_review_comment_event
-    end
+  before do
+    create_test_events
+  end
 
+  describe 'when processing a collection containing no review_event' do
     let(:review_comment) { create :review_comment }
 
-    let(:create_one_review_comment_event) do
+    let(:create_test_events) do
       create :event, name: 'review_comment', project: project, handleable: review_comment
     end
 
-    it 'does not create a metrics' do
+    it 'does not create a metric' do
       subject.call(events: events_to_process)
 
       expect(generated_metrics_count).to eq(0)
     end
   end
 
-  describe 'for a project that has no previous review_turnaround generated' do
-    before do
+  describe 'for a project that had not previously processed the review_turnaround metric' do
+    let(:create_test_events) do
       create_one_review_event
     end
 
-    it 'generates a new metric' do
+    it 'generates a first review_turnaround metric' do
       subject.call(events: events_to_process)
 
       expect(generated_metrics.first).to have_attributes(
@@ -58,10 +60,14 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
     end
   end
 
-  describe 'for a project that has a previous review_turnaround generated' do
-    before(:each) do
-      create_one_review_event
+  describe 'for a project that had previously processed the review_turnaround metric' do
+    let(:generate_previous_review_turnaround) do
       subject.call(events: events_to_process)
+    end
+
+    let(:create_test_events) do
+      create_one_review_event
+      generate_previous_review_turnaround
     end
 
     it 'updates the metric' do
@@ -83,15 +89,15 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
   end
 
   describe 'for two different projects' do
-    before do
-      create_one_review_event
-      create_one_review_event_for_another_project
-    end
-
     let(:another_project) { create :project, name: 'Project B' }
 
     let(:create_one_review_event_for_another_project) do
       create :event, name: 'pull_request', project: another_project, handleable: review_request
+    end
+
+    let(:create_test_events) do
+      create_one_review_event
+      create_one_review_event_for_another_project
     end
 
     it 'generates a new metric for the first project' do
