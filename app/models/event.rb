@@ -23,5 +23,7 @@ class Event < ApplicationRecord
 
   belongs_to :handleable, polymorphic: true, optional: true
   belongs_to :project
-  validates :name, :data, presence: true
+
+  validates :name, presence: true, inclusion: { in: TYPES }
+  validates :data, presence: true
 end

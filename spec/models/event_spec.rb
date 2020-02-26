@@ -24,14 +24,11 @@ RSpec.describe Event, type: :model do
   subject { build :event }
 
   context 'validations' do
-    it 'is not valid without data' do
-      subject.data = nil
-      expect(subject).to_not be_valid
-    end
+    it { should validate_presence_of(:name) }
+    it { should validate_inclusion_of(:name)
+      .in_array(%w[pull_request review review_comment])
+    }
 
-    it 'is not valid without name' do
-      subject.name = nil
-      expect(subject).to_not be_valid
-    end
+    it { should validate_presence_of(:data) }
   end
 end
