@@ -27,15 +27,15 @@ FactoryBot.define do
 
     association :project, factory: :project
 
-    trait :for_pull_request do
+    trait :of_type_pull_request do
       association :handleable, factory: :pull_request
     end
 
-    trait :for_review do
+    trait :of_type_review do
       association :handleable, factory: :review
     end
 
-    trait :review_comment do
+    trait :of_type_comment do
       association :handleable, factory: :review_comment
     end
   end
