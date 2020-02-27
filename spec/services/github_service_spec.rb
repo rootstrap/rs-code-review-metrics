@@ -127,5 +127,20 @@ RSpec.describe GithubService do
         }.to change { review_comment.reload.state }.from('active').to('removed')
       end
     end
+
+    context 'type not included in Event::TYPES' do
+      let(:payload) { create :check_run_payload, :with_repository }
+      let(:event) { 'check_run' }
+
+      it 'saves the unhandled Event' do
+        expect {
+          suppress(Events::NotHandleableError) { subject }
+        }.to change(Event, :count).by(1)
+      end
+
+      it 'raises an Events::NotHandleableError' do
+        expect { subject }.to raise_error(Events::NotHandleableError)
+      end
+    end
   end
 end

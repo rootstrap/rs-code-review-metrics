@@ -36,6 +36,8 @@ class GithubService < BaseService
   end
 
   def find_or_create_event_type
+    return unless handleable_event?
+
     EventBuilders.const_get(@event.classify).call(payload: @payload, event: @event)
   end
 

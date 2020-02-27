@@ -25,17 +25,15 @@ RSpec.describe Event, type: :model do
 
   context 'validations' do
     it { should validate_presence_of(:name) }
-    it {
-      should validate_inclusion_of(:name)
-        .in_array(%w[pull_request review review_comment])
-    }
-
     it { should validate_presence_of(:data) }
-    it { should validate_presence_of(:handleable) }
 
-    it 'should validate the name to match the event type' do
-      subject = build(:event, :of_type_pull_request, name: 'review')
-      expect(subject).not_to be_valid
+    context 'of an event handled type' do
+      it { should validate_presence_of(:handleable) }
+
+      it 'should validate the name to match the event type' do
+        subject = build(:event, :of_type_pull_request, name: 'review')
+        expect(subject).not_to be_valid
+      end
     end
   end
 end
