@@ -23,19 +23,23 @@ FactoryBot.define do
 
   factory :event do
     name { handleable.event_name }
-    data { Faker::Json.shallow_json(width: 3) }
 
     association :project, factory: :project
 
+    of_type_pull_request
+
     trait :of_type_pull_request do
+      data { build :pull_request_payload }
       association :handleable, factory: :pull_request
     end
 
     trait :of_type_review do
+      data { build :review_payload }
       association :handleable, factory: :review
     end
 
     trait :of_type_comment do
+      data { build :review_comment_payload }
       association :handleable, factory: :review_comment
     end
   end
