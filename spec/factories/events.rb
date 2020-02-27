@@ -22,11 +22,11 @@ FactoryBot.define do
   sequence(:body) { |n| "Please change line #{n}" }
 
   factory :event do
+    of_type_pull_request
+
     name { handleable.event_name }
 
     association :project, factory: :project
-
-    of_type_pull_request
 
     trait :of_type_pull_request do
       data { build :pull_request_payload }

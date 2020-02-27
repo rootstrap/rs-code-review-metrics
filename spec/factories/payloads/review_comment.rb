@@ -15,11 +15,14 @@ FactoryBot.define do
     end
     initialize_with { attributes.deep_stringify_keys }
 
-    factory :full_review_comment_payload do
-      after(:create) do |review_payload|
-        review_payload.merge!((create :pull_request_payload))
-        review_payload.merge!((create :repository_payload))
-      end
+    trait :with_pull_request do
+      pull_request { (build :pull_request_payload, repository: repository)['pull_request'] }
     end
+
+    trait :with_repository do
+      repository { (build :repository_payload)['repository'] }
+    end
+
+    factory :full_review_comment_payload, traits: %i[with_repository with_pull_request]
   end
 end

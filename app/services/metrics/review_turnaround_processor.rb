@@ -4,12 +4,14 @@ module Metrics
   # metric.
   #
   # The review_turnaround value is defined as the number of seconds between
-  #   - the instant when a PullRequestReview is created
+  #   - the instant when a PullRequest review_requested action is created
+  #     (https://developer.github.com/v3/activity/events/types/#pullrequestevent)
   #
   #   up to
   #
   #   - the instant when a PullRequestReviewEvent for that same PullRequestReview
-  #     is received.
+  #     is 'submitted', 'edited' or 'dismissed'.
+  #     (https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
   class ReviewTurnaroundProcessor < Metric
     private
 
@@ -40,10 +42,11 @@ module Metrics
     ##
     # Returns the review turnaround value for the given event.
     def review_turnaround_as_seconds(event:)
-      review_event = event.handleable
-      pull_request = review_event.pull_request
+      # RFC should we move these times to the Event model?
+      review_attended_at = Time.zone.parse(event.data['review']['submitted_at'])
+      review_requested_at = Time.zone.parse(event.data['pull_request']['created_at'])
 
-      review_event.created_at - pull_request.created_at
+      (review_attended_at - review_requested_at).seconds
     end
   end
 end
