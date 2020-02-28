@@ -57,6 +57,7 @@ module Metrics
 
       events.each do |event|
         next if skip_event?(event: event)
+
         pull_request_id = event.data['pull_request']['id']
         next if pull_request_reviewed_track.key?(pull_request_id)
 
