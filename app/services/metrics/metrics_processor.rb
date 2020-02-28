@@ -35,7 +35,7 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process(metric:, events:)
-      metric.call(events: events)
+      metric.call(events: events, starting_at: nil, time_span: 1.day)
     end
 
     ##

@@ -2,12 +2,16 @@ module Metrics
   ##
   # Base class for classes that do the processing of a Metric from given events.
   class Metric < BaseService
-    def initialize(events:)
+    def initialize(events:, starting_at:, time_span:)
       @events = events
+      @starting_at = starting_at
+      @time_span = time_span
     end
 
     ##
     # Processes the given events to generate the metrics.
+    # The given @events are expected to include all the events during the full
+    # time interval ( [@starting_at, @starting_at + @time_span) ).
     def call
       process_events
     end

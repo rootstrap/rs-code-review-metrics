@@ -5,7 +5,13 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
 
   let(:events_to_process) { Event.all }
 
-  let(:process_all_events) { subject.call(events: events_to_process) }
+  let(:time_span_to_process) { 1.day }
+
+  let(:start_time_to_process) { Time.zone.parse('2020-01-01 00:00:00') }
+
+  let(:process_all_events) do
+    subject.call(events: events_to_process, starting_at: start_time_to_process, time_span: time_span_to_process)
+  end
 
   let(:create_test_events) {}
 

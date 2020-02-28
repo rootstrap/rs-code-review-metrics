@@ -12,6 +12,33 @@ module Metrics
   #   - the instant when a PullRequestReviewEvent for that same PullRequestReview
   #     is 'submitted', 'edited' or 'dismissed'.
   #     (https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
+  #
+  # The review_turnaround metric is generated for:
+  #     - a project
+  #       and
+  #     - a time interval
+  #
+  # For example, given two projects A and B and a daily interval the ReviewTurnaroundProcessor
+  # would generate the following metrics:
+  #
+  #     - project A, 2020-01-01 => 100
+  #     - project B, 2020-01-01 => 20
+  #     - project A, 2020-01-02 => 130
+  #     - project B, 2020-01-02 => 120
+  #
+  # For the same project and a monthly interval generates the following metrics
+  #
+  #     - project A, 2020-01-01 => 320
+  #     - project B, 2020-01-01 => 140
+  #     - project A, 2020-02-00 => 150
+  #     - project B, 2020-02-00 => 110
+  #
+  # Therefore to generate the metrics from a collection of Github events the
+  # ReviewTurnaroundProcessor requires the following parameters:
+  #
+  #     - an interval of time (1 month)
+  #     - the initial point in time for the interval (2020-01-01)
+  #     - the collection of events reveived in that interval
   class ReviewTurnaroundProcessor < Metric
     private
 
