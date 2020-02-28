@@ -40,12 +40,17 @@ FactoryBot.define do
 
     factory :event_pull_request do
       transient do
-        created_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday).to_time }
-        updated_at { Faker::Date.between(from: created_at, to: Date.yesterday).to_time }
+        created_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday) }
+        updated_at { Faker::Date.between(from: created_at, to: Date.yesterday) }
       end
 
       name { handleable.event_name }
-      data { build :pull_request_payload, action: action, created_at: created_at, updated_at: updated_at }
+      data do
+        build :pull_request_payload,
+              action: action,
+              created_at: created_at,
+              updated_at: updated_at
+      end
       association :handleable, factory: :pull_request
     end
 
