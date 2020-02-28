@@ -71,7 +71,7 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
       expect(first_metric).to have_attributes(
         entity_key: 'Project A',
         metric_key: 'review_turnaround',
-        value_timestamp: nil
+        value_timestamp: start_time_to_process
       )
 
       expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
