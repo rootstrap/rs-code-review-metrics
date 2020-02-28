@@ -22,23 +22,49 @@ FactoryBot.define do
   sequence(:body) { |n| "Please change line #{n}" }
 
   factory :event do
-    of_type_pull_request
+    transient do
+      action {}
+      pull_request_payload {}
+    end
 
-    name { handleable.event_name }
+    data { build :check_run_payload }
+
+    name { 'check_run' }
 
     association :project, factory: :project
 
-    trait :of_type_pull_request do
-      data { build :pull_request_payload }
+    after(:build) do |event, factory|
+      event.data['action'] = factory.action if factory.action
+      event.data['pull_request'] = factory.pull_request_payload if factory.pull_request_payload
+    end
+
+    factory :event_pull_request do
+      transient do
+        created_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday).to_time }
+        updated_at { Faker::Date.between(from: created_at, to: Date.yesterday).to_time }
+      end
+
+      name { handleable.event_name }
+      data { build :pull_request_payload, action: action, created_at: created_at, updated_at: updated_at }
       association :handleable, factory: :pull_request
     end
 
-    trait :of_type_review do
+    factory :event_review do
+      transient do
+        submitted_at {}
+      end
+
+      name { handleable.event_name }
       data { build :review_payload }
       association :handleable, factory: :review
+
+      after(:build) do |event, factory|
+        event.data['review']['submitted_at'] = factory.submitted_at.to_s if factory.submitted_at
+      end
     end
 
-    trait :of_type_comment do
+    factory :event_review_comment do
+      name { handleable.event_name }
       data { build :review_comment_payload }
       association :handleable, factory: :review_comment
     end

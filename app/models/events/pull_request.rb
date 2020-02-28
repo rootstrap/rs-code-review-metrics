@@ -46,5 +46,9 @@ module Events
               :locked,
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
+
+    ##
+    # Returns the number of reviews this pull_request has
+    delegate :count, to: :reviews, prefix: true
   end
 end
