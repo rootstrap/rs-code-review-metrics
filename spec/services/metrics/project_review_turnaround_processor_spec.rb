@@ -72,6 +72,25 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
   context 'for a project' do
     let(:project_a) { create :project, name: 'Project A' }
 
+    describe 'with a PR that had not been reviewed yet' do
+      #  event :project, id: 10, action: :created, at: '2019-01-01 15:10:00'
+      #
+      # Partial metric:
+      #  event :pull_request, id: 1, project: 'Project A',
+      #   action: :opened, at: '2020-01-01 15:10:00'
+      let(:create_test_events) do
+        pull_request = create :event_pull_request,
+                              project: project_a,
+                              action: 'opened',
+                              created_at: Time.zone.parse('2020-01-01T15:10:00')
+      end
+
+      # expect metrics_for project id: 'Project A', count: 0
+      it 'does not generate a metric' do
+        expect(generated_metrics_count).to eq(0)
+      end
+    end
+
     describe 'with no previous review_turnaround metric in the given time interval' do
       #  event :project, id: 10, action: :created, at: '2019-01-01 15:10:00'
       #  event :pull_request, id: 1, project: 'Project A',
