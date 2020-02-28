@@ -64,7 +64,7 @@ module Metrics
         entity_key: event.project.name,
         metric_key: 'review_turnaround',
         value: review_turnaround_as_seconds(event: event),
-        value_timestamp: @starting_at
+        value_timestamp: @time_interval.starting_at
       )
     end
 

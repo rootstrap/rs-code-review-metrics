@@ -5,14 +5,14 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
 
   let(:events_to_process) { Event.all }
 
-  let(:time_span_to_process) { 1.day }
-
-  let(:start_time_to_process) { Time.zone.parse('2020-01-01 00:00:00') }
+  let(:time_interval_to_process) do
+    TimeInterval.new(starting_at: Time.zone.parse('2020-01-01 00:00:00'),
+                     duration: 1.day)
+  end
 
   let(:process_all_events) do
     subject.call(events: events_to_process,
-                 starting_at: start_time_to_process,
-                 time_span: time_span_to_process)
+                 time_interval: time_interval_to_process)
   end
 
   let(:create_test_events) {}
@@ -76,7 +76,7 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
         expect(first_metric).to have_attributes(
           entity_key: 'Project A',
           metric_key: 'review_turnaround',
-          value_timestamp: start_time_to_process
+          value_timestamp: time_interval_to_process.starting_at
         )
 
         expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
