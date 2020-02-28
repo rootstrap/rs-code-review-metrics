@@ -14,7 +14,7 @@ module Metrics
   #     (https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
   #
   # The review_turnaround metric is generated for:
-  #     - a project
+  #     - a project (in the future it will also be for a user and user/project)
   #       and
   #     - a time interval
   #
@@ -36,8 +36,8 @@ module Metrics
   # Therefore to generate the metrics from a collection of Github events the
   # ReviewTurnaroundProcessor requires the following parameters:
   #
-  #     - an interval of time (1 month)
-  #     - the initial point in time for the interval (2020-01-01)
+  #     - an interval of time (ej. 1 month)
+  #     - the initial point in time for the interval (ej. 2020-01-01)
   #     - the collection of events reveived in that interval
   class ReviewTurnaroundProcessor < Metric
     private
@@ -45,8 +45,29 @@ module Metrics
     ##
     # Processes the given events to generate the review_turnaround metrics.
     def process_events
+      review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
+
       @events.each do |event|
-        process_event(event: event) if process_event?(event: event)
+        process_event(event: event) do |review_turnaround_value|
+          review_turnaround_per_project[event.project.name] << review_turnaround_value
+        end
+      end
+
+      update_metrics(review_turnaround_per_project: review_turnaround_per_project)
+    end
+
+    ##
+    # Updates the metrics for all the project in the given review_turnaround_per_project
+    def update_metrics(review_turnaround_per_project:)
+      review_turnaround_per_project.each_pair do |project_id, values|
+        average_value = values.sum / values.size
+
+        update_metric(
+          entity_key: project_id,
+          metric_key: 'review_turnaround',
+          value: average_value,
+          value_timestamp: @time_interval.starting_at
+        )
       end
     end
 
@@ -57,15 +78,10 @@ module Metrics
     ##
     # Process a single event.
     # If the event is not related to a turn around event it ignores it.
-    def process_event(event:)
-      return if pull_request_reviewed?(review_event: event)
+    def process_event(event:, &value_block)
+      return if event.name != 'review' || pull_request_reviewed?(review_event: event)
 
-      update_metric(
-        entity_key: event.project.name,
-        metric_key: 'review_turnaround',
-        value: review_turnaround_as_seconds(event: event),
-        value_timestamp: @time_interval.starting_at
-      )
+      value_block.call(review_turnaround_as_seconds(event: event))
     end
 
     ##
