@@ -19,23 +19,23 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
     process_all_events
   end
 
-  describe 'when processing a collection containing no review_events' do
-    let(:create_test_events) do
-      pull_request_event_payload = create_pull_request_event(
-        action: 'opened',
-        created_at: Time.zone.parse('2020-01-01T15:10:00')
-      )
+  context 'no review_turnaround events' do
+    describe 'when processing a collection containing no review_events' do
+      let(:create_test_events) do
+        pull_request_event_payload = create_pull_request_event(
+          action: 'opened',
+          created_at: Time.zone.parse('2020-01-01T15:10:00')
+        )
 
-      create_review_comment_event pull_request_event_payload: pull_request_event_payload
+        create_review_comment_event pull_request_event_payload: pull_request_event_payload
+      end
+
+      it 'does not create a metric' do
+        expect(generated_metrics_count).to eq(0)
+      end
     end
 
-    it 'does not create a metric' do
-      expect(generated_metrics_count).to eq(0)
-    end
-  end
-
-  context 'for a project' do
-    describe 'with a PR that had not been reviewed yet' do
+    describe 'with a PR that has no reviews' do
       let(:create_test_events) do
         create_pull_request_event(action: 'opened',
                                   created_at: Time.zone.parse('2020-01-01T15:10:00'))
@@ -45,8 +45,10 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
         expect(generated_metrics_count).to eq(0)
       end
     end
+  end
 
-    describe 'with no previous review_turnaround metric in the given time interval' do
+  context 'metrics generation' do
+    describe 'if the metrics for the given time interval was not yet generated' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
           action: 'opened',
@@ -73,7 +75,7 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
       end
     end
 
-    describe 'with a previous review_turnaround metric in the given time interval' do
+    describe 'if a metric for the given time interval was already generated' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
           action: 'opened',
