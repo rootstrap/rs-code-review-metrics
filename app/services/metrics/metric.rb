@@ -12,7 +12,7 @@ module Metrics
     # The given @events are expected to include all the events during the full
     # time interval ( [@starting_at, @starting_at + @time_span) ).
     def call
-      process_events
+      process_events(events: @events, time_interval: @time_interval)
     end
 
     private

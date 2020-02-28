@@ -44,21 +44,22 @@ module Metrics
 
     ##
     # Processes the given events to generate the review_turnaround metrics.
-    def process_events
+    def process_events(events:, time_interval:)
       review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
 
-      @events.each do |event|
+      events.each do |event|
         process_event(event: event) do |review_turnaround_value|
           review_turnaround_per_project[event.project.name] << review_turnaround_value
         end
       end
 
-      update_metrics(review_turnaround_per_project: review_turnaround_per_project)
+      update_metrics(value_timestamp: time_interval.starting_at,
+                     review_turnaround_per_project: review_turnaround_per_project)
     end
 
     ##
     # Updates the metrics for all the project in the given review_turnaround_per_project
-    def update_metrics(review_turnaround_per_project:)
+    def update_metrics(value_timestamp:, review_turnaround_per_project:)
       review_turnaround_per_project.each_pair do |project_id, values|
         average_value = values.sum / values.size
 
@@ -66,7 +67,7 @@ module Metrics
           entity_key: project_id,
           metric_key: 'review_turnaround',
           value: average_value,
-          value_timestamp: @time_interval.starting_at
+          value_timestamp: value_timestamp
         )
       end
     end
