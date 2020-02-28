@@ -22,16 +22,9 @@ FactoryBot.define do
         body: generate(:body)
       }
     end
+    pull_request { (build :pull_request_payload, repository: repository)['pull_request'] }
+    repository { (build :repository_payload)['repository'] }
+
     initialize_with { attributes.deep_stringify_keys }
-
-    trait :with_pull_request do
-      pull_request { (build :pull_request_payload, repository: repository)['pull_request'] }
-    end
-
-    trait :with_repository do
-      repository { (build :repository_payload)['repository'] }
-    end
-
-    factory :full_review_payload, traits: %i[with_repository with_pull_request]
   end
 end

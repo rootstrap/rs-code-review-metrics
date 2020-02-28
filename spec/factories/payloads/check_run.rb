@@ -9,10 +9,8 @@ FactoryBot.define do
         node_id: "#{Faker::Alphanumeric.alphanumeric}="
       }
     end
-    initialize_with { attributes.deep_stringify_keys }
+    repository { (create :repository_payload)['repository'] }
 
-    trait :with_repository do
-      repository { (create :repository_payload)['repository'] }
-    end
+    initialize_with { attributes.deep_stringify_keys }
   end
 end

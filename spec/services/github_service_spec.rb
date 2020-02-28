@@ -58,7 +58,7 @@ RSpec.describe GithubService do
     end
 
     context 'review' do
-      let(:payload) { (create :full_review_payload) }
+      let(:payload) { (create :review_payload) }
       let(:event) { 'review' }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:review) { create :review, github_id: payload['review']['id'] }
@@ -93,7 +93,7 @@ RSpec.describe GithubService do
     end
 
     context 'review comment' do
-      let(:payload) { create :full_review_comment_payload }
+      let(:payload) { create :review_comment_payload }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
@@ -129,7 +129,7 @@ RSpec.describe GithubService do
     end
 
     context 'type not included in Event::TYPES' do
-      let(:payload) { create :check_run_payload, :with_repository }
+      let(:payload) { create :check_run_payload }
       let(:event) { 'check_run' }
 
       it 'saves the unhandled Event' do
