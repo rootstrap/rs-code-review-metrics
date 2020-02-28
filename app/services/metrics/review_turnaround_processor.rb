@@ -45,16 +45,28 @@ module Metrics
     ##
     # Processes the given events to generate the review_turnaround metrics.
     def process_events(events:, time_interval:)
-      review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
-
-      events.each do |event|
-        process_event(event: event) do |review_turnaround_value|
-          review_turnaround_per_project[event.project.name] << review_turnaround_value
-        end
-      end
+      review_turnaround_per_project = collect_review_turnaround_per_project(events: events)
 
       update_metrics(value_timestamp: time_interval.starting_at,
                      review_turnaround_per_project: review_turnaround_per_project)
+    end
+
+    def collect_review_turnaround_per_project(events:)
+      review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
+      pull_request_reviewed_track = {}
+
+      events.each do |event|
+        next if skip_event?(event: event)
+        pull_request_id = event.data['pull_request']['id']
+        next if pull_request_reviewed_track.key?(pull_request_id)
+
+        review_turnaround_value = review_turnaround_as_seconds(event: event)
+        review_turnaround_per_project[event.project.name] << review_turnaround_value
+
+        pull_request_reviewed_track[pull_request_id] = :reviewed
+      end
+
+      review_turnaround_per_project
     end
 
     ##
@@ -80,8 +92,6 @@ module Metrics
     # Process a single event.
     # If the event is not related to a turn around event it ignores it.
     def process_event(event:, &value_block)
-      return if event.name != 'review' || pull_request_reviewed?(review_event: event)
-
       value_block.call(review_turnaround_as_seconds(event: event))
     end
 
@@ -106,9 +116,9 @@ module Metrics
     #
     # In all other cases the pull_request linked to this review_event was already
     # reviewed and the review_event is ignored for the review_turnaround metric
-    def pull_request_reviewed?(review_event:)
-      (review_event.data['review']['action'] != 'submitted') &&
-        review_event.handleable.pull_request.reviews_count > 1
+    def skip_event?(event:)
+      event.name != 'review' ||
+        event.data['action'] != 'submitted'
     end
   end
 end

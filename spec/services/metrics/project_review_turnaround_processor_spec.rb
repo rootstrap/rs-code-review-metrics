@@ -116,4 +116,27 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
       end
     end
   end
+
+  context 'review turnaround definition' do
+    describe 'if a pull request has more than one review' do
+      let(:create_test_events) do
+        pull_request_event_payload = create_pull_request_event(
+          action: 'opened',
+          created_at: Time.zone.parse('2020-01-01T15:10:00')
+        )
+
+        create_review_event pull_request_event_payload: pull_request_event_payload,
+                            action: 'submitted',
+                            submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+
+        create_review_event pull_request_event_payload: pull_request_event_payload,
+                            action: 'submitted',
+                            submitted_at: Time.zone.parse('2020-01-01T16:30:00')
+      end
+
+      it 'it uses only the first review for to calculate the metric value' do
+        expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
+      end
+    end
+  end
 end
