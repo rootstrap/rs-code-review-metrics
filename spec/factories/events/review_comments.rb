@@ -25,7 +25,7 @@
 FactoryBot.define do
   factory :review_comment, class: Events::ReviewComment do
     github_id { Faker::Number.unique.number(digits: 4) }
-    body { Faker::Quote.matz }
+    body { Faker::Quote.singular_siegler }
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

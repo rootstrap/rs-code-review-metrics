@@ -4,13 +4,13 @@ FactoryBot.define do
     review do
       {
         id: Faker::Number.number(digits: 4),
-        body: Faker::Quote.matz,
+        body: Faker::Quote.singular_siegler,
         user: (attributes_for :user, id: Faker::Number.number).as_json
       }
     end
     changes do
       {
-        body: Faker::Quote.matz
+        body: Faker::Quote.singular_siegler
       }
     end
     initialize_with { attributes.deep_stringify_keys }
