@@ -29,6 +29,8 @@ class Event < ApplicationRecord
   validates :handleable, presence: true, if: proc { |event| event.handled_type? }
   validate :name_matches_handleable_type, if: proc { |event| handleable && event.handled_type? }
 
+  scope :received_after, ->(time) { time ? where('created_at > ?', time) : nil }
+
   ##
   # Validate that the receiver name matches the class of the handleable Event.
   # For example if handleable is a Events::PullRequest object the name is
