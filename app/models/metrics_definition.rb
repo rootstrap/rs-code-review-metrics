@@ -15,7 +15,7 @@
 class MetricsDefinition < ApplicationRecord
   enum time_intervals: { all_times: 'all_times', daily: 'daily', weekly: 'weekly' }
   enum subjects: { projects: 'projects', users: 'users', users_per_project: 'users_per_project' }
-  DURATIONS = { 'all_times' => nil, 'daily' => 1.day, 'weekly' => 7.days }
+  DURATIONS = { 'all_times' => nil, 'daily' => 1.day, 'weekly' => 7.days }.freeze
 
   validates :metrics_name, presence: true, length: { maximum: 255 }
   validates :time_interval, presence: true, inclusion: { in: time_intervals.keys }
