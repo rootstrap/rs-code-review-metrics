@@ -17,9 +17,17 @@ module Metrics
     private
 
     ##
+    # Returns all the defined metrics to process.
+    def all_metrics_definitions
+      MetricsDefinition.all
+    end
+
+    ##
     # Returns the collection of all metrics to be processed.
     def all_metrics
-      [ReviewTurnaroundProcessor]
+      all_metrics_definitions.map do |metrics_definition|
+        metrics_definition.metrics_processor
+      end
     end
 
     ##
@@ -35,7 +43,9 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process(metric:, events:)
-      metric.call(events: events, time_interval: nil)
+      time_interval = TimeInterval.new(starting_at: Date.today, duration: 1.day)
+
+      metric.call(events: events, time_interval: time_interval)
     end
 
     ##

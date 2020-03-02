@@ -17,4 +17,8 @@ class MetricsDefinition < ApplicationRecord
   validates :metrics_name, presence: true, length: { maximum: 255 }
   validates :time_interval, presence: true, inclusion: { in: time_intervals.keys }
   validates :subject, presence: true, inclusion: { in: subjects.keys }
+
+  def metrics_processor
+    Metrics::ReviewTurnaroundProcessor
+  end
 end

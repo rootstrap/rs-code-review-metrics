@@ -1,6 +1,6 @@
 require_relative 'metrics_specs_helper'
 
-RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
+RSpec.describe Metrics::ReviewTurnaroundProcessor do
   subject { Metrics::ReviewTurnaroundProcessor }
 
   let(:test_repository_payload) do
