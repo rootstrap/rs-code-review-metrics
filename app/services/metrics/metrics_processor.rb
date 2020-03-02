@@ -23,14 +23,6 @@ module Metrics
     end
 
     ##
-    # Returns the collection of all metrics to be processed.
-    def all_metrics
-      all_metrics_definitions.map do |metrics_definition|
-        metrics_processor_for(metrics_definition)
-      end
-    end
-
-    ##
     # Returns the concrete MetricsProcessor to process the metrics definition.
     def metrics_processor_for(metrics_definition)
       metrics_definition.metrics_processor.constantize
@@ -41,8 +33,16 @@ module Metrics
     def process_all_metrics
       events = events_to_process
 
-      all_metrics.each do |metric|
+      return if events.empty?
+
+      last_event_time = events.last.created_at
+
+      all_metrics_definitions.each do |metrics_definition|
+        metric = metrics_processor_for(metrics_definition)
+
         process(metric: metric, events: events)
+
+        metrics_definition.update!(last_processed_event_time: last_event_time)
       end
     end
 

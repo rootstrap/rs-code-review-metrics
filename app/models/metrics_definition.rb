@@ -2,13 +2,14 @@
 #
 # Table name: metrics_definitions
 #
-#  id                :bigint           not null, primary key
-#  metrics_name      :string           not null
-#  metrics_processor :string           not null
-#  subject           :string           not null
-#  time_interval     :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                        :bigint           not null, primary key
+#  last_processed_event_time :datetime
+#  metrics_name              :string           not null
+#  metrics_processor         :string           not null
+#  subject                   :string           not null
+#  time_interval             :string           not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
 #
 
 class MetricsDefinition < ApplicationRecord

@@ -9,13 +9,35 @@ RSpec.describe Metrics::MetricsProcessor do
              metrics_name: 'review_turnaround',
              time_interval: :daily,
              subject: :projects,
-             metrics_processor: Metrics::ReviewTurnaroundPerProjectProcessor.name
-
-      subject.call
+             metrics_processor: Metrics::NullProcessor.name
     end
 
-    it 'creates the concrete metrics processor to process the metrics' do
-      expect(1).to eql(1)
+    context 'with no events to process' do
+      it 'does not instantiate the concrete metrics processor' do
+        expect(Metrics::NullProcessor).not_to receive(:call)
+      end
+    end
+
+    context 'with events to process' do
+      before do
+        create :event
+      end
+
+      let(:metrics_definition) { MetricsDefinition.first }
+
+      let(:processed_event_time) { Event.first.created_at }
+
+      it 'creates the concrete metrics processor to process the metrics' do
+        expect_any_instance_of(Metrics::NullProcessor).to receive(:call).once
+
+        subject.call
+      end
+
+      it 'updates the metric last_processed_event_time after processing the metric' do
+        subject.call
+
+        expect(metrics_definition.last_processed_event_time).to eql(processed_event_time)
+      end
     end
   end
 end

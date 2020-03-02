@@ -5,6 +5,7 @@ class CreateMetricsDefinitions < ActiveRecord::Migration[6.0]
       t.string :time_interval, null: false # TODO: make it a Postgres enum
       t.string :subject, null: false # TODO: make it a Postgres enum
       t.string :metrics_processor, null: false
+      t.datetime :last_processed_event_time, null: true
 
       t.timestamps
     end
