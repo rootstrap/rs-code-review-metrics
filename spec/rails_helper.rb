@@ -1,5 +1,5 @@
 require 'simplecov'
-require 'simplecov_custom_profile'
+require 'simplecov_default_profile'
 SimpleCov.start 'default'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
