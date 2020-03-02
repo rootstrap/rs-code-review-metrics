@@ -1,7 +1,7 @@
 require_relative 'metrics_specs_helper'
 
-RSpec.describe Metrics::ReviewTurnaroundProcessor do
-  subject { Metrics::ReviewTurnaroundProcessor }
+RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
+  subject { Metrics::ReviewTurnaroundPerProjectProcessor }
 
   let(:test_repository_payload) do
     (build :repository_payload, name: 'Project A')['repository']

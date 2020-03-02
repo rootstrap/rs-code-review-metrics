@@ -1,7 +1,7 @@
 module Metrics
   ##
   # Does the processing of the given events to generate the review_turnaround
-  # metric.
+  # metric for each project.
   #
   # The review_turnaround value is defined as the number of seconds between
   #   - the instant when a PullRequest review_requested action is created
@@ -13,13 +13,13 @@ module Metrics
   #     is 'submitted', 'edited' or 'dismissed'.
   #     (https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
   #
-  # The review_turnaround metric is generated for:
-  #     - a project (in the future it will also be for a user and user/project)
-  #       and
+  # This processor generates a review_turnaround metric is for:
+  #     - each project
+  #     in
   #     - a time interval
   #
-  # For example, given two projects A and B and a daily interval the ReviewTurnaroundProcessor
-  # would generate the following metrics:
+  # For example, given two projects A and B and a daily interval the
+  # ReviewTurnaroundPerProjectProcessor would generate the following metrics:
   #
   #     - project A, 2020-01-01 => 100
   #     - project B, 2020-01-01 => 20
@@ -34,24 +34,24 @@ module Metrics
   #     - project B, 2020-02-00 => 110
   #
   # Therefore to generate the metrics from a collection of Github events the
-  # ReviewTurnaroundProcessor requires the following parameters:
+  # ReviewTurnaroundPerProjectProcessor requires the following parameters:
   #
   #     - an interval of time (ej. 1 month)
   #     - the initial point in time for the interval (ej. 2020-01-01)
   #     - the collection of events reveived in that interval
-  class ReviewTurnaroundProcessor < Metric
+  class ReviewTurnaroundPerProjectProcessor < Metric
     private
 
     ##
     # Processes the given events to generate the review_turnaround metrics.
     def process_events(events:, time_interval:)
-      review_turnaround_per_project = collect_review_turnaround_per_project(events: events)
+      review_turnaround_per_project = collect_review_turnaround_per_project_from(events: events)
 
       update_metrics(value_timestamp: time_interval.starting_at,
                      review_turnaround_per_project: review_turnaround_per_project)
     end
 
-    def collect_review_turnaround_per_project(events:)
+    def collect_review_turnaround_per_project_from(events:)
       review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
       pull_request_reviewed_track = {}
 
@@ -83,13 +83,6 @@ module Metrics
           value_timestamp: value_timestamp
         )
       end
-    end
-
-    ##
-    # Process a single event.
-    # If the event is not related to a turn around event it ignores it.
-    def process_event(event:, &value_block)
-      value_block.call(review_turnaround_as_seconds(event: event))
     end
 
     ##
