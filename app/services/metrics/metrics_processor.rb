@@ -38,9 +38,9 @@ module Metrics
       last_event_time = events.last.created_at
 
       all_metrics_definitions.each do |metrics_definition|
-        metric = metrics_processor_for(metrics_definition)
+        metrics_processor = metrics_processor_for(metrics_definition)
 
-        process(metric: metric, events: events)
+        process(metrics_processor: metrics_processor, events: events)
 
         metrics_definition.update!(last_processed_event_time: last_event_time)
       end
@@ -48,10 +48,10 @@ module Metrics
 
     ##
     # Makes the given metric to process all the events.
-    def process(metric:, events:)
+    def process(metrics_processor:, events:)
       time_interval = TimeInterval.new(starting_at: Time.zone.today, duration: 1.day)
 
-      metric.call(events: events, time_interval: time_interval)
+      metrics_processor.call(events: events, time_interval: time_interval)
     end
 
     ##
