@@ -206,6 +206,39 @@ CREATE TABLE public.metrics (
 
 
 --
+-- Name: metrics_definitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.metrics_definitions (
+    id bigint NOT NULL,
+    metrics_name character varying NOT NULL,
+    time_interval character varying NOT NULL,
+    subject character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: metrics_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.metrics_definitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: metrics_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.metrics_definitions_id_seq OWNED BY public.metrics_definitions.id;
+
+
+--
 -- Name: metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -476,6 +509,13 @@ ALTER TABLE ONLY public.metrics ALTER COLUMN id SET DEFAULT nextval('public.metr
 
 
 --
+-- Name: metrics_definitions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics_definitions ALTER COLUMN id SET DEFAULT nextval('public.metrics_definitions_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -547,6 +587,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: metrics_definitions metrics_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics_definitions
+    ADD CONSTRAINT metrics_definitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -849,6 +897,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200212151614'),
 ('20200217165218'),
 ('20200219141137'),
+('20200302120947'),
 ('20200303210031'),
 ('20200305141203'),
 ('20200305142724'),
