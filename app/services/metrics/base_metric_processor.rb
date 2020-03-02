@@ -1,7 +1,8 @@
 module Metrics
   ##
-  # Base class for classes that do the processing of a Metric from given events.
-  class Metric < BaseService
+  # Base class for classes that do the processing of a Metric from a
+  # collection of events.
+  class BaseMetricProcessor < BaseService
     def initialize(events:, time_interval:)
       @events = events
       @time_interval = time_interval
