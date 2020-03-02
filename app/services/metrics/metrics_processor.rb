@@ -61,9 +61,9 @@ module Metrics
     # It polls the given metrics_definitions to know which events to query
     # to avoid querying more events than needed.
     def events_to_process_for(metrics_definitions)
-      minimum_time = minimum_time_among(metrics_definitions)
-      Event.where('created_at > :minimum_time', { minimum_time: minimum_time })
-        .order(:created_at)
+      Event.where('created_at > :minimum_time',
+                  minimum_time: minimum_time_among(metrics_definitions))
+           .order(:created_at)
     end
 
     ##
@@ -72,8 +72,7 @@ module Metrics
     def minimum_time_among(metrics_definitions)
       metrics_definitions.map { |metrics_definition|
         # Does an minus infinite date exist instead of a constant?
-        metrics_definition.last_processed_event_time ?
-          metrics_definition.last_processed_event_time : Time.new(1900)
+        metrics_definition.last_processed_event_time || Time.zone.local(1900)
       }.min
     end
   end
