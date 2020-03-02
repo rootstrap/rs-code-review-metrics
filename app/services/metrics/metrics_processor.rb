@@ -37,23 +37,23 @@ module Metrics
 
       return if events.empty?
 
-      last_event_time = events.last.created_at
-
       metrics_definitions.each do |metrics_definition|
         metrics_processor = metrics_processor_for(metrics_definition)
 
-        process(metrics_processor: metrics_processor, events: events)
-
-        metrics_definition.update!(last_processed_event_time: last_event_time)
+        process(metrics_processor: metrics_processor,
+                events: events,
+                metrics_definition: metrics_definition)
       end
     end
 
     ##
     # Makes the given metric to process all the events.
-    def process(metrics_processor:, events:)
-      time_interval = TimeInterval.new(starting_at: Time.zone.today, duration: 1.day)
+    def process(metrics_processor:, events:, metrics_definition:)
+      time_interval = metrics_definition.time_interval_starting_at(Time.zone.today)
 
       metrics_processor.call(events: events, time_interval: time_interval)
+
+      metrics_definition.update!(last_processed_event_time: events.last.created_at)
     end
 
     ##
