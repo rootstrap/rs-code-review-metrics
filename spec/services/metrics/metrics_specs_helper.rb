@@ -44,7 +44,8 @@ end
 #   Until the factories are finished and to avoid blocking the testing of the
 #   metrics the tests populate the models evaluating the same service that the
 #   app evaluates when a webhook arrives providing the customized payloads for
-#   each test.
+#   each test. This will help in debugging only the metris or only the factories,
+#   one at a time.
 
 ##
 # Create a PullRequestEvent event as it would come from github for the testing

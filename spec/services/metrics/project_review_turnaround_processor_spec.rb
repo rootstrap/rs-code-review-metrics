@@ -34,17 +34,6 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
         expect(generated_metrics_count).to eq(0)
       end
     end
-
-    describe 'with a PR that has no reviews' do
-      let(:create_test_events) do
-        create_pull_request_event(action: 'opened',
-                                  created_at: Time.zone.parse('2020-01-01T15:10:00'))
-      end
-
-      it 'does not generate a metric' do
-        expect(generated_metrics_count).to eq(0)
-      end
-    end
   end
 
   context 'metrics generation' do
@@ -111,7 +100,7 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
         expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(15.minutes)
       end
 
-      it 'updates only that metric' do
+      it 'does not create a new metric' do
         expect(generated_metrics_count).to eq(1)
       end
     end
@@ -134,9 +123,20 @@ RSpec.describe Metrics::ReviewTurnaroundProcessor, type: :job do
                             submitted_at: Time.zone.parse('2020-01-01T16:30:00')
       end
 
-      it 'it uses only the first review for to calculate the metric value' do
+      it 'it uses only the first review to calculate the metric value' do
         expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
       end
+    end
+  end
+
+  describe 'with a PR that has no reviews' do
+    let(:create_test_events) do
+      create_pull_request_event(action: 'opened',
+                                created_at: Time.zone.parse('2020-01-01T15:10:00'))
+    end
+
+    it 'does not generate a metric' do
+      expect(generated_metrics_count).to eq(0)
     end
   end
 end

@@ -85,10 +85,6 @@ module Metrics
       end
     end
 
-    def process_event?(event:)
-      event.name == 'review'
-    end
-
     ##
     # Process a single event.
     # If the event is not related to a turn around event it ignores it.
