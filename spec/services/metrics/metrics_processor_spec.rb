@@ -8,7 +8,8 @@ RSpec.describe Metrics::MetricsProcessor do
       create :metrics_definition,
              metrics_name: 'review_turnaround',
              time_interval: :daily,
-             subject: :projects
+             subject: :projects,
+             metrics_processor: Metrics::ReviewTurnaroundProcessor.name
 
       subject.call
     end

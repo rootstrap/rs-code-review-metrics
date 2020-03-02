@@ -26,8 +26,14 @@ module Metrics
     # Returns the collection of all metrics to be processed.
     def all_metrics
       all_metrics_definitions.map do |metrics_definition|
-        metrics_definition.metrics_processor
+        metrics_processor_for(metrics_definition)
       end
+    end
+
+    ##
+    # Returns the concrete MetricsProcessor to process the metrics definition.
+    def metrics_processor_for(metrics_definition)
+      metrics_definition.metrics_processor.constantize
     end
 
     ##
@@ -43,7 +49,7 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process(metric:, events:)
-      time_interval = TimeInterval.new(starting_at: Date.today, duration: 1.day)
+      time_interval = TimeInterval.new(starting_at: Time.zone.today, duration: 1.day)
 
       metric.call(events: events, time_interval: time_interval)
     end

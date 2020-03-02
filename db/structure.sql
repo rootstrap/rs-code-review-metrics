@@ -214,6 +214,7 @@ CREATE TABLE public.metrics_definitions (
     metrics_name character varying NOT NULL,
     time_interval character varying NOT NULL,
     subject character varying NOT NULL,
+    metrics_processor character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
