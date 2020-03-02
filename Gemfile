@@ -37,9 +37,6 @@ gem 'annotate', '~> 3.0'
 # Use Sidekiq to enqueue job in the background
 gem 'sidekiq', '~> 6.0.2'
 
-gem 'activeadmin', '~> 2.6.0'
-gem 'devise', '~> 4.7.1'
-
 gem 'dotenv-rails', '~> 2.7.5'
 
 group :development, :test do
