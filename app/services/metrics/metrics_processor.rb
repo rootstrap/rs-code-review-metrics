@@ -31,13 +31,15 @@ module Metrics
     ##
     # Makes each metric defined to process all the events.
     def process_all_metrics
-      events = events_to_process
+      metrics_definitions = all_metrics_definitions
+
+      events = events_to_process_for(metrics_definitions)
 
       return if events.empty?
 
       last_event_time = events.last.created_at
 
-      all_metrics_definitions.each do |metrics_definition|
+      metrics_definitions.each do |metrics_definition|
         metrics_processor = metrics_processor_for(metrics_definition)
 
         process(metrics_processor: metrics_processor, events: events)
@@ -56,10 +58,23 @@ module Metrics
 
     ##
     # Returns an array with the events to process.
-    # Currently it returns all the events but its final implementation will return
-    # only the events that had not been processed yet.
-    def events_to_process
-      Event.all
+    # It polls the given metrics_definitions to know which events to query
+    # to avoid querying more events than needed.
+    def events_to_process_for(metrics_definitions)
+      minimum_time = minimum_time_among(metrics_definitions)
+      Event.where('created_at > :minimum_time', { minimum_time: minimum_time })
+        .order(:created_at)
+    end
+
+    ##
+    # Query all the metrics_definitions to get the minimum for the events to
+    # process
+    def minimum_time_among(metrics_definitions)
+      metrics_definitions.map { |metrics_definition|
+        # Does an minus infinite date exist instead of a constant?
+        metrics_definition.last_processed_event_time ?
+          metrics_definition.last_processed_event_time : Time.new(1900)
+      }.min
     end
   end
 end

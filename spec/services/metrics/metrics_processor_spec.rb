@@ -39,5 +39,19 @@ RSpec.describe Metrics::MetricsProcessor do
         expect(metrics_definition.last_processed_event_time).to eql(processed_event_time)
       end
     end
+
+    context 'with events that had been processed already' do
+      before do
+        create :event
+      end
+
+      it 'does not process the event again' do
+        subject.call
+
+        expect_any_instance_of(Metrics::NullProcessor).not_to receive(:call)
+
+        subject.call
+      end
+    end
   end
 end
