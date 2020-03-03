@@ -51,9 +51,10 @@ end
 # Create a PullRequestEvent event as it would come from github for the testing
 # repository.
 # Return the created event payload.
-def create_pull_request_event(action:, created_at:)
+def create_pull_request_event(action:, created_at:, repository_payload: nil)
+  repository_payload = test_repository_A_payload if repository_payload.nil?
   create(:pull_request_payload,
-         repository: test_repository_payload,
+         repository: repository_payload,
          action: action,
          created_at: created_at).tap do |payload|
     GithubService.call(payload: payload, event: 'pull_request')
@@ -64,9 +65,10 @@ end
 # Create a ReviewEvent event as it would come from github for the testing
 # repository and a given PullRequest payload.
 # Return the created event payload.
-def create_review_event(action:, submitted_at:, pull_request_event_payload:)
+def create_review_event(action:, submitted_at:, pull_request_event_payload:, repository_payload: nil)
+  repository_payload = test_repository_A_payload if repository_payload.nil?
   create(:review_payload,
-         repository: test_repository_payload,
+         repository: repository_payload,
          pull_request: pull_request_event_payload['pull_request'],
          action: action,
          submitted_at: submitted_at).tap do |payload|
@@ -78,9 +80,10 @@ end
 # Create a ReviewCommentEvent event as it would come from github for the testing
 # repository and a given PullRequest payload.
 # Return the created event payload.
-def create_review_comment_event(pull_request_event_payload:)
+def create_review_comment_event(pull_request_event_payload:, repository_payload: nil)
+  repository_payload = test_repository_A_payload if repository_payload.nil?
   create(:review_comment_payload,
-         repository: test_repository_payload,
+         repository: repository_payload,
          pull_request: pull_request_event_payload['pull_request']).tap do |payload|
     GithubService.call(payload: payload, event: 'review_comment')
   end

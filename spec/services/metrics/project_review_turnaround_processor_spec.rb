@@ -3,7 +3,7 @@ require_relative 'metrics_specs_helper'
 RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
   subject { Metrics::ReviewTurnaroundPerProjectProcessor }
 
-  let(:test_repository_payload) do
+  let(:test_repository_A_payload) do
     (build :repository_payload, name: 'Project A')['repository']
   end
 
@@ -137,6 +137,54 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
     it 'does not generate a metric' do
       expect(generated_metrics_count).to eq(0)
+    end
+  end
+
+  describe 'with events from more than one project' do
+    let(:test_repository_B_payload) do
+      (build :repository_payload, name: 'Project B')['repository']
+    end
+
+    let(:create_test_events) do
+      pull_request_A_event_payload = create_pull_request_event(
+        action: 'opened',
+        created_at: Time.zone.parse('2020-01-01T15:10:00')
+      )
+
+      create_review_event pull_request_event_payload: pull_request_A_event_payload,
+                          action: 'submitted',
+                          submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+
+      pull_request_B_event_payload = create_pull_request_event(
+        repository_payload: test_repository_B_payload,
+        action: 'opened',
+        created_at: Time.zone.parse('2020-01-01T16:00:00')
+      )
+
+      create_review_event repository_payload: test_repository_B_payload,
+                          pull_request_event_payload: pull_request_B_event_payload,
+                          action: 'submitted',
+                          submitted_at: Time.zone.parse('2020-01-01T16:45:00')
+    end
+
+    it 'it generates the metric for the first project' do
+      expect(first_metric).to have_attributes(
+        entity_key: 'Project A',
+        metric_key: 'review_turnaround',
+        value_timestamp: time_interval_to_process.starting_at
+      )
+
+      expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
+    end
+
+    it 'it generates the metric for the second project' do
+      expect(second_metric).to have_attributes(
+        entity_key: 'Project B',
+        metric_key: 'review_turnaround',
+        value_timestamp: time_interval_to_process.starting_at
+      )
+
+      expect(second_metric_value_expressed_as_seconds).to be_within(1.second) .of(45.minutes)
     end
   end
 end
