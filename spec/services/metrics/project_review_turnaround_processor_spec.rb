@@ -3,7 +3,7 @@ require_relative 'metrics_specs_helper'
 RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
   subject { Metrics::ReviewTurnaroundPerProjectProcessor }
 
-  let(:test_repository_A_payload) do
+  let(:test_repository_a_payload) do
     (build :repository_payload, name: 'Project A')['repository']
   end
 
@@ -141,28 +141,28 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
   end
 
   describe 'with events from more than one project' do
-    let(:test_repository_B_payload) do
+    let(:test_repository_b_payload) do
       (build :repository_payload, name: 'Project B')['repository']
     end
 
     let(:create_test_events) do
-      pull_request_A_event_payload = create_pull_request_event(
+      pull_request_a_event_payload = create_pull_request_event(
         action: 'opened',
         created_at: Time.zone.parse('2020-01-01T15:10:00')
       )
 
-      create_review_event pull_request_event_payload: pull_request_A_event_payload,
+      create_review_event pull_request_event_payload: pull_request_a_event_payload,
                           action: 'submitted',
                           submitted_at: Time.zone.parse('2020-01-01T15:30:00')
 
-      pull_request_B_event_payload = create_pull_request_event(
-        repository_payload: test_repository_B_payload,
+      pull_request_b_event_payload = create_pull_request_event(
+        repository_payload: test_repository_b_payload,
         action: 'opened',
         created_at: Time.zone.parse('2020-01-01T16:00:00')
       )
 
-      create_review_event repository_payload: test_repository_B_payload,
-                          pull_request_event_payload: pull_request_B_event_payload,
+      create_review_event repository_payload: test_repository_b_payload,
+                          pull_request_event_payload: pull_request_b_event_payload,
                           action: 'submitted',
                           submitted_at: Time.zone.parse('2020-01-01T16:45:00')
     end
