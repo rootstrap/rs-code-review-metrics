@@ -115,7 +115,7 @@ module Metrics
       payload = event.data
       event.name != 'review' ||
         payload['action'] != 'submitted' ||
-        !time_interval.includes?(Time.zone.parse(payload['review']['submitted_at']))
+        !time_interval.includes?(parse_time(payload['review']['submitted_at']))
     end
   end
 end
