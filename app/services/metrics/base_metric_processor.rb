@@ -32,7 +32,9 @@ module Metrics
     # Processes all the given events that are included in the time interval
     def iterate_events(events:, time_interval:, accumulators:)
       events.each do |event|
-        next if skip_event?(event: event, time_interval: time_interval)
+        next if skip_event?(event: event,
+                            time_interval: time_interval,
+                            accumulators: accumulators)
 
         process_event(event: event, accumulators: accumulators)
       end

@@ -13,10 +13,10 @@ module Metrics
   #     is 'submitted', 'edited' or 'dismissed'.
   #     (https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
   #
-  # This processor generates a review_turnaround metric is for:
+  # This processor generates a review_turnaround metric for:
   #     - each project
   #     in
-  #     - a time interval
+  #     - a time interval (like 'daily', 'weekly', 'all_times')
   #
   # For example, given two projects A and B and a daily interval the
   # ReviewTurnaroundPerProjectProcessor would generate the following metrics:
@@ -61,12 +61,10 @@ module Metrics
 
     def process_event(event:, accumulators:)
       pull_request_id = event.data['pull_request']['id']
-      pull_request_reviewed = accumulators[:pull_request_reviewed]
-      return if pull_request_reviewed.key?(pull_request_id)
 
       review_turnaround_value = review_turnaround_as_seconds(event: event)
       accumulators[:review_turnaround_per_project][event.project.name] << review_turnaround_value
-      pull_request_reviewed[pull_request_id] = :reviewed
+      accumulators[:pull_request_reviewed][pull_request_id] = :reviewed
     end
 
     ##
@@ -111,10 +109,11 @@ module Metrics
     #
     # In all other cases the pull_request linked to this review_event was already
     # reviewed and the review_event is ignored for the review_turnaround metric
-    def skip_event?(event:, time_interval:)
+    def skip_event?(event:, time_interval:, accumulators:)
       payload = event.data
       event.name != 'review' ||
         payload['action'] != 'submitted' ||
+        accumulators[:pull_request_reviewed].key?(payload['pull_request']['id']) ||
         !time_interval.includes?(parse_time(payload['review']['submitted_at']))
     end
   end
