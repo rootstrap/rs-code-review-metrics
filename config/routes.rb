@@ -9,5 +9,4 @@ Rails.application.routes.draw do
   resource :metrics do
     get 'review_turnaround', to: 'metrics#review_turnaround'
   end
-  # get '/review_turnaround', to: 'metrics#review_turnaround'
 end
