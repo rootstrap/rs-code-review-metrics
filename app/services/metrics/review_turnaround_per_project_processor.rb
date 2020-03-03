@@ -43,44 +43,42 @@ module Metrics
     private
 
     ##
-    # Processes the given events to generate the review_turnaround metrics.
-    def process_events(events:, time_interval:)
-      review_turnaround_per_project = collect_review_turnaround_per_project_from(events: events)
-
-      update_metrics(value_timestamp: time_interval.starting_at,
-                     review_turnaround_per_project: review_turnaround_per_project)
+    # review_turnaround_per_project: { project_id: review_turnaround_value }
+    #   Keeps the values of the review_turnaround for each project.
+    #   Allows to calculate the metrics for all the projects in a single pass.
+    #
+    # pull_request_reviewed: { pull_request_id: true|nil }
+    #   A PullRequest can have many Review events. The
+    #   review_turnaround only considers the first Review. This flag is set
+    #   to true if a previous Review event was the first Review to ignore all
+    #   the Review events after that one.
+    def create_accumulators
+      {
+        review_turnaround_per_project: Hash.new { |hash, key| hash[key] = [] },
+        pull_request_reviewed: {}
+      }
     end
 
-    def collect_review_turnaround_per_project_from(events:)
-      review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
-      pull_request_reviewed_track = {}
+    def process_event(event:, accumulators:)
+      pull_request_id = event.data['pull_request']['id']
+      return if accumulators[:pull_request_reviewed].key?(pull_request_id)
 
-      events.each do |event|
-        next if skip_event?(event: event)
-
-        pull_request_id = event.data['pull_request']['id']
-        next if pull_request_reviewed_track.key?(pull_request_id)
-
-        review_turnaround_value = review_turnaround_as_seconds(event: event)
-        review_turnaround_per_project[event.project.name] << review_turnaround_value
-
-        pull_request_reviewed_track[pull_request_id] = :reviewed
-      end
-
-      review_turnaround_per_project
+      review_turnaround_value = review_turnaround_as_seconds(event: event)
+      accumulators[:review_turnaround_per_project][event.project.name] << review_turnaround_value
+      accumulators[:pull_request_reviewed][pull_request_id] = :reviewed
     end
 
     ##
     # Updates the metrics for all the project in the given review_turnaround_per_project
-    def update_metrics(value_timestamp:, review_turnaround_per_project:)
-      review_turnaround_per_project.each_pair do |project_id, values|
+    def update_metrics(time_interval:, accumulators:)
+      accumulators[:review_turnaround_per_project].each_pair do |project_id, values|
         average_value = values.sum / values.size
 
         update_metric(
           entity_key: project_id,
           metric_key: 'review_turnaround',
           value: average_value,
-          value_timestamp: value_timestamp
+          value_timestamp: time_interval.starting_at
         )
       end
     end
@@ -106,9 +104,10 @@ module Metrics
     #
     # In all other cases the pull_request linked to this review_event was already
     # reviewed and the review_event is ignored for the review_turnaround metric
-    def skip_event?(event:)
+    def skip_event?(event:, time_interval:)
       event.name != 'review' ||
-        event.data['action'] != 'submitted'
+        event.data['action'] != 'submitted' ||
+        !time_interval.includes?(Time.zone.parse(event.data['review']['submitted_at']))
     end
   end
 end

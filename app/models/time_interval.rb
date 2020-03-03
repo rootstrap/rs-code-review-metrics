@@ -7,7 +7,14 @@ class TimeInterval
   def initialize(starting_at:, duration:)
     @starting_at = starting_at
     @duration = duration
+    @closed_end_at = @starting_at + @duration - 0.01.seconds
   end
 
   attr_reader :starting_at, :duration
+
+  ##
+  # Returns true if the TimeInterval includes the given time.
+  def includes?(time)
+    time.between?(@starting_at, @closed_end_at)
+  end
 end
