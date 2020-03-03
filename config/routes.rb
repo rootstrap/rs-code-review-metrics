@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'
-  resource :metrics do
+  resource :metrics, only: [] do
     get 'review_turnaround', to: 'metrics#review_turnaround'
   end
 end
