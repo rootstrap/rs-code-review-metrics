@@ -1,4 +1,4 @@
-require_relative 'metrics_specs_helper'
+require_relative '../../support/metrics_specs_helper'
 
 RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
   subject { Metrics::ReviewTurnaroundPerProjectProcessor }

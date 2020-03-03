@@ -61,11 +61,12 @@ module Metrics
 
     def process_event(event:, accumulators:)
       pull_request_id = event.data['pull_request']['id']
-      return if accumulators[:pull_request_reviewed].key?(pull_request_id)
+      pull_request_reviewed = accumulators[:pull_request_reviewed]
+      return if pull_request_reviewed.key?(pull_request_id)
 
       review_turnaround_value = review_turnaround_as_seconds(event: event)
       accumulators[:review_turnaround_per_project][event.project.name] << review_turnaround_value
-      accumulators[:pull_request_reviewed][pull_request_id] = :reviewed
+      pull_request_reviewed[pull_request_id] = :reviewed
     end
 
     ##
@@ -86,11 +87,17 @@ module Metrics
     ##
     # Returns the review turnaround value for the given event.
     def review_turnaround_as_seconds(event:)
+      payload = event.data
+
       # RFC should we move these times to the Event model?
-      reviewed_at = Time.zone.parse(event.data['review']['submitted_at'])
-      review_requested_at = Time.zone.parse(event.data['pull_request']['created_at'])
+      reviewed_at = parse_time(payload['review']['submitted_at'])
+      review_requested_at = parse_time(payload['pull_request']['created_at'])
 
       (reviewed_at - review_requested_at).seconds
+    end
+
+    def parse_time(time_string)
+      Time.zone.parse(time_string)
     end
 
     ##
@@ -105,9 +112,10 @@ module Metrics
     # In all other cases the pull_request linked to this review_event was already
     # reviewed and the review_event is ignored for the review_turnaround metric
     def skip_event?(event:, time_interval:)
+      payload = event.data
       event.name != 'review' ||
-        event.data['action'] != 'submitted' ||
-        !time_interval.includes?(Time.zone.parse(event.data['review']['submitted_at']))
+        payload['action'] != 'submitted' ||
+        !time_interval.includes?(Time.zone.parse(payload['review']['submitted_at']))
     end
   end
 end
