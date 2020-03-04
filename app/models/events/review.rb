@@ -25,6 +25,7 @@
 module Events
   class Review < ApplicationRecord
     enum status: { active: 'active', removed: 'removed' }
+    enum review_state: { approved: 'approved', commented: 'commented', changes_requested: 'changes_requested' }
 
     has_many :events, as: :handleable, dependent: :destroy
     belongs_to :owner, class_name: 'User',
@@ -34,6 +35,7 @@ module Events
                               inverse_of: :reviews
 
     validates :status, inclusion: { in: statuses.keys }
+    validates :review_state, inclusion: { in: review_states.keys }
     validates :github_id, presence: true
   end
 end
