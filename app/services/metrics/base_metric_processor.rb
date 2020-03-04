@@ -15,49 +15,26 @@ module Metrics
     # The given @events are expected to include all the events during the full
     # time interval ( [@starting_at, @starting_at + @time_span) ).
     def call
-      process_events(events: events, time_interval: time_interval)
+      process_events
     end
 
     private
 
     ##
     # Processes the given events to generate the review_turnaround metrics.
-    def process_events(events:, time_interval:)
-      accumulators = create_accumulators
-
-      iterate_events(events: events, time_interval: time_interval, accumulators: accumulators)
-
-      update_metrics(time_interval: time_interval, accumulators: accumulators)
+    def process_events
+      iterate_events
+      update_metrics
     end
 
     ##
     # Processes all the given events that are included in the time interval
-    def iterate_events(events:, time_interval:, accumulators:)
+    def iterate_events
       events.each do |event|
-        next if skip_event?(event: event,
-                            time_interval: time_interval,
-                            accumulators: accumulators)
+        next if skip_event?(event: event)
 
-        process_event(event: event, accumulators: accumulators)
+        process_event(event: event)
       end
-    end
-
-    ##
-    # Some MetricProcessor may need to keep track of values like averages, sums,
-    # flags, arrays or complex calculations.
-    # Instead of using instance variables the processor creates a hash of
-    # variables
-    #     {
-    #       accumulator_variable: value,
-    #       ...
-    #     }
-    # that is passed along to the :process_event method.
-    # The use of this accumulator allows to perform the calculation of many
-    # metrics in a single iteration of all the events of a given time interval.
-    # For example to calculate the review_turnaround for all the projects in a
-    # single iteration of the events instead of one interation for each project.
-    def create_accumulators
-      {}
     end
 
     ##
