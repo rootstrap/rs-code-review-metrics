@@ -1,10 +1,14 @@
 FactoryBot.define do
   factory :review_comment_payload, class: Hash do
     skip_create
+    transient do
+      body { generate(:body) }
+    end
+
     comment do
       {
         id: generate(:review_comment_id),
-        body: generate(:body),
+        body: body,
         user: (attributes_for :user, id: generate(:user_id)).as_json
       }
     end

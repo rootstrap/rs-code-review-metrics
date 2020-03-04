@@ -93,7 +93,11 @@ RSpec.describe GithubService do
     end
 
     context 'review comment' do
-      let(:payload) { create :review_comment_payload, changes: { body: 'new body contents' } }
+      let(:payload) do
+        create :review_comment_payload,
+               body: 'initial body contents',
+               changes: { body: 'new body contents' }
+      end
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
