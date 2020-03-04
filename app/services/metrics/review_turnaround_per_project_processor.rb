@@ -30,8 +30,8 @@ module Metrics
   #
   #     - project A, 2020-01-01 => 320
   #     - project B, 2020-01-01 => 140
-  #     - project A, 2020-02-00 => 150
-  #     - project B, 2020-02-00 => 110
+  #     - project A, 2020-02-01 => 150
+  #     - project B, 2020-02-01 => 110
   #
   # Therefore to generate the metrics from a collection of Github events the
   # ReviewTurnaroundPerProjectProcessor requires the following parameters:
