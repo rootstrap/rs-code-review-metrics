@@ -36,4 +36,10 @@ class Event < ApplicationRecord
   def handled_type?
     TYPES.include?(name)
   end
+
+  ##
+  # Return the name of the handleable type
+  def handleable_type_name
+    handleable.event_name
+  end
 end

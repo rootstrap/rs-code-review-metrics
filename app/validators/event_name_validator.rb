@@ -4,7 +4,7 @@
 # is expected to be 'pull_request'
 class EventNameValidator < ActiveModel::Validator
   def validate(event)
-    return if event.name == event.handleable.event_name
+    return if event.name == event.handleable_type_name
 
     event.errors[:event_name_validator] << 'Event.name must match Event.handleable type'
   end
