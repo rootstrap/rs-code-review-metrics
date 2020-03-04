@@ -67,7 +67,7 @@ module Metrics
     # Query all the metrics_definitions to get the minimum for the events to
     # process
     def minimum_time_among(metrics_definitions)
-      metrics_definitions.map(&:last_processed_event_time).compact.min
+      metrics_definitions.minimum(:last_processed_event_time)
     end
   end
 end
