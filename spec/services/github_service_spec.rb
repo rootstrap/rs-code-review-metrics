@@ -93,7 +93,7 @@ RSpec.describe GithubService do
     end
 
     context 'review comment' do
-      let(:payload) { create :review_comment_payload }
+      let(:payload) { create :review_comment_payload, changes: { body: 'new body contents' } }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:event) { 'review_comment' }
       let(:review_comment) { create :review_comment, github_id: payload['comment']['id'] }
@@ -117,7 +117,7 @@ RSpec.describe GithubService do
 
         expect {
           subject
-        }.to change { review_comment.reload.body }.from(body).to(payload['changes']['body'])
+        }.to change { review_comment.reload.body }.from(body).to('new body contents')
       end
 
       it 'sets removed' do
