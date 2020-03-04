@@ -3,6 +3,7 @@ FactoryBot.define do
     skip_create
 
     transient do
+      body { generate(:body) }
       submitted_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday) }
     end
 
@@ -11,7 +12,7 @@ FactoryBot.define do
       {
         id: generate(:review_id),
         node_id: Faker::Crypto.sha1,
-        body: generate(:body),
+        body: body,
         user: (attributes_for :user, id: generate(:user_id)).as_json,
         state: generate(:review_state),
         submitted_at: submitted_at.to_time.iso8601

@@ -58,7 +58,11 @@ RSpec.describe GithubService do
     end
 
     context 'review' do
-      let(:payload) { (create :review_payload) }
+      let(:payload) do
+        create :review_payload,
+               body: 'initial body contents',
+               changes: { body: 'new body contents' }
+      end
       let(:event) { 'review' }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:review) { create :review, github_id: payload['review']['id'] }
@@ -67,11 +71,11 @@ RSpec.describe GithubService do
         expect { subject }.to change(Events::Review, :count).by(1)
       end
 
-      it 'sets body' do
+      it 'sets state to submitted' do
         change_action_to('submitted')
         expect {
           subject
-        }.to change { review.reload.state }.from(review.state).to(payload['review']['state'])
+        }.to change { review.reload.state }.from(review.state).to('commented')
       end
 
       it 'edits body' do
@@ -81,7 +85,7 @@ RSpec.describe GithubService do
 
         expect {
           subject
-        }.to change { review.reload.body }.from(body).to(payload['changes']['body'])
+        }.to change { review.reload.body }.from(body).to('new body contents')
       end
 
       it 'sets state to dismissed' do
