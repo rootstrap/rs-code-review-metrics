@@ -3,6 +3,8 @@ module Metrics
   # Base class for classes that do the processing of a Metric from a
   # collection of events.
   class BaseMetricProcessor < BaseService
+    attr_reader :events, :time_interval
+
     def initialize(events:, time_interval:)
       @events = events
       @time_interval = time_interval
@@ -13,7 +15,7 @@ module Metrics
     # The given @events are expected to include all the events during the full
     # time interval ( [@starting_at, @starting_at + @time_span) ).
     def call
-      process_events(events: @events, time_interval: @time_interval)
+      process_events(events: events, time_interval: time_interval)
     end
 
     private
