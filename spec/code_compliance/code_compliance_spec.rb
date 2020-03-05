@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'the source code complies with', code_complience: true do
+RSpec.describe 'the source code complies with', code_compliance: true do
   let(:brakeman) { `bundle exec brakeman . -z -q` }
   let(:rubocop) { `bundle exec rubocop -a app config lib spec` }
   let(:reek) { `bundle exec reek app config lib spec` }
