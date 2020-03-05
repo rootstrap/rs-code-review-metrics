@@ -56,7 +56,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
           value_timestamp: time_interval_to_process.starting_at
         )
 
-        expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
+        expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
       end
 
       it 'generates only that metric' do
@@ -97,7 +97,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
           value_timestamp: time_interval_to_process.starting_at
         )
 
-        expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(15.minutes)
+        expect(first_metric_value_expressed_as_seconds).to eq(15.minutes)
       end
 
       it 'does not create a new metric' do
@@ -124,7 +124,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
       end
 
       it 'it uses only the first review to calculate the metric value' do
-        expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
+        expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
       end
     end
   end
@@ -174,7 +174,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
         value_timestamp: time_interval_to_process.starting_at
       )
 
-      expect(first_metric_value_expressed_as_seconds).to be_within(1.second) .of(20.minutes)
+      expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
     end
 
     it 'it generates the metric for the second project' do
@@ -184,7 +184,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
         value_timestamp: time_interval_to_process.starting_at
       )
 
-      expect(second_metric_value_expressed_as_seconds).to be_within(1.second) .of(45.minutes)
+      expect(second_metric_value_expressed_as_seconds).to eq(45.minutes)
     end
   end
 end
