@@ -31,7 +31,7 @@ FactoryBot.define do
 
     name { 'check_run' }
 
-    association :project, factory: :project
+    project
 
     after(:build) do |event, factory|
       event.data['action'] = factory.action if factory.action
