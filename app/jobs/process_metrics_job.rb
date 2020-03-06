@@ -5,8 +5,8 @@ class ProcessMetricsJob < ApplicationJob
   queue_as :default
 
   ##
-  # Delegates the processing to the MetricsProcessor service.
+  # Delegates the processing to the MetricsDefinitionProcessor service.
   def perform
-    Metrics::MetricsProcessor.call
+    Metrics::MetricsDefinitionProcessor.call
   end
 end

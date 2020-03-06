@@ -1,11 +1,8 @@
 module Metrics
   ##
-  # Does the processing of the Github events previously stored and leaves the
-  # generated metrics in the Metrics table.
-  #
-  # It takes care of processing only the metrics that are pending to be
-  # processed.
-  class MetricsProcessor < BaseService
+  # For each metric definition it does the processing of the Github events
+  # previously stored and leaves the generated metrics in the Metrics table.
+  class MetricsDefinitionProcessor < BaseService
     ##
     # Processes the metrics
     def call

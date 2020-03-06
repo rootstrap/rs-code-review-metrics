@@ -1,7 +1,7 @@
 require_relative '../../support/metrics_specs_helper'
 
-RSpec.describe Metrics::MetricsProcessor do
-  subject { Metrics::MetricsProcessor }
+RSpec.describe Metrics::MetricsDefinitionProcessor do
+  subject { Metrics::MetricsDefinitionProcessor }
 
   describe 'when processing the defined metrics' do
     before do
