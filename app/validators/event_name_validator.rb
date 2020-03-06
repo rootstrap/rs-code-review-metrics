@@ -6,6 +6,6 @@ class EventNameValidator < ActiveModel::Validator
   def validate(event)
     return if event.name == event.handleable_type_name
 
-    event.errors[:event_name_validator] << 'Event.name must match Event.handleable type'
+    event.errors[:name] << 'Event.name must match Event.handleable_type_name'
   end
 end

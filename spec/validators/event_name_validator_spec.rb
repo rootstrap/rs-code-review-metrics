@@ -28,7 +28,7 @@ RSpec.describe EventNameValidator, type: :validator do
     it 'generates a validation error' do
       subject.validate(event)
 
-      expect(event.errors).to include(:event_name_validator)
+      expect(event.errors).to include(:name)
     end
   end
 end
