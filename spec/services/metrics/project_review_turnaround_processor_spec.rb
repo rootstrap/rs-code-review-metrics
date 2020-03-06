@@ -27,7 +27,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
           created_at: Time.zone.parse('2020-01-01T15:10:00')
         )
 
-        create_review_comment_event pull_request_event_payload: pull_request_event_payload
+        create_review_comment_event(pull_request_event_payload: pull_request_event_payload)
       end
 
       it 'does not create a metric' do
