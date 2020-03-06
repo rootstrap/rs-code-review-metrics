@@ -1,22 +1,17 @@
 require_relative '../../support/metrics_specs_helper'
 
 RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
+  include_context 'events metrics'
+
   subject { Metrics::ReviewTurnaroundPerProjectProcessor }
 
   let(:test_repository_a_payload) do
     (build :repository_payload, name: 'Project A')['repository']
   end
 
-  let(:create_test_events) {}
-
   let(:time_interval_to_process) do
     TimeInterval.new(starting_at: Time.zone.parse('2020-01-01 00:00:00'),
                      duration: 1.day)
-  end
-
-  before do
-    create_test_events
-    process_all_events
   end
 
   context 'no review_turnaround events' do
