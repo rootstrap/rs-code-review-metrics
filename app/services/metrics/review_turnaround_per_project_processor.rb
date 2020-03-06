@@ -39,7 +39,7 @@ module Metrics
   #     - an interval of time (ej. 1 month)
   #     - the initial point in time for the interval (ej. 2020-01-01)
   #     - the collection of events reveived in that interval
-  class ReviewTurnaroundPerProjectProcessor < BaseMetricProcessor
+  class ReviewTurnaroundPerProjectProcessor < MetricProcessor
     attr_reader :review_turnaround_per_project, :pull_request_reviewed
 
     ##
