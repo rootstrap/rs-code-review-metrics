@@ -33,4 +33,18 @@ class TimeInterval
   def includes?(time)
     starting_at <= time && time < ending_at
   end
+
+  ##
+  # Returns the duration of the receiver
+  def duration
+    ending_at - starting_at
+  end
+
+  ##
+  # Returns the contiguous TimeInterval right next to the receiver.
+  # The next TimeInterval starts at the receiver ending_at and has the
+  # the same duration as the receiver.
+  def next
+    self.class.new(starting_at: ending_at, duration: duration)
+  end
 end

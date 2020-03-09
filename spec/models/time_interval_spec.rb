@@ -77,4 +77,14 @@ RSpec.describe TimeInterval do
       expect(subject.includes?(after_time)).to be(false)
     end
   end
+
+  describe 'when iterating over the daily intervals it includes' do
+    let(:contiguous_time_interval) do
+      TimeInterval.new(starting_at: start_time + duration, duration: duration)
+    end
+
+    it 'returns its contiguous time interval' do
+      expect(subject.next).to eq(contiguous_time_interval)
+    end
+  end
 end
