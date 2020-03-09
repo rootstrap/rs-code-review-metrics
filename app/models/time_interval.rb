@@ -40,37 +40,4 @@ class TimeInterval
   def duration
     ending_at - starting_at
   end
-
-  ##
-  # Returns the contiguous TimeInterval right next to the receiver.
-  # The next TimeInterval starts at the receiver ending_at and has the
-  # the same duration as the receiver.
-  def next
-    self.class.new(starting_at: ending_at, duration: duration)
-  end
-
-  ##
-  # Returns the daily TimeIntervals contained in the receiver.
-  def daily_intervals
-    [].tap do |contained_intervals|
-      each_partially_included_interval(duration: 1.day) do |daily_interval|
-        contained_intervals << daily_interval
-      end
-    end
-  end
-
-  private
-
-  ##
-  # Iterates over each TimeInterval of the given duration included in the receiver.
-  # Partially included means that if the included interval ends beyond the
-  # receiver it is also iterated.
-  def each_partially_included_interval(duration:, &iteration_block)
-    time_interval = self.class.new(starting_at: starting_at, duration: duration)
-
-    while time_interval.starting_at < ending_at
-      iteration_block.call(time_interval)
-      time_interval = time_interval.next
-    end
-  end
 end

@@ -52,16 +52,6 @@ RSpec.describe TimeInterval do
     end
   end
 
-  describe 'when asking its contiguous time_interval' do
-    let(:contiguous_time_interval) do
-      TimeInterval.new(starting_at: start_time + duration, duration: duration)
-    end
-
-    it 'returns its contiguous time interval' do
-      expect(subject.next).to eq(contiguous_time_interval)
-    end
-  end
-
   describe 'when asking for a Time inclusion' do
     let(:before_time) { Time.utc(2009, 12, 31, 23, 59, 59) }
     let(:included_time) { Time.utc(2010, 1, 2, 20, 15, 1) }
@@ -91,20 +81,6 @@ RSpec.describe TimeInterval do
 
     it 'does not include a time after the TimeInterval' do
       expect(subject.includes?(after_time)).to be(false)
-    end
-  end
-
-  describe 'when iterating over the daily intervals starting within itself' do
-    let(:daily) { 1.day }
-
-    it 'iterates each daily interval starting in the subject interval' do
-      expected_intervals = [
-        TimeInterval.new(starting_at: start_time, duration: daily),
-        TimeInterval.new(starting_at: start_time + 1.day, duration: daily),
-        TimeInterval.new(starting_at: start_time + 2.days, duration: daily)
-      ]
-
-      expect(subject.daily_intervals).to eq(expected_intervals)
     end
   end
 end
