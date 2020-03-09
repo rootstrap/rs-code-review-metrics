@@ -46,6 +46,12 @@ RSpec.describe TimeInterval do
     end
   end
 
+  describe 'when asking its duration' do
+    it 'returns its duration' do
+      expect(subject.duration).to eq(duration)
+    end
+  end
+
   describe 'when asking for a Time inclusion' do
     let(:before_time) { Time.utc(2009, 12, 31, 23, 59, 59) }
     let(:included_time) { Time.utc(2010, 1, 2, 20, 15, 1) }
