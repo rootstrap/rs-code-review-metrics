@@ -4,7 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
-#  status          :enum             default("active")
+#  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  github_id       :integer
@@ -15,6 +15,7 @@
 #
 #  index_reviews_on_owner_id         (owner_id)
 #  index_reviews_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_state            (state)
 #
 # Foreign Keys
 #
@@ -24,8 +25,10 @@
 
 module Events
   class Review < ApplicationRecord
-    enum status: { active: 'active', removed: 'removed' }
-    enum review_state: { approved: 'approved', commented: 'commented', changes_requested: 'changes_requested' }
+    enum state: { approved: 'approved',
+                  commented: 'commented',
+                  changes_requested: 'changes_requested',
+                  dismissed: 'dismissed' }
 
     has_many :events, as: :handleable, dependent: :destroy
     belongs_to :owner, class_name: 'User',
@@ -34,8 +37,7 @@ module Events
     belongs_to :pull_request, class_name: 'Events::PullRequest',
                               inverse_of: :reviews
 
-    validates :status, inclusion: { in: statuses.keys }
-    validates :review_state, inclusion: { in: review_states.keys }
+    validates :state, inclusion: { in: states.keys }
     validates :github_id, presence: true
   end
 end
