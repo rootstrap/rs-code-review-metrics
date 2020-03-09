@@ -24,9 +24,10 @@ class TimeInterval
 
   ##
   # Returns true if the receiver is equal to the given time_interval
-  def ==(other)
+  def eql?(other)
     starting_at == other.starting_at && ending_at == other.ending_at
   end
+  alias == eql?
 
   ##
   # Returns true if the TimeInterval includes the given time.
