@@ -15,6 +15,20 @@ class TimeInterval
   end
 
   ##
+  # Returns the hashed value of the receiver.
+  # It must be consistent with the :== operand to allow its inclusion
+  # in Sets and to be used as Hash keys.
+  def hash
+    starting_at.hash | ending_at.hash
+  end
+
+  ##
+  # Returns true if the receiver is equal to the given time_interval
+  def ==(other)
+    starting_at == other.starting_at && ending_at == other.ending_at
+  end
+
+  ##
   # Returns true if the TimeInterval includes the given time.
   def includes?(time)
     starting_at <= time && time < ending_at
