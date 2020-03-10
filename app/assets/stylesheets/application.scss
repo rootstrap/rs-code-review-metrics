@@ -1,9 +1,7 @@
 @import "bootstrap";
 
-.nav-background {
-  background-color: #ab0404;
-}
+// Shared
+@import "shared/*";
 
-.nav-txt-color {
-  color: white;
-}
+// Metrics
+@import "metrics/*"
