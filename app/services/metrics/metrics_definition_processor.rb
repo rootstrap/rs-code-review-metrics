@@ -44,7 +44,7 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process(metrics_processor:, events:, metrics_definition:)
-      time_interval = metrics_definition.time_interval_starting_at(Time.zone.today)
+      time_interval = metrics_definition.time_period.containing(Time.zone.now)
 
       metrics_processor.call(events: events, time_interval: time_interval)
 

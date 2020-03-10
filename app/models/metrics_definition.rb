@@ -15,14 +15,23 @@
 class MetricsDefinition < ApplicationRecord
   enum time_intervals: { all_times: 'all_times', daily: 'daily', weekly: 'weekly' }
   enum subjects: { projects: 'projects', users: 'users', users_per_project: 'users_per_project' }
-  DURATIONS = { 'all_times' => nil, 'daily' => 1.day, 'weekly' => 7.days }.freeze
+  TIME_INTERVALS = { daily: TimeIntervals::DailyInterval }.freeze
 
   validates :metrics_name, presence: true, length: { maximum: 255 }
   validates :time_interval, presence: true, inclusion: { in: time_intervals.keys }
   validates :subject, presence: true, inclusion: { in: subjects.keys }
   validates :metrics_processor, presence: true
 
-  def time_interval_starting_at(start_time)
-    TimeInterval.new(starting_at: start_time, duration: DURATIONS[time_interval])
+  ##
+  # Returns the TimeInterval object, for example TimeIntervals::DailyInterval,
+  # for this MetricsDefinition
+  def time_period
+    @time_period ||= time_interval_to_time_period
+  end
+
+  ##
+  # Converts the receiver time_interval string to a TimeInterval object
+  def time_interval_to_time_period
+    TIME_INTERVALS.fetch(time_interval.to_sym)
   end
 end
