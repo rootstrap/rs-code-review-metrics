@@ -10,7 +10,8 @@ gem 'puma', '~> 4.3'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 4.0'
+gem 'sprockets', '~> 4'
+gem 'sprockets-rails', '~> 3.2', '>= 3.2.1'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -41,6 +42,11 @@ gem 'activeadmin', '~> 2.6.0'
 gem 'devise', '~> 4.7.1'
 
 gem 'dotenv-rails', '~> 2.7.5'
+
+gem 'bootstrap', '~> 4.4.1'
+gem 'jquery-rails', '~> 4.3', '>= 4.3.5'
+
+gem 'chartkick', '~> 3.3', '>= 3.3.1'
 
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
