@@ -12,8 +12,10 @@
 #
 
 FactoryBot.define do
+  sequence(:project_id, 100)
+
   factory :project do
-    github_id { Faker::Number.unique.number(digits: 4) }
+    github_id { generate(:project_id) }
     name { Faker::App.name }
     description { Faker::FunnyName.name }
     lang { %w[ruby python nodejs react ios android others unassigned].sample }

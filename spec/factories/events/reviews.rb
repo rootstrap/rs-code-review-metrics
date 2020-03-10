@@ -23,8 +23,10 @@
 #
 
 FactoryBot.define do
+  sequence(:review_id, 100)
+
   factory :review, class: Events::Review do
-    github_id { Faker::Number.unique.number(digits: 4) }
+    github_id { generate(:review_id) }
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

@@ -1,4 +1,6 @@
 FactoryBot.define do
+  sequence(:review_request_id, 100)
+
   factory :review_request do
     status { %w[active removed].sample }
     login { "octocat#{Faker::Number.number}" }

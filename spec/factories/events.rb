@@ -19,6 +19,8 @@
 #
 
 FactoryBot.define do
+  sequence(:body) { |n| "Please change line #{n}" }
+
   factory :event do
     name { %w[pull_request review review_comment].sample }
     data { Faker::Json.shallow_json(width: 3) }
