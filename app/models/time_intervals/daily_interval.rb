@@ -11,7 +11,7 @@ module TimeIntervals
     extend self
 
     def each_from(starting_at, up_to:, &iteration_block)
-      time_interval = TimeInterval.new(starting_at: starting_at, duration: 1.day)
+      time_interval = at(starting_at)
       while time_interval.starting_at < up_to
         iteration_block.call(time_interval)
         time_interval = next_to(time_interval)
