@@ -40,4 +40,8 @@ class TimeInterval
   def duration
     ending_at - starting_at
   end
+
+  def to_s
+    "#{self.class.name}(starting_at: #{starting_at}, duration: #{duration} seconds)"
+  end
 end

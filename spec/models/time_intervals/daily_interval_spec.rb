@@ -1,17 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe TimeIntervals::DailyInterval do
-  let(:start_time) { Time.utc(2010, 1, 1, 0, 0, 0) }
-  let(:end_time) { start_time + 3.days }
+  let(:start_time) { Time.utc(2010, 1, 1, 15, 10, 30) }
+  let(:end_time) { Time.utc(2010, 1, 3, 1, 0, 10) }
+
+  let(:begining_of_day) { Time.utc(2010, 1, 1, 0, 0, 0) }
 
   describe 'when iterating over the daily intervals starting within itself' do
-    let(:duration) { 1.day }
     let(:iterated_intervals) { [] }
     let(:expected_intervals) do
       [
-        TimeInterval.new(starting_at: start_time, duration: duration),
-        TimeInterval.new(starting_at: start_time + 1.day, duration: duration),
-        TimeInterval.new(starting_at: start_time + 2.days, duration: duration)
+        TimeIntervals::DailyInterval.containing(begining_of_day),
+        TimeIntervals::DailyInterval.containing(begining_of_day + 1.day),
+        TimeIntervals::DailyInterval.containing(begining_of_day + 2.days)
       ]
     end
 
@@ -26,10 +27,10 @@ RSpec.describe TimeIntervals::DailyInterval do
 
   describe 'when asking its contiguous time_interval' do
     let(:time_interval) do
-      TimeInterval.new(starting_at: start_time, duration: 3.days)
+      TimeIntervals::DailyInterval.containing(start_time)
     end
     let(:expected_time_interval) do
-      TimeInterval.new(starting_at: start_time + 3.days, duration: 1.day)
+      TimeIntervals::DailyInterval.containing(begining_of_day + 1.day)
     end
 
     it 'returns the daily TimeInterval next to the given TimeInterval' do

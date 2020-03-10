@@ -11,7 +11,7 @@ module TimeIntervals
     extend self
 
     def each_from(starting_at, up_to:, &iteration_block)
-      time_interval = at(starting_at)
+      time_interval = containing(starting_at)
       while time_interval.starting_at < up_to
         iteration_block.call(time_interval)
         time_interval = next_to(time_interval)
@@ -21,11 +21,20 @@ module TimeIntervals
     ##
     # Returns the contiguous Daily TimeInterval right next to the given one.
     def next_to(time_interval)
-      at(time_interval.ending_at)
+      containing(time_interval.ending_at)
     end
 
-    def at(time)
-      TimeInterval.new(starting_at: time, duration: 1.day)
+    ##
+    # Returns a TimeInterval during 1 day starting at the begining of the day of
+    # the given time
+    def containing(time)
+      TimeInterval.new(starting_at: to_begining_of_day(time), duration: 1.day).freeze
+    end
+
+    ##
+    # Returns the begining of the day of the given time
+    def to_begining_of_day(time)
+      ActiveSupport::TimeZone.new(time.zone).parse(time.strftime('%Y-%m-%dT00:00:00'))
     end
   end
 end
