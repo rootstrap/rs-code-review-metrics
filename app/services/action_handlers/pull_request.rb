@@ -2,7 +2,6 @@ module ActionHandlers
   class PullRequest < ActionHandler
     ACTIONS = %w[open review_requested closed \
                  review_request_removed].freeze
-    private_constant :ACTIONS
 
     private
 

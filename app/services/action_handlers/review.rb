@@ -1,7 +1,6 @@
 module ActionHandlers
   class Review < ActionHandler
     ACTIONS = %w[submitted edited dismissed].freeze
-    private_constant :ACTIONS
 
     private
 

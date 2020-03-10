@@ -1,4 +1,6 @@
 class ActionHandler < BaseService
+  private_constant :ACTIONS
+
   def initialize(payload:, event:, entity:)
     @payload = payload
     @event = event

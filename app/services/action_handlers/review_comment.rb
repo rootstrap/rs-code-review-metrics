@@ -1,7 +1,6 @@
 module ActionHandlers
   class ReviewComment < ActionHandler
     ACTIONS = %w[created edited deleted].freeze
-    private_constant :ACTIONS
 
     private
 
