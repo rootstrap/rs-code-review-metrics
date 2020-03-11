@@ -30,7 +30,6 @@ FactoryBot.define do
     github_id { generate(:review_id) }
     state { %w[approved commented changes_requested].sample }
 
-
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build
   end
