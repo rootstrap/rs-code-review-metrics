@@ -29,9 +29,11 @@ class MetricsDefinition < ApplicationRecord
     @time_period ||= time_interval_to_time_period
   end
 
+  private
+
   ##
   # Converts the receiver time_interval string to a TimeInterval object
   def time_interval_to_time_period
-    TIME_INTERVALS.fetch(time_interval.to_sym)
+    time_interval ? TIME_INTERVALS.fetch(time_interval.to_sym) : nil
   end
 end

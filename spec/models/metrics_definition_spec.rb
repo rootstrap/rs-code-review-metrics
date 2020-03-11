@@ -59,4 +59,29 @@ RSpec.describe MetricsDefinition, type: :model do
 
     it { should validate_presence_of(:metrics_processor) }
   end
+
+  describe 'time period' do
+    it 'is nil if time_interval is nil' do
+      expect(subject.time_period).to be_nil
+    end
+
+    it 'is DailyInterval if time_interval is "daily"' do
+      subject.time_interval = 'daily'
+
+      expect(subject.time_period).to be_kind_of(TimeIntervals::DailyInterval)
+    end
+
+    it 'preserves its identity among different calls' do
+      subject.time_interval = 'daily'
+
+      expect(subject.time_period).to be(subject.time_period)
+    end
+
+    it 'raises an error if time_interval is not defined' do
+      expect {
+        subject.time_interval = 'invalid_time_interval'
+        subject.time_period
+      } .to raise_error(KeyError)
+    end
+  end
 end
