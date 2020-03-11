@@ -11,8 +11,10 @@ module ActionHandlers
 
     # Sets state depending on the state that we receive from the payload
     def submitted
-      state = @payload['review']['state']
-      @entity.public_send("#{state}!")
+      @state = @payload['review']['state']
+      return unless valid_state?
+
+      @entity.public_send("#{@state}!")
     end
 
     def edited
@@ -21,6 +23,10 @@ module ActionHandlers
 
     def dismissed
       @entity.dismissed!
+    end
+
+    def valid_state?
+      Events::Review.states.key?(@state)
     end
   end
 end
