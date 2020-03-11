@@ -12,9 +12,13 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
              metrics_processor: Metrics::NullProcessor.name
     end
 
+    let(:metrics_definition) { MetricsDefinition.first }
+
     context 'with no events to process' do
-      it 'does not instantiate the concrete metrics processor' do
-        expect(Metrics::NullProcessor).not_to receive(:call)
+      it 'does not process any metrics_definition' do
+        expect_any_instance_of(Metrics::MetricsDefinitionProcessor).not_to receive(:process)
+
+        subject.call
       end
     end
 
@@ -23,12 +27,10 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
         create :event
       end
 
-      let(:metrics_definition) { MetricsDefinition.first }
-
       let(:processed_event_time) { Event.first.created_at }
 
-      it 'creates the concrete metrics processor to process the metrics' do
-        expect_any_instance_of(Metrics::NullProcessor).to receive(:call).once
+      it 'creates and calls a Metrics::SingleMetricDefinitionProcessor to process the metrics' do
+        expect_any_instance_of(Metrics::SingleMetricDefinitionProcessor).to receive(:call).once
 
         subject.call
       end
@@ -40,17 +42,20 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
       end
     end
 
-    context 'with events that had been processed already' do
+    context 'with events that were processed before' do
       before do
         create :event
       end
 
+      let(:process_events_for_the_first_time) { subject.call }
+      let(:process_events_for_the_second_time) { subject.call }
+
       it 'does not process the event again' do
-        subject.call
+        process_events_for_the_first_time
 
-        expect_any_instance_of(Metrics::NullProcessor).not_to receive(:call)
+        expect_any_instance_of(Metrics::SingleMetricDefinitionProcessor).not_to receive(:call)
 
-        subject.call
+        process_events_for_the_second_time
       end
     end
   end

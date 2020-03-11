@@ -6,7 +6,7 @@ module Metrics
     ##
     # Processes the metrics
     def call
-      process_all_metrics
+      process_all_metrics_definitions
     end
 
     private
@@ -19,11 +19,18 @@ module Metrics
 
     ##
     # Makes each metric defined to process all the events.
-    def process_all_metrics
+    def process_all_metrics_definitions
       metrics_definitions = all_metrics_definitions
       events = events_to_process_for_all(metrics_definitions)
       return if events.empty?
 
+      process(metrics_definitions: metrics_definitions, events: events)
+    end
+
+    ##
+    # Makes each metric in the given metrics_definitions to process all the given
+    # events.
+    def process(metrics_definitions:, events:)
       metrics_definitions.each do |metrics_definition|
         process_each(
           metrics_definition: metrics_definition,

@@ -28,10 +28,18 @@ module Metrics
     def process
       events_starting_at = metrics_definition_process_events_after_time
 
+      return unless events_starting_at
+
       metrics_definition.time_period.each_from(events_starting_at, up_to: now) do |time_interval|
-        metrics_processor.call(events: events, time_interval: time_interval)
-        metrics_definition.update!(last_processed_event_time: events.last.created_at)
+        process_time_interval(time_interval)
       end
+    end
+
+    ##
+    # Process the metrics for the given events in the given time_interval
+    def process_time_interval(time_interval)
+      metrics_processor.call(events: events, time_interval: time_interval)
+      metrics_definition.update!(last_processed_event_time: events.last.created_at)
     end
 
     ##
