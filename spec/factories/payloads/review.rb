@@ -5,7 +5,8 @@ FactoryBot.define do
       {
         id: Faker::Number.number(digits: 4),
         body: Faker::Quote.singular_siegler,
-        user: (attributes_for :user, id: Faker::Number.number).as_json
+        user: (attributes_for :user, id: Faker::Number.number).as_json,
+        state: %w[approved commented changes_requested].sample
       }
     end
     changes do
