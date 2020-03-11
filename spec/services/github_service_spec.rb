@@ -42,10 +42,10 @@ RSpec.describe GithubService do
                  pull_request: pull_request
         end
 
-        it 'sets status to removed' do
+        it 'sets state to removed' do
           change_action_to('review_request_removed')
           subject
-          expect(ReviewRequest.where(status: 'removed').count).to eq(1)
+          expect(ReviewRequest.where(state: 'removed').count).to eq(1)
         end
       end
 
@@ -71,7 +71,7 @@ RSpec.describe GithubService do
         change_action_to('submitted')
         expect {
           subject
-        }.to change { review.reload.body }.from(nil).to(payload['review']['body'])
+        }.to change { review.reload.state }.from(review.state).to(payload['review']['state'])
       end
 
       it 'edits body' do
@@ -84,11 +84,11 @@ RSpec.describe GithubService do
         }.to change { review.reload.body }.from(body).to(payload['changes']['body'])
       end
 
-      it 'sets status to removed' do
+      it 'sets state to dismissed' do
         change_action_to('dismissed')
         expect {
           subject
-        }.to change { review.reload.status }.from('active').to('removed')
+        }.to change { review.reload.state }.from(review.state).to('dismissed')
       end
     end
 
@@ -114,6 +114,7 @@ RSpec.describe GithubService do
         change_action_to('edited')
         body = payload['comment']['body']
         review_comment.update!(body: body)
+
         expect {
           subject
         }.to change { review_comment.reload.body }.from(body).to(payload['changes']['body'])
@@ -123,7 +124,7 @@ RSpec.describe GithubService do
         change_action_to('deleted')
         expect {
           subject
-        }.to change { review_comment.reload.status }.from('active').to('removed')
+        }.to change { review_comment.reload.state }.from('active').to('removed')
       end
     end
   end

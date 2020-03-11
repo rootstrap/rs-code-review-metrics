@@ -20,6 +20,7 @@
 # Indexes
 #
 #  index_pull_requests_on_github_id  (github_id) UNIQUE
+#  index_pull_requests_on_state      (state)
 #
 
 FactoryBot.define do

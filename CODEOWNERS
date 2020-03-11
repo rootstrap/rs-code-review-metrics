@@ -1,1 +1,6 @@
-* @rootstrap/ruby-on-rails/hdamico @rootstrap/ruby-on-rails/santiagovidal @rootstrap/ruby-on-rails/santib @rootstrap/ruby-on-rails/mrubi-rootstrap @rootstrap/ruby-on-rails/horacio
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @global-owner1 and @global-owner2 will be requested for
+# review when someone opens a pull request.
+
+* @hdamico @santiagovidal @santib @mrubi-rootstrap @horacio

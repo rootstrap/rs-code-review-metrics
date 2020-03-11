@@ -26,22 +26,44 @@ CREATE TYPE public.lang AS ENUM (
 
 
 --
--- Name: state; Type: TYPE; Schema: public; Owner: -
+-- Name: pull_request_state; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.state AS ENUM (
+CREATE TYPE public.pull_request_state AS ENUM (
     'open',
     'closed'
 );
 
 
 --
--- Name: status; Type: TYPE; Schema: public; Owner: -
+-- Name: review_comment_state; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.status AS ENUM (
+CREATE TYPE public.review_comment_state AS ENUM (
     'active',
     'removed'
+);
+
+
+--
+-- Name: review_request_state; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.review_request_state AS ENUM (
+    'active',
+    'removed'
+);
+
+
+--
+-- Name: review_state; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.review_state AS ENUM (
+    'approved',
+    'commented',
+    'changes_requested',
+    'dismissed'
 );
 
 
@@ -253,7 +275,7 @@ CREATE TABLE public.pull_requests (
     node_id character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    state public.state,
+    state public.pull_request_state,
     opened_at timestamp without time zone
 );
 
@@ -287,9 +309,9 @@ CREATE TABLE public.review_comments (
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    status public.status DEFAULT 'active'::public.status,
     pull_request_id bigint NOT NULL,
-    owner_id bigint
+    owner_id bigint,
+    state public.review_comment_state DEFAULT 'active'::public.review_comment_state
 );
 
 
@@ -323,9 +345,9 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    status public.status DEFAULT 'active'::public.status,
     node_id character varying NOT NULL,
-    login character varying NOT NULL
+    login character varying NOT NULL,
+    state public.review_request_state DEFAULT 'active'::public.review_request_state
 );
 
 
@@ -360,7 +382,7 @@ CREATE TABLE public.reviews (
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    status public.status DEFAULT 'active'::public.status
+    state public.review_state NOT NULL
 );
 
 
@@ -648,6 +670,13 @@ CREATE UNIQUE INDEX index_pull_requests_on_github_id ON public.pull_requests USI
 
 
 --
+-- Name: index_pull_requests_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_requests_on_state ON public.pull_requests USING btree (state);
+
+
+--
 -- Name: index_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -659,6 +688,13 @@ CREATE INDEX index_review_comments_on_owner_id ON public.review_comments USING b
 --
 
 CREATE INDEX index_review_comments_on_pull_request_id ON public.review_comments USING btree (pull_request_id);
+
+
+--
+-- Name: index_review_comments_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_comments_on_state ON public.review_comments USING btree (state);
 
 
 --
@@ -683,6 +719,13 @@ CREATE INDEX index_review_requests_on_reviewer_id ON public.review_requests USIN
 
 
 --
+-- Name: index_review_requests_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_requests_on_state ON public.review_requests USING btree (state);
+
+
+--
 -- Name: index_reviews_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -694,6 +737,13 @@ CREATE INDEX index_reviews_on_owner_id ON public.reviews USING btree (owner_id);
 --
 
 CREATE INDEX index_reviews_on_pull_request_id ON public.reviews USING btree (pull_request_id);
+
+
+--
+-- Name: index_reviews_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviews_on_state ON public.reviews USING btree (state);
 
 
 --
@@ -798,6 +848,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200206203850'),
 ('20200212151614'),
 ('20200217165218'),
-('20200219141137');
+('20200219141137'),
+('20200303210031'),
+('20200305141203'),
+('20200305142724'),
+('20200305150412'),
+('20200305150445'),
+('20200305171608');
 
 

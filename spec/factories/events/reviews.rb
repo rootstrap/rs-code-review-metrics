@@ -4,7 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
-#  status          :enum             default("active")
+#  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  github_id       :integer
@@ -15,6 +15,7 @@
 #
 #  index_reviews_on_owner_id         (owner_id)
 #  index_reviews_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_state            (state)
 #
 # Foreign Keys
 #
@@ -27,6 +28,8 @@ FactoryBot.define do
 
   factory :review, class: Events::Review do
     github_id { generate(:review_id) }
+    state { %w[approved commented changes_requested].sample }
+
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build
