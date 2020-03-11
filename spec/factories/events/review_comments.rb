@@ -27,7 +27,7 @@ FactoryBot.define do
 
   factory :review_comment, class: Events::ReviewComment do
     github_id { generate(:review_comment_id) }
-    body { generate(:body) }
+    body
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build
