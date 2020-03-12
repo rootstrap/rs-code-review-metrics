@@ -14,7 +14,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
                      duration: 1.day)
   end
 
-  context 'no review_turnaround events' do
+  context 'with no review_turnaround events' do
     describe 'when processing a collection containing no review_events' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
@@ -31,7 +31,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
     end
   end
 
-  context 'metrics generation' do
+  context 'when generating the metric values' do
     describe 'if the metrics for the given time interval was not yet generated' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
@@ -101,7 +101,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
     end
   end
 
-  context 'review turnaround definition' do
+  context 'when calculating the turnaround value' do
     describe 'if a pull request has more than one review' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
