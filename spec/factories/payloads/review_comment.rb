@@ -3,13 +3,17 @@ FactoryBot.define do
     skip_create
     transient do
       body { generate(:body) }
+      created_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday) }
+      updated_at { Faker::Date.between(from: created_at, to: Date.yesterday) }
     end
 
     comment do
       {
         id: generate(:review_comment_id),
         body: body,
-        user: (attributes_for :user, id: generate(:user_id)).as_json
+        user: (attributes_for :user, id: generate(:user_id)).as_json,
+        created_at: created_at.iso8601,
+        updated_at: updated_at.iso8601
       }
     end
     changes do

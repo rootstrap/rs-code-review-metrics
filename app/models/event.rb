@@ -30,6 +30,7 @@ class Event < ApplicationRecord
   validates :data, presence: true
   validates :handleable, presence: true, if: proc { |event| event.handled_type? }
   validates_with EventNameValidator, if: proc { |event| handleable && event.handled_type? }
+  validates :occurred_at, presence: true, if: proc { |event| event.handled_type? }
 
   scope :received_after, ->(time) { time ? where('created_at > ?', time) : all }
 
