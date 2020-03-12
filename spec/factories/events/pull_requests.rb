@@ -24,8 +24,10 @@
 #
 
 FactoryBot.define do
+  sequence(:pull_request_id, 100)
+
   factory :pull_request, class: Events::PullRequest do
-    github_id { Faker::Number.unique.number(digits: 4) }
+    github_id { generate(:pull_request_id) }
     number { Faker::Number.number(digits: 1) }
     title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }

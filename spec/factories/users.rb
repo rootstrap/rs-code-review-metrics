@@ -15,8 +15,10 @@
 #
 
 FactoryBot.define do
+  sequence(:user_id, 100)
+
   factory :user do
-    github_id { Faker::Number.unique.number(digits: 4) }
+    github_id { generate(:user_id) }
     login { "octocat#{Faker::Number.number}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
   end

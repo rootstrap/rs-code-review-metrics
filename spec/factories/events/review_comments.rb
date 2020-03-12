@@ -24,9 +24,11 @@
 #
 
 FactoryBot.define do
+  sequence(:review_comment_id, 100)
+
   factory :review_comment, class: Events::ReviewComment do
-    github_id { Faker::Number.unique.number(digits: 4) }
-    body { Faker::Quote.singular_siegler }
+    github_id { generate(:review_comment_id) }
+    body
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

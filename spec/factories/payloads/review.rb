@@ -3,15 +3,15 @@ FactoryBot.define do
     skip_create
     review do
       {
-        id: Faker::Number.number(digits: 4),
-        body: Faker::Quote.singular_siegler,
-        user: (attributes_for :user, id: Faker::Number.number).as_json,
-        state: %w[approved commented changes_requested].sample
+        id: generate(:review_id),
+        body: generate(:body),
+        user: (attributes_for :user, id: generate(:user_id)).as_json,
+        state: generate(:review_state)
       }
     end
     changes do
       {
-        body: Faker::Quote.singular_siegler
+        body: generate(:body)
       }
     end
     initialize_with { attributes.deep_stringify_keys }

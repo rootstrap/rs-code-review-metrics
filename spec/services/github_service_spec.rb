@@ -5,7 +5,7 @@ RSpec.describe GithubService do
 
   describe 'events' do
     context 'pull request' do
-      let!(:payload) { (create :pull_request_payload_with_repository) }
+      let!(:payload) { (create :full_pull_request_payload) }
       let!(:event) { 'pull_request' }
       let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
 
