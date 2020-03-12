@@ -108,12 +108,22 @@ module Metrics
     #
     # In all other cases the pull_request linked to this review_event was already
     # reviewed and the review_event is ignored for the review_turnaround metric
-    def skip_event?(event:)
-      payload = event.data
-      event.name != 'review' ||
-        payload['action'] != 'submitted' ||
-        pull_request_reviewed.key?(payload['pull_request']['id']) ||
-        !time_interval.includes?(parse_time(payload['review']['submitted_at']))
+    def process_event?(event:)
+      submitted_review_event?(event: event) &&
+        first_review?(event: event) &&
+        reviewed_in_time_interval?(event: event)
+    end
+
+    def submitted_review_event?(event:)
+      event.name == 'review' && event.data['action'] == 'submitted'
+    end
+
+    def first_review?(event:)
+      !pull_request_reviewed.key?(event.data['pull_request']['id'])
+    end
+
+    def reviewed_in_time_interval?(event:)
+      time_interval.includes?(parse_time(event.data['review']['submitted_at']))
     end
   end
 end

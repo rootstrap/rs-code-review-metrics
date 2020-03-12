@@ -42,12 +42,16 @@ module Metrics
       end
     end
 
+    def skip_event?(event:)
+      !process_event?(event: event)
+    end
+
     ##
     # MetricsProcessors are interested only in a some Events.
-    # If this method returns true the event is ignored.
-    #   event:, time_interval:
-    def skip_event?(*)
-      false
+    # If this method returns true the event is processed, otherwise it is ignored.
+    #     process_event?(event:)
+    def process_event?(*)
+      true
     end
 
     ##
