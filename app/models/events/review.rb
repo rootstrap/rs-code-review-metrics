@@ -46,16 +46,24 @@ module Events
     # Returns the occurrence time of the 'review' event.
     ##
     def occurence_time(payload:)
-      case payload.fetch('action')
+      event_action = payload.fetch('action')
+      review_payload = payload.fetch('review')
+      case event_action
       when 'submitted'
-        Time.zone.parse(payload.fetch('review').fetch('submitted_at'))
+        parse_time(review_payload.fetch('submitted_at'))
       when 'edited'
-        Time.zone.parse(payload.fetch('review').fetch('edited_at'))
+        parse_time(review_payload.fetch('edited_at'))
       when 'dismissed'
-        Time.zone.parse(payload.fetch('review').fetch('dismissed_at'))
+        parse_time(review_payload.fetch('dismissed_at'))
       else
-        raise "Uknown action '#{payload.fetch('action')}'"
+        raise "Uknown action '#{event_action}'"
       end
+    end
+
+    ##
+    # Parses the given time_string and returns a TimeWithZone object
+    def parse_time(time_string)
+      Time.zone.parse(time_string)
     end
   end
 end

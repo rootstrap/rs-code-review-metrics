@@ -70,7 +70,9 @@ RSpec.describe Event, type: :model do
 
     context 'with a review_comment event' do
       subject { create :event_review_comment }
-      let(:review_comment_event_with_invalid_name) { build(:event_review_comment, name: 'pull_request') }
+      let(:review_comment_event_with_invalid_name) do
+        build(:event_review_comment, name: 'pull_request')
+      end
 
       it { should validate_presence_of(:handleable) }
       it { should validate_presence_of(:occurred_at) }
