@@ -24,7 +24,7 @@
 #
 module Events
   class PullRequest < ApplicationRecord
-    enum state: { open: 'open', closed: 'closed' }
+    enum state: { opened: 'opened', closed: 'closed' }
 
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',

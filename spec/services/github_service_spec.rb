@@ -13,10 +13,10 @@ RSpec.describe GithubService do
         expect { subject }.to change(Events::PullRequest, :count).by(1)
       end
 
-      it 'sets state to open' do
+      it 'sets state to opened' do
         change_action_to('open')
         pull_request.closed!
-        expect { subject }.to change { pull_request.reload.open? }.from(false).to(true)
+        expect { subject }.to change { pull_request.reload.opened? }.from(false).to(true)
       end
 
       it 'sets state closed' do

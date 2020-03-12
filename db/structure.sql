@@ -30,7 +30,7 @@ CREATE TYPE public.lang AS ENUM (
 --
 
 CREATE TYPE public.pull_request_state AS ENUM (
-    'open',
+    'opened',
     'closed'
 );
 
@@ -854,6 +854,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200305142724'),
 ('20200305150412'),
 ('20200305150445'),
-('20200305171608');
+('20200305171608'),
+('20200312144232');
 
 
