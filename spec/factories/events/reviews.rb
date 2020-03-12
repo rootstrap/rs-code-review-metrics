@@ -25,10 +25,11 @@
 
 FactoryBot.define do
   sequence(:review_id, 100)
+  sequence(:review_state) { |n| Events::Review.states.values[n%2] }
 
   factory :review, class: Events::Review do
     github_id { generate(:review_id) }
-    state { %w[approved commented changes_requested].sample }
+    state { generate(:review_state) }
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

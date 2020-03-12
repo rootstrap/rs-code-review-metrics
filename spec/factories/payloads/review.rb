@@ -6,7 +6,7 @@ FactoryBot.define do
         id: generate(:review_id),
         body: generate(:body),
         user: (attributes_for :user, id: generate(:user_id)).as_json,
-        state: %w[approved commented changes_requested].sample
+        state: generate(:review_state)
       }
     end
     changes do
