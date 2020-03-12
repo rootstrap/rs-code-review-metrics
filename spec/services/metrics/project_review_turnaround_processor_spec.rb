@@ -14,20 +14,18 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
                      duration: 1.day)
   end
 
-  context 'with no review_turnaround events' do
-    describe 'when processing a collection containing no review_events' do
-      let(:create_test_events) do
-        pull_request_event_payload = create_pull_request_event(
-          action: 'opened',
-          created_at: Time.zone.parse('2020-01-01T15:10:00')
-        )
+  describe 'when processing a collection containing no review_events' do
+    let(:create_test_events) do
+      pull_request_event_payload = create_pull_request_event(
+        action: 'opened',
+        created_at: Time.zone.parse('2020-01-01T15:10:00')
+      )
 
-        create_review_comment_event(pull_request_event_payload: pull_request_event_payload)
-      end
+      create_review_comment_event(pull_request_event_payload: pull_request_event_payload)
+    end
 
-      it 'does not create a metric' do
-        expect(generated_metrics_count).to eq(0)
-      end
+    it 'does not create a metric' do
+      expect(generated_metrics_count).to eq(0)
     end
   end
 
