@@ -53,7 +53,7 @@ module Metrics
     # to avoid querying more events than needed.
     def events_to_process_for_all(metrics_definitions)
       Event.received_after(oldest_event_time_to_process_all(metrics_definitions))
-           .order(:occured_at)
+           .order(:occurred_at)
     end
 
     ##
