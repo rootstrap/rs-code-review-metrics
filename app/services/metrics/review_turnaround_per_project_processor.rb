@@ -42,6 +42,8 @@ module Metrics
   class ReviewTurnaroundPerProjectProcessor < MetricProcessor
     attr_reader :review_turnaround_per_project, :pull_request_reviewed
 
+    private
+
     ##
     # @review_turnaround_per_project: { project_id: review_turnaround_value }
     #   Keeps the values of the review_turnaround for each project.
@@ -52,14 +54,10 @@ module Metrics
     #   review_turnaround only considers the first Review. This flag is set
     #   to true if a previous Review event was the first Review to ignore all
     #   the Review events after that one.
-    def initialize(events:, time_interval:)
-      super
-
+    def initialize_accumulators
       @review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
       @pull_request_reviewed = {}
     end
-
-    private
 
     def process_event(event:)
       pull_request_id = event.data['pull_request']['id']

@@ -202,7 +202,8 @@ CREATE TABLE public.metrics (
     value numeric,
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    metrics_definition_id bigint NOT NULL
 );
 
 
@@ -721,6 +722,13 @@ CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id
 
 
 --
+-- Name: index_metrics_on_metrics_definition_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_metrics_on_metrics_definition_id ON public.metrics USING btree (metrics_definition_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -844,6 +852,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: metrics fk_rails_a828ab15c4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics
+    ADD CONSTRAINT fk_rails_a828ab15c4 FOREIGN KEY (metrics_definition_id) REFERENCES public.metrics_definitions(id);
+
+
+--
 -- Name: reviews fk_rails_bcf65590e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -916,6 +932,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200305171608'),
 ('20200311132103'),
 ('20200312144232'),
+('20200312161141'),
 ('20200318160321');
 
 

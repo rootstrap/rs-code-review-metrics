@@ -38,7 +38,9 @@ module Metrics
     ##
     # Process the metrics for the given events in the given time_interval
     def process_time_interval(time_interval)
-      metrics_processor.call(events: events, time_interval: time_interval)
+      metrics_processor.call(metrics_definition: metrics_definition,
+                             events: events,
+                             time_interval: time_interval)
       metrics_definition.update!(last_processed_event_time: events.last.occurred_at)
     end
 

@@ -15,9 +15,9 @@
 FactoryBot.define do
   factory :metrics_definition do
     metrics_name { Faker::IndustrySegments.unique }
-    time_interval { [MetricsDefinition.time_intervals].sample }
-    subject { [MetricsDefinition.subjects].sample }
-    metrics_processor {}
+    time_interval { MetricsDefinition.time_intervals.keys.sample }
+    subject { MetricsDefinition.subjects.keys.sample }
+    metrics_processor { Metrics::NullProcessor }
     last_processed_event_time { nil }
   end
 end

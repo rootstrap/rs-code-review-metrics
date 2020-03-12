@@ -30,6 +30,7 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
     process_all_events
   end
 
+  let(:metrics_definition) { create :metrics_definition }
   let(:create_test_events) {}
 
   def events_to_process
@@ -38,7 +39,8 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
 
   # RFC where should these methods be defined? The make reference to :subject
   def process_all_events
-    subject.call(events: events_to_process,
+    subject.call(metrics_definition: metrics_definition,
+                 events: events_to_process,
                  time_interval: time_interval_to_process)
   end
 

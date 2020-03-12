@@ -17,6 +17,8 @@ class MetricsDefinition < ApplicationRecord
   enum subjects: { projects: 'projects', users: 'users', users_per_project: 'users_per_project' }
   TIME_INTERVALS = { daily: TimeIntervals::DailyInterval }.freeze
 
+  has_many :metrics, dependent: :destroy
+
   validates :metrics_name, presence: true, length: { maximum: 255 }
   validates :time_interval, presence: true, inclusion: { in: time_intervals.keys }
   validates :subject, presence: true, inclusion: { in: subjects.keys }

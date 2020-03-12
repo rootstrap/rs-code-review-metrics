@@ -3,11 +3,14 @@ module Metrics
   # Base class for classes that do the processing of a Metric from a
   # collection of events.
   class MetricProcessor < BaseService
-    attr_reader :events, :time_interval
+    attr_reader :metrics_definition, :events, :time_interval
 
-    def initialize(events:, time_interval:)
+    def initialize(metrics_definition:, events:, time_interval:)
+      @metrics_definition = metrics_definition
       @events = events
       @time_interval = time_interval
+
+      initialize_accumulators
     end
 
     ##
@@ -19,6 +22,8 @@ module Metrics
     end
 
     private
+
+    def initialize_accumulators; end
 
     ##
     # Processes the given events to generate the review_turnaround metrics.
@@ -57,7 +62,9 @@ module Metrics
     # the &block on it.
     # If the Metric does not exist it creates it.
     def find_or_create_metric(entity_key:, metric_key:, &block)
-      ::Metric.find_or_create_by!(entity_key: entity_key, metric_key: metric_key, &block)
+      ::Metric.find_or_create_by!(metrics_definition: metrics_definition,
+                                  entity_key: entity_key,
+                                  metric_key: metric_key, &block)
     end
   end
 end

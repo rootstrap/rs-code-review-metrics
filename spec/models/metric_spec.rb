@@ -2,13 +2,22 @@
 #
 # Table name: metrics
 #
-#  id              :bigint           not null, primary key
-#  entity_key      :string           not null
-#  metric_key      :string           not null
-#  value           :decimal(, )
-#  value_timestamp :datetime
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                    :bigint           not null, primary key
+#  entity_key            :string           not null
+#  metric_key            :string           not null
+#  value                 :decimal(, )
+#  value_timestamp       :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  metrics_definition_id :bigint           not null
+#
+# Indexes
+#
+#  index_metrics_on_metrics_definition_id  (metrics_definition_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (metrics_definition_id => metrics_definitions.id)
 #
 
 require 'rails_helper'
