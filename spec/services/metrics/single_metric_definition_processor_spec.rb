@@ -27,11 +27,38 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
       before do
         create :event
       end
+      let(:processed_event_time) { Event.first.created_at }
 
       it 'creates and calls the concrete MetricProcessor service' do
         expect(Metrics::NullProcessor).to receive(:call)
 
         subject.call(metrics_definition: metrics_definition, events: events)
+      end
+
+      it 'updates the metric last_processed_event_time after processing the metric' do
+        subject.call(metrics_definition: metrics_definition, events: events)
+
+        expect(metrics_definition.last_processed_event_time).to eql(processed_event_time)
+      end
+    end
+
+    context 'with events that were processed before' do
+      before do
+        create :event
+      end
+      let(:process_events_for_the_first_time) do
+        subject.call(metrics_definition: metrics_definition, events: events)
+      end
+      let(:process_events_for_the_second_time) do
+        subject.call(metrics_definition: metrics_definition, events: events)
+      end
+
+      it 'does not process the event again' do
+        process_events_for_the_first_time
+
+        expect(Metrics::NullProcessor).to receive(:call)
+
+        process_events_for_the_second_time
       end
     end
   end
