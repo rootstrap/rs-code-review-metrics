@@ -3,8 +3,8 @@ FactoryBot.define do
     skip_create
     transient do
       body { generate(:body) }
-      created_at { Faker::Date.between(from: 1.month.ago, to: Date.yesterday) }
-      updated_at { Faker::Date.between(from: created_at, to: Date.yesterday) }
+      created_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
+      updated_at { Faker::Date.between(from: created_at, to: Time.zone.now) }
     end
 
     comment do
