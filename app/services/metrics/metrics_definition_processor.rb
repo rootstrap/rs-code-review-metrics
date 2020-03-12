@@ -22,7 +22,6 @@ module Metrics
     def process_all_metrics_definitions
       metrics_definitions = all_metrics_definitions
       events = events_to_process_for_all(metrics_definitions)
-      return if events.empty?
 
       process(metrics_definitions: metrics_definitions, events: events)
     end
@@ -31,6 +30,8 @@ module Metrics
     # Makes each metric in the given metrics_definitions to process all the given
     # events.
     def process(metrics_definitions:, events:)
+      return if events.empty?
+
       metrics_definitions.each do |metrics_definition|
         process_each(
           metrics_definition: metrics_definition,

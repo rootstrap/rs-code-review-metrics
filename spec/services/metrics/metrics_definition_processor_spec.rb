@@ -16,7 +16,7 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
 
     context 'with no events to process' do
       it 'does not process any metrics_definition' do
-        expect_any_instance_of(Metrics::MetricsDefinitionProcessor).not_to receive(:process)
+        expect(Metrics::SingleMetricDefinitionProcessor).not_to receive(:new)
 
         subject.call
       end
@@ -30,7 +30,8 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
       let(:processed_event_time) { Event.first.created_at }
 
       it 'creates and calls a Metrics::SingleMetricDefinitionProcessor to process the metrics' do
-        expect_any_instance_of(Metrics::SingleMetricDefinitionProcessor).to receive(:call).once
+        expect(Metrics::SingleMetricDefinitionProcessor).to receive(:call)
+          .once
 
         subject.call
       end
@@ -53,7 +54,7 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
       it 'does not process the event again' do
         process_events_for_the_first_time
 
-        expect_any_instance_of(Metrics::SingleMetricDefinitionProcessor).not_to receive(:call)
+        expect(Metrics::SingleMetricDefinitionProcessor).not_to receive(:new)
 
         process_events_for_the_second_time
       end

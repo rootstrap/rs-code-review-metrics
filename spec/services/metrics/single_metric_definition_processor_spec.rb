@@ -17,7 +17,7 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
 
     context 'with no events to process' do
       it 'does not call any concrete MetricProcessor service' do
-        expect_any_instance_of(Metrics::NullProcessor).not_to receive(:call)
+        expect(Metrics::NullProcessor).not_to receive(:new)
 
         subject.call(metrics_definition: metrics_definition, events: [])
       end
