@@ -29,7 +29,7 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
       end
 
       it 'creates and calls the concrete MetricProcessor service' do
-        expect_any_instance_of(Metrics::NullProcessor).to receive(:call)
+        expect(Metrics::NullProcessor).to receive(:call)
 
         subject.call(metrics_definition: metrics_definition, events: events)
       end
