@@ -28,7 +28,12 @@ class GithubService < BaseService
 
   def handle_event
     @entity = find_or_create_event_type
-    Event.create!(project: @project, data: @payload, name: @event, handleable: @entity)
+
+    Event.create!(project: @project,
+                  data: @payload,
+                  name: @event,
+                  handleable: @entity,
+                  occurred_at: event_occurence_time)
   end
 
   def handleable_event?
@@ -39,6 +44,12 @@ class GithubService < BaseService
     return unless handleable_event?
 
     EventBuilders.const_get(@event.classify).call(payload: @payload, event: @event)
+  end
+
+  def event_occurence_time
+    return unless handleable_event?
+
+    @entity.occurence_time(payload: @payload)
   end
 
   def handle_action

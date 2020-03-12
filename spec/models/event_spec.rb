@@ -6,6 +6,7 @@
 #  data            :jsonb
 #  handleable_type :string
 #  name            :string
+#  occurred_at     :datetime
 #  type            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -15,6 +16,7 @@
 # Indexes
 #
 #  index_events_on_handleable_type_and_handleable_id  (handleable_type,handleable_id)
+#  index_events_on_occurred_at                        (occurred_at)
 #  index_events_on_project_id                         (project_id)
 #
 

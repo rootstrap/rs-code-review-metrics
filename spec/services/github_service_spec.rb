@@ -80,6 +80,7 @@ RSpec.describe GithubService do
 
       it 'edits body' do
         change_action_to('edited')
+        payload['review']['edited_at'] = Time.zone.now.to_s
         body = payload['review']['body']
         review.update!(body: body)
 
@@ -90,6 +91,7 @@ RSpec.describe GithubService do
 
       it 'sets state to dismissed' do
         change_action_to('dismissed')
+        payload['review']['dismissed_at'] = Time.zone.now.to_s
         expect {
           subject
         }.to change { review.reload.state }.from(review.state).to('dismissed')
