@@ -25,7 +25,7 @@
 
 FactoryBot.define do
   sequence(:review_id, 100)
-  sequence(:review_state) { |n| Events::Review.states.values[n%2] }
+  sequence(:review_state) { |n| Events::Review.states.values[n % 2] }
 
   factory :review, class: Events::Review do
     github_id { generate(:review_id) }
