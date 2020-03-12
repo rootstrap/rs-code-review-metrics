@@ -89,8 +89,7 @@ module Metrics
     def review_turnaround_as_seconds(event:)
       payload = event.data
 
-      # RFC should we move these times to the Event model?
-      reviewed_at = parse_time(payload['review']['submitted_at'])
+      reviewed_at = event.occurred_at
       review_requested_at = parse_time(payload['pull_request']['created_at'])
 
       (reviewed_at - review_requested_at).seconds

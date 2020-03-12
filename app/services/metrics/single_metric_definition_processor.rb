@@ -26,9 +26,9 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process
-      events_starting_at = metrics_definition_process_events_after_time
+      return if events.empty?
 
-      return unless events_starting_at
+      events_starting_at = metrics_definition_process_events_after_time
 
       metrics_definition.time_period.each_from(events_starting_at, up_to: now) do |time_interval|
         process_time_interval(time_interval)
@@ -39,7 +39,7 @@ module Metrics
     # Process the metrics for the given events in the given time_interval
     def process_time_interval(time_interval)
       metrics_processor.call(events: events, time_interval: time_interval)
-      metrics_definition.update!(last_processed_event_time: events.last.created_at)
+      metrics_definition.update!(last_processed_event_time: events.last.occurred_at)
     end
 
     ##
@@ -48,7 +48,7 @@ module Metrics
     # If the metrics_definition was never processed before return all the time
     # of the oldest event
     def metrics_definition_process_events_after_time
-      metrics_definition.last_processed_event_time || Event.minimum(:created_at)
+      metrics_definition.last_processed_event_time || Event.minimum(:occurred_at)
     end
 
     ##

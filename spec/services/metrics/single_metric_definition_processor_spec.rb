@@ -25,9 +25,9 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
 
     context 'with events to process' do
       before do
-        create :event
+        create :event_pull_request, occurred_at: Time.zone.now
       end
-      let(:processed_event_time) { Event.first.created_at }
+      let(:processed_event_time) { Event.first.occurred_at }
 
       it 'creates and calls the concrete MetricProcessor service' do
         expect(Metrics::NullProcessor).to receive(:call)
@@ -44,7 +44,7 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
 
     context 'with events that were processed before' do
       before do
-        create :event
+        create :event_pull_request, occurred_at: Time.zone.now
       end
       let(:process_events_for_the_first_time) do
         subject.call(metrics_definition: metrics_definition, events: events)

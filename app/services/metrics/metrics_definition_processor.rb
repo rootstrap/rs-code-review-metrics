@@ -43,7 +43,8 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process_each(metrics_definition:, events:)
-      SingleMetricDefinitionProcessor.call(metrics_definition: metrics_definition, events: events)
+      SingleMetricDefinitionProcessor.call(metrics_definition: metrics_definition,
+                                           events: events)
     end
 
     ##
@@ -52,7 +53,7 @@ module Metrics
     # to avoid querying more events than needed.
     def events_to_process_for_all(metrics_definitions)
       Event.received_after(oldest_event_time_to_process_all(metrics_definitions))
-           .order(:created_at)
+           .order(:occured_at)
     end
 
     ##
