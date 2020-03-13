@@ -50,11 +50,5 @@ module Events
     ##
     # Returns the number of reviews this pull_request has
     delegate :count, to: :reviews, prefix: true
-
-    ##
-    # Returns the occurrence time of the 'pull_request' event.
-    def occurence_time(payload:)
-      Time.zone.parse(payload.fetch('pull_request').fetch('updated_at'))
-    end
   end
 end

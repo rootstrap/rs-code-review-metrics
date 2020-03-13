@@ -38,11 +38,5 @@ module Events
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id, :body, presence: true
-
-    ##
-    # Returns the occurrence time of the 'review_comment' event.
-    def occurence_time(payload:)
-      Time.zone.parse(payload.fetch('comment').fetch('updated_at'))
-    end
   end
 end

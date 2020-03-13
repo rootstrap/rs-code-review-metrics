@@ -40,6 +40,8 @@ module Metrics
   #     - the initial point in time for the interval (ej. 2020-01-01)
   #     - the collection of events reveived in that interval
   class ReviewTurnaroundPerProjectProcessor < MetricProcessor
+    include GithubEventPayloadHelper
+
     attr_reader :review_turnaround_per_project, :pull_request_reviewed
 
     private
@@ -88,13 +90,9 @@ module Metrics
       payload = event.data
 
       reviewed_at = event.occurred_at
-      review_requested_at = parse_time(payload['pull_request']['created_at'])
+      review_requested_at = parse_time_string(payload['pull_request']['created_at'])
 
       (reviewed_at - review_requested_at).seconds
-    end
-
-    def parse_time(time_string)
-      Time.zone.parse(time_string)
     end
 
     ##
@@ -123,7 +121,7 @@ module Metrics
     end
 
     def reviewed_in_time_interval?(event:)
-      time_interval.includes?(parse_time(event.data['review']['submitted_at']))
+      time_interval.includes?(parse_time_string(event.data['review']['submitted_at']))
     end
   end
 end

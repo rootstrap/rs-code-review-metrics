@@ -1,4 +1,6 @@
 class GithubService < BaseService
+  include GithubEventPayloadHelper
+
   def initialize(payload:, event:)
     @payload = payload
     @event = event
@@ -33,23 +35,17 @@ class GithubService < BaseService
                   data: @payload,
                   name: @event,
                   handleable: @entity,
-                  occurred_at: event_occurence_time)
+                  occurred_at: occurence_time(event_name: @event, payload: @payload))
   end
 
   def handleable_event?
-    Event::TYPES.include?(@event)
+    handleable_event_type?(@event)
   end
 
   def find_or_create_event_type
     return unless handleable_event?
 
     EventBuilders.const_get(@event.classify).call(payload: @payload, event: @event)
-  end
-
-  def event_occurence_time
-    return unless handleable_event?
-
-    @entity.occurence_time(payload: @payload)
   end
 
   def handle_action

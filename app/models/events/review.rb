@@ -41,29 +41,5 @@ module Events
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id, presence: true
-
-    ##
-    # Returns the occurrence time of the 'review' event.
-    ##
-    def occurence_time(payload:)
-      event_action = payload.fetch('action')
-      review_payload = payload.fetch('review')
-      case event_action
-      when 'submitted'
-        parse_time(review_payload.fetch('submitted_at'))
-      when 'edited'
-        parse_time(review_payload.fetch('edited_at'))
-      when 'dismissed'
-        parse_time(review_payload.fetch('dismissed_at'))
-      else
-        raise "Uknown action '#{event_action}'"
-      end
-    end
-
-    ##
-    # Parses the given time_string and returns a TimeWithZone object
-    def parse_time(time_string)
-      Time.zone.parse(time_string)
-    end
   end
 end
