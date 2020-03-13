@@ -28,13 +28,7 @@ module TimeIntervals
     # Returns a TimeInterval during 1 day starting at the beginning of the day of
     # the given time
     def containing(time)
-      TimeInterval.new(starting_at: to_beginning_of_day(time), duration: 1.day).freeze
-    end
-
-    ##
-    # Returns the beginning of the day of the given time
-    def to_beginning_of_day(time)
-      ActiveSupport::TimeZone.new(time.zone).parse(time.strftime('%Y-%m-%dT00:00:00'))
+      TimeInterval.new(starting_at: time.beginning_of_day, duration: 1.day).freeze
     end
   end
 end
