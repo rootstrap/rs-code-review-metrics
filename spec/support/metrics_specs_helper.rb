@@ -27,44 +27,39 @@ require 'rails_helper'
 RSpec.shared_context 'events metrics', shared_context: :metadata do
   before do
     create_test_events
-    process_all_events
   end
 
   let(:metrics_definition) { create :metrics_definition }
+
   let(:create_test_events) {}
 
-  def events_to_process
-    Event.all
-  end
-
-  # RFC where should these methods be defined? The make reference to :subject
-  def process_all_events
+  let(:process_all_events) do
     subject.call(metrics_definition: metrics_definition,
-                 events: events_to_process,
+                 events: Event.all,
                  time_interval: time_interval_to_process)
   end
 
-  def generated_metrics
-    Metric.all
+  let(:process_all_events_for_the_second_time) do
+    subject.call(metrics_definition: metrics_definition,
+                 events: Event.all,
+                 time_interval: time_interval_to_process)
   end
 
-  def generated_metrics_count
-    Metric.count
-  end
-
-  def first_metric
+  let(:first_metric) do
+    process_all_events
     Metric.first
   end
 
-  def first_metric_value_expressed_as_seconds
+  let(:first_metric_value_expressed_as_seconds) do
     first_metric.value.seconds
   end
 
-  def second_metric
+  let(:second_metric) do
+    process_all_events
     Metric.second
   end
 
-  def second_metric_value_expressed_as_seconds
+  let(:second_metric_value_expressed_as_seconds) do
     second_metric.value.seconds
   end
 

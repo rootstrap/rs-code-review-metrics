@@ -25,7 +25,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
     end
 
     it 'does not create a metric' do
-      expect(generated_metrics_count).to eq(0)
+      expect { process_all_events }.not_to change { Metric.count }
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
       end
 
       it 'generates only that metric' do
-        expect(generated_metrics_count).to eq(1)
+        expect { process_all_events }.to change { Metric.count }.from(0).to(1)
       end
     end
 
@@ -79,8 +79,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
                             action: 'submitted',
                             submitted_at: Time.zone.parse('2020-01-01T16:10:00')
 
-        # process the metrics again with the new events
-        process_all_events
+        process_all_events_for_the_second_time
       end
 
       it 'updates the review_turnaround metric for the given interval' do
@@ -94,7 +93,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
       end
 
       it 'does not create a new metric' do
-        expect(generated_metrics_count).to eq(1)
+        expect { process_all_events }.not_to change { Metric.count }
       end
     end
   end
@@ -129,7 +128,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
     end
 
     it 'does not generate a metric' do
-      expect(generated_metrics_count).to eq(0)
+      expect { process_all_events }.not_to change { Metric.count }
     end
   end
 
