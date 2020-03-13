@@ -19,14 +19,14 @@ module Metrics
     # It polls the given metrics_definitions to know which events to query
     # to avoid querying more events than needed.
     def events_to_process_for_all
-      Event.occurred_at(oldest_event_time_to_process_all(metrics_definitions))
+      Event.occurred_at(oldest_event_time_to_process)
            .order(:occurred_at)
     end
 
     ##
     # Query all the metrics_definitions to get the oldest time of the events to
     # process
-    def oldest_event_time_to_process_all(metrics_definitions)
+    def oldest_event_time_to_process
       metrics_definitions.minimum(:last_processed_event_time)
     end
   end
