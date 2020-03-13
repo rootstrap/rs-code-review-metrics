@@ -3,9 +3,11 @@
 # Table name: review_requests
 #
 #  id              :bigint           not null, primary key
-#  status          :enum             default("active")
+#  login           :string           not null
+#  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  node_id         :string           not null
 #  owner_id        :bigint
 #  pull_request_id :bigint           not null
 #  reviewer_id     :bigint           not null
@@ -15,6 +17,7 @@
 #  index_review_requests_on_owner_id         (owner_id)
 #  index_review_requests_on_pull_request_id  (pull_request_id)
 #  index_review_requests_on_reviewer_id      (reviewer_id)
+#  index_review_requests_on_state            (state)
 #
 # Foreign Keys
 #
@@ -23,7 +26,7 @@
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord
-  enum status: { active: 'active', removed: 'removed' }
+  enum state: { active: 'active', removed: 'removed' }
 
   belongs_to :owner, class_name: 'User',
                      foreign_key: :owner_id,
@@ -35,5 +38,6 @@ class ReviewRequest < ApplicationRecord
   belongs_to :pull_request, class_name: 'Events::PullRequest',
                             inverse_of: :review_requests
 
-  validates :status, inclusion: { in: statuses.keys }
+  validates :state, inclusion: { in: states.keys }
+  validates :node_id, :login, presence: true
 end

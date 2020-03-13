@@ -4,7 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
-#  status          :enum             default("active")
+#  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  github_id       :integer
@@ -15,6 +15,7 @@
 #
 #  index_reviews_on_owner_id         (owner_id)
 #  index_reviews_on_pull_request_id  (pull_request_id)
+#  index_reviews_on_state            (state)
 #
 # Foreign Keys
 #
@@ -24,9 +25,10 @@
 
 module Events
   class Review < ApplicationRecord
-    ACTIONS = %w[submitted edited dismissed].freeze
-
-    enum status: { active: 'active', removed: 'removed' }
+    enum state: { approved: 'approved',
+                  commented: 'commented',
+                  changes_requested: 'changes_requested',
+                  dismissed: 'dismissed' }
 
     has_many :events, as: :handleable, dependent: :destroy
     belongs_to :owner, class_name: 'User',
@@ -35,56 +37,7 @@ module Events
     belongs_to :pull_request, class_name: 'Events::PullRequest',
                               inverse_of: :reviews
 
-    validates :status, inclusion: { in: statuses.keys }
+    validates :state, inclusion: { in: states.keys }
     validates :github_id, presence: true
-
-    attr_accessor :payload
-
-    def resolve
-      return unless handleable?
-
-      handle_action
-    end
-
-    private
-
-    def handle_action
-      send(payload['action'])
-    end
-
-    def find_or_create_user(user_data)
-      User.find_or_create_by!(github_id: user_data['id']) do |user|
-        user.node_id = user_data['node_id']
-        user.login = user_data['login']
-      end
-    end
-
-    def find_or_create_review(payload)
-      review_data = payload['review']
-      review = Events::Review.find_or_create_by!(github_id: review_data['id']) do |rc|
-        rc.owner = find_or_create_user(review_data['user'])
-        rc.pull_request = Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
-      end
-      review.assign_attributes(payload: payload)
-      review
-    end
-
-    def handleable?
-      ACTIONS.include?(payload['action'])
-    end
-
-    # Actions
-
-    def submitted
-      update!(body: payload['review']['body'])
-    end
-
-    def edited
-      update!(body: payload['changes']['body'])
-    end
-
-    def dismissed
-      removed!
-    end
   end
 end

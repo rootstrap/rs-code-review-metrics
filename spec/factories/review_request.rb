@@ -1,6 +1,10 @@
 FactoryBot.define do
+  sequence(:review_request_id, 100)
+
   factory :review_request do
-    status { 'active' }
+    state { %w[active removed].sample }
+    login { "octocat#{Faker::Number.number}" }
+    node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
 
     association :pull_request, strategy: :build
     association :reviewer, factory: :user, strategy: :build

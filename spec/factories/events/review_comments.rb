@@ -4,7 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
-#  status          :enum             default("active")
+#  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  github_id       :integer
@@ -15,6 +15,7 @@
 #
 #  index_review_comments_on_owner_id         (owner_id)
 #  index_review_comments_on_pull_request_id  (pull_request_id)
+#  index_review_comments_on_state            (state)
 #
 # Foreign Keys
 #
@@ -23,9 +24,11 @@
 #
 
 FactoryBot.define do
+  sequence(:review_comment_id, 100)
+
   factory :review_comment, class: Events::ReviewComment do
-    sequence(:github_id, 1000)
-    body { 'You might need to fix this.' }
+    github_id { generate(:review_comment_id) }
+    body
 
     association :pull_request, strategy: :build
     association :owner, factory: :user, strategy: :build

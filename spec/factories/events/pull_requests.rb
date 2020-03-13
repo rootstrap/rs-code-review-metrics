@@ -20,38 +20,19 @@
 # Indexes
 #
 #  index_pull_requests_on_github_id  (github_id) UNIQUE
+#  index_pull_requests_on_state      (state)
 #
 
 FactoryBot.define do
+  sequence(:pull_request_id, 100)
+
   factory :pull_request, class: Events::PullRequest do
-    sequence(:github_id, 1000)
-    sequence(:number, 2)
-    sequence(:title) { |n| "Pull Request-#{n}" }
-    node_id { 'MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3' }
-    state { 'open' }
+    github_id { generate(:pull_request_id) }
+    number { Faker::Number.number(digits: 1) }
+    title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
+    node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
+    state { 'opened' }
     locked { false }
     draft { false }
-
-    factory :pull_request_with_events do
-      transient do
-        events_count { 5 }
-      end
-
-      after(:create) do |pull_request, evaluator|
-        create_list(:event, evaluator.events_count, pull_request: pull_request)
-      end
-    end
-
-    factory :pull_request_with_review_requests do
-      transient do
-        review_requests_count { 5 }
-      end
-
-      after(:create) do |pull_request, evaluator|
-        create_list(:review_request,
-                    evaluator.review_requests_count,
-                    pull_request: pull_request)
-      end
-    end
   end
 end

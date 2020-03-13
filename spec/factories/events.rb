@@ -19,11 +19,10 @@
 #
 
 FactoryBot.define do
-  factory :event do
-    name { 'pull_request' }
-    data { 'json' }
+  sequence(:body) { |n| "Please change line #{n}" }
 
-    association :project, strategy: :build
-    association :handleable, factory: :pull_request, strategy: :build
+  factory :event do
+    name { %w[pull_request review review_comment].sample }
+    data { Faker::Json.shallow_json(width: 3) }
   end
 end

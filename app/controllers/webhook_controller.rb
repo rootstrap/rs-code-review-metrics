@@ -3,7 +3,7 @@ class WebhookController < ApplicationController
   before_action :set_params
 
   def handle
-    RequestHandlerJob.perform_later(@payload)
+    RequestHandlerJob.perform_later(@payload, @event)
 
     head :ok
   end
@@ -14,7 +14,7 @@ class WebhookController < ApplicationController
     @headers = request.headers
     @signature = @headers['X-Hub-Signature']
     @payload = JSON.parse(request.request_parameters['payload'])
-                   .merge(event: @headers['X-GitHub-Event']).stringify_keys
+    @event = @headers['X-GitHub-Event']
 
     head :forbidden && return unless webhook_verified?
   end
