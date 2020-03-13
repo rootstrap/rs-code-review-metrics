@@ -25,7 +25,7 @@
 
 module Events
   class ReviewComment < ApplicationRecord
-    include EventRecord
+    include EventHelper
 
     enum state: { active: 'active', removed: 'removed' }
 

@@ -24,7 +24,7 @@
 #
 module Events
   class PullRequest < ApplicationRecord
-    include EventRecord
+    include EventHelper
 
     enum state: { open: 'open', closed: 'closed' }
 
