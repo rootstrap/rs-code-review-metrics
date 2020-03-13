@@ -31,7 +31,8 @@ class Event < ApplicationRecord
   validates_with EventNameValidator, if: proc { |event| handleable && event.handled_type? }
   validates :occurred_at, presence: true, if: proc { |event| event.handled_type? }
 
-  scope :occurred_at, ->(time) { time ? where('occurred_at > ?', time) : all }
+  scope :occurred_after, ->(time) { time ? where('occurred_at > ?', time) : all }
+  scope :occurred_up_to, ->(time) { where('occurred_at <= ?', time) }
 
   ##
   # Return true if the event name is included in the Event handled types

@@ -23,7 +23,8 @@ module Metrics
     # to avoid querying more events than needed.
     def events_to_process
       @events_to_process ||= MetricsDefinitionsEventsCollector.call(
-        metrics_definitions: metrics_definitions
+        metrics_definitions: metrics_definitions,
+        up_to: Time.zone.now
       )
     end
 

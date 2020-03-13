@@ -6,7 +6,11 @@ RSpec.describe Metrics::MetricsDefinitionsEventsCollector do
   subject { described_class }
 
   let(:metrics_definitions) { MetricsDefinition.all }
-  let(:events) { subject.call(metrics_definitions: metrics_definitions) }
+  let(:up_to_time) { Time.zone.now }
+  let(:events) do
+    subject.call(metrics_definitions: metrics_definitions,
+                 up_to: up_to_time)
+  end
 
   describe 'with an empty set of MetricsDefinition' do
     it 'returns an empty collection of events' do
@@ -145,6 +149,41 @@ RSpec.describe Metrics::MetricsDefinitionsEventsCollector do
 
     it 'returns the events from the oldest last_processed_event_time' do
       expect(events).to have(2).item
+    end
+  end
+
+  describe 'with an up_to time given' do
+    let(:up_to_time) { older_event_time }
+
+    before do
+      create :metrics_definition,
+             metrics_name: 'review_turnaround',
+             time_interval: :daily,
+             subject: :projects,
+             metrics_processor: Metrics::NullProcessor.name
+
+      create_pull_request_event(
+        action: 'opened',
+        created_at: newest_event_time
+      )
+      create_pull_request_event(
+        action: 'opened',
+        created_at: oldest_event_time
+      )
+      create_pull_request_event(
+        action: 'opened',
+        created_at: older_event_time
+      )
+    end
+
+    let(:oldest_event_time) { Time.zone.parse('2020-01-01T15:10:00') }
+    let(:older_event_time) { Time.zone.parse('2020-01-02T15:10:00') }
+    let(:newest_event_time) { Time.zone.parse('2020-01-03T15:10:00') }
+
+    it 'returns the events occurred up to the given time, including it' do
+      expect(events).to have(2).item
+      expect(events.first.occurred_at).to eq(oldest_event_time)
+      expect(events.second.occurred_at).to eq(older_event_time)
     end
   end
 end

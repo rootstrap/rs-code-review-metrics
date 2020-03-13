@@ -1,6 +1,8 @@
 require_relative '../../support/metrics_specs_helper'
 
 RSpec.describe Metrics::MetricsDefinitionProcessor do
+  include_context 'events metrics'
+
   subject { described_class }
 
   describe 'when processing the defined metrics' do
@@ -24,7 +26,10 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
 
     context 'with events to process' do
       before do
-        create :event
+        create_pull_request_event(
+          action: 'opened',
+          created_at: Time.zone.parse('2020-01-01T15:10:00')
+        )
       end
 
       it 'creates and calls a Metrics::SingleMetricDefinitionProcessor to process the metrics' do
