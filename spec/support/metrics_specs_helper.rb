@@ -29,6 +29,10 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
     create_test_events
   end
 
+  let(:test_repository_a_payload) do
+    (build :repository_payload, name: 'Project A')['repository']
+  end
+
   let(:metrics_definition) { create :metrics_definition }
 
   let(:create_test_events) {}
@@ -83,7 +87,8 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
     create(:pull_request_payload,
            repository: repository_payload,
            action: action,
-           created_at: created_at).tap do |payload|
+           created_at: created_at,
+           updated_at: created_at).tap do |payload|
       GithubService.call(payload: payload, event: 'pull_request')
     end
   end

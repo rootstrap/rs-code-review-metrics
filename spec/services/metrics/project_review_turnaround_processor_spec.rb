@@ -5,10 +5,6 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
   subject { Metrics::ReviewTurnaroundPerProjectProcessor }
 
-  let(:test_repository_a_payload) do
-    (build :repository_payload, name: 'Project A')['repository']
-  end
-
   let(:time_interval_to_process) do
     TimeInterval.new(starting_at: Time.zone.parse('2020-01-01 00:00:00'),
                      duration: 1.day)

@@ -54,6 +54,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'colorize', '~> 0.8.1'
   gem 'factory_bot_rails', '~> 5.1'
+  gem 'rspec-collection_matchers', '~> 1.2.0'
   gem 'rspec-rails', '~> 3.9'
 end
 
