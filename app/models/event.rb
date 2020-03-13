@@ -26,8 +26,7 @@ class Event < ApplicationRecord
   belongs_to :handleable, polymorphic: true, optional: true
   belongs_to :project
 
-  validates :name, presence: true
-  validates :data, presence: true
+  validates :name, :data, presence: true
   validates :handleable, presence: true, if: proc { |event| event.handled_type? }
   validates_with EventNameValidator, if: proc { |event| handleable && event.handled_type? }
   validates :occurred_at, presence: true, if: proc { |event| event.handled_type? }
