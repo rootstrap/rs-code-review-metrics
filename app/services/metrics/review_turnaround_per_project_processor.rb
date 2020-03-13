@@ -68,7 +68,7 @@ module Metrics
     end
 
     ##
-    # Updates the metrics for all the project in the given review_turnaround_per_project
+    # Updates the metrics for all the projects in the given review_turnaround_per_project
     def update_metrics
       review_turnaround_per_project.each_pair do |project_id, values|
         average_value = values.sum / values.size
