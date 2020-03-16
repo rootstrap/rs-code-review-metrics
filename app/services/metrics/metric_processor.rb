@@ -55,7 +55,7 @@ module Metrics
     end
 
     ##
-    # Sets the the value of the metric with the key (entity_key, metric_key).
+    # Sets the value of the metric with the key (entity_key, metric_key).
     def update_metric(entity_key:, metric_key:, value:, value_timestamp:)
       find_or_create_metric(entity_key: entity_key, metric_key: metric_key)
         .update!(value: value, value_timestamp: value_timestamp)
