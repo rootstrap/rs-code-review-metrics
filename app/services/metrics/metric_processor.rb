@@ -62,13 +62,12 @@ module Metrics
     end
 
     ##
-    # Returns the Metric with the given (entity_key:, metric_key:) and evaluates
-    # the &block on it.
+    # Returns the Metric with the given (metrics_definition, entity_key:, metric_key:).
     # If the Metric does not exist it creates it.
-    def find_or_create_metric(entity_key:, metric_key:, &block)
+    def find_or_create_metric(entity_key:, metric_key:)
       ::Metric.find_or_create_by!(metrics_definition: metrics_definition,
                                   entity_key: entity_key,
-                                  metric_key: metric_key, &block)
+                                  metric_key: metric_key)
     end
   end
 end
