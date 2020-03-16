@@ -26,7 +26,7 @@ module Metrics
     def initialize_accumulators; end
 
     ##
-    # Processes the given events to generate the review_turnaround metrics.
+    # Processes the given events to generate the metrics.
     def process_events
       iterate_events
       update_metrics
