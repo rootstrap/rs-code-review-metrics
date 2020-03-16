@@ -36,9 +36,10 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
       end
 
       it 'updates the metric last_processed_event_time after processing the metric' do
-        subject.call(metrics_definition: metrics_definition, events: events)
-
-        expect(metrics_definition.last_processed_event_time).to eql(processed_event_time)
+        expect {
+          subject.call(metrics_definition: metrics_definition, events: events)
+        }.to change { metrics_definition.last_processed_event_time }
+          .from(nil).to(processed_event_time)
       end
     end
 
