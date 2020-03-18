@@ -31,7 +31,7 @@ FactoryBot.define do
     number { Faker::Number.number(digits: 1) }
     title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
-    state { 'opened' }
+    state { 'open' }
     locked { false }
     draft { false }
   end
