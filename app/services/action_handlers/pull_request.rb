@@ -11,7 +11,7 @@ module ActionHandlers
     end
 
     def open
-      @entity.opened!
+      @entity.open!
       @entity.update!(opened_at: Time.current)
     end
 
