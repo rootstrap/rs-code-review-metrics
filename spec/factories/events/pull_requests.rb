@@ -16,11 +16,17 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  project_id :bigint           not null
 #
 # Indexes
 #
-#  index_pull_requests_on_github_id  (github_id) UNIQUE
-#  index_pull_requests_on_state      (state)
+#  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_project_id  (project_id)
+#  index_pull_requests_on_state       (state)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
 #
 
 FactoryBot.define do
@@ -35,5 +41,6 @@ FactoryBot.define do
     opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
     locked { false }
     draft { false }
+    project
   end
 end

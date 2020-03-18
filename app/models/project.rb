@@ -17,6 +17,7 @@ class Project < ApplicationRecord
                others: 'others', unassigned: 'unassigned' }
 
   has_many :events, dependent: :destroy
+  has_many :pull_requests, dependent: :destroy, inverse_of: :pull_request
 
   validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true

@@ -313,7 +313,8 @@ CREATE TABLE public.pull_requests (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     state public.pull_request_state,
-    opened_at timestamp without time zone
+    opened_at timestamp without time zone,
+    project_id bigint NOT NULL
 );
 
 
@@ -737,6 +738,13 @@ CREATE UNIQUE INDEX index_pull_requests_on_github_id ON public.pull_requests USI
 
 
 --
+-- Name: index_pull_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_requests_on_project_id ON public.pull_requests USING btree (project_id);
+
+
+--
 -- Name: index_pull_requests_on_state; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -845,6 +853,14 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
+-- Name: pull_requests fk_rails_5df700b412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_requests
+    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: review_requests fk_rails_9ece0f7518; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -935,6 +951,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200312144232'),
 ('20200312161141'),
 ('20200318125243'),
-('20200318160321');
+('20200318160321'),
+('20200318171820');
 
 

@@ -32,7 +32,7 @@ FactoryBot.define do
     initialize_with { attributes.deep_stringify_keys }
 
     factory :full_pull_request_payload do
-      after(:create) do |pull_request_payload|
+      after(:build) do |pull_request_payload|
         pull_request_payload['repository'] = (create :repository_payload)['repository']
       end
     end
