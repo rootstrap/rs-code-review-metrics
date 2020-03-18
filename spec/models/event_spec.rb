@@ -87,7 +87,7 @@ RSpec.describe Event, type: :model do
     end
 
     context 'of an event not handled type' do
-      subject { create :event, data: { unhandled_event: {} } }
+      subject { create :event_unhandled }
 
       it { should_not validate_presence_of(:occurred_at) }
 

@@ -80,5 +80,9 @@ FactoryBot.define do
       association :handleable, factory: :review_comment
       occurred_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
     end
+
+    factory :event_unhandled do
+      data { { unhandled_event: {} } }
+    end
   end
 end
