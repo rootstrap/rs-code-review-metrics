@@ -68,6 +68,11 @@ RSpec.describe Events::PullRequest, type: :model do
       expect(subject).to_not be_valid
     end
 
+    it 'is not valid without opened_at' do
+      subject.opened_at = nil
+      expect(subject).to_not be_valid
+    end
+
     it { is_expected.to validate_uniqueness_of(:github_id) }
     it { is_expected.to have_many(:events) }
   end

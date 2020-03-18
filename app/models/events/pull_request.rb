@@ -41,6 +41,7 @@ module Events
               :node_id,
               :title,
               :number,
+              :opened_at,
               presence: true
     validates :draft,
               :locked,

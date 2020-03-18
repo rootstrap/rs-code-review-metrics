@@ -32,6 +32,7 @@ FactoryBot.define do
     title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
     state { 'open' }
+    opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
     locked { false }
     draft { false }
   end
