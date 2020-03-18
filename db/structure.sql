@@ -419,7 +419,8 @@ CREATE TABLE public.reviews (
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    state public.review_state NOT NULL
+    state public.review_state NOT NULL,
+    opened_at timestamp without time zone NOT NULL
 );
 
 
@@ -933,6 +934,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200311132103'),
 ('20200312144232'),
 ('20200312161141'),
+('20200318125243'),
 ('20200318160321');
 
 

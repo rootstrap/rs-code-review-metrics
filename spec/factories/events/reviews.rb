@@ -4,6 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
+#  opened_at       :datetime         not null
 #  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -30,6 +31,7 @@ FactoryBot.define do
   factory :review, class: Events::Review do
     github_id { generate(:review_id) }
     state { generate(:review_state) }
+    opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
 
     association :pull_request
     association :owner, factory: :user

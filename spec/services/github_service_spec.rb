@@ -71,11 +71,8 @@ RSpec.describe GithubService do
         expect { subject }.to change(Events::Review, :count).by(1)
       end
 
-      it 'sets state to submitted' do
-        change_action_to('submitted')
-        expect {
-          subject
-        }.to change { review.reload.state }.from(review.state).to('commented')
+      it 'sets state to commented' do
+        expect(review.state).to eq('commented')
       end
 
       it 'edits body' do
