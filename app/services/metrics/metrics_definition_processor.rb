@@ -18,21 +18,8 @@ module Metrics
     end
 
     ##
-    # Returns an array with the events to process.
-    # It polls the given metrics_definitions to know which events to query
-    # to avoid querying more events than needed.
-    def events_to_process
-      @events_to_process ||= MetricsDefinitionsEventsCollector.call(
-        metrics_definitions: metrics_definitions,
-        up_to: Time.zone.now
-      )
-    end
-
-    ##
     # Makes each metric defined to process all the events.
     def process_all_metrics_definitions
-      return if events_to_process.empty?
-
       metrics_definitions.each do |metrics_definition|
         process_each(
           metrics_definition: metrics_definition
@@ -43,8 +30,7 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process_each(metrics_definition:)
-      SingleMetricDefinitionProcessor.call(metrics_definition: metrics_definition,
-                                           events: events_to_process)
+      SingleMetricDefinitionProcessor.call(metrics_definition: metrics_definition)
     end
   end
 end
