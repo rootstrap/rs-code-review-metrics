@@ -42,21 +42,13 @@ module Metrics
   class ReviewTurnaroundPerProjectProcessor < MetricProcessor
     include GithubEventPayloadHelper
 
-    attr_reader :review_turnaround_per_project
-
     private
 
-    def initialize_accumulators
-      @review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
-    end
-
-    def iterate_events
+    def process
       reviews.each do |project_id:, turnaround_as_seconds:|
         save_value(project_id: project_id, turnaround_as_seconds: turnaround_as_seconds)
       end
     end
-
-    def update_metrics; end
 
     def reviews
       Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)

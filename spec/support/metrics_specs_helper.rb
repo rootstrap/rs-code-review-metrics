@@ -39,13 +39,11 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
 
   let(:process_all_events) do
     subject.call(metrics_definition: metrics_definition,
-                 events: Event.all,
                  time_interval: time_interval_to_process)
   end
 
   let(:process_all_events_for_the_second_time) do
     subject.call(metrics_definition: metrics_definition,
-                 events: Event.all,
                  time_interval: time_interval_to_process)
   end
 

@@ -20,7 +20,11 @@ module Queries
         .joins(pull_requests: [:reviews])
         .where('reviews.id IN (?)', oldest_review_in_pr_query)
         .group(:id)
-        .average('EXTRACT(EPOCH FROM reviews.opened_at) - EXTRACT(EPOCH FROM pull_requests.opened_at)')
+        .average(
+          'EXTRACT(EPOCH FROM reviews.opened_at) ' \
+          '- ' \
+          'EXTRACT(EPOCH FROM pull_requests.opened_at)'
+        )
     end
 
     def oldest_review_in_pr_query
