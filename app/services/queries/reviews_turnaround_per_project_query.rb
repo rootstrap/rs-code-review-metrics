@@ -6,8 +6,12 @@ module Queries
       @time_interval = time_interval
     end
 
-    def last_review_created_at
-      Events::Review.order(:created_at).pluck(:created_at).last
+    def last_processed_review
+      Events::Review
+        .where('? < reviews.created_at AND ? < reviews.created_at', starting_at, ending_at)
+        .order(created_at: :desc)
+        .limit(1)
+        .first
     end
 
     def each(&block)
