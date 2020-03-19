@@ -3,12 +3,15 @@ require_relative '../../support/metrics_specs_helper'
 RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
   include_context 'events metrics'
 
-  subject { Metrics::ReviewTurnaroundPerProjectProcessor }
+  subject { described_class }
 
   let(:time_interval_to_process) do
     TimeInterval.new(starting_at: Time.zone.parse('2020-01-01 00:00:00'),
                      duration: 1.day)
   end
+
+  let(:first_project_id) { Project.order(:id).first.id.to_s }
+  let(:second_project_id) { Project.order(:id).second.id.to_s }
 
   describe 'when processing a collection containing no review_events' do
     let(:create_test_events) do
@@ -40,7 +43,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
       it 'generates a review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: 'Project A',
+          entity_key: first_project_id,
           metric_key: 'review_turnaround',
           value_timestamp: time_interval_to_process.starting_at
         )
@@ -80,7 +83,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
       it 'updates the review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: 'Project A',
+          entity_key: first_project_id,
           metric_key: 'review_turnaround',
           value_timestamp: time_interval_to_process.starting_at
         )
@@ -92,27 +95,27 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
         expect { process_all_events }.not_to change { Metric.count }
       end
     end
-  end
 
-  context 'when calculating the turnaround value' do
-    describe 'if a pull request has more than one review' do
-      let(:create_test_events) do
-        pull_request_event_payload = create_pull_request_event(
-          action: 'opened',
-          created_at: Time.zone.parse('2020-01-01T15:10:00')
-        )
+    context 'when calculating the turnaround value' do
+      describe 'if a pull request has more than one review' do
+        let(:create_test_events) do
+          pull_request_event_payload = create_pull_request_event(
+            action: 'opened',
+            created_at: Time.zone.parse('2020-01-01T15:10:00')
+          )
 
-        create_review_event pull_request_event_payload: pull_request_event_payload,
-                            action: 'submitted',
-                            submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+          create_review_event pull_request_event_payload: pull_request_event_payload,
+                              action: 'submitted',
+                              submitted_at: Time.zone.parse('2020-01-01T15:30:00')
 
-        create_review_event pull_request_event_payload: pull_request_event_payload,
-                            action: 'submitted',
-                            submitted_at: Time.zone.parse('2020-01-01T16:30:00')
-      end
+          create_review_event pull_request_event_payload: pull_request_event_payload,
+                              action: 'submitted',
+                              submitted_at: Time.zone.parse('2020-01-01T16:30:00')
+        end
 
-      it 'it uses only the first review to calculate the metric value' do
-        expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
+        it 'it uses only the first review to calculate the metric value' do
+          expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
+        end
       end
     end
   end
@@ -157,7 +160,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
     it 'it generates the metric for the first project' do
       expect(first_metric).to have_attributes(
-        entity_key: 'Project A',
+        entity_key: first_project_id,
         metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )
@@ -167,7 +170,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
 
     it 'it generates the metric for the second project' do
       expect(second_metric).to have_attributes(
-        entity_key: 'Project B',
+        entity_key: second_project_id,
         metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )

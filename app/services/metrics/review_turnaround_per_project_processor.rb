@@ -42,86 +42,33 @@ module Metrics
   class ReviewTurnaroundPerProjectProcessor < MetricProcessor
     include GithubEventPayloadHelper
 
-    attr_reader :review_turnaround_per_project, :pull_request_reviewed
+    attr_reader :review_turnaround_per_project
 
     private
 
-    ##
-    # @review_turnaround_per_project: { project_id: review_turnaround_value }
-    #   Keeps the values of the review_turnaround for each project.
-    #   Allows to calculate the metrics for all the projects in a single pass.
-    #
-    # @pull_request_reviewed: { pull_request_id: true|nil }
-    #   A PullRequest can have many Review events. The
-    #   review_turnaround only considers the first Review. This flag is set
-    #   to true if a previous Review event was the first Review to ignore all
-    #   the Review events after that one.
     def initialize_accumulators
       @review_turnaround_per_project = Hash.new { |hash, key| hash[key] = [] }
-      @pull_request_reviewed = {}
     end
 
-    def process_event(event:)
-      pull_request_id = event.data['pull_request']['id']
-
-      review_turnaround_value = review_turnaround_as_seconds(event: event)
-      review_turnaround_per_project[event.project.name] << review_turnaround_value
-      pull_request_reviewed[pull_request_id] = :reviewed
-    end
-
-    ##
-    # Updates the metrics for all the projects in the given review_turnaround_per_project
-    def update_metrics
-      review_turnaround_per_project.each_pair do |project_id, values|
-        average_value = values.sum / values.size
-
-        update_metric(
-          entity_key: project_id,
-          metric_key: 'review_turnaround',
-          value: average_value,
-          value_timestamp: time_interval.starting_at
-        )
+    def iterate_events
+      reviews.each do |project_id:, turnaround_as_seconds:|
+        save_value(project_id: project_id, turnaround_as_seconds: turnaround_as_seconds)
       end
     end
 
-    ##
-    # Returns the review turnaround value for the given event.
-    def review_turnaround_as_seconds(event:)
-      payload = event.data
+    def update_metrics; end
 
-      reviewed_at = event.occurred_at
-      review_requested_at = parse_time_string(payload['pull_request']['created_at'])
-
-      (reviewed_at - review_requested_at).seconds
+    def reviews
+      Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
     end
 
-    ##
-    # The review turnaround metric is only interested in the first review of a PR.
-    # This method returns true if the PR of the given review_event was already reviewed.
-    #
-    # A review_event is the first review of a PR if:
-    #     - its action = 'submitted'
-    #       &&
-    #     - its PR has exactly one Review (the one created by this very same review_event)
-    #
-    # In all other cases the pull_request linked to this review_event was already
-    # reviewed and the review_event is ignored for the review_turnaround metric
-    def process_event?(event:)
-      submitted_review_event?(event: event) &&
-        first_review?(event: event) &&
-        reviewed_in_time_interval?(event: event)
-    end
-
-    def submitted_review_event?(event:)
-      event.name == 'review' && event.data['action'] == 'submitted'
-    end
-
-    def first_review?(event:)
-      !pull_request_reviewed.key?(event.data['pull_request']['id'])
-    end
-
-    def reviewed_in_time_interval?(event:)
-      time_interval.includes?(parse_time_string(event.data['review']['submitted_at']))
+    def save_value(project_id:, turnaround_as_seconds:)
+      update_metric(
+        entity_key: project_id,
+        metric_key: 'review_turnaround',
+        value: turnaround_as_seconds,
+        value_timestamp: time_interval.starting_at
+      )
     end
   end
 end
