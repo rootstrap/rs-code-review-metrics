@@ -10,57 +10,16 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
              time_interval: :daily,
              subject: :projects,
              metrics_processor: Metrics::NullProcessor.name
+
+      create :event_pull_request, occurred_at: Time.zone.now
     end
 
     let(:metrics_definition) { MetricsDefinition.first }
-    let(:events) { Event.all }
 
-    context 'with no events to process' do
-      it 'does not call any concrete MetricProcessor service' do
-        expect(Metrics::NullProcessor).not_to receive(:new)
+    it 'creates and calls the concrete MetricProcessor service' do
+      expect(Metrics::NullProcessor).to receive(:call)
 
-        subject.call(metrics_definition: metrics_definition, events: [])
-      end
-    end
-
-    context 'with events to process' do
-      before do
-        create :event_pull_request, occurred_at: Time.zone.now
-      end
-      let(:processed_event_time) { Event.first.occurred_at }
-
-      it 'creates and calls the concrete MetricProcessor service' do
-        expect(Metrics::NullProcessor).to receive(:call)
-
-        subject.call(metrics_definition: metrics_definition, events: events)
-      end
-
-      it 'updates the metric last_processed_event_time after processing the metric' do
-        expect {
-          subject.call(metrics_definition: metrics_definition, events: events)
-        }.to change { metrics_definition.last_processed_event_time }
-          .from(nil).to(processed_event_time)
-      end
-    end
-
-    context 'with events that were processed before' do
-      before do
-        create :event_pull_request, occurred_at: Time.zone.now
-      end
-      let(:process_events_for_the_first_time) do
-        subject.call(metrics_definition: metrics_definition, events: events)
-      end
-      let(:process_events_for_the_second_time) do
-        subject.call(metrics_definition: metrics_definition, events: events)
-      end
-
-      it 'does not process the event again' do
-        process_events_for_the_first_time
-
-        expect(Metrics::NullProcessor).to receive(:call)
-
-        process_events_for_the_second_time
-      end
+      subject.call(metrics_definition: metrics_definition)
     end
   end
 end

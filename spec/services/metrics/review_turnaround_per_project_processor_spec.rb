@@ -54,6 +54,13 @@ RSpec.describe Metrics::ReviewTurnaroundPerProjectProcessor do
       it 'generates only that metric' do
         expect { process_all_events }.to change { Metric.count }.from(0).to(1)
       end
+
+      it 'updates the metric last_processed_event_time' do
+        expect {
+          process_all_events
+        }.to change { metrics_definition.last_processed_event_time }
+          .from(nil).to(Events::Review.last.created_at)
+      end
     end
 
     describe 'if a metric for the given time interval was already generated' do

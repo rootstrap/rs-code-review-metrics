@@ -15,7 +15,6 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
     end
 
     let(:metrics_definition) { MetricsDefinition.first }
-    let(:events) { Event.all }
 
     let(:first_daily_interval) do
       TimeIntervals::DailyInterval.containing(Time.zone.now - 2.days)
@@ -39,7 +38,7 @@ RSpec.describe Metrics::SingleMetricDefinitionProcessor do
       expect(Metrics::NullProcessor).to receive(:call)
         .with(hash_including(time_interval: third_daily_interval))
 
-      subject.call(metrics_definition: metrics_definition, events: events)
+      subject.call(metrics_definition: metrics_definition)
     end
   end
 end

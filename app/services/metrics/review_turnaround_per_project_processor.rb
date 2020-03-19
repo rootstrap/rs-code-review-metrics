@@ -53,7 +53,7 @@ module Metrics
     end
 
     def reviews
-      @reviews_query ||= Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
+      @reviews ||= Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
     end
 
     def save_value(project_id:, turnaround_as_seconds:)
