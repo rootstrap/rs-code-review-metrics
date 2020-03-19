@@ -40,8 +40,6 @@ module Metrics
   #     - the initial point in time for the interval (ej. 2020-01-01)
   #     - the collection of events reveived in that interval
   class ReviewTurnaroundPerProjectProcessor < MetricProcessor
-    include GithubEventPayloadHelper
-
     private
 
     def process
