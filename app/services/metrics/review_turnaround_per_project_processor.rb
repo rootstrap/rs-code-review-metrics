@@ -48,10 +48,12 @@ module Metrics
       reviews.each do |project_id:, turnaround_as_seconds:|
         save_value(project_id: project_id, turnaround_as_seconds: turnaround_as_seconds)
       end
+
+      metrics_definition.update!(last_processed_event_time: reviews.last_review_created_at)
     end
 
     def reviews
-      Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
+      @reviews_query ||= Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
     end
 
     def save_value(project_id:, turnaround_as_seconds:)

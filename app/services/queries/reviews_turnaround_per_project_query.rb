@@ -6,6 +6,10 @@ module Queries
       @time_interval = time_interval
     end
 
+    def last_review_created_at
+      Events::Review.order(:created_at).pluck(:created_at).last
+    end
+
     def each(&block)
       query.each do |project_value|
         block.call(
