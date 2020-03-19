@@ -14,8 +14,8 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
              metrics_processor: Metrics::NullProcessor.name
     end
 
-    it 'creates and calls a Metrics::SingleMetricDefinitionProcessor to process the metrics' do
-      expect(Metrics::SingleMetricDefinitionProcessor).to receive(:call)
+    it 'creates and calls a Metrics::MetricDefinitionTimeIntervalsProcessor to process the metrics' do
+      expect(Metrics::MetricDefinitionTimeIntervalsProcessor).to receive(:call)
         .once
 
       subject.call

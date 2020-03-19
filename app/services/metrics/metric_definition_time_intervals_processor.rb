@@ -1,7 +1,7 @@
 module Metrics
   ##
-  # Process the metrics of a single MetricsDefinition.
-  class SingleMetricDefinitionProcessor < BaseService
+  # Process each time intervals of a single MetricsDefinition.
+  class MetricDefinitionTimeIntervalsProcessor < BaseService
     attr_reader :metrics_definition
 
     def initialize(metrics_definition:)

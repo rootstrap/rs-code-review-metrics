@@ -30,7 +30,7 @@ module Metrics
     ##
     # Makes the given metric to process all the events.
     def process_each(metrics_definition:)
-      SingleMetricDefinitionProcessor.call(metrics_definition: metrics_definition)
+      MetricDefinitionTimeIntervalsProcessor.call(metrics_definition: metrics_definition)
     end
   end
 end
