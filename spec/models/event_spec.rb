@@ -30,8 +30,9 @@ RSpec.describe Event, type: :model do
     it { should validate_presence_of(:data) }
 
     context 'with an event of a handled type' do
+      subject { build(:event_pull_request, name: 'review') }
+
       it 'validates the name to match the event type' do
-        subject = build(:event_pull_request, name: 'review')
         expect(subject).not_to be_valid
       end
     end
