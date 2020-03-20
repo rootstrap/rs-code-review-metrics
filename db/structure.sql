@@ -167,7 +167,8 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    project_id bigint NOT NULL
+    project_id bigint NOT NULL,
+    occurred_at timestamp without time zone
 );
 
 
@@ -201,8 +202,44 @@ CREATE TABLE public.metrics (
     value numeric,
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    metrics_definition_id bigint NOT NULL
+);
+
+
+--
+-- Name: metrics_definitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.metrics_definitions (
+    id bigint NOT NULL,
+    metrics_name character varying NOT NULL,
+    time_interval character varying NOT NULL,
+    subject character varying NOT NULL,
+    metrics_processor character varying NOT NULL,
+    last_processed_event_time timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
+
+
+--
+-- Name: metrics_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.metrics_definitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: metrics_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.metrics_definitions_id_seq OWNED BY public.metrics_definitions.id;
 
 
 --
@@ -276,7 +313,8 @@ CREATE TABLE public.pull_requests (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     state public.pull_request_state,
-    opened_at timestamp without time zone
+    opened_at timestamp without time zone,
+    project_id bigint NOT NULL
 );
 
 
@@ -382,7 +420,8 @@ CREATE TABLE public.reviews (
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    state public.review_state NOT NULL
+    state public.review_state NOT NULL,
+    opened_at timestamp without time zone NOT NULL
 );
 
 
@@ -476,6 +515,13 @@ ALTER TABLE ONLY public.metrics ALTER COLUMN id SET DEFAULT nextval('public.metr
 
 
 --
+-- Name: metrics_definitions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics_definitions ALTER COLUMN id SET DEFAULT nextval('public.metrics_definitions_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -547,6 +593,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: metrics_definitions metrics_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics_definitions
+    ADD CONSTRAINT metrics_definitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -656,6 +710,13 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 
 
 --
+-- Name: index_events_on_occurred_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_on_occurred_at ON public.events USING btree (occurred_at);
+
+
+--
 -- Name: index_events_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -663,10 +724,24 @@ CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id
 
 
 --
+-- Name: index_metrics_on_metrics_definition_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_metrics_on_metrics_definition_id ON public.metrics USING btree (metrics_definition_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_pull_requests_on_github_id ON public.pull_requests USING btree (github_id);
+
+
+--
+-- Name: index_pull_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_requests_on_project_id ON public.pull_requests USING btree (project_id);
 
 
 --
@@ -778,11 +853,27 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
+-- Name: pull_requests fk_rails_5df700b412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_requests
+    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: review_requests fk_rails_9ece0f7518; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.review_requests
     ADD CONSTRAINT fk_rails_9ece0f7518 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: metrics fk_rails_a828ab15c4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metrics
+    ADD CONSTRAINT fk_rails_a828ab15c4 FOREIGN KEY (metrics_definition_id) REFERENCES public.metrics_definitions(id);
 
 
 --
@@ -849,13 +940,18 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200212151614'),
 ('20200217165218'),
 ('20200219141137'),
+('20200302120947'),
 ('20200303210031'),
 ('20200305141203'),
 ('20200305142724'),
 ('20200305150412'),
 ('20200305150445'),
 ('20200305171608'),
+('20200311132103'),
 ('20200312144232'),
-('20200318160321');
+('20200312161141'),
+('20200318125243'),
+('20200318160321'),
+('20200318171820');
 
 

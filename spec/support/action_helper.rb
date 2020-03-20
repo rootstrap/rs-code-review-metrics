@@ -1,5 +1,5 @@
 module ActionHelper
   def change_action_to(action)
-    payload.merge!('action' => action)
+    payload['action'] = action
   end
 end

@@ -6,8 +6,8 @@ FactoryBot.define do
     login { "octocat#{Faker::Number.number}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
 
-    association :pull_request, strategy: :build
-    association :reviewer, factory: :user, strategy: :build
-    association :owner, factory: :user, strategy: :build
+    association :pull_request
+    association :reviewer, factory: :user
+    association :owner, factory: :user
   end
 end

@@ -4,6 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
+#  opened_at       :datetime         not null
 #  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -34,10 +35,15 @@ RSpec.describe Events::Review, type: :model do
     end
 
     it 'is not valid without github id' do
-      subject.github_id = nil
+      subject = build :review, github_id: nil
       expect(subject).to_not be_valid
     end
 
     it { is_expected.to belong_to(:pull_request) }
+
+    it 'is not valid without opened_at' do
+      subject = build :review, opened_at: nil
+      expect(subject).to_not be_valid
+    end
   end
 end

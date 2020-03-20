@@ -16,11 +16,17 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  project_id :bigint           not null
 #
 # Indexes
 #
-#  index_pull_requests_on_github_id  (github_id) UNIQUE
-#  index_pull_requests_on_state      (state)
+#  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_project_id  (project_id)
+#  index_pull_requests_on_state       (state)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
 #
 
 require 'rails_helper'
@@ -29,33 +35,17 @@ RSpec.describe Events::PullRequest, type: :model do
   context 'validations' do
     subject { build :pull_request }
 
+    it { is_expected.to validate_presence_of(:opened_at) }
+    it { is_expected.to validate_presence_of(:github_id) }
+    it { is_expected.to validate_uniqueness_of(:github_id) }
+    it { is_expected.to have_many(:events) }
+    it { is_expected.to validate_presence_of(:title) }
+    it { is_expected.to validate_presence_of(:state) }
+    it { is_expected.to validate_presence_of(:number) }
+    it { is_expected.to validate_presence_of(:node_id) }
+
     it 'is valid with valid attributes' do
       expect(subject).to be_valid
-    end
-
-    it 'is not valid without github id' do
-      subject.github_id = nil
-      expect(subject).to_not be_valid
-    end
-
-    it 'is not valid without title' do
-      subject.title = nil
-      expect(subject).to_not be_valid
-    end
-
-    it 'is not valid without state' do
-      subject.state = nil
-      expect(subject).to_not be_valid
-    end
-
-    it 'is not valid without number' do
-      subject.number = nil
-      expect(subject).to_not be_valid
-    end
-
-    it 'is not valid without node id' do
-      subject.node_id = nil
-      expect(subject).to_not be_valid
     end
 
     it 'is not valid without locked' do
@@ -67,8 +57,5 @@ RSpec.describe Events::PullRequest, type: :model do
       subject.draft = nil
       expect(subject).to_not be_valid
     end
-
-    it { is_expected.to validate_uniqueness_of(:github_id) }
-    it { is_expected.to have_many(:events) }
   end
 end

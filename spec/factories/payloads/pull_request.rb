@@ -1,6 +1,17 @@
 FactoryBot.define do
   factory :pull_request_payload, class: Hash do
     skip_create
+
+    transient do
+      created_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
+      updated_at { Faker::Date.between(from: created_at, to: Time.zone.now) }
+    end
+
+    action do
+      %w[assigned unassigned review_requested review_request_removed
+         labeled unlabeled opened edited closed ready_for_review locked
+         unlocked reopened].sample
+    end
     pull_request do
       {
         id: generate(:pull_request_id),
@@ -10,7 +21,9 @@ FactoryBot.define do
         state: 'open',
         locked: 'false',
         draft: 'false',
-        user: (attributes_for :user, id: generate(:user_id)).as_json
+        user: (attributes_for :user, id: generate(:user_id)).as_json,
+        created_at: created_at.to_time.iso8601,
+        updated_at: updated_at.to_time.iso8601
       }
     end
     requested_reviewer do
@@ -19,8 +32,8 @@ FactoryBot.define do
     initialize_with { attributes.deep_stringify_keys }
 
     factory :full_pull_request_payload do
-      after(:create) do |pull_request_payload|
-        pull_request_payload.merge!((create :repository_payload))
+      after(:build) do |pull_request_payload|
+        pull_request_payload['repository'] = (create :repository_payload)['repository']
       end
     end
   end

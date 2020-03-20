@@ -16,16 +16,25 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  project_id :bigint           not null
 #
 # Indexes
 #
-#  index_pull_requests_on_github_id  (github_id) UNIQUE
-#  index_pull_requests_on_state      (state)
+#  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_project_id  (project_id)
+#  index_pull_requests_on_state       (state)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id)
 #
 module Events
   class PullRequest < ApplicationRecord
+    include EventHelper
+
     enum state: { open: 'open', closed: 'closed' }
 
+    belongs_to :project, inverse_of: :pull_requests
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',
                                dependent: :destroy, inverse_of: :pull_request
@@ -39,10 +48,15 @@ module Events
               :node_id,
               :title,
               :number,
+              :opened_at,
               presence: true
     validates :draft,
               :locked,
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
+
+    ##
+    # Returns the number of reviews this pull_request has
+    delegate :count, to: :reviews, prefix: true
   end
 end

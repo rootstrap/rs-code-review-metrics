@@ -1,11 +1,19 @@
 FactoryBot.define do
   factory :review_comment_payload, class: Hash do
     skip_create
+    transient do
+      body { generate(:body) }
+      created_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
+      updated_at { Faker::Date.between(from: created_at, to: Time.zone.now) }
+    end
+
     comment do
       {
         id: generate(:review_comment_id),
-        body: generate(:body),
-        user: (attributes_for :user, id: generate(:user_id)).as_json
+        body: body,
+        user: (attributes_for :user, id: generate(:user_id)).as_json,
+        created_at: created_at.iso8601,
+        updated_at: updated_at.iso8601
       }
     end
     changes do
@@ -13,13 +21,9 @@ FactoryBot.define do
         body: generate(:body)
       }
     end
-    initialize_with { attributes.deep_stringify_keys }
+    repository { (build :repository_payload)['repository'] }
+    pull_request { (build :pull_request_payload, repository: repository)['pull_request'] }
 
-    factory :full_review_comment_payload do
-      after(:create) do |review_payload|
-        review_payload.merge!((create :pull_request_payload))
-        review_payload.merge!((create :repository_payload))
-      end
-    end
+    initialize_with { attributes.deep_stringify_keys }
   end
 end

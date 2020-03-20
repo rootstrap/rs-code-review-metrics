@@ -4,6 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
+#  opened_at       :datetime         not null
 #  state           :enum             not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -25,6 +26,8 @@
 
 module Events
   class Review < ApplicationRecord
+    include EventHelper
+
     enum state: { approved: 'approved',
                   commented: 'commented',
                   changes_requested: 'changes_requested',
@@ -38,6 +41,6 @@ module Events
                               inverse_of: :reviews
 
     validates :state, inclusion: { in: states.keys }
-    validates :github_id, presence: true
+    validates :github_id, :opened_at, presence: true
   end
 end
