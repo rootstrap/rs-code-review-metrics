@@ -23,9 +23,9 @@ class GithubService < BaseService
     event = Event.new(project: project, data: @payload, name: @event)
     if handleable_event?
       @entity = find_or_create_event_type
-      event.tap do |e|
-        e.assign_attributes(handleable: @entity, occurred_at: occurence_time)
-        e.save!
+      event.tap do |evnt|
+        evnt.assign_attributes(handleable: @entity, occurred_at: occurence_time)
+        evnt.save!
       end
     else
       event.tap(&:save!)
