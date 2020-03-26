@@ -1,4 +1,4 @@
-require_relative '../../support/metrics_specs_helper'
+require_relative '../../support/helpers/metrics_specs_helper'
 
 RSpec.describe Metrics::MetricsDefinitionProcessor do
   include_context 'events metrics'
