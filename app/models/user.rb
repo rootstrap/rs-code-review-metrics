@@ -34,6 +34,8 @@ class User < ApplicationRecord
            foreign_key: :reviewer_id,
            dependent: :destroy,
            inverse_of: :reviewer
+  has_many :users_projects
+  has_many :projects, through: :users_projects
   validates :github_id,
             :login,
             :node_id,

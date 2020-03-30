@@ -43,8 +43,9 @@ module Metrics
     private
 
     def process
-      review_turnaround_average.each do |project_id:, turnaround_as_seconds:|
-        save_value(project_id: project_id, turnaround_as_seconds: turnaround_as_seconds)
+      review_turnaround_average.each do |user_id, turnaround_as_seconds|
+        find_or_create_metric(entity_key: user_id, metric_key: 'review_turnaround')
+          .update!(value: turnaround_as_seconds, value_timestamp: time_interval.starting_at)
       end
 
       update_last_process_time
@@ -52,16 +53,7 @@ module Metrics
 
     def review_turnaround_average
       @review_turnaround_average ||=
-        Queries::ReviewsTurnaroundPerProjectQuery.new(time_interval: time_interval)
-    end
-
-    def save_value(project_id:, turnaround_as_seconds:)
-      update_metric(
-        entity_key: project_id,
-        metric_key: 'review_turnaround',
-        value: turnaround_as_seconds,
-        value_timestamp: time_interval.starting_at
-      )
+        Queries::ReviewsTurnaroundPerUserQuery.call(time_interval: time_interval)
     end
 
     def update_last_process_time

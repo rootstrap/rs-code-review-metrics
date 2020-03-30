@@ -7,6 +7,7 @@ module EventBuilders
       Events::Review.find_or_create_by!(github_id: review_data['id']) do |review|
         review.owner = find_or_create_user(review_data['user'])
         review.pull_request = find_pull_request
+        review.review_request = find_first_review_request(review.pull_request.id, review.owner.id)
 
         ATTR_PAYLOAD_MAP.each do |key, value|
           review.public_send("#{key}=", review_data.fetch(value))

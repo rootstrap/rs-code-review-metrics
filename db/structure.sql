@@ -421,7 +421,8 @@ CREATE TABLE public.reviews (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     state public.review_state NOT NULL,
-    opened_at timestamp without time zone NOT NULL
+    opened_at timestamp without time zone NOT NULL,
+    review_request_id bigint
 );
 
 
@@ -484,6 +485,36 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: users_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users_projects (
+    id bigint NOT NULL,
+    user_id bigint,
+    project_id bigint
+);
+
+
+--
+-- Name: users_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_projects_id_seq OWNED BY public.users_projects.id;
 
 
 --
@@ -561,6 +592,13 @@ ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.revi
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: users_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_projects ALTER COLUMN id SET DEFAULT nextval('public.users_projects_id_seq'::regclass);
 
 
 --
@@ -665,6 +703,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_projects users_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_projects
+    ADD CONSTRAINT users_projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -815,6 +861,13 @@ CREATE INDEX index_reviews_on_pull_request_id ON public.reviews USING btree (pul
 
 
 --
+-- Name: index_reviews_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviews_on_review_request_id ON public.reviews USING btree (review_request_id);
+
+
+--
 -- Name: index_reviews_on_state; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -826,6 +879,20 @@ CREATE INDEX index_reviews_on_state ON public.reviews USING btree (state);
 --
 
 CREATE UNIQUE INDEX index_users_on_github_id ON public.users USING btree (github_id);
+
+
+--
+-- Name: index_users_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_projects_on_project_id ON public.users_projects USING btree (project_id);
+
+
+--
+-- Name: index_users_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_projects_on_user_id ON public.users_projects USING btree (user_id);
 
 
 --
@@ -952,6 +1019,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200312161141'),
 ('20200318125243'),
 ('20200318160321'),
-('20200318171820');
+('20200318171820'),
+('20200327172924'),
+('20200330162011');
 
 
