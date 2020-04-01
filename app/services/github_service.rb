@@ -1,6 +1,5 @@
 class GithubService < BaseService
   include GithubEventPayloadHelper
-  include ProjectBuilder
 
   def initialize(payload:, event:)
     @payload = payload
@@ -19,7 +18,7 @@ class GithubService < BaseService
   end
 
   def handle_event
-    project = find_or_create_project(@payload['repository'])
+    project = Projects::Builder.fetch_or_create(@payload['repository'])
     event = Event.new(project: project, data: @payload, name: @event)
     if handleable_event?
       @entity = find_or_create_event_type
