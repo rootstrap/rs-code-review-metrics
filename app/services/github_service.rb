@@ -24,12 +24,11 @@ class GithubService < BaseService
       @entity = find_or_create_event_type
       event.assign_attributes(handleable: @entity, occurred_at: occurence_time)
       event.save!
-      event
     else
       event.save!
-      event
       raise Events::NotHandleableError
     end
+    event
   end
 
   def handleable_event?
