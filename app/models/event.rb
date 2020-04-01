@@ -27,19 +27,4 @@ class Event < ApplicationRecord
   belongs_to :project
 
   validates :name, :data, presence: true
-  validates :handleable, presence: true, if: proc { |event| event.handled_type? }
-  validates_with EventNameValidator, if: proc { |event| handleable && event.handled_type? }
-  validates :occurred_at, presence: true, if: proc { |event| event.handled_type? }
-
-  ##
-  # Return true if the event name is included in the Event handled types
-  def handled_type?
-    TYPES.include?(name)
-  end
-
-  ##
-  # Return the name of the handleable type
-  def handleable_type_name
-    handleable.event_name
-  end
 end

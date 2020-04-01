@@ -25,7 +25,6 @@ RemoveEmptyHelpersCheck: { }
 RemoveTrailingWhitespaceCheck: { }
 RemoveUnusedMethodsInControllersCheck: { except_methods: [] }
 RemoveUnusedMethodsInHelpersCheck: { except_methods: [
-  'GithubEventPayloadHelper#occurence_time',
   'GithubEventPayloadHelper#pull_request_ocurrence_time',
   'GithubEventPayloadHelper#review_comment_ocurrence_time',
   'GithubEventPayloadHelper#review_ocurrence_time'
