@@ -197,8 +197,6 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 CREATE TABLE public.metrics (
     id bigint NOT NULL,
-    entity_key character varying NOT NULL,
-    metric_key character varying NOT NULL,
     value numeric,
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
