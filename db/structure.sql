@@ -201,7 +201,9 @@ CREATE TABLE public.metrics (
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    metrics_definition_id bigint NOT NULL
+    metrics_definition_id bigint NOT NULL,
+    ownable_type character varying NOT NULL,
+    ownable_id bigint NOT NULL
 );
 
 
@@ -728,6 +730,13 @@ CREATE INDEX index_metrics_on_metrics_definition_id ON public.metrics USING btre
 
 
 --
+-- Name: index_metrics_on_ownable_type_and_ownable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USING btree (ownable_type, ownable_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -950,6 +959,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200318125243'),
 ('20200318160321'),
 ('20200318171820'),
-('20200401200520');
+('20200401200520'),
+('20200401205154'),
+('20200403140307');
 
 
