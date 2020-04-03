@@ -57,7 +57,8 @@ module Metrics
 
     def save_value(project_id:, turnaround_as_seconds:)
       update_metric(
-        ownable_id: project_id,
+        entity_key: project_id,
+        entity_type: Project.to_s,
         value: turnaround_as_seconds,
         value_timestamp: time_interval.starting_at
       )
