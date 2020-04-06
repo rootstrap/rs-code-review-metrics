@@ -22,8 +22,8 @@
 
 FactoryBot.define do
   factory :metric do
-    entity_key { Faker::Name.unique }
-    metric_key { Faker::Name.unique }
+    entity_key { Faker::Name.unique.name }
+    metric_key { Faker::Name.unique.name }
     value { Faker::Number.number(digits: 4) }
     value_timestamp { Faker::Date.backward(days: 30) }
     association :metrics_definition

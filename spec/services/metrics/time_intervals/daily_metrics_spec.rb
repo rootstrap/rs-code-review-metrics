@@ -8,7 +8,6 @@ RSpec.describe Metrics::MetricDefinitionTimeIntervalsProcessor do
       create :metrics_definition,
              metrics_name: 'review_turnaround',
              time_interval: :daily,
-             subject: :projects,
              metrics_processor: Metrics::NullProcessor.name
 
       create :event_pull_request, occurred_at: Time.zone.now - 2.days

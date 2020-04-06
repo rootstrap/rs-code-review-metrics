@@ -6,7 +6,6 @@
 #  last_processed_event_time :datetime
 #  metrics_name              :string           not null
 #  metrics_processor         :string           not null
-#  subject                   :string           not null
 #  time_interval             :string           not null
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -24,12 +23,6 @@ RSpec.describe MetricsDefinition, type: :model do
 
     it 'has a time_interval field' do
       expect(subject).to have_db_column(:time_interval)
-        .of_type(:string)
-        .with_options(null: false)
-    end
-
-    it 'has a subject field' do
-      expect(subject).to have_db_column(:subject)
         .of_type(:string)
         .with_options(null: false)
     end
@@ -53,9 +46,6 @@ RSpec.describe MetricsDefinition, type: :model do
 
     it { should validate_presence_of(:time_interval) }
     it { should validate_inclusion_of(:time_interval) .in_array(%w[all_times daily weekly]) }
-
-    it { should validate_presence_of(:subject) }
-    it { should validate_inclusion_of(:subject) .in_array(%w[projects users users_per_project]) }
 
     it { should validate_presence_of(:metrics_processor) }
   end

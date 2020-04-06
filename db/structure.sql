@@ -215,7 +215,6 @@ CREATE TABLE public.metrics_definitions (
     id bigint NOT NULL,
     metrics_name character varying NOT NULL,
     time_interval character varying NOT NULL,
-    subject character varying NOT NULL,
     metrics_processor character varying NOT NULL,
     last_processed_event_time timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
@@ -1038,6 +1037,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200318171820'),
 ('20200327172924'),
 ('20200330162011'),
-('20200402175059');
-
-
+('20200402175059'),
+('20200401200520');
