@@ -6,12 +6,12 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
   subject { described_class }
 
   let(:time_interval_to_process) do
-    TimeInterval.new(starting_at: Time.now - 1.hour,
+    TimeInterval.new(starting_at: Time.current - 1.hour,
                      duration: 1.day)
   end
 
-  let(:pr_user_id) { Events::Review.first.owner.id.to_s }
-  let(:second_project_id) { Project.order(:id).second.id.to_s }
+  let(:first_review_user_id) { Events::Review.first.owner.id.to_s }
+  let(:second_review_user_id) { Events::Review.last.owner.id.to_s }
 
   describe 'when processing a collection containing no review_events' do
     let(:create_test_events) do
@@ -38,12 +38,12 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
         create_review_event pull_request_event_payload: pull_request_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.now - 30.minutes
+                            submitted_at: Time.current - 30.minutes
       end
 
       it 'generates a review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: pr_user_id,
+          entity_key: first_review_user_id,
           metric_key: 'review_turnaround',
           value_timestamp: time_interval_to_process.starting_at
         )
@@ -54,43 +54,38 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
       it 'generates only that metric' do
         expect { process_all_events }.to change { Metric.count }.from(0).to(1)
       end
-
-      it 'updates the metric last_processed_event_time' do
-        expect {
-          process_all_events
-        }.to change { metrics_definition.last_processed_event_time }
-          .from(nil).to(Events::Review.last.created_at)
-      end
     end
 
     describe 'if a metric for the given time interval was already generated' do
       let(:create_test_events) do
         pull_request_event_payload = create_pull_request_event(
-          action: 'opened',
-          created_at: Time.zone.parse('2020-01-01T15:10:00')
+          action: 'opened'
         )
+
+        create_review_request_event(pull_request_event_payload: pull_request_event_payload)
 
         create_review_event pull_request_event_payload: pull_request_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+                            submitted_at: Time.current - 15.minutes
       end
 
       before do
         pull_request2_event_payload = create_pull_request_event(
-          action: 'opened',
-          created_at: Time.zone.parse('2020-01-01T16:00:00')
+          action: 'opened'
         )
+
+        create_review_request_event(pull_request_event_payload: pull_request2_event_payload)
 
         create_review_event pull_request_event_payload: pull_request2_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.zone.parse('2020-01-01T16:10:00')
+                            submitted_at: Time.current - 15.minutes
 
         process_all_events_for_the_second_time
       end
 
       it 'updates the review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: first_project_id,
+          entity_key: first_review_user_id,
           metric_key: 'review_turnaround',
           value_timestamp: time_interval_to_process.starting_at
         )
@@ -107,17 +102,18 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
       describe 'if a pull request has more than one review' do
         let(:create_test_events) do
           pull_request_event_payload = create_pull_request_event(
-            action: 'opened',
-            created_at: Time.zone.parse('2020-01-01T15:10:00')
+            action: 'opened'
           )
 
-          create_review_event pull_request_event_payload: pull_request_event_payload,
-                              action: 'submitted',
-                              submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+          create_review_request_event(pull_request_event_payload: pull_request_event_payload)
 
           create_review_event pull_request_event_payload: pull_request_event_payload,
                               action: 'submitted',
-                              submitted_at: Time.zone.parse('2020-01-01T16:30:00')
+                              submitted_at: Time.current - 20.minutes
+
+          create_review_event pull_request_event_payload: pull_request_event_payload,
+                              action: 'submitted',
+                              submitted_at: Time.current - 20.minutes
         end
 
         it 'it uses only the first review to calculate the metric value' do
@@ -129,8 +125,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
   describe 'with a PR that has no reviews' do
     let(:create_test_events) do
-      create_pull_request_event(action: 'opened',
-                                created_at: Time.zone.parse('2020-01-01T15:10:00'))
+      create_pull_request_event(action: 'opened')
     end
 
     it 'does not generate a metric' do
@@ -145,29 +140,32 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
     let(:create_test_events) do
       pull_request_a_event_payload = create_pull_request_event(
-        action: 'opened',
-        created_at: Time.zone.parse('2020-01-01T15:10:00')
+        action: 'opened'
       )
+
+      create_review_request_event(pull_request_event_payload: pull_request_a_event_payload)
 
       create_review_event pull_request_event_payload: pull_request_a_event_payload,
                           action: 'submitted',
-                          submitted_at: Time.zone.parse('2020-01-01T15:30:00')
+                          submitted_at: Time.current - 20.minutes
 
       pull_request_b_event_payload = create_pull_request_event(
         repository_payload: test_repository_b_payload,
-        action: 'opened',
-        created_at: Time.zone.parse('2020-01-01T16:00:00')
+        action: 'opened'
       )
 
-      create_review_event repository_payload: test_repository_b_payload,
-                          pull_request_event_payload: pull_request_b_event_payload,
+      create_review_request_event(pull_request_event_payload: pull_request_b_event_payload,
+                                  user_id: 1000)
+
+      create_review_event pull_request_event_payload: pull_request_b_event_payload,
                           action: 'submitted',
-                          submitted_at: Time.zone.parse('2020-01-01T16:45:00')
+                          user_id: 1000,
+                          submitted_at: Time.current - 45.minutes
     end
 
     it 'it generates the metric for the first project' do
       expect(first_metric).to have_attributes(
-        entity_key: first_project_id,
+        entity_key: first_review_user_id,
         metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )
@@ -177,7 +175,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
     it 'it generates the metric for the second project' do
       expect(second_metric).to have_attributes(
-        entity_key: second_project_id,
+        entity_key: second_review_user_id,
         metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )

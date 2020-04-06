@@ -27,7 +27,8 @@ module Metrics
     def process
       events_starting_at = metrics_definition_process_events_after_time
 
-      metrics_definition.time_period.each_from(events_starting_at, up_to: Time.zone.now) do |time_interval|
+      metrics_definition.time_period.each_from(events_starting_at,
+                                               up_to: Time.zone.now) do |time_interval|
         process_time_interval(time_interval)
       end
     end

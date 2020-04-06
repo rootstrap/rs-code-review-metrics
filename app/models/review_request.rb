@@ -37,7 +37,8 @@ class ReviewRequest < ApplicationRecord
              inverse_of: :received_review_requests
   belongs_to :pull_request, class_name: 'Events::PullRequest',
                             inverse_of: :review_requests
-  has_many :reviews, class_name: 'Events::Review'
+  has_many :reviews, class_name: 'Events::Review',
+                     dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
   validates :node_id, :login, presence: true

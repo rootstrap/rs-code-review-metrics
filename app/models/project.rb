@@ -21,7 +21,7 @@ class Project < ApplicationRecord
            class_name: 'Events::PullRequest',
            dependent: :destroy,
            inverse_of: :project
-  has_many :users_projects
+  has_many :users_projects, dependent: :destroy
   has_many :users, through: :users_projects
 
   validates :lang, inclusion: { in: langs.keys }
