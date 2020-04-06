@@ -28,8 +28,6 @@
 
 module Events
   class Review < ApplicationRecord
-    include EventHelper
-
     enum state: { approved: 'approved',
                   commented: 'commented',
                   changes_requested: 'changes_requested',

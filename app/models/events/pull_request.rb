@@ -33,8 +33,6 @@
 #
 module Events
   class PullRequest < ApplicationRecord
-    include EventHelper
-
     enum state: { open: 'open', closed: 'closed' }
 
     belongs_to :project, inverse_of: :pull_requests

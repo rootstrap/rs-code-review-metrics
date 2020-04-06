@@ -48,7 +48,7 @@ FactoryBot.define do
         updated_at { Faker::Date.between(from: created_at, to: Time.zone.now) }
       end
 
-      name { handleable.event_name }
+      name { 'pull_request' }
       data do
         build :pull_request_payload,
               action: action,
@@ -64,7 +64,7 @@ FactoryBot.define do
         submitted_at {}
       end
 
-      name { handleable.event_name }
+      name { 'review' }
       data { build :review_payload }
       association :handleable, factory: :review
       occurred_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
@@ -75,7 +75,7 @@ FactoryBot.define do
     end
 
     factory :event_review_comment do
-      name { handleable.event_name }
+      name { 'review_comment' }
       data { build :review_comment_payload }
       association :handleable, factory: :review_comment
       occurred_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }

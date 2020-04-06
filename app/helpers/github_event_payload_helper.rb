@@ -1,18 +1,6 @@
 module GithubEventPayloadHelper
   private
 
-  def handleable_event_type?(event_type)
-    Event::TYPES.include?(event_type)
-  end
-
-  ##
-  # Returns the occurrence time of the given event_name, taken from the given payload
-  def occurence_time(event_name:, payload:)
-    return unless handleable_event_type?(event_name)
-
-    send("#{event_name}_ocurrence_time", payload: payload)
-  end
-
   ##
   # Returns the occurrence time of the 'pull_request' event.
   def pull_request_ocurrence_time(payload:)
