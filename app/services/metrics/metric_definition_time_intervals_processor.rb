@@ -27,7 +27,7 @@ module Metrics
     def process
       events_starting_at = metrics_definition_process_events_after_time
 
-      metrics_definition.time_period.each_from(events_starting_at, up_to: now) do |time_interval|
+      metrics_definition.time_period.each_from(events_starting_at, up_to: Time.zone.now) do |time_interval|
         process_time_interval(time_interval)
       end
     end
@@ -46,12 +46,6 @@ module Metrics
     # of the oldest event to process all existing events
     def metrics_definition_process_events_after_time
       metrics_definition.last_processed_event_time || Event.minimum(:occurred_at)
-    end
-
-    ##
-    # Return the current time
-    def now
-      Time.zone.now
     end
   end
 end

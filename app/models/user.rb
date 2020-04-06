@@ -36,6 +36,9 @@ class User < ApplicationRecord
            inverse_of: :reviewer
   has_many :users_projects
   has_many :projects, through: :users_projects
+  has_many :pull_requests,
+           class_name: 'Events::PullRequest',
+           inverse_of: :owner
   validates :github_id,
             :login,
             :node_id,

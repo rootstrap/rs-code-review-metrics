@@ -32,6 +32,9 @@ RSpec.describe Events::Review, type: :model do
   describe 'validations' do
     subject { build :review }
 
+    it { is_expected.to belong_to(:pull_request) }
+    it { is_expected.to belong_to(:review_request) }
+
     it 'is valid with valid attributes' do
       expect(subject).to be_valid
     end
@@ -40,8 +43,6 @@ RSpec.describe Events::Review, type: :model do
       subject = build :review, github_id: nil
       expect(subject).to_not be_valid
     end
-
-    it { is_expected.to belong_to(:pull_request) }
 
     it 'is not valid without opened_at' do
       subject = build :review, opened_at: nil

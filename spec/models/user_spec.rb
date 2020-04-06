@@ -19,6 +19,15 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   subject { build :user }
 
+  it { is_expected.to have_many(:owned_review_requests) }
+  it { is_expected.to have_many(:owned_review_comments) }
+  it { is_expected.to have_many(:owned_reviews) }
+  it { is_expected.to have_many(:received_review_requests) }
+  it { is_expected.to have_many(:users_projects) }
+  it { is_expected.to have_many(:projects) }
+  it { is_expected.to have_many(:pull_requests) }
+  it { is_expected.to validate_uniqueness_of(:github_id) }
+
   it 'is valid with valid attributes' do
     expect(subject).to be_valid
   end
@@ -37,6 +46,4 @@ RSpec.describe User, type: :model do
     subject.login = nil
     expect(subject).to_not be_valid
   end
-
-  it { is_expected.to validate_uniqueness_of(:github_id) }
 end

@@ -64,8 +64,14 @@ RSpec.describe GithubService do
                changes: { body: 'new body contents' }
       end
       let(:event) { 'review' }
+      let(:review) { create :review, github_id: payload['review']['id'], state: 'commented' }
+      let!(:user) { create :user, github_id: payload['review']['user']['id'] }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
-      let(:review) { create :review, github_id: payload['review']['id'] }
+      let!(:review_request) do
+        create :review_request,
+               pull_request_id: pull_request.id,
+               reviewer_id: user.id
+      end
 
       it 'creates a review' do
         expect { subject }.to change(Events::Review, :count).by(1)

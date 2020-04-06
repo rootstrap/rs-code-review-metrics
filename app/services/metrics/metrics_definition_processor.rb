@@ -12,18 +12,10 @@ module Metrics
     private
 
     ##
-    # Returns all the defined metrics to process.
-    def metrics_definitions
-      @metrics_definitions ||= MetricsDefinition.all
-    end
-
-    ##
     # Makes each metric defined to process all the events.
     def process_all_metrics_definitions
-      metrics_definitions.each do |metrics_definition|
-        process_each(
-          metrics_definition: metrics_definition
-        )
+      MetricsDefinition.all.each do |metrics_definition|
+        process_each(metrics_definition: metrics_definition)
       end
     end
 

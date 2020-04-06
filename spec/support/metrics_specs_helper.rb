@@ -80,13 +80,27 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
   # Create a PullRequestEvent event as it would come from github for the testing
   # repository.
   # Return the created event payload.
-  def create_pull_request_event(action:, created_at:, repository_payload: nil)
+  def create_pull_request_event(action:, repository_payload: nil)
     repository_payload ||= test_repository_a_payload
     create(:pull_request_payload,
            repository: repository_payload,
-           action: action,
-           created_at: created_at,
-           updated_at: created_at).tap do |payload|
+           action: action).tap do |payload|
+      GithubService.call(payload: payload, event: 'pull_request')
+    end
+  end
+
+  def create_user
+    @create_user ||= create(:user)
+  end
+
+  def create_review_request_event(repository_payload: nil,
+                                  pull_request_event_payload:)
+    repository_payload ||= test_repository_a_payload
+    create(:pull_request_payload,
+           repository: repository_payload,
+           pull_request: pull_request_event_payload['pull_request'],
+           requested_reviewer: create_user.attributes,
+           action: 'review_requested').tap do |payload|
       GithubService.call(payload: payload, event: 'pull_request')
     end
   end
@@ -96,14 +110,14 @@ RSpec.shared_context 'events metrics', shared_context: :metadata do
   # repository and a given PullRequest payload.
   # Return the created event payload.
   def create_review_event(action:,
-                          submitted_at:, pull_request_event_payload:,
-                          repository_payload: nil)
+                          submitted_at:, pull_request_event_payload:, repository_payload: nil)
     repository_payload ||= test_repository_a_payload
     create(:review_payload,
            repository: repository_payload,
            pull_request: pull_request_event_payload['pull_request'],
            action: action,
            submitted_at: submitted_at).tap do |payload|
+      payload.deep_merge!('review' => { 'user' => { 'id' => create_user.id }})
       GithubService.call(payload: payload, event: 'review')
     end
   end

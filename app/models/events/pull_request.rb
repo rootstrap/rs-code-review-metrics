@@ -16,16 +16,19 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  owner_id   :bigint
 #  project_id :bigint           not null
 #
 # Indexes
 #
 #  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_owner_id    (owner_id)
 #  index_pull_requests_on_project_id  (project_id)
 #  index_pull_requests_on_state       (state)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (owner_id => users.id)
 #  fk_rails_...  (project_id => projects.id)
 #
 module Events
@@ -35,6 +38,8 @@ module Events
     enum state: { open: 'open', closed: 'closed' }
 
     belongs_to :project, inverse_of: :pull_requests
+    belongs_to :owner, class_name: 'User', foreign_key: :owner_id,
+                       inverse_of: :pull_requests
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',
                                dependent: :destroy, inverse_of: :pull_request

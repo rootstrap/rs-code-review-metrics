@@ -8,6 +8,7 @@ module EventBuilders
       pr_data = @payload['pull_request']
       Events::PullRequest.find_or_create_by!(github_id: pr_data['id']) do |pr|
         pr.project = find_or_create_project(@payload['repository'])
+        pr.owner = find_or_create_user(pr_data['user'])
         ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
       end
     end

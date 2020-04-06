@@ -34,9 +34,9 @@ FactoryBot.define do
     github_id { generate(:review_id) }
     state { generate(:review_state) }
     opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
-    review_request
 
     association :pull_request
+    association :review_request
     association :owner, factory: :user
   end
 end
