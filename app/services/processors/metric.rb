@@ -1,7 +1,5 @@
-module Metrics
-  ##
-  # Base class for classes that do the processing of a Metric.
-  class MetricProcessor < BaseService
+module Processors
+  class Metric < BaseService
     attr_reader :metrics_definition, :time_interval
 
     def initialize(metrics_definition:, time_interval:)
@@ -9,8 +7,6 @@ module Metrics
       @time_interval = time_interval
     end
 
-    ##
-    # Processes the given events to generate the metrics.
     def call
       process
     end
