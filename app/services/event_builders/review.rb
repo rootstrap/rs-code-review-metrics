@@ -9,6 +9,7 @@ module EventBuilders
         review.pull_request = find_pull_request
         review.review_request = find_or_create_review_request(review.pull_request,
                                                               review.owner.id)
+        relate_user_project(review.owner, review.pull_request.project)
 
         ATTR_PAYLOAD_MAP.each do |key, value|
           review.public_send("#{key}=", review_data.fetch(value))

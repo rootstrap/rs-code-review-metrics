@@ -1,5 +1,5 @@
 module Metrics
-  class ReviewTurnaroundPerUserProcessor < MetricProcessor
+  class ReviewTurnaroundPerUserProjectProcessor < MetricProcessor
     private
 
     def process
@@ -11,7 +11,7 @@ module Metrics
     end
 
     def review_turnaround_average
-      Queries::ReviewsTurnaroundPerUserQuery.call(time_interval: time_interval)
+      Queries::ReviewsTurnaroundPerUserProjectQuery.call(time_interval: time_interval)
     end
   end
 end
