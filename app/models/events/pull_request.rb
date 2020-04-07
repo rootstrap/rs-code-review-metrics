@@ -37,7 +37,7 @@ module Events
 
     belongs_to :project, inverse_of: :pull_requests
     belongs_to :owner, class_name: 'User', foreign_key: :owner_id,
-                       inverse_of: :pull_requests
+                       inverse_of: :created_pull_requests
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',
                                dependent: :destroy, inverse_of: :pull_request

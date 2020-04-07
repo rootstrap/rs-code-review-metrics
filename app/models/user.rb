@@ -36,7 +36,7 @@ class User < ApplicationRecord
            inverse_of: :reviewer
   has_many :users_projects, dependent: :destroy
   has_many :projects, through: :users_projects
-  has_many :pull_requests,
+  has_many :created_pull_requests,
            class_name: 'Events::PullRequest',
            dependent: :destroy,
            inverse_of: :owner
