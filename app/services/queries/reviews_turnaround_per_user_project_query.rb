@@ -19,7 +19,7 @@ module Queries
 
     def run
       query.collect do |review|
-        { user_id: find_user_project(review.owner, review.pull_request.project),
+        { entity: find_user_project(review.owner, review.pull_request.project),
           turnaround: [review.review_request.created_at.to_i,
                        review.opened_at.to_i].reduce(:-) }
       end
