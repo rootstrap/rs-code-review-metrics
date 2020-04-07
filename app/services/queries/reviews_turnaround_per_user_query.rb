@@ -20,8 +20,8 @@ module Queries
     def run
       query.collect do |review|
         { user_id: review.owner.id,
-          turnaround: [review.review_request.created_at.to_time.to_i,
-                       review.opened_at.to_time.to_i].reduce(:-) }
+          turnaround: [review.review_request.created_at.to_i,
+                       review.opened_at.to_i].reduce(:-) }
       end
     end
   end
