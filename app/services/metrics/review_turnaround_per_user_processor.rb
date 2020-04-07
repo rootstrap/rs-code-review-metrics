@@ -4,8 +4,7 @@ module Metrics
 
     def process
       review_turnaround_average.each do |review_turnaround|
-        find_or_create_metric(entity_key: review_turnaround[:user_id],
-                              metric_key: 'review_turnaround')
+        find_or_create_metric(entity: review_turnaround[:user_id])
           .update!(value: review_turnaround[:turnaround],
                    value_timestamp: time_interval.starting_at)
       end

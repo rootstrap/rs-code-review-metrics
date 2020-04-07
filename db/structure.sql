@@ -197,13 +197,13 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 CREATE TABLE public.metrics (
     id bigint NOT NULL,
-    entity_key character varying NOT NULL,
-    metric_key character varying NOT NULL,
     value numeric,
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    metrics_definition_id bigint NOT NULL
+    metrics_definition_id bigint NOT NULL,
+    ownable_type character varying NOT NULL,
+    ownable_id bigint NOT NULL
 );
 
 
@@ -777,6 +777,13 @@ CREATE INDEX index_metrics_on_metrics_definition_id ON public.metrics USING btre
 
 
 --
+-- Name: index_metrics_on_ownable_type_and_ownable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USING btree (ownable_type, ownable_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1038,4 +1045,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200327172924'),
 ('20200330162011'),
 ('20200402175059'),
-('20200401200520');
+('20200401200520'),
+('20200401205154'),
+('20200403140307');
+
+

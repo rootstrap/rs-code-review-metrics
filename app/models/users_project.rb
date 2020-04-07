@@ -15,4 +15,5 @@
 class UsersProject < ApplicationRecord
   belongs_to :user
   belongs_to :project
+  has_many :metrics, as: :ownable, dependent: :destroy
 end

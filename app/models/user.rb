@@ -14,6 +14,9 @@
 #  index_users_on_github_id  (github_id) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :metrics,
+           as: :ownable,
+           dependent: :destroy
   has_many :owned_review_requests,
            class_name: 'ReviewRequest',
            foreign_key: :owner_id,

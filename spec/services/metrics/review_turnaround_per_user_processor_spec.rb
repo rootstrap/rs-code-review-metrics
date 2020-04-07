@@ -10,8 +10,8 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
                      duration: 1.day)
   end
 
-  let(:first_review_user_id) { Events::Review.first.owner.id.to_s }
-  let(:second_review_user_id) { Events::Review.last.owner.id.to_s }
+  let(:first_review_user_id) { Events::Review.first.owner.id }
+  let(:second_review_user_id) { Events::Review.last.owner.id }
 
   describe 'when processing a collection containing no review_events' do
     let(:create_test_events) do
@@ -43,8 +43,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
       it 'generates a review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: first_review_user_id,
-          metric_key: 'review_turnaround',
+          ownable_id: first_review_user_id,
           value_timestamp: time_interval_to_process.starting_at
         )
 
@@ -85,8 +84,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
       it 'updates the review_turnaround metric for the given interval' do
         expect(first_metric).to have_attributes(
-          entity_key: first_review_user_id,
-          metric_key: 'review_turnaround',
+          ownable_id: first_review_user_id,
           value_timestamp: time_interval_to_process.starting_at
         )
 
@@ -165,8 +163,6 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
     it 'it generates the metric for the first project' do
       expect(first_metric).to have_attributes(
-        entity_key: first_review_user_id,
-        metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )
 
@@ -175,8 +171,6 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
     it 'it generates the metric for the second project' do
       expect(second_metric).to have_attributes(
-        entity_key: second_review_user_id,
-        metric_key: 'review_turnaround',
         value_timestamp: time_interval_to_process.starting_at
       )
 

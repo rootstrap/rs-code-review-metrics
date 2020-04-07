@@ -23,6 +23,7 @@ class Project < ApplicationRecord
            inverse_of: :project
   has_many :users_projects, dependent: :destroy
   has_many :users, through: :users_projects
+  has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true
