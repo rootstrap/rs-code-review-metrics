@@ -38,7 +38,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
         create_review_event pull_request_event_payload: pull_request_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.zone.now - 30.minutes
+                            submitted_at: (Time.zone.now - 30.minutes).change(usec: 0)
       end
 
       it 'generates a review_turnaround metric for the given interval' do
@@ -66,7 +66,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
         create_review_event pull_request_event_payload: pull_request_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.zone.now - 15.minutes
+                            submitted_at: (Time.zone.now - 15.minutes).change(usec: 0)
       end
 
       before do
@@ -78,7 +78,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
         create_review_event pull_request_event_payload: pull_request2_event_payload,
                             action: 'submitted',
-                            submitted_at: Time.zone.now - 15.minutes
+                            submitted_at: (Time.zone.now - 15.minutes).change(usec: 0)
 
         process_all_events_for_the_second_time
       end
@@ -109,11 +109,11 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
           create_review_event pull_request_event_payload: pull_request_event_payload,
                               action: 'submitted',
-                              submitted_at: Time.zone.now - 20.minutes
+                              submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
 
           create_review_event pull_request_event_payload: pull_request_event_payload,
                               action: 'submitted',
-                              submitted_at: Time.zone.now - 20.minutes
+                              submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
         end
 
         it 'it uses only the first review to calculate the metric value' do
@@ -147,7 +147,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
 
       create_review_event pull_request_event_payload: pull_request_a_event_payload,
                           action: 'submitted',
-                          submitted_at: Time.zone.now - 20.minutes
+                          submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
 
       pull_request_b_event_payload = create_pull_request_event(
         repository_payload: test_repository_b_payload,
@@ -160,7 +160,7 @@ RSpec.describe Metrics::ReviewTurnaroundPerUserProcessor do
       create_review_event pull_request_event_payload: pull_request_b_event_payload,
                           action: 'submitted',
                           user_id: 1000,
-                          submitted_at: Time.zone.now - 45.minutes
+                          submitted_at: (Time.zone.now - 45.minutes).change(usec: 0)
     end
 
     it 'it generates the metric for the first project' do
