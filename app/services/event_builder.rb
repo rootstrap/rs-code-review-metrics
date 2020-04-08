@@ -24,8 +24,4 @@ class EventBuilder < BaseService
       review_requests.order(:created_at).first
     end
   end
-
-  def relate_user_project(user, project)
-    user.projects << project
-  end
 end
