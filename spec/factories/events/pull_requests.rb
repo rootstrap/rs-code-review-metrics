@@ -16,16 +16,19 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  owner_id   :bigint
 #  project_id :bigint           not null
 #
 # Indexes
 #
 #  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_owner_id    (owner_id)
 #  index_pull_requests_on_project_id  (project_id)
 #  index_pull_requests_on_state       (state)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (owner_id => users.id)
 #  fk_rails_...  (project_id => projects.id)
 #
 
@@ -42,5 +45,7 @@ FactoryBot.define do
     locked { false }
     draft { false }
     project
+
+    association :owner, factory: :user
   end
 end

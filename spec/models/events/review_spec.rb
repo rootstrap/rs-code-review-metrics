@@ -2,21 +2,23 @@
 #
 # Table name: reviews
 #
-#  id              :bigint           not null, primary key
-#  body            :string
-#  opened_at       :datetime         not null
-#  state           :enum             not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  github_id       :integer
-#  owner_id        :bigint
-#  pull_request_id :bigint           not null
+#  id                :bigint           not null, primary key
+#  body              :string
+#  opened_at         :datetime         not null
+#  state             :enum             not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  github_id         :integer
+#  owner_id          :bigint
+#  pull_request_id   :bigint           not null
+#  review_request_id :bigint
 #
 # Indexes
 #
-#  index_reviews_on_owner_id         (owner_id)
-#  index_reviews_on_pull_request_id  (pull_request_id)
-#  index_reviews_on_state            (state)
+#  index_reviews_on_owner_id           (owner_id)
+#  index_reviews_on_pull_request_id    (pull_request_id)
+#  index_reviews_on_review_request_id  (review_request_id)
+#  index_reviews_on_state              (state)
 #
 # Foreign Keys
 #
@@ -30,6 +32,9 @@ RSpec.describe Events::Review, type: :model do
   describe 'validations' do
     subject { build :review }
 
+    it { is_expected.to belong_to(:pull_request) }
+    it { is_expected.to belong_to(:review_request) }
+
     it 'is valid with valid attributes' do
       expect(subject).to be_valid
     end
@@ -38,8 +43,6 @@ RSpec.describe Events::Review, type: :model do
       subject = build :review, github_id: nil
       expect(subject).to_not be_valid
     end
-
-    it { is_expected.to belong_to(:pull_request) }
 
     it 'is not valid without opened_at' do
       subject = build :review, opened_at: nil
