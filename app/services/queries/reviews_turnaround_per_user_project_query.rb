@@ -13,15 +13,15 @@ module Queries
     private
 
     def query
-      Events::Review.joins(:review_request, owner: :users_projects, pull_request: :project).includes(:review_request)
+      Events::Review.joins(:review_request, owner: :users_projects, pull_request: :project)
+                    .includes(:review_request)
                     .where(opened_at: @time_interval.starting_at..@time_interval.ending_at)
     end
 
     def run
       query.lazy.collect do |review|
         { entity: find_user_project(review.owner, review.pull_request.project),
-          turnaround: review.review_request.created_at.to_i.-(
-                       review.opened_at.to_i) }
+          turnaround: review.review_request.created_at.to_i - review.opened_at.to_i }
       end
     end
 
