@@ -1,10 +1,6 @@
 require 'rails_helper'
 
-<<<<<<< HEAD:spec/services/metrics/review_turnaround_per_user_project_processor_spec.rb
-RSpec.describe Metrics::ReviewTurnaroundPerUserProjectProcessor do
-=======
-RSpec.describe Metrics::ReviewTurnaround::PerProject do
->>>>>>> changes the folder structure in order to have a better organization when new metrics get implemented:spec/services/metrics/review_turnaround/per_project_spec.rb
+RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
   include_context 'events metrics'
 
   subject { described_class }
