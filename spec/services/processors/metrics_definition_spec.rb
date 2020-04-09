@@ -1,6 +1,6 @@
-require_relative '../../support/helpers/metrics_specs_helper'
+require 'rails_helper'
 
-RSpec.describe Metrics::MetricsDefinitionProcessor do
+RSpec.describe Processors::MetricsDefinition do
   include_context 'events metrics'
 
   subject { described_class }
@@ -14,7 +14,7 @@ RSpec.describe Metrics::MetricsDefinitionProcessor do
     end
 
     it 'creates and calls a MetricDefinitionTimeIntervalsProcessor to process the metrics' do
-      expect(Metrics::MetricDefinitionTimeIntervalsProcessor).to receive(:call)
+      expect(Processors::MetricDefinitionTimeIntervals).to receive(:call)
         .once
 
       subject.call
