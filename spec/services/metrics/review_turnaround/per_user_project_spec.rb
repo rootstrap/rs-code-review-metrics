@@ -1,6 +1,6 @@
-require_relative '../../support/helpers/metrics_specs_helper'
+require 'rails_helper'
 
-RSpec.describe Metrics::ReviewTurnaroundPerUserProjectProcessor do
+RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
   include_context 'events metrics'
 
   subject { described_class }

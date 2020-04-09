@@ -1,6 +1,6 @@
-require_relative '../../support/helpers/metrics_specs_helper'
+require 'rails_helper'
 
-RSpec.describe Metrics::MetricDefinitionTimeIntervalsProcessor do
+RSpec.describe Processors::MetricDefinitionTimeIntervals do
   subject { described_class }
 
   describe 'when processing the defined metrics' do

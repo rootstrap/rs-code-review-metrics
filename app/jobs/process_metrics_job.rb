@@ -7,6 +7,6 @@ class ProcessMetricsJob < ApplicationJob
   ##
   # Delegates the processing to the MetricsDefinitionProcessor service.
   def perform
-    Metrics::MetricsDefinitionProcessor.call
+    Processors::MetricsDefinition.call
   end
 end
