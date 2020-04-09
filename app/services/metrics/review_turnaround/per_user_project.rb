@@ -15,7 +15,7 @@ module Metrics
       end
 
       def retrieve_reviews
-        Queries::ReviewsTurnaroundPerUserProjectQuery.call(time_interval: time_interval)
+        Queries::ReviewTurnaround::PerUserProject.call(time_interval: time_interval)
       end
 
       def find_user_project(user, project)
