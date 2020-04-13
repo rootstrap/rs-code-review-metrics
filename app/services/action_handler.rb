@@ -1,7 +1,6 @@
 class ActionHandler < BaseService
-  def initialize(payload:, event:, entity:)
+  def initialize(payload:, entity:)
     @payload = payload
-    @event = event
     @entity = entity
   end
 

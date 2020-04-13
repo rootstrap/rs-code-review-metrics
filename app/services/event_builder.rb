@@ -1,7 +1,6 @@
 class EventBuilder < BaseService
-  def initialize(payload:, event:)
+  def initialize(payload:)
     @payload = payload
-    @event = event
   end
 
   def call

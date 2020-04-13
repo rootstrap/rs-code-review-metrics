@@ -1,6 +1,4 @@
 class GithubService < BaseService
-  include GithubEventPayloadHelper
-
   def initialize(payload:, event:)
     @payload = payload
     @event = event
@@ -28,7 +26,6 @@ class GithubService < BaseService
       event.save!
       raise Events::NotHandleableError
     end
-    event
   end
 
   def handleable_event?
@@ -36,16 +33,15 @@ class GithubService < BaseService
   end
 
   def find_or_create_event_type
-    EventBuilders.const_get(@event.classify).call(payload: @payload, event: @event)
+    EventBuilders.const_get(@event.classify).call(payload: @payload)
   end
 
   def occurence_time
-    send("#{@event}_ocurrence_time", payload: @payload)
+    Payload::Parser.public_send("#{@event}_ocurrence_time", @payload)
   end
 
   def handle_action
     ActionHandlers.const_get(@event.classify).call(payload: @payload,
-                                                   event: @event,
                                                    entity: @entity)
   end
 end
