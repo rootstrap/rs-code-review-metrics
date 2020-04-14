@@ -37,7 +37,7 @@ class GithubService < BaseService
   end
 
   def occurence_time
-    Payload::Parser.public_send("#{@event}_ocurrence_time", @payload)
+    Payload::Parser.new(@payload).public_send("#{@event}_ocurrence_time")
   end
 
   def handle_action
