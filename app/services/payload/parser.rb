@@ -10,16 +10,8 @@ module Payload
       end
 
       def review_ocurrence_time(payload)
-        event_action = payload['action']
-        review_payload = payload['review']
-        time_zone = Time.zone
-        if event_action == 'submitted'
-          time_zone.parse(review_payload['submitted_at'])
-        elsif event_action == 'edited'
-          time_zone.parse(review_payload['edited_at'])
-        elsif event_action == 'dismissed'
-          time_zone.parse(review_payload['dismissed_at'])
-        end
+        occurrence_time = payload['review']["#{payload['action']}_at"]
+        Time.zone.parse(occurrence_time)
       end
     end
   end
