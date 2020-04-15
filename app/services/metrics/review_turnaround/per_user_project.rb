@@ -18,7 +18,7 @@ module Metrics
         Events::Review.select(:pull_request_id)
                       .joins(:review_request, owner: :users_projects, pull_request: :project)
                       .includes(:review_request)
-                      .where(opened_at: Date.today.all_day)
+                      .where(opened_at: Time.zone.today.all_day)
                       .order(:created_at)
                       .distinct
       end
