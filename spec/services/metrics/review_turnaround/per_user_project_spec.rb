@@ -1,181 +1,133 @@
 require 'rails_helper'
 
 RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
-  include_context 'events metrics'
 
-  subject { described_class }
+  describe '.call' do
 
-  let(:time_interval_to_process) do
-    TimeInterval.new(starting_at: (Time.zone.now - 1.hour).change(usec: 0),
-                     duration: 1.day)
-  end
-
-  let(:first_user_project_id) { UsersProject.first.id }
-  let(:second_user_project_id) { UsersProject.second.id }
-
-  describe 'when processing a collection containing no review_events' do
-    let(:create_test_events) do
-      pull_request_event_payload = create_pull_request_event(
-        action: 'opened'
-      )
-
-      create_review_comment_event(pull_request_event_payload: pull_request_event_payload)
-    end
-
-    it 'does not create a metric' do
-      expect { process_all_events }.not_to change { Metric.count }
-    end
-  end
-
-  context 'when generating the metric values' do
-    describe 'if the metrics for the given time interval was not yet generated' do
-      let(:create_test_events) do
-        pull_request_event_payload = create_pull_request_event(
-          action: 'opened'
-        )
-
-        create_review_request_event(pull_request_event_payload: pull_request_event_payload)
-
-        create_review_event pull_request_event_payload: pull_request_event_payload,
-                            action: 'submitted',
-                            submitted_at: (Time.zone.now - 30.minutes).change(usec: 0)
-      end
-
-      it 'generates a review_turnaround metric for the given interval' do
-        expect(first_metric).to have_attributes(
-          ownable_id: first_user_project_id,
-          value_timestamp: time_interval_to_process.starting_at
-        )
-
-        expect(first_metric_value_expressed_as_seconds).to eq(30.minutes)
-      end
-
-      it 'generates only that metric' do
-        expect { process_all_events }.to change { Metric.count }.from(0).to(1)
+    let(:user_project) { create(:users_project) }
+  
+    context 'when processing a collection containing no review request events' do
+      let!(:pull_request) { create(:pull_request, state: :open)  }
+  
+      it 'does not create a metric' do
+        expect { described_class.call }.not_to change { Metric.count }
       end
     end
-
-    describe 'if a metric for the given time interval was already generated' do
-      let(:create_test_events) do
-        pull_request_event_payload = create_pull_request_event(
-          action: 'opened'
-        )
-
-        create_review_request_event(pull_request_event_payload: pull_request_event_payload)
-
-        create_review_event pull_request_event_payload: pull_request_event_payload,
-                            action: 'submitted',
-                            submitted_at: (Time.zone.now - 15.minutes).change(usec: 0)
-      end
-
-      before do
-        pull_request2_event_payload = create_pull_request_event(
-          action: 'opened'
-        )
-
-        create_review_request_event(pull_request_event_payload: pull_request2_event_payload)
-
-        create_review_event pull_request_event_payload: pull_request2_event_payload,
-                            action: 'submitted',
-                            submitted_at: (Time.zone.now - 15.minutes).change(usec: 0)
-
-        process_all_events_for_the_second_time
-      end
-
-      it 'updates the review_turnaround metric for the given interval' do
-        expect(first_metric).to have_attributes(
-          ownable_id: first_user_project_id,
-          value_timestamp: time_interval_to_process.starting_at
-        )
-
-        expect(first_metric_value_expressed_as_seconds).to eq(15.minutes)
-      end
-
-      it 'does not create a new metric' do
-        expect { process_all_events }.not_to change { Metric.count }
-      end
-    end
-
-    context 'when calculating the turnaround value' do
-      describe 'if a pull request has more than one review' do
-        let(:create_test_events) do
-          pull_request_event_payload = create_pull_request_event(
-            action: 'opened'
+  
+    context 'Generating metrics values' do
+      context 'when a review comment ocurred in a 30 minutes interval' do
+        let(:pull_request)   { create(:pull_request, state: :open, project_id: user_project.project_id)  }
+        let(:review_request) do 
+          create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
+        end
+        let!(:review) do 
+          create(:review, 
+            pull_request: pull_request, 
+            opened_at: Time.zone.now + 30.minutes,
+            owner: review_request.reviewer
           )
-
-          create_review_request_event(pull_request_event_payload: pull_request_event_payload)
-
-          create_review_event pull_request_event_payload: pull_request_event_payload,
-                              action: 'submitted',
-                              submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
-
-          create_review_event pull_request_event_payload: pull_request_event_payload,
-                              action: 'submitted',
-                              submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
         end
-
-        it 'it uses only the first review to calculate the metric value' do
-          expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
+        
+        it 'generates a metric with value expressed as decimal equal to 30 minutes' do
+          described_class.call
+          expect(Metric.last.value.seconds).to eq(30.minutes)
+        end
+  
+        it 'generates only that metric' do
+          expect { described_class.call }.to change { Metric.count }.from(0).to(1)
+        end
+      end
+  
+      context 'when calculating the turnaround value' do
+        context 'and a user made more than one review in a pull request' do
+          let(:pull_request) do 
+            create(:pull_request, state: :open, project_id: user_project.project_id)
+          end
+    
+          let(:review_request) do 
+            create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
+          end
+  
+          let!(:review) do 
+            create(:review, 
+              pull_request: pull_request, 
+              opened_at: Time.zone.now,
+              owner: review_request.reviewer
+            )
+          end
+  
+          let!(:a_second_review) do
+            create(:review, 
+              pull_request: pull_request, 
+              opened_at: Time.zone.now,
+              owner: review_request.reviewer
+            )
+          end
+  
+          xit 'creates just one metric' do
+            expect { described_class.call }.not_to change { Metric.count }
+          end
         end
       end
     end
-  end
-
-  describe 'with a PR that has no reviews' do
-    let(:create_test_events) do
-      create_pull_request_event(action: 'opened')
+  
+    context 'with a PR that has no reviews' do
+      let(:pull_request) { create(:pull_request, action: :open) }
+  
+      it 'does not generate a metric' do
+        expect { described_class }.not_to change { Metric.count }
+      end
     end
-
-    it 'does not generate a metric' do
-      expect { process_all_events }.not_to change { Metric.count }
-    end
-  end
-
-  describe 'with events from more than one project' do
-    let(:test_repository_b_payload) do
-      (build :repository_payload, name: 'Project B')['repository']
-    end
-
-    let(:create_test_events) do
-      pull_request_a_event_payload = create_pull_request_event(
-        action: 'opened'
-      )
-
-      create_review_request_event(pull_request_event_payload: pull_request_a_event_payload)
-
-      create_review_event pull_request_event_payload: pull_request_a_event_payload,
-                          action: 'submitted',
-                          submitted_at: (Time.zone.now - 20.minutes).change(usec: 0)
-
-      pull_request_b_event_payload = create_pull_request_event(
-        repository_payload: test_repository_b_payload,
-        action: 'opened'
-      )
-
-      create_review_request_event(pull_request_event_payload: pull_request_b_event_payload,
-                                  user_id: 1000)
-
-      create_review_event pull_request_event_payload: pull_request_b_event_payload,
-                          action: 'submitted',
-                          user_id: 1000,
-                          submitted_at: (Time.zone.now - 45.minutes).change(usec: 0)
-    end
-
-    it 'it generates the metric for the first project' do
-      expect(first_metric).to have_attributes(
-        value_timestamp: time_interval_to_process.starting_at
-      )
-
-      expect(first_metric_value_expressed_as_seconds).to eq(20.minutes)
-    end
-
-    it 'it generates the metric for the second project' do
-      expect(second_metric).to have_attributes(
-        ownable_id: second_user_project_id,
-        value_timestamp: time_interval_to_process.starting_at
-      )
-
-      expect(second_metric_value_expressed_as_seconds).to eq(45.minutes)
+  
+    context 'when a user has reviews in more tha one project' do
+  
+      let(:same_user_for_second_project) { create(:users_project, user_id: user_project.user_id) }
+  
+      let(:pull_request) do 
+        create(:pull_request, state: :open, project_id: user_project.project_id)
+      end
+  
+      let(:review_request) do 
+        create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
+      end
+  
+      let!(:review) do 
+        create(:review, 
+          pull_request: pull_request, 
+          opened_at: Time.zone.now + 20.minutes,
+          owner: review_request.reviewer
+        )
+      end
+  
+      let(:second_project_pull_request) do 
+        create(:pull_request, state: :open, project_id: same_user_for_second_project.project_id)
+      end
+  
+      let(:second_project_review_request) do 
+        create(
+          :review_request, 
+          pull_request: pull_request, 
+          reviewer_id: same_user_for_second_project.user_id
+        )
+      end
+  
+      let!(:second_project_review) do 
+        create(:review, 
+          pull_request: second_project_pull_request, 
+          opened_at: Time.zone.now + 45.minutes,
+          owner: second_project_review_request.reviewer
+        )
+      end
+  
+      before { described_class.call }
+  
+      it 'it generates the metric for the first project' do
+        expect(Metric.first.value.seconds).to eq(20.minutes)
+      end
+  
+      it 'it generates the metric for the second project' do
+        expect(Metric.second.value.seconds).to eq(45.minutes)
+      end
     end
   end
 end

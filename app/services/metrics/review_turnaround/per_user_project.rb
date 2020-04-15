@@ -1,21 +1,25 @@
 module Metrics
   module ReviewTurnaround
-    class PerUserProject < Processors::Metric
+    class PerUserProject < BaseService
+
+      def call
+        process
+      end
+
       private
 
       def process
         retrieve_reviews.find_each.lazy.each do |review|
+          
           entity = find_user_project(review.owner, review.pull_request.project)
           turnaround = calculate_turnaround(review)
 
-          find_or_create_metric(entity: entity)
-            .update!(value: turnaround,
-                     value_timestamp: time_interval.starting_at)
+          create_metric(entity, turnaround)
         end
       end
 
       def retrieve_reviews
-        Queries::ReviewTurnaround::PerUserProject.call(time_interval: time_interval)
+        Queries::ReviewTurnaround::PerUserProject.call
       end
 
       def find_user_project(user, project)
@@ -23,7 +27,11 @@ module Metrics
       end
 
       def calculate_turnaround(review)
-        review.review_request.created_at.to_i - review.opened_at.to_i
+        review.opened_at.to_i - review.review_request.created_at.to_i
+      end
+
+      def create_metric(entity, turnaround)
+        Metric.create!(ownable: entity, value: turnaround)
       end
     end
   end
