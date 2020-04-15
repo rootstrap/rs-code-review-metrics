@@ -9,8 +9,7 @@ module Metrics
       private
 
       def process
-        retrieve_reviews.find_each.lazy.each do |review|
-          
+        today_reviews.find_each.lazy.each do |review|
           entity = find_user_project(review.owner, review.pull_request.project)
           turnaround = calculate_turnaround(review)
 
@@ -18,8 +17,13 @@ module Metrics
         end
       end
 
-      def retrieve_reviews
-        Queries::ReviewTurnaround::PerUserProject.call
+      def today_reviews
+        Events::Review.select(:pull_request_id)
+                      .joins(:review_request, owner: :users_projects, pull_request: :project)
+                      .includes(:review_request)
+                      .where(opened_at: Time.zone.today.all_day)
+                      .order(:created_at)
+                      .distinct
       end
 
       def find_user_project(user, project)
