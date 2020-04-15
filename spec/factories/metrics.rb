@@ -24,14 +24,11 @@
 #
 
 FactoryBot.define do
-  sequence(:metric_name) { |n| Metric.names.values[n % 1] }
-  sequence(:metric_interval) { |n| Metric.intervals.values[n % 4] }
-
   factory :metric do
     value { Faker::Number.number(digits: 4) }
     value_timestamp { Faker::Date.backward(days: 30) }
-    name { generate(:metric_name) }
-    interval { generate(:metric_interval) }
+    sequence(:name) { |n| Metric.names.values[n % 1] }
+    sequence(:interval) { |n| Metric.intervals.values[n % 4] }
 
     association :metrics_definition
     association :ownable, factory: :project
