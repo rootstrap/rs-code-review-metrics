@@ -2,13 +2,16 @@
 #
 # Table name: metrics
 #
-#  id              :bigint           not null, primary key
-#  ownable_type    :string           not null
-#  value           :decimal(, )
-#  value_timestamp :datetime
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  ownable_id      :bigint           not null
+#  id                    :bigint           not null, primary key
+#  interval              :enum
+#  name                  :enum
+#  ownable_type          :string           not null
+#  value                 :decimal(, )
+#  value_timestamp       :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  metrics_definition_id :bigint           not null
+#  ownable_id            :bigint           not null
 #
 # Indexes
 #
@@ -16,5 +19,11 @@
 #
 
 class Metric < ApplicationRecord
+  enum interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', all_times: 'all_times' }
+  enum name: { review_turnaround: 'review_turnaround' }
+
   belongs_to :ownable, polymorphic: true
+
+  validates :interval, inclusion: { in: intervals.keys }
+  validates :name, inclusion: { in: names.keys }
 end

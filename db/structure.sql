@@ -26,6 +26,27 @@ CREATE TYPE public.lang AS ENUM (
 
 
 --
+-- Name: metric_interval; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.metric_interval AS ENUM (
+    'daily',
+    'weekly',
+    'monthly',
+    'all_times'
+);
+
+
+--
+-- Name: metric_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.metric_type AS ENUM (
+    'review_turnaround'
+);
+
+
+--
 -- Name: pull_request_state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -202,7 +223,9 @@ CREATE TABLE public.metrics (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     ownable_type character varying NOT NULL,
-    ownable_id bigint NOT NULL
+    ownable_id bigint NOT NULL,
+    name public.metric_type,
+    "interval" public.metric_interval
 );
 
 
@@ -983,6 +1006,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200401205154'),
 ('20200402175059'),
 ('20200403140307'),
+<<<<<<< HEAD
 ('20200414205816');
+=======
+('20200415162514');
+>>>>>>> 78452ddb9d1d1df36e2e6080e2295a67729fa26e
 
 

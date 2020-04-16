@@ -2,13 +2,16 @@
 #
 # Table name: metrics
 #
-#  id              :bigint           not null, primary key
-#  ownable_type    :string           not null
-#  value           :decimal(, )
-#  value_timestamp :datetime
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  ownable_id      :bigint           not null
+#  id                    :bigint           not null, primary key
+#  interval              :enum
+#  name                  :enum
+#  ownable_type          :string           not null
+#  value                 :decimal(, )
+#  value_timestamp       :datetime
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  metrics_definition_id :bigint           not null
+#  ownable_id            :bigint           not null
 #
 # Indexes
 #
@@ -18,7 +21,9 @@
 FactoryBot.define do
   factory :metric do
     value { Faker::Number.number(digits: 4) }
-    value_timestamp { Faker::Date.backward(days: 30) }
+    sequence(:name) { |n| Metric.names.values[n % 1] }
+    sequence(:interval) { |n| Metric.intervals.values[n % 4] }
+
     association :ownable, factory: :project
   end
 
