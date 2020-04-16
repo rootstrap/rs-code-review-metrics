@@ -56,16 +56,24 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
             )
           end
   
-          let!(:a_second_review) do
+          let!(:second_review) do
             create(:review, 
               pull_request: pull_request, 
-              opened_at: Time.zone.now,
+              opened_at: Time.zone.now + 2.hours,
+              owner: review_request.reviewer
+            )
+          end
+
+          let!(:third_review) do
+            create(:review, 
+              pull_request: pull_request, 
+              opened_at: Time.zone.now + 4.hours,
               owner: review_request.reviewer
             )
           end
   
-          xit 'creates just one metric' do
-            expect { described_class.call }.not_to change { Metric.count }
+          it 'creates just one metric' do
+            expect { described_class.call }.to change { Metric.count }.from(0).to(1)
           end
         end
       end
