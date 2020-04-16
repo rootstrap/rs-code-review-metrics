@@ -1,6 +1,6 @@
 module Processors
   class ReviewTurnaround < BaseService
-    ENTITIES = ["UserProject"]
+    ENTITIES = ['UserProject'].freeze
 
     def call
       process

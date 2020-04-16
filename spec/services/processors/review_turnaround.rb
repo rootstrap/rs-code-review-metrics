@@ -6,7 +6,7 @@ RSpec.describe Processors::ReviewTurnaround do
       described_class::ENTITIES.each do |entity|
         expect_any_instance_of(Metrics::ReviewTurnaround.const_get("Per#{entity}"))
           .to receive(:call)
-     end
+      end
     end
   end
 end
