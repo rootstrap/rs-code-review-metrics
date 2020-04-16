@@ -37,7 +37,7 @@ module Metrics
       end
 
       def create_metric(entity, turnaround)
-        Metric.create!(ownable: entity, value: turnaround)
+        Metric.create!(ownable: entity, value: turnaround, name: :review_turnaround)
       end
     end
   end

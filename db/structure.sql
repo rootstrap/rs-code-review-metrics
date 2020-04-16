@@ -38,10 +38,10 @@ CREATE TYPE public.metric_interval AS ENUM (
 
 
 --
--- Name: metric_type; Type: TYPE; Schema: public; Owner: -
+-- Name: metric_name; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.metric_type AS ENUM (
+CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround'
 );
 
@@ -224,8 +224,8 @@ CREATE TABLE public.metrics (
     updated_at timestamp(6) without time zone NOT NULL,
     ownable_type character varying NOT NULL,
     ownable_id bigint NOT NULL,
-    name public.metric_type,
-    "interval" public.metric_interval
+    name public.metric_name,
+    "interval" public.metric_interval DEFAULT 'daily'::public.metric_interval
 );
 
 
@@ -1006,10 +1006,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200401205154'),
 ('20200402175059'),
 ('20200403140307'),
-<<<<<<< HEAD
-('20200414205816');
-=======
-('20200415162514');
->>>>>>> 78452ddb9d1d1df36e2e6080e2295a67729fa26e
+('20200414205816'),
+('20200415162514'),
+('20200416212440');
 
 
