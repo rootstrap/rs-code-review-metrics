@@ -13,9 +13,11 @@ module Processors
 
     private
 
-    def find_or_create_metric(entity:)
+    def find_or_create_metric(entity:, interval:, name:)
       ::Metric.find_or_create_by!(ownable: entity,
-                                  metrics_definition: metrics_definition)
+                                  metrics_definition: metrics_definition,
+                                  interval: interval,
+                                  name: name)
     end
   end
 end
