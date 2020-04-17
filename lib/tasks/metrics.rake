@@ -7,6 +7,6 @@
 namespace :metrics do
   desc 'Processes the stored events and generates the all the metrics'
   task process: :environment do
-    ProcessMetricsJob.perform_now
+    ProcessReviewTurnaroundMetricsJob.perform_now
   end
 end
