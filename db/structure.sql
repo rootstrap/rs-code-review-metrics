@@ -38,10 +38,10 @@ CREATE TYPE public.metric_interval AS ENUM (
 
 
 --
--- Name: metric_type; Type: TYPE; Schema: public; Owner: -
+-- Name: metric_name; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.metric_type AS ENUM (
+CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround'
 );
 
@@ -222,46 +222,11 @@ CREATE TABLE public.metrics (
     value_timestamp timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    metrics_definition_id bigint NOT NULL,
     ownable_type character varying NOT NULL,
     ownable_id bigint NOT NULL,
-    name public.metric_type,
-    "interval" public.metric_interval
+    name public.metric_name,
+    "interval" public.metric_interval DEFAULT 'daily'::public.metric_interval
 );
-
-
---
--- Name: metrics_definitions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.metrics_definitions (
-    id bigint NOT NULL,
-    metrics_name character varying NOT NULL,
-    time_interval character varying NOT NULL,
-    metrics_processor character varying NOT NULL,
-    last_processed_event_time timestamp without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: metrics_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.metrics_definitions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: metrics_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.metrics_definitions_id_seq OWNED BY public.metrics_definitions.id;
 
 
 --
@@ -569,13 +534,6 @@ ALTER TABLE ONLY public.metrics ALTER COLUMN id SET DEFAULT nextval('public.metr
 
 
 --
--- Name: metrics_definitions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.metrics_definitions ALTER COLUMN id SET DEFAULT nextval('public.metrics_definitions_id_seq'::regclass);
-
-
---
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -654,14 +612,6 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
-
-
---
--- Name: metrics_definitions metrics_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.metrics_definitions
-    ADD CONSTRAINT metrics_definitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -790,13 +740,6 @@ CREATE INDEX index_events_on_occurred_at ON public.events USING btree (occurred_
 --
 
 CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id);
-
-
---
--- Name: index_metrics_on_metrics_definition_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_metrics_on_metrics_definition_id ON public.metrics USING btree (metrics_definition_id);
 
 
 --
@@ -981,14 +924,6 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
--- Name: metrics fk_rails_a828ab15c4; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.metrics
-    ADD CONSTRAINT fk_rails_a828ab15c4 FOREIGN KEY (metrics_definition_id) REFERENCES public.metrics_definitions(id);
-
-
---
 -- Name: reviews fk_rails_bcf65590e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1071,6 +1006,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200401205154'),
 ('20200402175059'),
 ('20200403140307'),
-('20200415162514');
+('20200414205816'),
+('20200415162514'),
+('20200416212440');
 
 
