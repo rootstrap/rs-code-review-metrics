@@ -32,7 +32,7 @@ module ActionHandlers
 
     def review_requested
       owner = find_or_create_user(@payload['pull_request']['user'])
-      reviewer = find_or_create_user(@payload['requested_reviewer'])
+      reviewer = find_or_create_user(@payload['pull_request']['requested_reviewers'].first)
       @entity.review_requests.create!(owner: owner, reviewer: reviewer,
                                       node_id: reviewer.node_id, login: reviewer.login)
     end
