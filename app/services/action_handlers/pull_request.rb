@@ -26,15 +26,16 @@ module ActionHandlers
     end
 
     def review_request_removed
-      reviewer = User.find_by!(github_id: @payload['requested_reviewer']['id'])
+      reviewer = User.find_by!(github_id: @payload['pull_request']['requested_reviewers']
+                                            .first['id'])
       @entity.review_requests.find_by!(reviewer: reviewer).removed!
     end
 
     def review_requested
-      owner = find_or_create_user(@payload['pull_request']['user'])
-      reviewer = find_or_create_user(@payload['pull_request']['requested_reviewers'].first)
-      @entity.review_requests.create!(owner: owner, reviewer: reviewer,
-                                      node_id: reviewer.node_id, login: reviewer.login)
+      pr_data = @payload['pull_request']
+      owner = find_or_create_user(pr_data['user'])
+      reviewer = find_or_create_user(pr_data['requested_reviewers'].first)
+      @entity.review_requests.create!(owner: owner, reviewer: reviewer)
     end
   end
 end

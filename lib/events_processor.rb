@@ -1,28 +1,53 @@
+# The intention of this script is to reprocess all the events stored in Events table all over again.
+# This script should be used whenever there are changes in the event types models.
+
 class EventsProcessor
+  TYPES = %w[pull_request review review_comment].freeze
+
   class << self
     def process
       errors = []
 
-      Event.all.find_each.lazy.each do |event|
-        Projects::Builder.call(event.data['repository'])
-        event_name = if event.name == 'pull_request_review'
-                       'review'
-                     elsif event.name == 'pull_request_review_comment'
-                       'review_comment'
-                     else
-                       event.name
-                     end
-        if handleable_event?(event_name)
-          payload = event.data
-          event_class = event_name.classify
-
-          entity = find_or_create_event_type(event_class, payload)
-          handle_action(event_class, payload, entity)
-        end
+      retrieve_reviews do |event|
+        fetch_or_create_project(event.data['repository'])
+        event_name = resolve_event_name(event)
+        process_event(event, event_name) if handleable_event?(event_name)
       rescue StandardError => e
         errors << error_msg(event, e)
       end
-      puts errors unless errors.empty?
+      Rails.logger.error errors unless errors.empty?
+    end
+
+    def fetch_or_create_project(repository_data)
+      Project.find_or_create_by!(github_id: repository_data['id']) do |project|
+        project.name = repository_data['name']
+        project.description = repository_data['description']
+      end
+    end
+
+    def retrieve_reviews
+      Event.all.find_each.lazy.each do |event|
+        yield(event)
+      end
+    end
+
+    def resolve_event_name(event)
+      event_name = event.name
+      if event_name == 'pull_request_review'
+        'review'
+      elsif event_name == 'pull_request_review_comment'
+        'review_comment'
+      else
+        event_name
+      end
+    end
+
+    def process_event(event, event_name)
+      payload = event.data
+      event_class = event_name.classify
+
+      entity = find_or_create_event_type(event_class, payload)
+      handle_action(event_class, payload, entity)
     end
 
     def error_msg(event, error)
@@ -39,7 +64,7 @@ class EventsProcessor
     end
 
     def handleable_event?(event_name)
-      Event::TYPES.include?(event_name)
+      TYPES.include?(event_name)
     end
 
     def find_or_create_user(user_data)

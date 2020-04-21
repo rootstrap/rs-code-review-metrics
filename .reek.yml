@@ -19,7 +19,8 @@ detectors:
   DuplicateMethodCall:
     enabled: true
     exclude: ['GithubService#handle_event',
-              'EventBuilders::Review#assign_attrs']
+              'EventBuilders::Review#assign_attrs',
+              'EventsProcessor::ReviewBuilder#self.assign_attrs']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
@@ -109,7 +110,7 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude: []
+    exclude: ['EventsProcessor#process']
     reject:
       - "/^.$/"
       - "/[0-9]$/"

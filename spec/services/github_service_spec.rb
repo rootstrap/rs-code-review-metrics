@@ -35,7 +35,9 @@ RSpec.describe GithubService do
 
       describe '#review_request_removed' do
         let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
-        let!(:reviewer) { create :user, github_id: payload['requested_reviewer']['id'] }
+        let!(:reviewer) do
+          create :user, github_id: payload['pull_request']['requested_reviewers'].first['id']
+        end
         let!(:review_request) do
           create :review_request,
                  reviewer: reviewer,
