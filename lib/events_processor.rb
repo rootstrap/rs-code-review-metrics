@@ -2,15 +2,13 @@
 # This script should be used whenever there are changes in the event types models.
 
 class EventsProcessor
-  TYPES = %w[pull_request review review_comment].freeze
-
   class << self
     def process
       errors = []
 
       retrieve_reviews do |event|
-        fetch_or_create_project(event.data['repository'])
-        event_name = resolve_event_name(event)
+        Projects::Builder.call(event.data['repository'])
+        event_name = event.data['event']
         process_event(event, event_name) if handleable_event?(event_name)
       rescue StandardError => e
         errors << error_msg(event, e)
@@ -18,27 +16,9 @@ class EventsProcessor
       Rails.logger.error errors unless errors.empty?
     end
 
-    def fetch_or_create_project(repository_data)
-      Project.find_or_create_by!(github_id: repository_data['id']) do |project|
-        project.name = repository_data['name']
-        project.description = repository_data['description']
-      end
-    end
-
     def retrieve_reviews
       Event.all.find_each.lazy.each do |event|
         yield(event)
-      end
-    end
-
-    def resolve_event_name(event)
-      event_name = event.name
-      if event_name == 'pull_request_review'
-        'review'
-      elsif event_name == 'pull_request_review_comment'
-        'review_comment'
-      else
-        event_name
       end
     end
 
@@ -64,7 +44,7 @@ class EventsProcessor
     end
 
     def handleable_event?(event_name)
-      TYPES.include?(event_name)
+      Event::TYPES.include?(event_name)
     end
 
     def find_or_create_user(user_data)
@@ -91,16 +71,12 @@ class EventsProcessor
   end
 
   class PullRequestBuilder < EventsProcessor
-    ATTR_PAYLOAD_MAP = { github_id: 'id', number: 'number', state: 'state',
-                         node_id: 'node_id', title: 'title', locked: 'locked',
-                         draft: 'draft', opened_at: 'created_at' }.freeze
-
     def self.build(payload)
       pr_data = payload['pull_request']
       Events::PullRequest.find_or_initialize_by(github_id: pr_data['id']).tap do |pr|
         pr.owner = find_or_create_user(pr_data['user'])
         pr.project = Projects::Builder.call(payload['repository'])
-        ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
+        EventBuilders::PullRequest::ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
         pr.save!
       end
     end
@@ -114,7 +90,7 @@ class EventsProcessor
       Events::Review.find_or_initialize_by(github_id: review_data['id']).tap do |review|
         assign_attrs(review, review_data, payload)
 
-        ATTR_PAYLOAD_MAP.each do |key, value|
+        EventBuilders::Review::ATTR_PAYLOAD_MAP.each do |key, value|
           review.public_send("#{key}=", review_data.fetch(value))
         end
         review.save!
