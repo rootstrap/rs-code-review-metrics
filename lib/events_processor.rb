@@ -7,8 +7,9 @@ class EventsProcessor
       errors = []
 
       retrieve_reviews do |event|
-        Projects::Builder.call(event.data['repository'])
-        event_name = event.data['event']
+        payload = event.data
+        Projects::Builder.call(payload['repository'])
+        event_name = payload['event']
         process_event(event, event_name) if handleable_event?(event_name)
       rescue StandardError => e
         errors << error_msg(event, e)
@@ -76,7 +77,9 @@ class EventsProcessor
       Events::PullRequest.find_or_initialize_by(github_id: pr_data['id']).tap do |pr|
         pr.owner = find_or_create_user(pr_data['user'])
         pr.project = Projects::Builder.call(payload['repository'])
-        EventBuilders::PullRequest::ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
+        EventBuilders::PullRequest::ATTR_PAYLOAD_MAP.each do |key, value|
+          pr.public_send("#{key}=", pr_data.fetch(value))
+        end
         pr.save!
       end
     end
