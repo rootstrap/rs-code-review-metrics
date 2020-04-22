@@ -8,9 +8,9 @@ class EventsProcessor
 
       retrieve_reviews do |event|
         payload = event.data
+        event_name = resolve_event_name(event.name)
         Projects::Builder.call(payload['repository'])
-        event_name = payload['event']
-        process_event(event, event_name) if handleable_event?(event_name)
+        process_event(event, event_name)
       rescue StandardError => e
         errors << error_msg(event, e)
       end
@@ -18,9 +18,15 @@ class EventsProcessor
     end
 
     def retrieve_reviews
-      Event.all.find_each.lazy.each do |event|
+      Event.where('data ?| array[:keys]', keys: Event::TYPES).find_each.lazy.each do |event|
         yield(event)
       end
+    end
+
+    def resolve_event_name(name)
+      return name.gsub('pull_request_', '') unless name == 'pull_request'
+
+      name
     end
 
     def process_event(event, event_name)
@@ -42,10 +48,6 @@ class EventsProcessor
     def handle_action(event_class, payload, entity)
       ActionHandlers.const_get(event_class).call(payload: payload,
                                                  entity: entity)
-    end
-
-    def handleable_event?(event_name)
-      Event::TYPES.include?(event_name)
     end
 
     def find_or_create_user(user_data)
