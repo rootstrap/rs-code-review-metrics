@@ -106,7 +106,7 @@ class EventsProcessor
       review.owner = find_or_create_user(review_data['user'])
       review.pull_request = find_pull_request(payload)
       review.review_request = find_or_create_review_request(review.pull_request, review.owner.id)
-      review.owner.projects << review.pull_request.project
+      find_or_create_user_project(review.pull_request.project.id, review.owner.id)
     end
   end
 

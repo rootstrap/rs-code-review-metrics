@@ -23,4 +23,8 @@ class EventBuilder < BaseService
       review_requests.order(:created_at).first
     end
   end
+
+  def find_or_create_user_project(project_id, user_id)
+    UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
+  end
 end

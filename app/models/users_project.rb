@@ -16,4 +16,6 @@ class UsersProject < ApplicationRecord
   belongs_to :user
   belongs_to :project
   has_many :metrics, as: :ownable, dependent: :destroy
+
+  validates :user_id, uniqueness: { scope: :project_id }
 end
