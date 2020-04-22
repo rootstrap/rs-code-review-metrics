@@ -5,6 +5,7 @@ module EventBuilders
     def build
       review_data = @payload['review']
       Events::Review.find_or_create_by!(github_id: review_data['id']) do |review|
+        find_or_create_user_project(review.owner.id, review.pull_request.project.id)
         assign_attrs(review, review_data)
 
         ATTR_PAYLOAD_MAP.each do |key, value|
@@ -17,7 +18,6 @@ module EventBuilders
       review.owner = find_or_create_user(review_data['user'])
       review.pull_request = find_pull_request
       review.review_request = find_or_create_review_request(review.pull_request, review.owner.id)
-      review.owner.projects << review.pull_request.project
     end
   end
 end
