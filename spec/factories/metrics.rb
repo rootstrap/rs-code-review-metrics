@@ -3,19 +3,30 @@
 # Table name: metrics
 #
 #  id              :bigint           not null, primary key
-#  entity_key      :string           not null
-#  metric_key      :string           not null
+#  interval        :enum             default("daily")
+#  name            :enum
+#  ownable_type    :string           not null
 #  value           :decimal(, )
 #  value_timestamp :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  ownable_id      :bigint           not null
+#
+# Indexes
+#
+#  index_metrics_on_ownable_type_and_ownable_id  (ownable_type,ownable_id)
 #
 
 FactoryBot.define do
   factory :metric do
-    entity_key { 'generis' }
-    metric_key { 'review_turnaround' }
-    value { 495 }
-    value_timestamp { Time.utc(2020, 2, 1, 0, 0, 0) }
+    value { Faker::Number.number(digits: 4) }
+    sequence(:name) { |n| Metric.names.values[n % 1] }
+    sequence(:interval) { |n| Metric.intervals.values[n % 4] }
+
+    association :ownable, factory: :project
+  end
+
+  trait :for_user do
+    association :ownable, factory: :user
   end
 end

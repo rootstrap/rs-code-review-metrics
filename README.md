@@ -1,2 +1,2 @@
-Code Review Metrics   [![Travis Build](https://travis-ci.com/rootstrap/rs-code-review-metrics.svg?branch=master)](https://travis-ci.com/rootstrap/rs-code-review-metrics)
+Code Review Metrics   [![Travis Build](https://travis-ci.com/rootstrap/rs-code-review-metrics.svg?branch=develop)](https://travis-ci.com/rootstrap/rs-code-review-metrics) [![CodeClimate Maintainability](https://api.codeclimate.com/v1/badges/bc6808c1200913bcb29c/maintainability)](https://codeclimate.com/github/rootstrap/rs-code-review-metrics/maintainability) [![CodeClimate Coverage](https://api.codeclimate.com/v1/badges/bc6808c1200913bcb29c/test_coverage)](https://codeclimate.com/github/rootstrap/rs-code-review-metrics/test_coverage)
 =========

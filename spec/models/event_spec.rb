@@ -6,6 +6,7 @@
 #  data            :jsonb
 #  handleable_type :string
 #  name            :string
+#  occurred_at     :datetime
 #  type            :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -15,52 +16,50 @@
 # Indexes
 #
 #  index_events_on_handleable_type_and_handleable_id  (handleable_type,handleable_id)
+#  index_events_on_occurred_at                        (occurred_at)
 #  index_events_on_project_id                         (project_id)
 #
 
 require 'rails_helper'
 
 RSpec.describe Event, type: :model do
-  subject { build :event }
+  subject { create :event_pull_request }
 
   context 'validations' do
-    it 'is not valid without data' do
-      subject.data = nil
-      expect(subject).to_not be_valid
-    end
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:data) }
 
-    it 'is not valid without name' do
-      subject.name = nil
-      expect(subject).to_not be_valid
-    end
-  end
+    context 'with a pull_request event' do
+      subject { create :event_pull_request }
 
-  describe '#resolve' do
-    context 'not handleable event' do
-      before { subject.name = 'comment' }
-
-      it 'creates an event ' do
-        expect {
-          subject.resolve
-        }.to change(Event, :count).by(1)
+      it 'sets the occcured_at attribute from the payload data' do
+        expect(subject.occurred_at).not_to be_nil
       end
     end
 
-    context 'handleable event' do
-      let(:pull_request) { build :pull_request }
+    context 'with a review event' do
+      subject { create :event_review }
 
-      it 'creates an event and gets associated' do
-        allow_any_instance_of(Events::PullRequest).to receive(:find_or_create_pull_request)
-          .and_return(pull_request)
-        allow_any_instance_of(Events::PullRequest).to receive(:resolve).and_return(pull_request)
+      it 'sets the occcured_at attribute from the payload data' do
+        expect(subject.occurred_at).not_to be_nil
+      end
+    end
 
-        expect {
-          subject.resolve
-        }.to change(described_class, :count).by(1)
+    context 'with a review_comment event' do
+      subject { create :event_review_comment }
 
-        expect(
-          subject.handleable
-        ).to eq(pull_request)
+      it 'sets the occcured_at attribute from the payload data' do
+        expect(subject.occurred_at).not_to be_nil
+      end
+    end
+
+    context 'of an event not handled type' do
+      subject { create :event_unhandled }
+
+      it { should_not validate_presence_of(:occurred_at) }
+
+      it 'sets the occcured_at to nil' do
+        expect(subject.occurred_at).to be_nil
       end
     end
   end

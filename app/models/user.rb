@@ -14,6 +14,9 @@
 #  index_users_on_github_id  (github_id) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :metrics,
+           as: :ownable,
+           dependent: :destroy
   has_many :owned_review_requests,
            class_name: 'ReviewRequest',
            foreign_key: :owner_id,
@@ -34,6 +37,12 @@ class User < ApplicationRecord
            foreign_key: :reviewer_id,
            dependent: :destroy,
            inverse_of: :reviewer
+  has_many :users_projects, dependent: :destroy
+  has_many :projects, through: :users_projects
+  has_many :created_pull_requests,
+           class_name: 'Events::PullRequest',
+           dependent: :destroy,
+           inverse_of: :owner
   validates :github_id,
             :login,
             :node_id,

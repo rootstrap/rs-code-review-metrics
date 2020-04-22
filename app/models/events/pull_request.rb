@@ -16,19 +16,28 @@
 #  updated_at :datetime         not null
 #  github_id  :bigint           not null
 #  node_id    :string           not null
+#  owner_id   :bigint
+#  project_id :bigint
 #
 # Indexes
 #
-#  index_pull_requests_on_github_id  (github_id) UNIQUE
+#  index_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_pull_requests_on_owner_id    (owner_id)
+#  index_pull_requests_on_project_id  (project_id)
+#  index_pull_requests_on_state       (state)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (owner_id => users.id)
+#  fk_rails_...  (project_id => projects.id)
 #
 module Events
   class PullRequest < ApplicationRecord
-    ACTIONS = %w[open review_requested closed \
-                 review_request_removed].freeze
-    private_constant :ACTIONS
-
     enum state: { open: 'open', closed: 'closed' }
 
+    belongs_to :project, inverse_of: :pull_requests
+    belongs_to :owner, class_name: 'User', foreign_key: :owner_id,
+                       inverse_of: :created_pull_requests
     has_many :review_requests, dependent: :destroy, inverse_of: :pull_request
     has_many :review_comments, class_name: 'Events::ReviewComment',
                                dependent: :destroy, inverse_of: :pull_request
@@ -42,78 +51,15 @@ module Events
               :node_id,
               :title,
               :number,
+              :opened_at,
               presence: true
     validates :draft,
               :locked,
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
 
-    attr_accessor :payload
-
-    def resolve
-      return unless handleable?
-
-      handle_action
-    end
-
-    private
-
-    def handle_action
-      send(payload['action'])
-    end
-
-    def find_or_create_user(user_data)
-      User.find_or_create_by!(github_id: user_data['id']) do |user|
-        user.node_id = user_data['node_id']
-        user.login = user_data['login']
-      end
-    end
-
-    def find_or_create_pull_request(payload)
-      pr_data = payload['pull_request']
-      pr = Events::PullRequest.find_or_create_by!(github_id: pr_data['id']) do |preq|
-        preq.node_id = pr_data['node_id']
-        preq.number = pr_data['number']
-        preq.state = pr_data['state']
-        preq.locked = pr_data['locked']
-        preq.draft = pr_data['draft']
-        preq.title = pr_data['title']
-        preq.body = pr_data['body']
-      end
-      pr.assign_attributes(payload: payload)
-      pr
-    end
-
-    def handleable?
-      ACTIONS.include?(payload['action'])
-    end
-
-    # Actions
-
-    def open
-      open!
-      update!(opened_at: Time.current)
-    end
-
-    def merged
-      update!(merged_at: Time.current)
-    end
-
-    def closed
-      merged if payload['pull_request']['merged'] == true
-      closed!
-      update!(closed_at: Time.current)
-    end
-
-    def review_request_removed
-      reviewer = find_or_create_user(payload['requested_reviewer'])
-      review_requests.find_by!(reviewer: reviewer).removed!
-    end
-
-    def review_requested
-      owner = find_or_create_user(payload['pull_request']['user'])
-      reviewer = find_or_create_user(payload['requested_reviewer'])
-      review_requests.create!(owner: owner, reviewer: reviewer)
-    end
+    ##
+    # Returns the number of reviews this pull_request has
+    delegate :count, to: :reviews, prefix: true
   end
 end

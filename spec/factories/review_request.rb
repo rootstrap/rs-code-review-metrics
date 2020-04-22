@@ -1,9 +1,11 @@
 FactoryBot.define do
-  factory :review_request do
-    status { 'active' }
+  sequence(:review_request_id, 100)
 
-    association :pull_request, strategy: :build
-    association :reviewer, factory: :user, strategy: :build
-    association :owner, factory: :user, strategy: :build
+  factory :review_request do
+    state { %w[active removed].sample }
+
+    association :pull_request
+    association :reviewer, factory: :user
+    association :owner, factory: :user
   end
 end

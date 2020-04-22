@@ -3,12 +3,18 @@
 # Table name: metrics
 #
 #  id              :bigint           not null, primary key
-#  entity_key      :string           not null
-#  metric_key      :string           not null
+#  interval        :enum             default("daily")
+#  name            :enum
+#  ownable_type    :string           not null
 #  value           :decimal(, )
 #  value_timestamp :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  ownable_id      :bigint           not null
+#
+# Indexes
+#
+#  index_metrics_on_ownable_type_and_ownable_id  (ownable_type,ownable_id)
 #
 
 require 'rails_helper'
@@ -17,14 +23,14 @@ RSpec.describe Metric, type: :model do
   subject { build :metric }
 
   describe 'database schema' do
-    it 'has an entity_key field' do
-      expect(subject).to have_db_column(:entity_key)
-        .of_type(:string)
+    it 'has a ownable_id field' do
+      expect(subject).to have_db_column(:ownable_id)
+        .of_type(:integer)
         .with_options(null: false)
     end
 
-    it 'has an metric_key field' do
-      expect(subject).to have_db_column(:metric_key)
+    it 'has a ownable_type field' do
+      expect(subject).to have_db_column(:ownable_type)
         .of_type(:string)
         .with_options(null: false)
     end
@@ -40,15 +46,23 @@ RSpec.describe Metric, type: :model do
         .of_type(:datetime)
         .with_options(null: true)
     end
+
+    it 'is valid with valid attributes' do
+      expect(subject).to be_valid
+    end
+
+    it 'is not valid without name' do
+      subject.name = nil
+      expect(subject).to_not be_valid
+    end
+
+    it 'is not valid without interval' do
+      subject.interval = nil
+      expect(subject).to_not be_valid
+    end
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:entity_key) }
-    it { should validate_length_of(:entity_key) .is_at_most(255) }
-
-    it { should validate_presence_of(:metric_key) }
-    it { should validate_length_of(:metric_key) .is_at_most(255) }
-
     describe 'does not fail with a' do
       it 'missing Metric.value since the metric could have not been run yet' do
         subject = build :metric, value: nil
