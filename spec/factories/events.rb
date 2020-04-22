@@ -35,11 +35,6 @@ FactoryBot.define do
 
     project
 
-<<<<<<< HEAD
-    occurred_at {}
-
-=======
->>>>>>> d8f7ecb089c97e957a6d48812a81da6c91e457b9
     after(:build) do |event, factory|
       event.data['action'] = factory.action if factory.action
       event.data['pull_request'] = factory.pull_request_payload if factory.pull_request_payload
