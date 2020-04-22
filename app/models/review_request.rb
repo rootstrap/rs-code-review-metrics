@@ -3,11 +3,9 @@
 # Table name: review_requests
 #
 #  id              :bigint           not null, primary key
-#  login           :string           not null
 #  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  node_id         :string           not null
 #  owner_id        :bigint
 #  pull_request_id :bigint           not null
 #  reviewer_id     :bigint           not null
@@ -41,5 +39,4 @@ class ReviewRequest < ApplicationRecord
                      dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
-  validates :node_id, :login, presence: true
 end

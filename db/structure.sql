@@ -301,7 +301,7 @@ CREATE TABLE public.pull_requests (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.pull_request_state,
     opened_at timestamp without time zone,
-    project_id bigint NOT NULL,
+    project_id bigint,
     owner_id bigint
 );
 
@@ -371,8 +371,6 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    node_id character varying NOT NULL,
-    login character varying NOT NULL,
     state public.review_request_state DEFAULT 'active'::public.review_request_state
 );
 
@@ -1008,6 +1006,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200403140307'),
 ('20200414205816'),
 ('20200415162514'),
-('20200416212440');
+('20200416212440'),
+('20200421172329');
 
 

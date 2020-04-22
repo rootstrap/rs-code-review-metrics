@@ -17,7 +17,7 @@
 #  github_id  :bigint           not null
 #  node_id    :string           not null
 #  owner_id   :bigint
-#  project_id :bigint           not null
+#  project_id :bigint
 #
 # Indexes
 #
