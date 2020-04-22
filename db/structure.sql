@@ -188,8 +188,7 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    project_id bigint NOT NULL,
-    occurred_at timestamp without time zone
+    project_id bigint NOT NULL
 );
 
 
@@ -727,13 +726,6 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 
 
 --
--- Name: index_events_on_occurred_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_on_occurred_at ON public.events USING btree (occurred_at);
-
-
---
 -- Name: index_events_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1007,6 +999,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200414205816'),
 ('20200415162514'),
 ('20200416212440'),
-('20200421172329');
+('20200421172329'),
+('20200422173907');
 
 

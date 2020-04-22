@@ -20,7 +20,7 @@ class GithubService < BaseService
     event = Event.new(project: project, data: @payload, name: @event)
     if handleable_event?
       @entity = find_or_create_event_type
-      event.assign_attributes(handleable: @entity, occurred_at: occurence_time)
+      event.assign_attributes(handleable: @entity)
       event.save!
     else
       event.save!
@@ -34,10 +34,6 @@ class GithubService < BaseService
 
   def find_or_create_event_type
     EventBuilders.const_get(@event.classify).call(payload: @payload)
-  end
-
-  def occurence_time
-    Payload::Parser.new(@payload).public_send("#{@event}_ocurrence_time")
   end
 
   def handle_action
