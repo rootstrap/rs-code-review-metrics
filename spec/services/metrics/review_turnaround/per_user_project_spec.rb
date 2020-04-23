@@ -69,7 +69,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       end
     end
 
-    context 'when a user has reviews in more tha one project' do
+    context 'when a user has reviews in more than one project' do
       let(:same_user_for_second_project) { create(:users_project, user_id: user_project.user_id) }
 
       let!(:review) do
@@ -106,6 +106,32 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
 
       it 'it generates the metric for the second project' do
         expect(Metric.second.value.seconds).to eq(45.minutes)
+      end
+    end
+
+    context 'when user has reviews in multiple pull requests' do
+      let!(:review) do
+        create(:review,
+               pull_request: pull_request,
+               opened_at: Time.zone.now + 20.minutes,
+               owner: review_request.reviewer)
+      end
+
+      let(:pull_request_2) do
+        create(:pull_request, state: :open, project_id: user_project.project_id)
+      end
+
+      let!(:review_2) do
+        create(:review,
+               pull_request: pull_request_2,
+               opened_at: Time.zone.now + 20.minutes,
+               owner: review_request.reviewer)
+      end
+
+      before { described_class.call }
+
+      it 'generates one metric' do
+        expect(Metric.count).to eq(1)
       end
     end
   end

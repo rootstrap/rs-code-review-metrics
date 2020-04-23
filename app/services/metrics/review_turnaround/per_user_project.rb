@@ -15,7 +15,7 @@ module Metrics
             entity = find_user_project(review.owner, review.pull_request.project)
             turnaround = calculate_turnaround(review)
 
-            create_metric(entity, turnaround)
+            create_or_update_metric(entity, turnaround)
           end
         end
       end
@@ -36,8 +36,12 @@ module Metrics
         review.opened_at.to_i - review.review_request.created_at.to_i
       end
 
-      def create_metric(entity, turnaround)
-        Metric.create!(ownable: entity, value: turnaround, name: :review_turnaround)
+      def create_or_update_metric(entity, turnaround)
+        metric = Metric.find_or_initialize_by(ownable: entity,
+                                              created_at: Time.zone.today.all_day)
+        return metric.update!(value: ((turnaround + metric.value) / 2)) if metric.persisted?
+
+        metric.update!(value: turnaround, name: :review_turnaround)
       end
     end
   end
