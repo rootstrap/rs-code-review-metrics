@@ -117,21 +117,19 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
                owner: review_request.reviewer)
       end
 
-      let(:pull_request_2) do
+      let(:second_pull_request) do
         create(:pull_request, state: :open, project_id: user_project.project_id)
       end
 
-      let!(:review_2) do
+      let!(:second_review) do
         create(:review,
-               pull_request: pull_request_2,
+               pull_request: second_pull_request,
                opened_at: Time.zone.now + 20.minutes,
                owner: review_request.reviewer)
       end
 
-      before { described_class.call }
-
       it 'generates one metric' do
-        expect(Metric.count).to eq(1)
+        expect{ described_class.call }.to change{ Metric.count }.from(0).to(1)
       end
     end
   end
