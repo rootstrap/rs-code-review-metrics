@@ -1,7 +1,7 @@
 class GithubService < BaseService
   def initialize(payload:, event:)
     @payload = payload
-    @event = event
+    @event = resolve_event_name(event)
   end
 
   def call
@@ -26,6 +26,12 @@ class GithubService < BaseService
       event.save!
       raise Events::NotHandleableError
     end
+  end
+
+  def resolve_event_name(event)
+    return event.gsub('pull_request_', '') unless event == 'pull_request'
+
+    event
   end
 
   def handleable_event?
