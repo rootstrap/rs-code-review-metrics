@@ -96,7 +96,9 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         )
       end
 
-      let(:second_user_project) { create(:users_project, user: second_project_review_request.reviewer) }
+      let(:second_user_project) do
+        create(:users_project, user: second_project_review_request.reviewer)
+      end
 
       let!(:second_project_review) do
         create(:review,

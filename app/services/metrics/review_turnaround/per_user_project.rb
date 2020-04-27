@@ -12,7 +12,8 @@ module Metrics
       def process
         filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
           Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
-                        .eager_load(:project, :review_request, owner: :users_projects).find(batch).each do |review|
+                        .eager_load(:project, :review_request, owner: :users_projects)
+                        .find(batch).each do |review|
             entity = find_user_project(review.owner, review.project)
             turnaround = calculate_turnaround(review)
 
