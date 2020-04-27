@@ -2,6 +2,7 @@ module Metrics
   module ReviewTurnaround
     class PerUserProject < BaseService
       BATCH_SIZE = 500
+      INTERVAL = Time.zone.today.all_day
 
       def call
         process
@@ -23,14 +24,14 @@ module Metrics
 
       def filtered_reviews_ids
         Events::Review.joins(:review_request, owner: :users_projects, pull_request: :project)
-                      .where(opened_at: Time.zone.today.all_day)
+                      .where(opened_at: INTERVAL)
                       .order(:pull_request_id, :opened_at)
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
       def pull_requests_count_per_user_project
         Events::Review.joins(:review_request, :owner, :pull_request, :project)
-                      .where(opened_at: Time.zone.today.all_day)
+                      .where(opened_at: INTERVAL)
                       .having(Arel.sql('COUNT(DISTINCT reviews.pull_request_id) > 1'))
                       .order(:project_id, :owner_id)
                       .group(:owner_id, :project_id)
@@ -41,7 +42,7 @@ module Metrics
       def calculate_avg
         pull_requests_count_per_user_project.each do |arr|
           ownable = UsersProject.find_by!(user_id: arr.second, project_id: arr.third)
-          Metric.find_by!(ownable: ownable, created_at: Time.zone.today.all_day).tap do |metric|
+          Metric.find_by!(ownable: ownable, created_at: INTERVAL).tap do |metric|
             metric.value = metric.value / arr.first
             metric.save!
           end
