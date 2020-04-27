@@ -71,6 +71,10 @@ class EventsProcessor
         review_requests.order(:created_at).first
       end
     end
+
+    def find_or_create_user_project(project_id, user_id)
+      UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
+    end
   end
 
   class PullRequestBuilder < EventsProcessor
@@ -106,6 +110,7 @@ class EventsProcessor
       review.owner = find_or_create_user(review_data['user'])
       review.pull_request = find_pull_request(payload)
       review.review_request = find_or_create_review_request(review.pull_request, review.owner.id)
+      review.project = Projects::Builder.call(payload['repository'])
       find_or_create_user_project(review.pull_request.project.id, review.owner.id)
     end
   end

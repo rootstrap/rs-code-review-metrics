@@ -113,6 +113,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       let!(:review) do
         create(:review,
                pull_request: pull_request,
+               project_id: user_project.project_id,
                opened_at: Time.zone.now + 20.minutes,
                owner: review_request.reviewer)
       end
@@ -124,6 +125,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       let!(:second_review) do
         create(:review,
                pull_request: second_pull_request,
+               project_id: user_project.project_id,
                opened_at: Time.zone.now + 20.minutes,
                owner: review_request.reviewer)
       end

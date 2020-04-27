@@ -407,7 +407,8 @@ CREATE TABLE public.reviews (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.review_state NOT NULL,
     opened_at timestamp without time zone NOT NULL,
-    review_request_id bigint
+    review_request_id bigint,
+    project_id bigint
 );
 
 
@@ -824,6 +825,13 @@ CREATE INDEX index_reviews_on_owner_id ON public.reviews USING btree (owner_id);
 
 
 --
+-- Name: index_reviews_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_reviews_on_project_id ON public.reviews USING btree (project_id);
+
+
+--
 -- Name: index_reviews_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1000,6 +1008,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200415162514'),
 ('20200416212440'),
 ('20200421172329'),
-('20200422173907');
+('20200422173907'),
+('20200424155835');
 
 
