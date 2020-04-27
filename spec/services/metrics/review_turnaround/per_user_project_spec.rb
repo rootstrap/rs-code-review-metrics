@@ -20,6 +20,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
           create(:review,
                  pull_request: pull_request,
                  opened_at: Time.zone.now + 30.minutes,
+                 project: user_project.project,
                  owner: review_request.reviewer)
         end
 
@@ -39,6 +40,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
             create(:review,
                    pull_request: pull_request,
                    opened_at: Time.zone.now,
+                   project: user_project.project,
                    owner: review_request.reviewer)
           end
 
@@ -46,6 +48,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
             create(:review,
                    pull_request: pull_request,
                    opened_at: Time.zone.now + 2.hours,
+                   project: user_project.project,
                    owner: review_request.reviewer)
           end
 
@@ -53,6 +56,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
             create(:review,
                    pull_request: pull_request,
                    opened_at: Time.zone.now + 4.hours,
+                   project: user_project.project,
                    owner: review_request.reviewer)
           end
 
@@ -76,6 +80,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: pull_request,
                opened_at: Time.zone.now + 20.minutes,
+               project: user_project.project,
                owner: review_request.reviewer)
       end
 
@@ -91,10 +96,13 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         )
       end
 
+      let(:second_user_project) { create(:users_project, user: second_project_review_request.reviewer) }
+
       let!(:second_project_review) do
         create(:review,
                pull_request: second_project_pull_request,
                opened_at: Time.zone.now + 45.minutes,
+               project: second_user_project.project,
                owner: second_project_review_request.reviewer)
       end
 
