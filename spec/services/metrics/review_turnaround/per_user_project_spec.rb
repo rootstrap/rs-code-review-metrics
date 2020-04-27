@@ -131,7 +131,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       end
 
       it 'generates one metric' do
-        expect{ described_class.call }.to change{ Metric.count }.from(0).to(1)
+        expect { described_class.call }.to change { Metric.count }.from(0).to(1)
       end
     end
   end
