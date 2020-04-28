@@ -8,3 +8,17 @@
 if Rails.env.development?
   AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 end
+
+project = FactoryBot.create(:project, name: 'rs-code-review-metrics')
+
+['santi_vidal', 'santi_barte', 'hernan', 'horacio', 'hosward', 'sandro'].each do |name|
+  FactoryBot.create(:user, login: name)
+end
+
+User.all.each { |user| UsersProject.create!(user: user, project: project) }
+
+UsersProject.all.each do |uspr|
+  20.times do |v|
+    FactoryBot.create(:metric, ownable: uspr, created_at: Time.zone.now - v.days)
+  end
+end
