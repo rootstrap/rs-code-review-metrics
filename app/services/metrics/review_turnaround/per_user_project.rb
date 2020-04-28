@@ -16,8 +16,7 @@ module Metrics
       def process
         ActiveRecord::Base.transaction do
           filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
-            Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
-                          .eager_load(:project, :review_request, owner: :users_projects)
+            Events::Review.includes(:project, :review_request, owner: :users_projects)
                           .find(batch).each do |review|
               entity = find_user_project(review.owner, review.project)
               turnaround = calculate_turnaround(review)
@@ -30,15 +29,13 @@ module Metrics
       end
 
       def filtered_reviews_ids
-        Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
-                      .where(opened_at: metric_interval)
+        Events::Review.where(opened_at: metric_interval)
                       .order(:pull_request_id, :opened_at)
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
       def pull_requests_count_per_user_project
-        Events::Review.joins(:review_request, :owner, :pull_request, :project)
-                      .where(opened_at: metric_interval)
+        Events::Review.where(opened_at: metric_interval)
                       .having(Arel.sql('COUNT(DISTINCT reviews.pull_request_id) > 1'))
                       .order(:project_id, :owner_id)
                       .group(:owner_id, :project_id)
