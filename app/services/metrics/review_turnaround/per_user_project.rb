@@ -14,17 +14,19 @@ module Metrics
       private
 
       def process
+        entities = []
         ActiveRecord::Base.transaction do
           filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
             Events::Review.includes(:project, :review_request, owner: :users_projects)
                           .find(batch).each do |review|
               entity = find_user_project(review.owner, review.project)
+              entities << entity
               turnaround = calculate_turnaround(review)
 
               create_or_update_metric(entity, turnaround)
             end
           end
-          calculate_avg
+          calculate_avg(entities)
         end
       end
 
@@ -34,19 +36,15 @@ module Metrics
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
-      def pull_requests_count_per_user_project
-        Events::Review.where(opened_at: metric_interval)
-                      .having(Arel.sql('COUNT(DISTINCT reviews.pull_request_id) > 1'))
-                      .order(:project_id, :owner_id)
-                      .group(:owner_id, :project_id)
-                      .pluck(Arel.sql('COUNT(DISTINCT reviews.pull_request_id)'),
-                             :owner_id, :project_id)
+      def pull_requests_count_per_user_project(entities)
+        entities_count = Hash.new(0)
+        entities.map { |value| [entities_count[value] += 1, value] }
+                .reject { |value| value.first == 1 }
       end
 
-      def calculate_avg
-        pull_requests_count_per_user_project.each do |arr|
-          ownable = UsersProject.find_by!(user_id: arr.second, project_id: arr.third)
-          Metric.find_by!(ownable: ownable, created_at: metric_interval).tap do |metric|
+      def calculate_avg(entities)
+        pull_requests_count_per_user_project(entities).each do |arr|
+          Metric.find_by!(ownable: arr.second, created_at: metric_interval).tap do |metric|
             metric.value = metric.value / arr.first
             metric.save!
           end
