@@ -21,7 +21,7 @@ module Queries
 
     def format_data(metrics)
       metrics.each.inject({}) do |hash, metric|
-        hash.merge!(metric.created_at.strftime('%Y-%m-%d').to_s =>  metric.value.to_i / 60)
+        hash.merge!(metric.created_at.strftime('%Y-%m-%d').to_s => metric.value.to_i / 60)
       end
     end
 
