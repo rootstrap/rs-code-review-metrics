@@ -124,7 +124,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: pull_request,
                project_id: user_project.project_id,
-               opened_at: Time.zone.now + 20.minutes,
+               opened_at: Time.zone.now + 25.minutes,
                owner: review_request.reviewer)
       end
 
@@ -135,13 +135,74 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       let!(:second_review) do
         create(:review,
                pull_request: second_pull_request,
-               project_id: user_project.project_id,
-               opened_at: Time.zone.now + 20.minutes,
+               project: user_project.project,
+               opened_at: Time.zone.now + 15.minutes,
                owner: review_request.reviewer)
       end
 
       it 'generates one metric' do
         expect { described_class.call }.to change { Metric.count }.from(0).to(1)
+      end
+
+      describe 'and has a review in another project' do
+        let(:second_user_project) do
+          create(:users_project, user: review_request.reviewer)
+        end
+
+        let(:third_pull_request) do
+          create(:pull_request, state: :open, project: second_user_project.project)
+        end
+
+        let!(:third_review) do
+          create(:review,
+                 pull_request: third_pull_request,
+                 project: second_user_project.project,
+                 opened_at: Time.zone.now + 35.minutes,
+                 owner: review_request.reviewer)
+        end
+
+        it 'generates two metrics' do
+          expect { described_class.call }.to change { Metric.count }.from(0).to(2)
+        end
+
+        it 'calculates average' do
+          described_class.call
+          metric = Metric.find_by!(ownable: user_project)
+          expect(metric.value).to eq(20.minutes)
+        end
+      end
+    end
+
+    context 'when transaction fails' do
+      let!(:review) do
+        create(:review,
+               pull_request: pull_request,
+               project_id: user_project.project_id,
+               opened_at: Time.zone.now + 25.minutes,
+               owner: review_request.reviewer)
+      end
+
+      let!(:project) { create :project }
+      let!(:second_project) { create :project }
+
+      let(:second_pull_request) do
+        create(:pull_request, state: :open, project_id: user_project.project_id)
+      end
+
+      let!(:review_with_invalid_user_project) do
+        create(:review,
+               pull_request: second_pull_request,
+               project_id: second_project.id,
+               opened_at: Time.zone.now + 25.minutes,
+               owner: review_request.reviewer)
+      end
+
+      it 'creates one metric and then rollbacks the transaction' do
+        suppress(ActiveRecord::RecordInvalid) do
+          described_class.call
+        end
+
+        expect(Metric.count).to eq(0)
       end
     end
   end

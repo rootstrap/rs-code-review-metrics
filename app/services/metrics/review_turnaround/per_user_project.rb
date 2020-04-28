@@ -3,6 +3,10 @@ module Metrics
     class PerUserProject < BaseService
       BATCH_SIZE = 500
 
+      def initialize(interval = nil)
+        @interval = interval || Time.zone.today.all_day
+      end
+
       def call
         process
       end
@@ -10,29 +14,31 @@ module Metrics
       private
 
       def process
-        filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
-          Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
-                        .eager_load(:project, :review_request, owner: :users_projects)
-                        .find(batch).each do |review|
-            entity = find_user_project(review.owner, review.project)
-            turnaround = calculate_turnaround(review)
+        ActiveRecord::Base.transaction do
+          filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
+            Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
+                          .eager_load(:project, :review_request, owner: :users_projects)
+                          .find(batch).each do |review|
+              entity = find_user_project(review.owner, review.project)
+              turnaround = calculate_turnaround(review)
 
-            create_or_update_metric(entity, turnaround)
+              create_or_update_metric(entity, turnaround)
+            end
           end
+          calculate_avg
         end
-        calculate_avg
       end
 
       def filtered_reviews_ids
         Events::Review.joins(:project, :review_request, :pull_request, owner: :users_projects)
-                      .where(opened_at: metric_interval)
+                      .where(opened_at: @interval)
                       .order(:pull_request_id, :opened_at)
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
       def pull_requests_count_per_user_project
         Events::Review.joins(:review_request, :owner, :pull_request, :project)
-                      .where(opened_at: metric_interval)
+                      .where(opened_at: @interval)
                       .having(Arel.sql('COUNT(DISTINCT reviews.pull_request_id) > 1'))
                       .order(:project_id, :owner_id)
                       .group(:owner_id, :project_id)
@@ -43,7 +49,7 @@ module Metrics
       def calculate_avg
         pull_requests_count_per_user_project.each do |arr|
           ownable = UsersProject.find_by!(user_id: arr.second, project_id: arr.third)
-          Metric.find_by!(ownable: ownable, created_at: metric_interval).tap do |metric|
+          Metric.find_by!(ownable: ownable, created_at: @interval).tap do |metric|
             metric.value = metric.value / arr.first
             metric.save!
           end
@@ -65,10 +71,6 @@ module Metrics
         return metric.update!(value: (turnaround + metric.value)) if metric.persisted?
 
         metric.update!(value: turnaround)
-      end
-
-      def metric_interval
-        @metric_interval ||= Time.zone.today.all_day
       end
     end
   end
