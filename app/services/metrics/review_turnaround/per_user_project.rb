@@ -70,12 +70,12 @@ module Metrics
                                               name: :review_turnaround)
         return metric.update!(value: (turnaround + metric.value)) if metric.persisted?
 
-        metric.update!(value: turnaround)
+        metric.value = turnaround
+        metric.save!
       end
 
       def metric_interval
-        @interval unless @interval.nil?
-        @metric_interval ||= Time.zone.today.all_day
+        @metric_interval ||= @interval || Time.zone.today.all_day
       end
     end
   end
