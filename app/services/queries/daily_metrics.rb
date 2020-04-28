@@ -20,13 +20,9 @@ module Queries
     end
 
     def format_data(metrics)
-      dates_and_values = {}
-      metrics.each do |metric|
-        dates_and_values.merge!(
-          metric.created_at.strftime('%Y-%m-%d').to_s => metric.value.to_i / 60
-        )
+      metrics.each.inject({}) do |hash, metric|
+        hash.merge!(metric.created_at.strftime('%Y-%m-%d').to_s =>  metric.value.to_i / 60)
       end
-      dates_and_values
     end
 
     def actual_time
