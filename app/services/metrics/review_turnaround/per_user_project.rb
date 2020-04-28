@@ -31,15 +31,16 @@ module Metrics
       end
 
       def filtered_reviews_ids
-        Events::Review.where(opened_at: metric_interval)
+        Events::Review.joins(:review_request)
+                      .where(opened_at: metric_interval)
                       .order(:pull_request_id, :opened_at)
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
       def pull_requests_count_per_user_project(entities)
         entities_count = Hash.new(0)
-        entities.map { |value| [entities_count[value] += 1, value] }
-                .reject { |value| value.first == 1 }
+        entities.map { |entity| [entities_count[entity] += 1, entity] }
+                .reject { |count, _entity| count == 1 }
       end
 
       def calculate_avg(entities)
