@@ -18,17 +18,16 @@ RSpec.describe Queries::DailyMetrics do
     context 'with a given project' do
       before do
         create(:metric, ownable: first_user_project, created_at: Time.zone.now)
-        create(:metric, ownable: first_user_project, created_at: Time.zone.now - 1.days)
+        create(:metric, ownable: first_user_project, created_at: Time.zone.now - 1.day)
         create(:metric, ownable: first_user_project, created_at: Time.zone.now - 2.days)
 
         create(:metric, ownable: second_user_project, created_at: Time.zone.now)
-        create(:metric, ownable: second_user_project, created_at: Time.zone.now - 1.days)
+        create(:metric, ownable: second_user_project, created_at: Time.zone.now - 1.day)
         create(:metric, ownable: second_user_project, created_at: Time.zone.now - 2.days)
       end
 
       let(:range) { (Time.zone.today - 14.days)..Time.zone.today }
       let(:user_of_another_project) { create(:users_project) }
-
 
       it 'returns the correct number of metrics based the amount of user in the project' do
         expect(described_class.call(project.id).count).to eq(2)
