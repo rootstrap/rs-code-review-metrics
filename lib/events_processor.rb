@@ -18,7 +18,7 @@ class EventsProcessor
     end
 
     def retrieve_reviews
-      Event.where('data ?| array[:keys]', keys: ['review']).find_each.lazy.each do |event|
+      Event.where('data ?| array[:keys]', keys: Event::TYPES).find_each.lazy.each do |event|
         yield(event)
       end
     end
