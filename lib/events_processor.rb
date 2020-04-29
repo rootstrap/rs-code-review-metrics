@@ -3,10 +3,10 @@
 
 class EventsProcessor
   class << self
-    def process
+    def process(entity)
       errors = []
 
-      retrieve_reviews do |event|
+      retrieve_entity_records(entity) do |event|
         payload = event.data
         event_name = resolve_event_name(event.name)
         Projects::Builder.call(payload['repository'])
@@ -17,8 +17,9 @@ class EventsProcessor
       Rails.logger.error errors unless errors.empty?
     end
 
-    def retrieve_reviews
-      Event.where('data ?| array[:keys]', keys: Event::TYPES).find_each.lazy.each do |event|
+    def retrieve_entity_records(entity)
+      entity = Event::TYPES if entity == 'all'
+      Event.where('data ?| array[:keys]', keys: entity).find_each.lazy.each do |event|
         yield(event)
       end
     end
