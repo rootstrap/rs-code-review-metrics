@@ -3,6 +3,10 @@ module Metrics
     class PerUserProject < BaseService
       BATCH_SIZE = 500
 
+      def initialize(interval = nil)
+        @interval = interval
+      end
+
       def call
         process
       end
@@ -10,22 +14,42 @@ module Metrics
       private
 
       def process
-        filtered_reviews_ids.each_slice(BATCH_SIZE) do |batch|
-          Events::Review.eager_load(:review_request).find(batch).lazy.each do |review|
-            entity = find_user_project(review.owner, review.pull_request.project)
-            turnaround = calculate_turnaround(review)
+        ActiveRecord::Base.transaction do
+          entities = Hash.new(0)
+          filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |ids|
+            reviews_reviews(ids) do |review|
+              entity = find_user_project(review.owner, review.project)
+              entities[entity] += 1
+              turnaround = calculate_turnaround(review)
 
-            create_metric(entity, turnaround)
+              create_or_update_metric(entity, turnaround)
+            end
           end
+          calculate_avg(entities)
+        end
+      end
+
+      def reviews_reviews(ids)
+        Events::Review.includes(:project, :review_request, owner: :users_projects)
+                      .find(ids).each do |review|
+          yield(review)
         end
       end
 
       def filtered_reviews_ids
-        Events::Review.joins(:review_request, owner: :users_projects, pull_request: :project)
-                      .select('DISTINCT ON (reviews.pull_request_id) reviews.id')
-                      .where(opened_at: Time.zone.today.all_day)
+        Events::Review.joins(:review_request)
+                      .where(opened_at: metric_interval)
                       .order(:pull_request_id, :opened_at)
-                      .map(&:id)
+                      .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
+      end
+
+      def calculate_avg(entities)
+        entities.reject { |_entity, count| count == 1 }.each do |entity, count|
+          Metric.find_by!(ownable: entity, created_at: metric_interval).tap do |metric|
+            metric.value = metric.value / count
+            metric.save!
+          end
+        end
       end
 
       def find_user_project(user, project)
@@ -36,8 +60,18 @@ module Metrics
         review.opened_at.to_i - review.review_request.created_at.to_i
       end
 
-      def create_metric(entity, turnaround)
-        Metric.create!(ownable: entity, value: turnaround, name: :review_turnaround)
+      def create_or_update_metric(entity, turnaround)
+        metric = Metric.find_or_initialize_by(ownable: entity,
+                                              created_at: Time.zone.today.all_day,
+                                              name: :review_turnaround)
+        return metric.update!(value: (turnaround + metric.value)) if metric.persisted?
+
+        metric.value = turnaround
+        metric.save!
+      end
+
+      def metric_interval
+        @metric_interval ||= @interval || Time.zone.today.all_day
       end
     end
   end

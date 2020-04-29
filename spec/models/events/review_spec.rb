@@ -10,12 +10,14 @@
 #  updated_at        :datetime         not null
 #  github_id         :integer
 #  owner_id          :bigint
+#  project_id        :bigint
 #  pull_request_id   :bigint           not null
 #  review_request_id :bigint
 #
 # Indexes
 #
 #  index_reviews_on_owner_id           (owner_id)
+#  index_reviews_on_project_id         (project_id)
 #  index_reviews_on_pull_request_id    (pull_request_id)
 #  index_reviews_on_review_request_id  (review_request_id)
 #  index_reviews_on_state              (state)
