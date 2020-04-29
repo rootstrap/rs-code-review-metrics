@@ -98,7 +98,7 @@ class EventsProcessor
     def self.build(payload)
       review_data = payload['review']
       Events::Review.find_or_initialize_by(github_id: review_data['id']).tap do |review|
-        assign_attrs(review, payload)
+        assign_attrs(review, review_data, payload)
         assign_user_project(review, review_data, payload)
 
         EventBuilders::Review::ATTR_PAYLOAD_MAP.each do |key, value|
@@ -108,15 +108,15 @@ class EventsProcessor
       end
     end
 
-    def self.assign_attrs(review, payload)
+    def self.assign_attrs(review, review_data, payload)
       review.pull_request = find_pull_request(payload)
-      review.review_request = find_or_create_review_request(review.pull_request, review.owner.id)
+      review.owner = find_or_create_user(review_data['user'])
+      review.review_request = find_or_create_review_request(review.pull_request, review.owner_id)
     end
 
     def self.assign_user_project(review, review_data, payload)
-      review.owner = find_or_create_user(review_data['user'])
       review.project = Projects::Builder.call(payload['repository'])
-      find_or_create_user_project(review.pull_request.project.id, review.owner.id)
+      find_or_create_user_project(review.project_id, review.owner_id)
     end
   end
 
