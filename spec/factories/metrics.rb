@@ -20,8 +20,8 @@
 FactoryBot.define do
   factory :metric do
     value { Faker::Number.number(digits: 4) }
-    sequence(:name) { |n| Metric.names.values[n % 1] }
-    sequence(:interval) { |n| Metric.intervals.values[n % 4] }
+    interval { 'daily' }
+    name { 'review_turnaround' }
 
     association :ownable, factory: :project
   end

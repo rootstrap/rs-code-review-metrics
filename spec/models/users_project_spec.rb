@@ -12,10 +12,8 @@
 #  index_users_projects_on_user_id     (user_id)
 #
 
-class UsersProject < ApplicationRecord
-  belongs_to :user
-  belongs_to :project
-  has_many :metrics, as: :ownable, dependent: :destroy
+require 'rails_helper'
 
-  validates :user_id, uniqueness: { scope: :project_id }
+RSpec.describe UsersProject, type: :model do
+  it { is_expected.to validate_uniqueness_of(:user_id).scoped_to(:project_id) }
 end
