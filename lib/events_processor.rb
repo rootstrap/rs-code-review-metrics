@@ -71,6 +71,10 @@ class EventsProcessor
         review_requests.order(:created_at).first
       end
     end
+
+    def find_or_create_user_project(project_id, user_id)
+      UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
+    end
   end
 
   class PullRequestBuilder < EventsProcessor
@@ -93,7 +97,8 @@ class EventsProcessor
     def self.build(payload)
       review_data = payload['review']
       Events::Review.find_or_initialize_by(github_id: review_data['id']).tap do |review|
-        assign_attrs(review, review_data, payload)
+        assign_attrs(review, payload)
+        assign_user_project(review, review_data, payload)
 
         EventBuilders::Review::ATTR_PAYLOAD_MAP.each do |key, value|
           review.public_send("#{key}=", review_data.fetch(value))
@@ -102,10 +107,14 @@ class EventsProcessor
       end
     end
 
-    def self.assign_attrs(review, review_data, payload)
-      review.owner = find_or_create_user(review_data['user'])
+    def self.assign_attrs(review, payload)
       review.pull_request = find_pull_request(payload)
       review.review_request = find_or_create_review_request(review.pull_request, review.owner.id)
+    end
+
+    def self.assign_user_project(review, review_data, payload)
+      review.owner = find_or_create_user(review_data['user'])
+      review.project = Projects::Builder.call(payload['repository'])
       find_or_create_user_project(review.pull_request.project.id, review.owner.id)
     end
   end
