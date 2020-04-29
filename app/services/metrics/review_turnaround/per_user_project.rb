@@ -14,13 +14,13 @@ module Metrics
       private
 
       def process
-        entities = []
+        entities = Hash.new(0)
         ActiveRecord::Base.transaction do
           filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |batch|
             Events::Review.includes(:project, :review_request, owner: :users_projects)
                           .find(batch).each do |review|
               entity = find_user_project(review.owner, review.project)
-              entities << entity
+              entities[entity] += 1
               turnaround = calculate_turnaround(review)
 
               create_or_update_metric(entity, turnaround)
@@ -37,16 +37,10 @@ module Metrics
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
-      def pull_requests_count_per_user_project(entities)
-        entities_count = Hash.new(0)
-        entities.map { |entity| [entities_count[entity] += 1, entity] }
-                .reject { |count, _entity| count == 1 }
-      end
-
       def calculate_avg(entities)
-        pull_requests_count_per_user_project(entities).each do |arr|
-          Metric.find_by!(ownable: arr.second, created_at: metric_interval).tap do |metric|
-            metric.value = metric.value / arr.first
+        entities.reject { |_entity, count| count == 1 }.each do |entity, count|
+          Metric.find_by!(ownable: entity, created_at: metric_interval).tap do |metric|
+            metric.value = metric.value / count
             metric.save!
           end
         end
