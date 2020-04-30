@@ -17,9 +17,9 @@ class EventsProcessor
       Rails.logger.error errors unless errors.empty?
     end
 
-    def retrieve_entity_records(entity)
-      entity = Event::TYPES if entity == 'all'
-      Event.where('data ?| array[:keys]', keys: entity).find_each.lazy.each do |event|
+    def retrieve_entity_records(types)
+      types = Event::TYPES if types == 'all'
+      Event.where('data ?| array[:keys]', keys: types).find_each.lazy.each do |event|
         yield(event)
       end
     end
