@@ -48,6 +48,8 @@ gem 'jquery-rails', '~> 4.3', '>= 4.3.5'
 
 gem 'chartkick', '~> 3.3', '>= 3.3.1'
 
+gem 'sidekiq-cron', '~> 1.1'
+
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
