@@ -5,24 +5,10 @@ RSpec.describe BlogPostCategorizer do
     let!(:ruby_technology) { create(:technology, name: 'ruby', keyword_string: 'ruby,rails') }
     let!(:python_technology) { create(:technology, name: 'python', keyword_string: 'python,django') }
     let!(:other_technology) { create(:technology, name: 'other', keyword_string: '') }
-    let(:blog_post_payload) do
-      {
-        'ID': 5043,
-        'site_ID': 166779230,
-        'date': '2020-04-16T20:24:58+00:00',
-        'title': 'Introducing yaaf',
-        'URL': 'https://www.rootstrap.com/blog/2020/04/16/introducing-yaaf/',
-        'short_URL': 'https://www.rootstrap.com/blog/?p=5043',
-        'slug': 'introducing-yaaf',
-        'status': 'publish',
-        'tags': tags,
-        'categories': categories
-      }
-    end
-    let(:tags) { {} }
-    let(:categories) { {} }
 
     context 'when there is no matching technology for the post' do
+      let(:blog_post_payload) { create(:blog_post_payload).with_indifferent_access }
+
       it 'returns the "other" technology' do
         expect(subject.technology_for(blog_post_payload)).to eq other_technology
       end
@@ -30,6 +16,7 @@ RSpec.describe BlogPostCategorizer do
 
     context 'when there is a technology matching the post tags' do
       let(:tags) { { 'Ruby': {} } }
+      let(:blog_post_payload) { create(:blog_post_payload, tags: tags).with_indifferent_access }
 
       it 'returns the matching technology' do
         expect(subject.technology_for(blog_post_payload)).to eq ruby_technology
@@ -38,6 +25,7 @@ RSpec.describe BlogPostCategorizer do
 
     context 'when there is a technology matching the post categories' do
       let(:categories) { { 'Rails': {} } }
+      let(:blog_post_payload) { create(:blog_post_payload, categories: categories).with_indifferent_access }
 
       it 'returns the matching technology' do
         expect(subject.technology_for(blog_post_payload)).to eq ruby_technology

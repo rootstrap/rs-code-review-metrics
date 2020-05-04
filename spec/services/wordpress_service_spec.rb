@@ -57,18 +57,7 @@ RSpec.describe WordpressService do
   describe '#blog_posts' do
     let(:access_token) { 'asdf' }
     let(:authorization_header) { { 'Authorization': "Bearer #{access_token}" } }
-    let(:blog_post) do
-      {
-        'ID': 4424,
-        'site_ID': 166779230,
-        'date': '2020-01-14T19:32:09+00:00',
-        'title': 'Rootstrap named Top Staff Augmentation Company by Clutch',
-        'URL': 'https://www.rootstrap.com/blog/2020/01/14/rootstrap-named-top-staff-augmentation-company-by-clutch/',
-        'short_URL': 'https://www.rootstrap.com/blog/?p=4424',
-        'slug': 'rootstrap-named-top-staff-augmentation-company-by-clutch',
-        'status': 'publish'
-      }
-    end
+    let(:blog_post) { create(:blog_post_payload) }
     let(:blog_posts_response) do
       JSON.generate(
         {
@@ -96,18 +85,7 @@ RSpec.describe WordpressService do
 
     context 'when there is more than 1 page of results' do
       let(:next_page_token) { 'value=1564437351&blog=166779230&post=715' }
-      let(:blog_post_2) do
-        {
-          'ID': 686,
-          'site_ID': 166779230,
-          'date': '2019-07-29T12:42:50+00:00',
-          'title': 'DevOps — are your servers pets, cows or ants?',
-          'URL': 'https://www.rootstrap.com/blog/2019/07/29/devops-are-your-servers-pets-cows-or-ants/',
-          'short_URL': 'https://www.rootstrap.com/blog/?p=686',
-          'slug': 'devops-are-your-servers-pets-cows-or-ants',
-          'status': 'publish'
-        }
-      end
+      let(:blog_post_2) { create(:blog_post_payload) }
       let(:blog_posts_response) do
         JSON.generate(
           {

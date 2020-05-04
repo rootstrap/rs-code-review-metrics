@@ -5,7 +5,7 @@ class WordpressService
       { status: BlogPost.statuses[:publish], page_handle: next_page_token },
       Authorization: "Bearer #{access_token}"
     )
-    response_body = JSON.parse(response.body).deep_symbolize_keys
+    response_body = JSON.parse(response.body).with_indifferent_access
 
     posts += response_body[:posts]
 
