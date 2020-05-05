@@ -19,10 +19,10 @@ class WordpressService
   private
 
   def access_token
-    @access_token ||= get_access_token
+    @access_token ||= request_access_token
   end
 
-  def get_access_token
+  def request_access_token
     request_body = {
       client_id: client_id,
       client_secret: client_secret,

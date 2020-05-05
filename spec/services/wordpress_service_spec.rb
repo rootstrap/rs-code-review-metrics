@@ -31,7 +31,7 @@ RSpec.describe WordpressService do
 
     context 'when the request is successful' do
       let(:access_token) { 'asdf' }
-      let(:token_response) { JSON.generate({ access_token: access_token }) }
+      let(:token_response) { JSON.generate(access_token: access_token) }
       let(:response_status) { 200 }
 
       it 'returns the access token' do
@@ -62,10 +62,8 @@ RSpec.describe WordpressService do
     let(:blog_post) { create(:blog_post_payload) }
     let(:blog_posts_response) do
       JSON.generate(
-        {
-          'posts': [blog_post],
-          'found': 1
-        }
+        'posts': [blog_post],
+        'found': 1
       )
     end
     let(:request_params) do
@@ -77,7 +75,7 @@ RSpec.describe WordpressService do
     before do
       subject.instance_variable_set(:@access_token, access_token)
       stub_request(:get, 'https://public-api.wordpress.com/rest/v1.1/me/posts')
-        .with(query: request_params.merge({ page_handle: nil }), headers: authorization_header)
+        .with(query: request_params.merge(page_handle: nil), headers: authorization_header)
         .to_return(body: blog_posts_response, status: 200)
     end
 
@@ -90,32 +88,32 @@ RSpec.describe WordpressService do
       let(:blog_post_2) { create(:blog_post_payload) }
       let(:blog_posts_response) do
         JSON.generate(
-          {
-            'posts': [blog_post],
-            'found': 2,
-            'meta': {
-              'next_page': next_page_token
-            }
+          'posts': [blog_post],
+          'found': 2,
+          'meta': {
+            'next_page': next_page_token
           }
         )
       end
       let(:blog_posts_response_2) do
         JSON.generate(
-          {
-            'posts': [blog_post_2],
-            'found': 1
-          }
+          'posts': [blog_post_2],
+          'found': 1
         )
       end
 
       before do
         stub_request(:get, 'https://public-api.wordpress.com/rest/v1.1/me/posts')
-          .with(query: request_params.merge({ page_handle: next_page_token }), headers: authorization_header)
+          .with(
+            query: request_params.merge(page_handle: next_page_token),
+            headers: authorization_header
+          )
           .to_return(body: blog_posts_response_2, status: 200)
       end
 
       it 'returns all the published blog posts of the site' do
-        expect(subject.blog_posts).to match_array([blog_post, blog_post_2].map(&:deep_symbolize_keys))
+        expect(subject.blog_posts)
+          .to match_array([blog_post, blog_post_2].map(&:deep_symbolize_keys))
       end
     end
   end
