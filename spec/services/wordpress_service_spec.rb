@@ -16,6 +16,8 @@ RSpec.describe WordpressService do
       }
     end
 
+    subject { described_class.new.send(:access_token) }
+
     before do
       stub_env('WORDPRESS_CLIENT_ID', client_id)
       stub_env('WORDPRESS_CLIENT_SECRET', client_secret)
@@ -33,7 +35,7 @@ RSpec.describe WordpressService do
       let(:response_status) { 200 }
 
       it 'returns the access token' do
-        expect(subject.access_token).to eq access_token
+        expect(subject).to eq access_token
       end
     end
 
@@ -49,7 +51,7 @@ RSpec.describe WordpressService do
       let(:response_status) { 400 }
 
       it 'raises an exception' do
-        expect { subject.access_token }.to raise_error Wordpress::InvalidTokenRequestError
+        expect { subject }.to raise_error Wordpress::InvalidTokenRequestError
       end
     end
   end

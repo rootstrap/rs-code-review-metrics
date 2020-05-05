@@ -16,6 +16,8 @@ class WordpressService
     end
   end
 
+  private
+
   def access_token
     @access_token ||= get_access_token
   end
