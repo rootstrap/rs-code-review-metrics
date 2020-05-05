@@ -50,10 +50,6 @@ gem 'chartkick', '~> 3.3', '>= 3.3.1'
 
 gem 'sidekiq-cron', '~> 1.1'
 
-gem 'stub_env', '~> 1.0'
-
-gem 'webmock', '~> 3.8'
-
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -84,5 +80,7 @@ group :test do
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'shoulda-matchers', '~> 4.2.0', require: false
   gem 'simplecov', require: false
+  gem 'stub_env', '~> 1.0'
   gem 'webdrivers'
+  gem 'webmock', '~> 3.8'
 end
