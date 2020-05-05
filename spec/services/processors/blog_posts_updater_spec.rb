@@ -14,5 +14,13 @@ RSpec.describe Processors::BlogPostsUpdater do
     it 'saves all blog posts in the db' do
       expect { subject.call }.to change(BlogPost, :count).by(1)
     end
+
+    context 'when the post has already been imported' do
+      before { subject.call }
+
+      it 'does not create another blog post' do
+        expect { subject.call }.not_to change(BlogPost, :count)
+      end
+    end
   end
 end

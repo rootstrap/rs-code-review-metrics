@@ -33,5 +33,6 @@ class BlogPost < ApplicationRecord
 
   belongs_to :technology
 
+  validates :blog_id, uniqueness: true
   validates :status, inclusion: { in: statuses.keys }
 end
