@@ -9,8 +9,10 @@ class WordpressService
 
     posts += response_body[:posts]
 
-    if response_body[:meta]
-      blog_posts(posts: posts, next_page_token: response_body[:meta][:next_page])
+    new_next_page_token = response_body.dig(:meta, :next_page)
+
+    if new_next_page_token
+      blog_posts(posts: posts, next_page_token: new_next_page_token)
     else
       posts
     end
