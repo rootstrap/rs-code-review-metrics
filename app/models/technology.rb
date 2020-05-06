@@ -11,6 +11,8 @@
 class Technology < ApplicationRecord
   has_many :blog_posts, dependent: :nullify
 
+  validates :name, uniqueness: true
+
   def keywords
     keyword_string.split(',')
   end
