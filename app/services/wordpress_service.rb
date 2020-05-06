@@ -1,8 +1,13 @@
 class WordpressService
-  def blog_posts(posts: [], next_page_token: nil)
+  def blog_posts(since: nil, posts: [], next_page_token: nil)
+    request_params = {
+      status: BlogPost.statuses[:publish],
+      after: since&.to_time&.iso8601,
+      page_handle: next_page_token
+    }
     response = connection.get(
       'rest/v1.1/me/posts',
-      { status: BlogPost.statuses[:publish], page_handle: next_page_token },
+      request_params,
       Authorization: "Bearer #{access_token}"
     )
     response_body = JSON.parse(response.body).with_indifferent_access
@@ -12,7 +17,7 @@ class WordpressService
     new_next_page_token = response_body.dig(:meta, :next_page)
 
     if new_next_page_token
-      blog_posts(posts: posts, next_page_token: new_next_page_token)
+      blog_posts(since: since, posts: posts, next_page_token: new_next_page_token)
     else
       posts
     end

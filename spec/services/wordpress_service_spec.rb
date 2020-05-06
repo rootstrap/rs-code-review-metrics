@@ -68,7 +68,8 @@ RSpec.describe WordpressService do
     end
     let(:request_params) do
       {
-        status: BlogPost.statuses[:publish]
+        status: BlogPost.statuses[:publish],
+        after: nil
       }
     end
 
@@ -114,6 +115,23 @@ RSpec.describe WordpressService do
       it 'returns all the published blog posts of the site' do
         expect(subject.blog_posts)
           .to match_array([blog_post, blog_post_2].map(&:deep_symbolize_keys))
+      end
+    end
+
+    context 'when given a starting date' do
+      let(:starting_date) { 30.days.ago }
+      let(:blog_post_date) { Faker::Date.between(from: starting_date, to: Time.zone.today) }
+      let(:blog_post) { create(:blog_post_payload, date: blog_post_date.to_time.iso8601) }
+      let(:request_params) do
+        {
+          status: BlogPost.statuses[:publish],
+          after: starting_date.to_time.iso8601
+        }
+      end
+
+      it 'returns the published blog posts created since the given date' do
+        expect(subject.blog_posts(since: starting_date))
+          .to contain_exactly(blog_post.deep_symbolize_keys)
       end
     end
   end
