@@ -36,7 +36,7 @@ module Metrics
         end
 
         def daily_metrics
-          @daily_metrics ||= Metric.where(value_timestamp: current_time.all_day, interval: :daily)
+          Metric.where(value_timestamp: current_time.all_day, interval: :daily)
         end
 
         def weekly_of(user)
