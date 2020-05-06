@@ -21,4 +21,8 @@ if Rails.env.development?
       FactoryBot.create(:metric, ownable: uspr, created_at: Time.zone.now - v.days)
     end
   end
+
+  Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
+  Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
+  Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 end
