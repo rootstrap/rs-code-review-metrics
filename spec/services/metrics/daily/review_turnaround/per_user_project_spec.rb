@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
+RSpec.describe Metrics::Daily::ReviewTurnaround::PerUserProject do
   describe '.call' do
     let(:user_project) { create(:users_project) }
     let(:pull_request) { create(:pull_request, state: :open, project_id: user_project.project_id) }

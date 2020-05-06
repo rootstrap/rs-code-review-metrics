@@ -4,3 +4,5 @@ production:
   :concurrency: 10
 :queues:
   - default
+  - daily_review_turnaround
+  - weekly_review_turnaround

@@ -2,6 +2,10 @@ module Processors
   class ReviewTurnaround < BaseService
     ENTITIES = ['UserProject'].freeze
 
+    def initialize(interval)
+      @interval = interval
+    end
+
     def call
       process
     end
@@ -10,7 +14,9 @@ module Processors
 
     def process
       ENTITIES.each do |entity|
-        Metrics::ReviewTurnaround.const_get("Per#{entity}").call
+        "Metrics::#{@interval.classify}::ReviewTurnaround::Per#{entity.classify}"
+          .constantize
+          .call
       end
     end
   end
