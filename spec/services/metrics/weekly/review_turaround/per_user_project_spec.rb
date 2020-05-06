@@ -4,8 +4,6 @@ RSpec.describe Metrics::Weekly::ReviewTurnaround::PerUserProject do
   describe '.call' do
     let(:project) { create(:project) }
     let(:users_project) { create(:users_project, project: project) }
-    let(:second_users_project) { create(:users_project, project: project) }
-    let(:third_users_project) { create(:users_project, project: project) }
 
     context 'generating a weekly metric for a user who has made his first review' do
       let!(:metric) { create(:metric, ownable: users_project, value_timestamp: Time.zone.today) }
