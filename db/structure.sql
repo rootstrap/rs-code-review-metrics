@@ -43,7 +43,8 @@ CREATE TYPE public.metric_interval AS ENUM (
 
 CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround',
-    'blog_visits'
+    'blog_visits',
+    'merge_time'
 );
 
 
@@ -1126,6 +1127,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423170720'),
 ('20200423175049'),
 ('20200423185715'),
-('20200424155835');
+('20200424155835'),
+('20200506182951');
 
 

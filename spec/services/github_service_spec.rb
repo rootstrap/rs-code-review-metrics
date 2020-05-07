@@ -80,7 +80,13 @@ RSpec.describe GithubService do
       end
 
       it 'sets state to commented' do
+        change_action_to('submitted')
+        payload['review']['state'] = 'approved'
         expect(review.state).to eq('commented')
+
+        expect {
+          subject
+        }.to change { review.reload.state }.from('commented').to('approved')
       end
 
       it 'edits body' do
