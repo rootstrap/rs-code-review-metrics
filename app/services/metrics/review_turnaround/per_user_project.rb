@@ -45,7 +45,8 @@ module Metrics
 
       def calculate_avg(entities)
         entities.reject { |_entity, count| count == 1 }.each do |entity, count|
-          Metric.find_by!(ownable: entity, created_at: metric_interval, name: :review_turnaround).tap do |metric|
+          Metric.find_by!(ownable: entity, created_at: metric_interval, name: :review_turnaround)
+                .tap do |metric|
             metric.value = metric.value / count
             metric.save!
           end
