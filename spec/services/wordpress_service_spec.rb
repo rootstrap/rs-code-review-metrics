@@ -120,12 +120,12 @@ RSpec.describe WordpressService do
 
     context 'when given a starting date' do
       let(:starting_date) { 30.days.ago }
-      let(:blog_post_date) { Faker::Date.between(from: starting_date, to: Time.zone.today) }
-      let(:blog_post) { create(:blog_post_payload, date: blog_post_date.to_time.iso8601) }
+      let(:blog_post_date) { Faker::Time.between(from: starting_date, to: Time.zone.today) }
+      let(:blog_post) { create(:blog_post_payload, date: blog_post_date.iso8601) }
       let(:request_params) do
         {
           status: BlogPost.statuses[:publish],
-          after: starting_date.to_time.iso8601
+          after: starting_date.iso8601
         }
       end
 

@@ -24,21 +24,21 @@ RSpec.describe Processors::BlogPostsUpdater do
     end
 
     context 'when there is already a blog post stored in the DB' do
-      let(:publish_date) { Faker::Date.backward }
+      let(:publish_date) { Faker::Time.backward }
       let!(:stored_blog_post) { create(:blog_post, published_at: publish_date) }
       let(:updated_slug) { 'newly-updated-slug' }
       let(:stored_blog_post_payload) do
         create(
           :blog_post_payload,
           ID: stored_blog_post.blog_id,
-          date: publish_date.to_time.iso8601,
+          date: publish_date.iso8601,
           slug: updated_slug
         ).with_indifferent_access
       end
       let(:new_blog_post_payload) do
         create(
           :blog_post_payload,
-          date: publish_date.next_week.to_time.iso8601
+          date: publish_date.next_week.iso8601
         ).with_indifferent_access
       end
       let(:blog_post_payload) { [stored_blog_post_payload, new_blog_post_payload] }

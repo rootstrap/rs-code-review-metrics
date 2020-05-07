@@ -2,7 +2,7 @@ class WordpressService
   def blog_posts(since: nil, posts: [], next_page_token: nil)
     request_params = {
       status: BlogPost.statuses[:publish],
-      after: since&.to_time&.iso8601,
+      after: since&.iso8601,
       page_handle: next_page_token
     }
     response = connection.get(
