@@ -184,7 +184,7 @@ CREATE TABLE public.blog_posts (
     id bigint NOT NULL,
     blog_id integer,
     slug character varying,
-    published_at date,
+    published_at timestamp without time zone,
     url character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -1128,6 +1128,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423175049'),
 ('20200423185715'),
 ('20200424155835'),
-('20200504143532');
+('20200504143532'),
+('20200507135524');
 
 

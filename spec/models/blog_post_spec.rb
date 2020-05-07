@@ -3,7 +3,7 @@
 # Table name: blog_posts
 #
 #  id            :bigint           not null, primary key
-#  published_at  :date
+#  published_at  :datetime
 #  slug          :string
 #  status        :string
 #  url           :string
