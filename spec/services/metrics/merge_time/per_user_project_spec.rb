@@ -15,7 +15,7 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
       end
     end
 
-    context 'Generating metrics values' do
+    context 'when the user has pull requests in one project' do
       context 'when merge ocurred in a 30 minutes interval' do
         let!(:pull_request) do
           create(:pull_request,
@@ -63,6 +63,11 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
 
           it 'creates just one metric' do
             expect { described_class.call }.to change { Metric.count }.from(0).to(1)
+          end
+
+          it 'generates a metric with value expressed as decimal equal to 65 minutes' do
+            described_class.call
+            expect(Metric.first.value.seconds).to eq(65.minutes)
           end
         end
       end

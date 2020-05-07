@@ -256,7 +256,7 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 CREATE TABLE public.metrics (
     id bigint NOT NULL,
     value numeric,
-    value_timestamp timestamp without time zone,
+    value_timestamp timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     ownable_type character varying NOT NULL,
@@ -1130,6 +1130,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423185715'),
 ('20200424155835'),
 ('20200504143532'),
-('20200506182951');
+('20200506182951'),
+('20200507174834');
 
 
