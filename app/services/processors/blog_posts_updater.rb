@@ -1,9 +1,5 @@
 module Processors
   class BlogPostsUpdater < BaseService
-    def initialize(full_update: false)
-      @full_update = full_update
-    end
-
     def call
       blog_posts.each do |blog_post_payload|
         blog_post = BlogPost.find_or_initialize_by(blog_id: blog_post_payload[:ID])
@@ -25,16 +21,6 @@ module Processors
 
     def categorizer
       @categorizer ||= BlogPostCategorizer.new
-    end
-
-    def full_update?
-      @full_update
-    end
-
-    def blog_posts
-      starting_date = BlogPost.last&.published_at unless full_update?
-
-      wordpress_service.blog_posts(since: starting_date)
     end
   end
 end
