@@ -486,7 +486,8 @@ CREATE TABLE public.technologies (
     id bigint NOT NULL,
     name character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    keyword_string text
 );
 
 
@@ -1128,6 +1129,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423175049'),
 ('20200423185715'),
 ('20200424155835'),
+('20200504143532'),
 ('20200506182951');
 
 
