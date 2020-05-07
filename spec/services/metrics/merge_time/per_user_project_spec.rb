@@ -3,8 +3,11 @@ require 'rails_helper'
 RSpec.describe Metrics::MergeTime::PerUserProject do
   describe '.call' do
     let(:user_project) { create(:users_project) }
-    let(:pull_request) { create(:pull_request, state: :open, project_id: user_project.project_id,
-                                                             owner_id: user_project.user_id) }
+    let(:pull_request) do
+      create(:pull_request, state: :open,
+                            project_id: user_project.project_id,
+                            owner_id: user_project.user_id)
+    end
 
     context 'when processing a collection containing no pull request events' do
       it 'does not create a metric' do
@@ -118,10 +121,10 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
 
       let!(:third_pull_request) do
         create(:pull_request,
-                opened_at: Time.zone.now,
-                merged_at: Time.zone.now + 20.minutes,
-                project_id: second_user_project.project_id,
-                owner_id: user_project.user_id)
+               opened_at: Time.zone.now,
+               merged_at: Time.zone.now + 20.minutes,
+               project_id: second_user_project.project_id,
+               owner_id: user_project.user_id)
       end
 
       it 'generates two metrics' do
