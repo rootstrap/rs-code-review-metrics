@@ -10,41 +10,42 @@ module Metrics
 
         def process
           daily_metrics.find_each do |daily_metric|
-            weekly_metric = weekly_of(daily_metric.ownable)
-            if weekly_metric.present?
-              next weekly_metric.update!(
-                value: (daily_metric.value + weekly_metric.value) / current_time.wday
-              )
-            end
-
-            create_weekly(daily_metric)
+            create_or_update_metric(daily_metric.ownable)
           end
-        end
-
-        def create_weekly(metric)
-          Metric.create!(
-            value: metric.value,
-            interval: :weekly,
-            name: :review_turnaround,
-            ownable: metric.ownable,
-            value_timestamp: current_time
-          )
         end
 
         def current_time
           @current_time ||= Time.zone.now
         end
 
-        def daily_metrics
-          Metric.where(value_timestamp: current_time.all_day, interval: :daily)
+        def metric_average_during_week(user_project)
+          Metric.where(
+            value_timestamp: current_time.beginning_of_week..current_time.end_of_week,
+            ownable_type: user_project.class.to_s,
+            ownable_id: user_project.id,
+            interval: :daily,
+            name: :review_turnaround
+          ).average(:value)
         end
 
-        def weekly_of(user)
-          Metric.find_by(
+        def daily_metrics
+          Metric.where(value_timestamp: current_time.all_day,
+                       interval: :daily, name: :review_turnaround)
+        end
+
+        def create_or_update_metric(user_project)
+          value = metric_average_during_week(user_project)
+          metric = Metric.find_or_initialize_by(
             interval: :weekly,
+            name: :review_turnaround,
             value_timestamp: current_time.beginning_of_week..current_time.end_of_week,
-            ownable: user
+            ownable_type: user_project.class.to_s,
+            ownable_id: user_project.id
           )
+          return metric.update!(value: value) if metric.persisted?
+
+          metric.value = value
+          metric.save!
         end
       end
     end
