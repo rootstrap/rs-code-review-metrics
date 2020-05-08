@@ -22,10 +22,10 @@ module Metrics
               entities[entity] += 1
               turnaround = calculate_turnaround(review)
 
-              create_or_update_metric(entity, turnaround)
+              create_or_update_metric(entity, turnaround, :review_turnaround)
             end
           end
-          calculate_avg(entities)
+          calculate_avg(entities, :review_turnaround)
         end
       end
 

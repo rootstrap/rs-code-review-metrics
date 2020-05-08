@@ -1,7 +1,7 @@
 class BaseMetricService < BaseService
-  def calculate_avg(entities)
+  def calculate_avg(entities, metric_type)
     entities.reject { |_entity, count| count == 1 }.each do |entity, count|
-      Metric.find_by!(ownable: entity, value_timestamp: metric_interval, name: :merge_time)
+      Metric.find_by!(ownable: entity, value_timestamp: metric_interval, name: metric_type)
             .tap do |metric|
         metric.value = metric.value / count
         metric.save!
@@ -9,13 +9,13 @@ class BaseMetricService < BaseService
     end
   end
 
-  def create_or_update_metric(entity, merge_time)
+  def create_or_update_metric(entity, metric_value, metric_type)
     metric = Metric.find_or_initialize_by(ownable: entity,
                                           value_timestamp: Time.zone.today.all_day,
-                                          name: :merge_time)
-    return metric.update!(value: (merge_time + metric.value)) if metric.persisted?
+                                          name: metric_type)
+    return metric.update!(value: (metric_value + metric.value)) if metric.persisted?
 
-    metric.value = merge_time
+    metric.value = metric_value
     metric.save!
   end
 end
