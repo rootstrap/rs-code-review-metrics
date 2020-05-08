@@ -43,10 +43,6 @@ module Metrics
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
 
-      def find_user_project(user, project)
-        user.users_projects.detect { |user_project| user_project.project_id == project.id }
-      end
-
       def calculate_turnaround(review)
         review.opened_at.to_i - review.review_request.created_at.to_i
       end

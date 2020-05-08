@@ -18,4 +18,8 @@ class BaseMetricService < BaseService
     metric.value = metric_value
     metric.save!
   end
+
+  def find_user_project(user, project)
+    user.users_projects.detect { |user_project| user_project.project_id == project.id }
+  end
 end

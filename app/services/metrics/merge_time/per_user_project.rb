@@ -32,10 +32,6 @@ module Metrics
                            .where(merged_at: metric_interval)
       end
 
-      def find_user_project(user, project)
-        user.users_projects.detect { |user_project| user_project.project_id == project.id }
-      end
-
       def calculate_merge_time(pull_request)
         pull_request.merged_at.to_i - pull_request.opened_at.to_i
       end
