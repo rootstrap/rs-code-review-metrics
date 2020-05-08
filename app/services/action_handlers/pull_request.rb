@@ -34,8 +34,12 @@ module ActionHandlers
     def review_requested
       pr_data = @payload['pull_request']
       owner = find_or_create_user(pr_data['user'])
-      reviewer = find_or_create_user(pr_data['requested_reviewers'].first)
-      @entity.review_requests.create!(owner: owner, reviewer: reviewer)
+      pr_data['requested_reviewers'].each do |raw_reviewer|
+        reviewer = find_or_create_user(raw_reviewer)
+        @entity.review_requests.create!(owner: owner, reviewer: reviewer)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      raise unless e.message == 'Validation failed: Pull request has already been taken'
     end
   end
 end

@@ -8,6 +8,7 @@ RSpec.describe GithubService do
       let!(:payload) { (create :full_pull_request_payload) }
       let!(:event) { 'pull_request' }
       let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      let(:review_request) { create :review_request }
 
       it 'creates a pull request' do
         expect { subject }.to change(Events::PullRequest, :count).by(1)
@@ -51,11 +52,36 @@ RSpec.describe GithubService do
         end
       end
 
-      it 'creates a review request' do
-        change_action_to('review_requested')
-        expect {
-          subject
-        }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
+      context 'when the action is review requested' do
+        before { change_action_to('review_requested') }
+
+        it 'creates a review request' do
+          expect {
+            subject
+          }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
+        end
+
+        it 'creates two review requests' do
+          review_request_attrs = review_request.attributes
+                                               .merge('login': 'test_user', 'node_id': 'test')
+          payload['pull_request']['requested_reviewers'] << review_request_attrs.stringify_keys
+          expect {
+            subject
+          }.to change(ReviewRequest, :count).by(2).and change(User, :count).by(3)
+        end
+
+        describe 'when are duplicated reviewers' do
+          it 'creates two review requests instead of three' do
+            review_request_attrs = review_request.attributes
+                                                 .merge('login': 'test_user', 'node_id': 'test')
+                                                 .stringify_keys
+            payload['pull_request']['requested_reviewers'] << review_request_attrs
+            payload['pull_request']['requested_reviewers'] << review_request_attrs
+            expect {
+              subject
+            }.to change(ReviewRequest, :count).by(2).and change(User, :count).by(3)
+          end
+        end
       end
     end
 

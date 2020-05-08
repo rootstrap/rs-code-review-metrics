@@ -39,4 +39,5 @@ class ReviewRequest < ApplicationRecord
                      dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
+  validates :pull_request_id, uniqueness: { scope: %i[owner_id reviewer_id] }
 end
