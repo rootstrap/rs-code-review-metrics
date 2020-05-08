@@ -135,4 +135,31 @@ RSpec.describe WordpressService do
       end
     end
   end
+
+  describe '#blog_post_views' do
+    let(:access_token) { 'asdf' }
+    let(:authorization_header) { { 'Authorization': "Bearer #{access_token}" } }
+    let(:blog_site_id) { 11_111 }
+    let(:url) do
+      "https://public-api.wordpress.com/rest/v1.1/sites/#{blog_site_id}/stats/post/#{blog_post_id}"
+    end
+    let(:blog_post) { create(:blog_post) }
+    let(:blog_post_id) { blog_post.blog_id }
+    let(:blog_post_views_payload) do
+      create(:blog_post_views_payload, publish_date: blog_post.published_at)
+    end
+    let(:blog_post_views_response) { JSON.generate(blog_post_views_payload) }
+
+    before do
+      stub_env('WORDPRESS_SITE_ID', blog_site_id)
+      subject.instance_variable_set(:@access_token, access_token)
+      stub_request(:get, url)
+        .with(headers: authorization_header)
+        .to_return(body: blog_post_views_response, status: 200)
+    end
+
+    it 'returns the views hash for the requested post' do
+      expect(subject.blog_post_views(blog_post_id)).to eq blog_post_views_payload
+    end
+  end
 end

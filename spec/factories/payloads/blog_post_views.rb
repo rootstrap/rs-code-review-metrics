@@ -3,13 +3,13 @@ FactoryBot.define do
     skip_create
 
     transient do
-      blog_post { create(:blog_post_payload) }
+      publish_datetime { Faker::Time.backward }
     end
 
-    date { Time.zone.today }
+    date { Time.zone.today.to_s }
 
     years do
-      blog_post_date = Time.iso8601(blog_post['date']).to_date
+      blog_post_date = publish_datetime.to_date
       today = Time.zone.today
       years_hash = {}
       (blog_post_date.year..today.year).each do |year|
