@@ -11,7 +11,7 @@ class ChangeReviewCommentsStatus < ActiveRecord::Migration[6.0]
     remove_index :review_comments, :state
     remove_column :review_comments, :state
     execute <<-SQL
-      DROP TYPE review_request_state;
+      DROP TYPE review_comment_state;
     SQL
   end
 end

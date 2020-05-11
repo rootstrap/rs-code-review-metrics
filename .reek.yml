@@ -110,7 +110,10 @@ detectors:
     accept: []
   UncommunicativeVariableName:
     enabled: true
-    exclude: ['EventsProcessor#process']
+    exclude: [
+      'EventsProcessor#process',
+      'ActionHandlers::PullRequest#review_requested'
+    ]
     reject:
       - "/^.$/"
       - "/[0-9]$/"

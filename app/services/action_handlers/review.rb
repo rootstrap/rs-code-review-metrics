@@ -11,6 +11,7 @@ module ActionHandlers
 
     # Sets state depending on the state that we receive from the payload
     def submitted
+      @entity.review_request.reviewed!
       @state = @payload['review']['state']
       return unless valid_state?
 
