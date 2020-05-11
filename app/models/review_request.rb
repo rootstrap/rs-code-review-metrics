@@ -24,7 +24,7 @@
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord
-  enum state: { active: 'active', removed: 'removed' }
+  enum state: { active: 'active', removed: 'removed', reviewed: 'reviewed' }
 
   belongs_to :owner, class_name: 'User',
                      foreign_key: :owner_id,
@@ -39,5 +39,5 @@ class ReviewRequest < ApplicationRecord
                      dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
-  validates :pull_request_id, uniqueness: { scope: %i[owner_id reviewer_id] }
+  validates :pull_request_id, uniqueness: { scope: %i[owner_id reviewer_id state] }
 end

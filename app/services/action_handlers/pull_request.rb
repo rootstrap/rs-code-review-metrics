@@ -26,9 +26,11 @@ module ActionHandlers
     end
 
     def review_request_removed
-      reviewer = User.find_by!(github_id: @payload['pull_request']['requested_reviewers']
-                                            .first['id'])
-      @entity.review_requests.find_by!(reviewer: reviewer).removed!
+      pr_data = @payload['pull_request']
+      reviewers_github_id = pr_data['requested_reviewers'].map { |reviewer| reviewer['id'] }
+      owner_github_id = pr_data['user']['id']
+      owner = User.find_by!(github_id: owner_github_id).id
+      remove_review_requests(owner, reviewers_github_id)
     end
 
     def review_requested
@@ -36,10 +38,18 @@ module ActionHandlers
       owner = find_or_create_user(pr_data['user'])
       pr_data['requested_reviewers'].each do |raw_reviewer|
         reviewer = find_or_create_user(raw_reviewer)
-        @entity.review_requests.create!(owner: owner, reviewer: reviewer)
+        @entity.review_requests.create!(owner: owner, reviewer: reviewer, state: 'active')
+      rescue ActiveRecord::RecordInvalid => e
+        raise unless e.message == 'Validation failed: Pull request has already been taken'
       end
-    rescue ActiveRecord::RecordInvalid => e
-      raise unless e.message == 'Validation failed: Pull request has already been taken'
+    end
+
+    def remove_review_requests(owner, reviewers)
+      @entity.review_requests
+             .includes(:owner)
+             .where.not(reviewer: User.where(github_id: reviewers))
+             .where(owner: owner)
+             .each(&:removed!)
     end
   end
 end

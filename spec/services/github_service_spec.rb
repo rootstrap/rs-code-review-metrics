@@ -39,9 +39,23 @@ RSpec.describe GithubService do
         let!(:reviewer) do
           create :user, github_id: payload['pull_request']['requested_reviewers'].first['id']
         end
+        let!(:second_reviewer) do
+          create :user
+        end
+        let!(:owner) do
+          create :user, github_id: payload['pull_request']['user']['id']
+        end
         let!(:review_request) do
           create :review_request,
+                 owner: owner,
                  reviewer: reviewer,
+                 pull_request: pull_request
+        end
+
+        before do
+          create :review_request,
+                 owner: owner,
+                 reviewer: second_reviewer,
                  pull_request: pull_request
         end
 
@@ -92,7 +106,7 @@ RSpec.describe GithubService do
                changes: { body: 'new body contents' }
       end
       let(:event) { 'review' }
-      let(:review) { create :review, github_id: payload['review']['id'], state: 'commented' }
+      let(:review) { create :review, github_id: payload['review']['id'], state: 'approved' }
       let!(:user) { create :user, github_id: payload['review']['user']['id'] }
       let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let!(:review_request) do
@@ -101,12 +115,25 @@ RSpec.describe GithubService do
                reviewer_id: user.id
       end
 
-      it 'creates a review' do
-        expect { subject }.to change(Events::Review, :count).by(1)
-      end
+      context 'when submit a review' do
+        before { change_action_to('submitted') }
 
-      it 'sets state to commented' do
-        expect(review.state).to eq('commented')
+        it 'creates a review' do
+          expect { subject }.to change(Events::Review, :count).by(1)
+        end
+
+        it 'sets state to commented' do
+          payload_state = payload['review']['state']
+          expect {
+            subject
+          }.to change { review.reload.state }.from(review.state).to(payload_state)
+        end
+
+        it 'sets review state to reviewed' do
+          expect {
+            subject
+          }.to change { review_request.reload.state }.from(review_request.state).to('reviewed')
+        end
       end
 
       it 'edits body' do
