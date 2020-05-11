@@ -74,7 +74,8 @@ CREATE TYPE public.review_comment_state AS ENUM (
 
 CREATE TYPE public.review_request_state AS ENUM (
     'active',
-    'removed'
+    'removed',
+    'reviewed'
 );
 
 
@@ -1132,4 +1133,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200504143532'),
 ('20200506182951'),
 ('20200507135524'),
-('20200507174834');
+('20200507174834'),
+('20200511180927');
