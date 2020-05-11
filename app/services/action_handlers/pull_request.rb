@@ -48,7 +48,6 @@ module ActionHandlers
       @entity.review_requests
              .includes(:owner)
              .where.not(reviewer: User.where(github_id: reviewers))
-             .where(owner: owner)
              .each(&:removed!)
     end
   end
