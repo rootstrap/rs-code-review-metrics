@@ -28,7 +28,6 @@ module ActionHandlers
     def review_request_removed
       pr_data = @payload['pull_request']
       reviewers_github_id = pr_data['requested_reviewers'].map { |reviewer| reviewer['id'] }
-      owner_github_id = pr_data['user']['id']
       remove_review_requests(reviewers_github_id)
     end
 
