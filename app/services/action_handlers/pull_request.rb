@@ -29,8 +29,7 @@ module ActionHandlers
       pr_data = @payload['pull_request']
       reviewers_github_id = pr_data['requested_reviewers'].map { |reviewer| reviewer['id'] }
       owner_github_id = pr_data['user']['id']
-      owner = User.find_by!(github_id: owner_github_id).id
-      remove_review_requests(owner, reviewers_github_id)
+      remove_review_requests(reviewers_github_id)
     end
 
     def review_requested
@@ -44,7 +43,7 @@ module ActionHandlers
       end
     end
 
-    def remove_review_requests(owner, reviewers)
+    def remove_review_requests(reviewers)
       @entity.review_requests
              .includes(:owner)
              .where.not(reviewer: User.where(github_id: reviewers))
