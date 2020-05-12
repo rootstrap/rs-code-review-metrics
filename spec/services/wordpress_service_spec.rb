@@ -146,7 +146,7 @@ RSpec.describe WordpressService do
     let(:blog_post) { create(:blog_post) }
     let(:blog_post_id) { blog_post.blog_id }
     let(:blog_post_views_payload) do
-      create(:blog_post_views_payload, publish_date: blog_post.published_at)
+      create(:blog_post_views_payload, publish_datetime: blog_post.published_at)
     end
     let(:blog_post_views_response) { JSON.generate(blog_post_views_payload) }
 
