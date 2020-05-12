@@ -19,10 +19,16 @@
 
 class Metric < ApplicationRecord
   enum interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', all_times: 'all_times' }
-  enum name: { review_turnaround: 'review_turnaround', blog_visits: 'blog_visits' }
+  enum name: { review_turnaround: 'review_turnaround',
+               blog_visits: 'blog_visits',
+               merge_time: 'merge_time' }
 
   belongs_to :ownable, polymorphic: true
 
   validates :interval, inclusion: { in: intervals.keys }
   validates :name, inclusion: { in: names.keys }
+
+  scope :today_daily_metrics, lambda {
+    where(value_timestamp: Time.zone.today.all_day, interval: :daily)
+  }
 end
