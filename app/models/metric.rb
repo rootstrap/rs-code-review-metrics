@@ -25,4 +25,8 @@ class Metric < ApplicationRecord
 
   validates :interval, inclusion: { in: intervals.keys }
   validates :name, inclusion: { in: names.keys }
+
+  scope :today_daily_metrics, lambda {
+    where(value_timestamp: Time.zone.today.all_day, interval: :daily)
+  }
 end
