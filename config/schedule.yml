@@ -6,6 +6,6 @@ weekly_metrics:
   cron: '50 23 * * 1-5'
   class: 'WeeklyMetricsJob'
 
-review_turnaround_generator:
+merge_time_generator:
   cron: '* 23 * * *'
   class: 'ProcessMergeTimeMetricsJob'
