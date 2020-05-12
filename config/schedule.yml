@@ -1,3 +1,7 @@
 metrics_generator:
   cron: '*/30 23 * * *'
   class: 'ProcessReviewTurnaroundMetricsJob'
+
+weekly_metrics:
+  cron: '50 23 * * 1-5'
+  class: 'WeeklyMetricsJob'
