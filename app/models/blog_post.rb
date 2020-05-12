@@ -3,7 +3,7 @@
 # Table name: blog_posts
 #
 #  id            :bigint           not null, primary key
-#  published_at  :date
+#  published_at  :datetime
 #  slug          :string
 #  status        :string
 #  url           :string
@@ -33,5 +33,6 @@ class BlogPost < ApplicationRecord
 
   belongs_to :technology
 
+  validates :blog_id, uniqueness: true
   validates :status, inclusion: { in: statuses.keys }
 end
