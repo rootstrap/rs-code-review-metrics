@@ -104,7 +104,7 @@ class EventsProcessor
     def self.assign_attrs(review, review_data, payload)
       review.pull_request = find_pull_request(payload)
       review.owner = find_or_create_user(review_data['user'])
-      review.review_request = find_or_create_review_request(review.pull_request, review.owner_id)
+      review.review_request = find_first_review_request(review.pull_request, review.owner_id)
     end
 
     def self.assign_user_project(review, payload)
