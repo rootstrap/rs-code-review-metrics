@@ -29,9 +29,8 @@ module ActionHandlers
       pr_data = @payload['pull_request']
       removed_reviewer = find_or_create_user(@payload['requested_reviewer'])
       owner = find_or_create_user(pr_data['user'])
-      review_request = @entity.review_requests
-                              .find_by(owner: owner, reviewer: removed_reviewer, state: 'active')
-      review_request.removed! unless review_request.nil?
+      @entity.review_requests.find_by(owner: owner, reviewer: removed_reviewer, state: 'active')
+                             &.removed!
     end
 
     def review_requested

@@ -23,10 +23,10 @@ module ActionHandlers
     end
 
     def mark_review_request_as_reviewed
-      review_request = ReviewRequest.find_by(pull_request_id: @entity.pull_request_id,
-                                             reviewer: @entity.owner,
-                                             state: 'active')
-      review_request.reviewed! unless review_request.nil?
+      ReviewRequest.find_by(pull_request_id: @entity.pull_request_id,
+                            reviewer: @entity.owner,
+                            state: 'active')
+                            &.reviewed!
     end
   end
 end
