@@ -24,12 +24,12 @@ FactoryBot.define do
         user: (attributes_for :user, id: generate(:user_id)).as_json,
         created_at: created_at.to_time.iso8601,
         updated_at: updated_at.to_time.iso8601,
-        requested_reviewers: [
-          (attributes_for :review_request, id: generate(:review_request_id),
-                                           node_id: "#{Faker::Alphanumeric.alphanumeric}=",
-                                           login: "octocat#{Faker::Number.number}").as_json
-        ]
       }
+    end
+    requested_reviewer do
+        (attributes_for :review_request, id: generate(:review_request_id),
+                                         node_id: "#{Faker::Alphanumeric.alphanumeric}=",
+                                         login: "octocat#{Faker::Number.number}").as_json
     end
     initialize_with { attributes.deep_stringify_keys }
 

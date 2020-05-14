@@ -27,26 +27,21 @@ module ActionHandlers
 
     def review_request_removed
       pr_data = @payload['pull_request']
-      reviewers_github_id = pr_data['requested_reviewers'].map { |reviewer| reviewer['id'] }
-      remove_review_requests(reviewers_github_id)
+      removed_reviewer = find_or_create_user(@payload['requested_reviewer'])
+      owner = find_or_create_user(pr_data['user'])
+      review_request = @entity.review_requests
+                              .find_by(owner: owner, reviewer: removed_reviewer, state: 'active')
+      review_request.removed! unless review_request.nil?
     end
 
     def review_requested
       pr_data = @payload['pull_request']
+      reviewer = find_or_create_user(@payload['requested_reviewer'])
       owner = find_or_create_user(pr_data['user'])
-      pr_data['requested_reviewers'].each do |raw_reviewer|
-        reviewer = find_or_create_user(raw_reviewer)
-        @entity.review_requests.create!(owner: owner, reviewer: reviewer, state: 'active')
-      rescue ActiveRecord::RecordInvalid => e
-        raise unless e.message == 'Validation failed: Pull request has already been taken'
-      end
-    end
-
-    def remove_review_requests(reviewers)
-      @entity.review_requests
-             .includes(:owner)
-             .where.not(reviewer: User.where(github_id: reviewers))
-             .each(&:removed!)
+      review_request = @entity.review_requests.find_or_initialize_by(owner: owner,
+                                                                     reviewer: reviewer,
+                                                                     state: 'active')
+      review_request.save! unless review_request.persisted?
     end
   end
 end

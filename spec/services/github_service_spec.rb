@@ -37,7 +37,7 @@ RSpec.describe GithubService do
       describe '#review_request_removed' do
         let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
         let!(:reviewer) do
-          create :user, github_id: payload['pull_request']['requested_reviewers'].first['id']
+          create :user, github_id: payload['requested_reviewer']['id']
         end
         let!(:second_reviewer) do
           create :user
@@ -74,28 +74,6 @@ RSpec.describe GithubService do
             subject
           }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
         end
-
-        it 'creates two review requests' do
-          review_request_attrs = review_request.attributes
-                                               .merge('login': 'test_user', 'node_id': 'test')
-          payload['pull_request']['requested_reviewers'] << review_request_attrs.stringify_keys
-          expect {
-            subject
-          }.to change(ReviewRequest, :count).by(2).and change(User, :count).by(3)
-        end
-
-        describe 'when are duplicated reviewers' do
-          it 'creates two review requests instead of three' do
-            review_request_attrs = review_request.attributes
-                                                 .merge('login': 'test_user', 'node_id': 'test')
-                                                 .stringify_keys
-            payload['pull_request']['requested_reviewers'] << review_request_attrs
-            payload['pull_request']['requested_reviewers'] << review_request_attrs
-            expect {
-              subject
-            }.to change(ReviewRequest, :count).by(2).and change(User, :count).by(3)
-          end
-        end
       end
     end
 
@@ -127,12 +105,6 @@ RSpec.describe GithubService do
           expect {
             subject
           }.to change { review.reload.state }.from(review.state).to(payload_state)
-        end
-
-        it 'sets review state to reviewed' do
-          expect {
-            subject
-          }.to change { review_request.reload.state }.from(review_request.state).to('reviewed')
         end
       end
 
@@ -170,12 +142,26 @@ RSpec.describe GithubService do
         expect { subject }.to change(Events::ReviewComment, :count).by(1)
       end
 
-      it 'sets body' do
-        change_action_to('created')
-        expect {
-          subject
-        }.to change { review_comment.reload.body }.from(review_comment.body)
-                                                  .to(payload['comment']['body'])
+      context 'when the action is created' do
+        let(:review_request) do
+          create(:review_request, pull_request: review_comment.pull_request,
+                                  reviewer: review_comment.owner)
+        end
+
+        it 'sets body' do
+          change_action_to('created')
+          expect {
+            subject
+          }.to change { review_comment.reload.body }.from(review_comment.body)
+                                                    .to(payload['comment']['body'])
+        end
+
+        it 'sets review request state to reviewed' do
+          change_action_to('created')
+          expect {
+            subject
+          }.to change { review_request.reload.state }.from('active').to('reviewed')
+        end
       end
 
       it 'edits body' do
