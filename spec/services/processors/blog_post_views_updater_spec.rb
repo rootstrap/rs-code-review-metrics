@@ -23,9 +23,11 @@ describe Processors::BlogPostViewsUpdater do
     it 'creates views metrics for the blog post' do
       described_class.call(blog_post.blog_id)
 
-      created_metric = Metric.find_by(ownable: blog_post)
-      expect(created_metric.interval).to eq Metric.intervals[:monthly]
-      expect(created_metric.name).to eq Metric.names[:blog_visits]
+      created_metric = Metric.find_by(
+        ownable: blog_post,
+        interval: Metric.intervals[:monthly],
+        name: Metric.names[:blog_visits]
+      )
       expect(created_metric.value).to eq current_month_views
       expect(created_metric.value_timestamp.to_s).to eq publish_date.end_of_month.to_s
     end
