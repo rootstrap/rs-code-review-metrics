@@ -7,24 +7,23 @@ module Queries
     end
 
     def call
-      users_project.map do |uspr|
-        metrics = uspr.metrics.where(created_at: (actual_time - FROM)..actual_time)
-        { name: uspr.user.login, data: format_data(metrics) }
-      end
+      ChartkickDataBuilder.call(
+        entity: users_project,
+        query: query
+      )
     end
 
     private
 
-    def users_project
-      @users_project ||= Project.find(@project_id).users_projects
+    def query
+      {
+        value_timestamp: (actual_time - FROM)..actual_time,
+        interval: :daily
+      }
     end
 
-    def format_data(metrics)
-      metrics.each.inject({}) do |hash, metric|
-        hash.merge!(
-          metric.created_at.strftime('%Y-%m-%d').to_s => (metric.value.to_i / 3600.0).round(1)
-        )
-      end
+    def users_project
+      @users_project ||= UsersProject.where(project_id: @project_id)
     end
 
     def actual_time

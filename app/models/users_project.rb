@@ -18,4 +18,6 @@ class UsersProject < ApplicationRecord
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :user_id, uniqueness: { scope: :project_id }
+
+  delegate :name, to: :user
 end
