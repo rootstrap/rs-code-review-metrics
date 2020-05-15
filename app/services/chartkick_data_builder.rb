@@ -6,11 +6,10 @@ class ChartkickDataBuilder < BaseService
     @query = query
   end
 
-
   def call
     @entity.map do |per_entity|
       metrics = per_entity.metrics.where(@query)
-      { name: per_entity.name, data: build_data(metrics)}
+      { name: per_entity.name, data: build_data(metrics) }
     end
   end
 

@@ -1,6 +1,5 @@
 module Queries
   class WeeklyMetrics < BaseService
-
     def initialize(project_id, number_of_previous: 3)
       @project_id = project_id
       @number_of_previous = number_of_previous

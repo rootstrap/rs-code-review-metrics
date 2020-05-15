@@ -16,39 +16,33 @@ RSpec.describe Queries::WeeklyMetrics do
     end
 
     let(:beginning_of_this_week) do
-      (Time.zone.today.beginning_of_week)
+      Time.zone.today.beginning_of_week
     end
 
     context 'with a given project' do
       let(:user_of_another_project) { create(:users_project) }
-      let(:range) { ((Time.zone.today - 4.week).beginning_of_week)..Time.zone.today.end_of_week }
+      let(:range) { ((Time.zone.today - 4.weeks).beginning_of_week)..Time.zone.today.end_of_week }
 
       before do
         create(:weekly_metric,
-          ownable: first_user_project,
-          value_timestamp: beginning_of_this_week
-        )
+               ownable: first_user_project,
+               value_timestamp: beginning_of_this_week)
         create(:weekly_metric,
-          ownable: first_user_project,
-          value_timestamp: beginning_of_this_week - 1.week
-        )
+               ownable: first_user_project,
+               value_timestamp: beginning_of_this_week - 1.week)
         create(:weekly_metric,
-          ownable: first_user_project,
-          value_timestamp: beginning_of_this_week - 2.week
-        )
+               ownable: first_user_project,
+               value_timestamp: beginning_of_this_week - 2.weeks)
 
         create(:weekly_metric,
-          ownable: second_user_project,
-          value_timestamp: beginning_of_this_week
-        )
+               ownable: second_user_project,
+               value_timestamp: beginning_of_this_week)
         create(:weekly_metric,
-          ownable: second_user_project,
-          value_timestamp: beginning_of_this_week - 1.week
-        )
+               ownable: second_user_project,
+               value_timestamp: beginning_of_this_week - 1.week)
         create(:weekly_metric,
-          ownable: second_user_project,
-          value_timestamp: beginning_of_this_week - 2.week
-        )
+               ownable: second_user_project,
+               value_timestamp: beginning_of_this_week - 2.weeks)
       end
 
       it_behaves_like 'query metric'

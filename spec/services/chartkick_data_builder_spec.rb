@@ -10,7 +10,7 @@ RSpec.describe ChartkickDataBuilder do
       let(:entity) { UsersProject.where(project: Project.last) }
 
       let(:query) do
-        { interval: :weekly,  value_timestamp: range}
+        { interval: :weekly, value_timestamp: range }
       end
 
       let(:user_project) { create(:users_project) }
@@ -24,9 +24,8 @@ RSpec.describe ChartkickDataBuilder do
 
       before do
         create(:weekly_metric,
-          ownable: user_project,
-          value_timestamp: Time.zone.today.beginning_of_week
-        )
+               ownable: user_project,
+               value_timestamp: Time.zone.today.beginning_of_week)
       end
 
       it 'returns an array' do
