@@ -5,7 +5,8 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
     let(:user_project) { create(:users_project) }
     let(:pull_request) { create(:pull_request, state: :open, project_id: user_project.project_id) }
     let(:review_request) do
-      create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
+      create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id,
+                              state: 'reviewed')
     end
 
     context 'when processing a collection containing no review request events' do
@@ -92,7 +93,8 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(
           :review_request,
           pull_request: pull_request,
-          reviewer_id: same_user_for_second_project.user_id
+          reviewer_id: same_user_for_second_project.user_id,
+          state: 'reviewed'
         )
       end
 

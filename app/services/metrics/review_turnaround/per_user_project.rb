@@ -38,7 +38,7 @@ module Metrics
 
       def filtered_reviews_ids
         Events::Review.joins(:review_request)
-                      .where(opened_at: metric_interval)
+                      .where(opened_at: metric_interval, review_requests: { state: 'reviewed' })
                       .order(:pull_request_id, :opened_at)
                       .pluck(Arel.sql('DISTINCT ON (reviews.pull_request_id) reviews.id'))
       end
