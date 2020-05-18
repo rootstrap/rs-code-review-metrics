@@ -55,18 +55,20 @@ describe Processors::BlogPostViewsUpdater do
           .to(current_month_views)
       end
 
-      context 'and last month as well' do
-        let(:publish_date) { Time.zone.now.last_month.beginning_of_month }
+      context 'and all months since it publication' do
+        let(:publish_date) { Time.zone.now.last_year }
 
         before do
-          create(
-            :metric,
-            name: Metric.names[:blog_visits],
-            interval: Metric.intervals[:monthly],
-            value: outdated_month_views,
-            value_timestamp: publish_date.next_month.end_of_month,
-            ownable: blog_post
-          )
+          (publish_date.to_date..Time.zone.today).map(&:end_of_month).uniq.each do |time|
+            create(
+              :metric,
+              name: Metric.names[:blog_visits],
+              interval: Metric.intervals[:monthly],
+              value: outdated_month_views,
+              value_timestamp: time.end_of_day,
+              ownable: blog_post
+            )
+          end
         end
 
         it 'does not access last month views as they will not have changed' do
