@@ -45,6 +45,7 @@ gem 'dotenv-rails', '~> 2.7.5'
 
 gem 'bootstrap', '~> 4.4.1'
 gem 'jquery-rails', '~> 4.3', '>= 4.3.5'
+gem 'select2-rails', '~> 4.0', '>= 4.0.3'
 
 gem 'chartkick', '~> 3.3', '>= 3.3.1'
 
