@@ -155,13 +155,6 @@ RSpec.describe GithubService do
           }.to change { review_comment.reload.body }.from(review_comment.body)
                                                     .to(payload['comment']['body'])
         end
-
-        it 'sets review request state to reviewed' do
-          change_action_to('created')
-          expect {
-            subject
-          }.to change { review_request.reload.state }.from('active').to('reviewed')
-        end
       end
 
       it 'edits body' do

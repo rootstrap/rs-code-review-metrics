@@ -38,7 +38,7 @@ FactoryBot.define do
     opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
 
     association :pull_request
-    association :review_request, state: 'reviewed'
+    association :review_request
     association :owner, factory: :user
     association :project
   end
