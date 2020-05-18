@@ -10,14 +10,9 @@ describe Processors::BlogPostViewsUpdater do
     let(:current_month_views) do
       blog_post_views_payload['years'][publish_date.year.to_s]['months'][publish_date.month.to_s]
     end
-    let(:api_service) { instance_double(WordpressService) }
 
     before do
-      allow_any_instance_of(described_class).to receive(:wordpress_service).and_return(api_service)
-      allow(api_service)
-        .to receive(:blog_post_views)
-        .with(blog_post.blog_id)
-        .and_return(blog_post_views_payload)
+      stub_blog_post_views_response(blog_post.blog_id, blog_post_views_payload)
     end
 
     it 'creates views metrics for the blog post' do
