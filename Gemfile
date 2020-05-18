@@ -7,11 +7,7 @@ ruby '~> 2.6.3'
 gem 'rails', '~> 6.0.2'
 # Use Puma as the app server
 gem 'puma', '~> 4.3'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'sprockets', '~> 4'
-gem 'sprockets-rails', '~> 3.2', '>= 3.2.1'
+gem 'webpacker', '~> 5.1', '>= 5.1.1'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -38,7 +34,7 @@ gem 'annotate', '~> 3.0'
 # Use Sidekiq to enqueue job in the background
 gem 'sidekiq', '~> 6.0.2'
 
-gem 'activeadmin', '~> 2.6.0'
+gem 'activeadmin', '~> 2.7'
 gem 'devise', '~> 4.7.1'
 
 gem 'dotenv-rails', '~> 2.7.5'
@@ -49,6 +45,8 @@ gem 'jquery-rails', '~> 4.3', '>= 4.3.5'
 gem 'chartkick', '~> 3.3', '>= 3.3.1'
 
 gem 'sidekiq-cron', '~> 1.1'
+
+gem 'rack-mini-profiler'
 
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
