@@ -1,6 +1,7 @@
 class ProjectsController < ApplicationController
   def review_turnaround
     return @metrics = weekly_metric_query if params[:period] == 'weekly'
+
     @metrics = daily_metric_query
   end
 
