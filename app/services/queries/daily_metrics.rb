@@ -18,7 +18,8 @@ module Queries
     def query
       {
         value_timestamp: (actual_time - FROM)..actual_time,
-        interval: :daily
+        interval: :daily,
+        name: :review_turnaround
       }
     end
 

@@ -15,7 +15,8 @@ module Queries
     def query
       {
         value_timestamp: weeks_range,
-        interval: :weekly
+        interval: :weekly,
+        name: :review_turnaround
       }
     end
 
