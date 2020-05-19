@@ -4,7 +4,7 @@ ActiveAdmin.setup do |config|
   # Set the title that is displayed on the main layout
   # for each of the active admin pages.
   #
-  config.site_title = 'Github Analyzer'
+  config.site_title = Rails.application.class.name.split("::").first.titlecase
 
   # Set the link url for the title. For example, to take
   # users to your main site. Defaults to no link.
@@ -124,7 +124,7 @@ ActiveAdmin.setup do |config|
   # This allows your users to comment on any resource registered with Active Admin.
   #
   # You can completely disable comments:
-  config.comments = false
+  # config.comments = false
   #
   # You can change the name under which comments are registered:
   # config.comments_registration_name = 'AdminComment'
@@ -294,7 +294,7 @@ ActiveAdmin.setup do |config|
   # config.include_default_association_filters = true
 
   # config.maximum_association_filter_arity = 256 # default value of :unlimited will change to 256 in a future version
-  # config.filter_columns_for_large_association, [
+  # config.filter_columns_for_large_association = [
   #    :display_name,
   #    :full_name,
   #    :name,
@@ -303,7 +303,7 @@ ActiveAdmin.setup do |config|
   #    :title,
   #    :email,
   #  ]
-  # config.filter_method_for_large_association, '_starts_with'
+  # config.filter_method_for_large_association = '_starts_with'
 
   # == Head
   #
