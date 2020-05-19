@@ -14,9 +14,10 @@ class EventBuilder < BaseService
   end
 
   def find_last_review_request(pull_request, reviewer_id)
-    pull_request.review_requests.where(reviewer_id: reviewer_id).last
-  rescue StandardError
-    raise NoReviewRequestError
+    review_request = pull_request.review_requests.where(reviewer_id: reviewer_id).last
+    return review_request unless review_request.nil?
+
+    raise Reviews::NoReviewRequestError
   end
 
   def find_or_create_user_project(project_id, user_id)

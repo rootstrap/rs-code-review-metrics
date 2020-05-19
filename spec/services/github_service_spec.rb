@@ -106,6 +106,13 @@ RSpec.describe GithubService do
             subject
           }.to change { review.reload.state }.from(review.state).to(payload_state)
         end
+
+        it 'raise an exception if there is no review request' do
+          review_request.update!(reviewer: (create :user))
+          expect {
+            subject
+          }.to raise_error(Reviews::NoReviewRequestError)
+        end
       end
 
       it 'edits body' do
