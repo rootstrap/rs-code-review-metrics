@@ -19,5 +19,5 @@ class UsersProject < ApplicationRecord
 
   validates :user_id, uniqueness: { scope: :project_id }
 
-  delegate :name, to: :user
+  delegate :name, to: :user, prefix: true
 end

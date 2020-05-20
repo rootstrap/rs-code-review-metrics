@@ -1,6 +1,4 @@
 class ChartkickDataBuilder < BaseService
-  SECONDS = 3600
-
   def initialize(entity:, query:)
     @entity = entity
     @query = query
@@ -9,7 +7,7 @@ class ChartkickDataBuilder < BaseService
   def call
     @entity.map do |per_entity|
       metrics = per_entity.metrics.where(@query)
-      { name: per_entity.name, data: build_data(metrics) }
+      { name: per_entity.user_name, data: build_data(metrics) }
     end
   end
 
@@ -24,6 +22,6 @@ class ChartkickDataBuilder < BaseService
   end
 
   def value_in_hours_for(metric)
-    (metric.value.to_f / SECONDS).round(2)
+    (metric.value.to_f / 1.hour.seconds).round(2)
   end
 end
