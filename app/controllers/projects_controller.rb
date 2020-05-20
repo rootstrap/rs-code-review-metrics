@@ -1,15 +1,21 @@
 class ProjectsController < ApplicationController
   def review_turnaround
-    return @metrics = weekly_metric_query if params[:period] == 'weekly'
+    return if params.dig(:metric, :period).blank?
 
-    @metrics = daily_metric_query
+    @metrics = if metric_params[:period] == 'weekly'
+                 Queries::WeeklyMetrics.call(project_id)
+               else
+                 Queries::DailyMetrics.call(project_id)
+               end
   end
 
-  def daily_metric_query
-    Queries::DailyMetrics.call(params[:project_id])
+  private
+
+  def project_id
+    params[:project_id]
   end
 
-  def weekly_metric_query
-    Queries::WeeklyMetrics.call(params[:project_id])
+  def metric_params
+    params.require(:metric).permit(:period)
   end
 end

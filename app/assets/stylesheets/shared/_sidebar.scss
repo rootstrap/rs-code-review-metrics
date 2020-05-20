@@ -1,5 +1,11 @@
-.sidebar-selector + span{
-  margin-top: 1rem;
+.sidebar-form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.metric_period{
+  width: 100%;
 }
 
 .container-height{

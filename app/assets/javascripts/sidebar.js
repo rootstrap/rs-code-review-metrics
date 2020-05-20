@@ -1,7 +1,12 @@
 
 $(document).ready(function() {
-  $('.time-period-select').select2();
-  $( ".time-period-select" ).change(function(event) {
-    window.location.replace(window.location.pathname + `?period=${event.target.value}`)
-  });
+  const optSelected = $('select.period-selection').children("option:selected").val();
+  if (optSelected === '') {
+    const url = window.location.href.split('?')[0]
+    window.history.replaceState({}, document.title, url);
+  }
+
+  $('.sidebar-form').change(function() {
+    this.submit();
+  })
 });
