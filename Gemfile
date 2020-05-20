@@ -7,6 +7,9 @@ ruby '~> 2.6.3'
 gem 'rails', '~> 6.0.2'
 # Use Puma as the app server
 gem 'puma', '~> 4.3'
+# Use SCSS for stylesheets
+gem 'sass-rails', '>= 6'
+
 gem 'webpacker', '~> 5.1', '>= 5.1.1'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
