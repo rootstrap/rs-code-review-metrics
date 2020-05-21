@@ -2,13 +2,15 @@ module Queries
   class DailyMetrics < BaseService
     FROM = 14.days
 
-    def initialize(project_id)
+    def initialize(project_id, metric_type)
       @project_id = project_id
+      @metric_type = metric_type
     end
 
     def call
       users_project.map do |uspr|
-        metrics = uspr.metrics.where(created_at: (actual_time - FROM)..actual_time)
+        metrics = uspr.metrics.where(created_at: (actual_time - FROM)..actual_time,
+                                     name: @metric_type)
         { name: uspr.user.login, data: format_data(metrics) }
       end
     end
