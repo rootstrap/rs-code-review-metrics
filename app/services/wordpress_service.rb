@@ -23,6 +23,15 @@ class WordpressService
     end
   end
 
+  def blog_post_views(blog_post_id)
+    response = connection.get(
+      "https://public-api.wordpress.com/rest/v1.1/sites/#{site_id}/stats/post/#{blog_post_id}",
+      {},
+      Authorization: "Bearer #{access_token}"
+    )
+    JSON.parse(response.body).with_indifferent_access
+  end
+
   private
 
   def access_token
@@ -50,6 +59,10 @@ class WordpressService
 
   def raise_invalid_token_error(response_body)
     raise(Wordpress::InvalidTokenRequestError, response_body['error_description'])
+  end
+
+  def site_id
+    ENV['WORDPRESS_SITE_ID']
   end
 
   def client_id

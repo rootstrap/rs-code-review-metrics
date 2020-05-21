@@ -71,4 +71,12 @@ RSpec.configure do |config|
   config.include ActionHelper
 
   config.include StubEnv::Helpers
+
+  # Allows testing of logged in users with Devise
+  config.include Warden::Test::Helpers
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::ControllerHelpers, type: :helper
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :feature
 end

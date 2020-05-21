@@ -10,6 +10,20 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: lang; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -43,7 +57,8 @@ CREATE TYPE public.metric_interval AS ENUM (
 
 CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround',
-    'blog_visits'
+    'blog_visits',
+    'merge_time'
 );
 
 
@@ -250,13 +265,83 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 
 --
+-- Name: exception_hunter_error_groups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exception_hunter_error_groups (
+    id bigint NOT NULL,
+    error_class_name character varying NOT NULL,
+    message character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: exception_hunter_error_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.exception_hunter_error_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exception_hunter_error_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.exception_hunter_error_groups_id_seq OWNED BY public.exception_hunter_error_groups.id;
+
+
+--
+-- Name: exception_hunter_errors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exception_hunter_errors (
+    id bigint NOT NULL,
+    class_name character varying NOT NULL,
+    message character varying,
+    occurred_at timestamp without time zone NOT NULL,
+    environment_data json,
+    custom_data json,
+    user_data json,
+    backtrace character varying[] DEFAULT '{}'::character varying[],
+    error_group_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: exception_hunter_errors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.exception_hunter_errors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exception_hunter_errors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_hunter_errors.id;
+
+
+--
 -- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.metrics (
     id bigint NOT NULL,
     value numeric,
-    value_timestamp timestamp without time zone,
+    value_timestamp timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     ownable_type character varying NOT NULL,
@@ -602,6 +687,20 @@ ALTER TABLE ONLY public.events ALTER COLUMN id SET DEFAULT nextval('public.event
 
 
 --
+-- Name: exception_hunter_error_groups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exception_hunter_error_groups ALTER COLUMN id SET DEFAULT nextval('public.exception_hunter_error_groups_id_seq'::regclass);
+
+
+--
+-- Name: exception_hunter_errors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT nextval('public.exception_hunter_errors_id_seq'::regclass);
+
+
+--
 -- Name: metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -702,6 +801,22 @@ ALTER TABLE ONLY public.blog_posts
 
 ALTER TABLE ONLY public.events
     ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exception_hunter_error_groups exception_hunter_error_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exception_hunter_error_groups
+    ADD CONSTRAINT exception_hunter_error_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exception_hunter_errors exception_hunter_errors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exception_hunter_errors
+    ADD CONSTRAINT exception_hunter_errors_pkey PRIMARY KEY (id);
 
 
 --
@@ -838,6 +953,20 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 --
 
 CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id);
+
+
+--
+-- Name: index_exception_hunter_error_groups_on_message; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exception_hunter_error_groups_on_message ON public.exception_hunter_error_groups USING gin (message public.gin_trgm_ops);
+
+
+--
+-- Name: index_exception_hunter_errors_on_error_group_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception_hunter_errors USING btree (error_group_id);
 
 
 --
@@ -1053,6 +1182,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: exception_hunter_errors fk_rails_ee1d3d35a2; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exception_hunter_errors
+    ADD CONSTRAINT fk_rails_ee1d3d35a2 FOREIGN KEY (error_group_id) REFERENCES public.exception_hunter_error_groups(id);
+
+
+--
 -- Name: review_requests fk_rails_feb865e207; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1130,7 +1267,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200423185715'),
 ('20200424155835'),
 ('20200504143532'),
+('20200506182951'),
 ('20200507135524'),
-('20200511180927');
-
-
+('20200507174834'),
+('20200511180927'),
+('20200518155135'),
+('20200518155136');
