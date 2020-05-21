@@ -1,34 +1,25 @@
 module Queries
-  class DailyMetrics < BaseService
+  class DailyMetrics < BaseQueryMetric
     FROM = 14.days
+    INTERVAL = 'daily'.freeze
 
-    def initialize(project_id)
+    def initialize(project_id:, metric_name:)
       @project_id = project_id
-    end
-
-    def call
-      ChartkickDataBuilder.call(
-        entity: users_project,
-        query: query
-      )
+      @metric_name = metric_name
     end
 
     private
 
-    def query
-      {
-        value_timestamp: (actual_time - FROM)..actual_time,
-        interval: :daily,
-        name: :review_turnaround
-      }
+    def interval
+      INTERVAL
+    end
+
+    def value_timestamp
+      FROM.ago(current_time)..current_time
     end
 
     def users_project
       @users_project ||= UsersProject.where(project_id: @project_id)
-    end
-
-    def actual_time
-      @actual_time ||= Time.zone.now
     end
   end
 end

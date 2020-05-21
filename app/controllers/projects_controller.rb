@@ -2,10 +2,19 @@ class ProjectsController < ApplicationController
   def review_turnaround
     return if params.dig(:metric, :period).blank?
 
-    @metrics = if metric_params[:period] == 'weekly'
-                 Queries::WeeklyMetrics.call(project_id)
+    period = metric_params[:period]
+    @metrics = if period == 'daily'
+                 Queries::DailyMetrics.call(
+                   project_id: project_id,
+                   metric_name: 'review_turnaround'
+                 )
+               elsif period == 'weekly'
+                 Queries::WeeklyMetrics.call(
+                   project_id: project_id,
+                   metric_name: 'review_turnaround'
+                 )
                else
-                 Queries::DailyMetrics.call(project_id)
+                 raise Graph::RangeDateNotSupported
                end
   end
 
