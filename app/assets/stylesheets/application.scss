@@ -1,10 +1,7 @@
 @import "bootstrap";
 
 // Abstracts
-@import "abstracts/*";
+@import "abstracts/variables";
 
 // Layout
-@import "layout/*";
-
-// Metrics
-@import "metrics/*"
+@import "layout/navigation";
