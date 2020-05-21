@@ -46,4 +46,10 @@ RSpec.describe User, type: :model do
     subject.login = nil
     expect(subject).to_not be_valid
   end
+
+  describe '.name' do
+    it 'returns the login attribute' do
+      expect(subject.login).to eq(subject.name)
+    end
+  end
 end
