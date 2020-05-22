@@ -20,6 +20,15 @@ if Rails.env.development?
     20.times do |v|
       FactoryBot.create(:metric, ownable: uspr, created_at: Time.zone.now - v.days)
     end
+
+    6.times do |v|
+      FactoryBot.create(
+        :metric,
+        interval: :weekly,
+        ownable: uspr,
+        value_timestamp: (Time.zone.now - v.weeks).beginning_of_week
+      )
+    end
   end
 
   Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')

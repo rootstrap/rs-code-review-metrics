@@ -48,4 +48,8 @@ class User < ApplicationRecord
             :node_id,
             presence: true
   validates :github_id, uniqueness: true
+
+  def name
+    login
+  end
 end

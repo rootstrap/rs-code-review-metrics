@@ -12,7 +12,8 @@ class EventsProcessor
         Projects::Builder.call(payload['repository'])
         process_event(event, event_name)
       rescue StandardError => e
-        errors << error_msg(event, e)
+        error = error_msg(event, e)
+        errors << error unless error.nil?
       end
       Rails.logger.error errors unless errors.empty?
     end
@@ -39,7 +40,15 @@ class EventsProcessor
     end
 
     def error_msg(event, error)
+      return if rescued_errors.include?(error.class)
+
       "#{event.name.humanize} with ID: '#{event.id}', failed with '#{error.message}'"
+    end
+
+    def rescued_errors
+      [Events::NotHandleableError,
+       Reviews::NoReviewRequestError,
+       PullRequests::RequestTeamAsReviewerError]
     end
 
     def find_or_create_event_type(event_class, payload)
@@ -62,8 +71,11 @@ class EventsProcessor
       Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
     end
 
-    def find_first_review_request(pull_request, reviewer_id)
-      pull_request.review_requests.where(reviewer_id: reviewer_id).order(:created_at).first
+    def find_last_review_request(pull_request, reviewer_id)
+      review_request = pull_request.review_requests.where(reviewer_id: reviewer_id).last
+      return review_request unless review_request.nil?
+
+      raise Reviews::NoReviewRequestError
     end
 
     def find_or_create_user_project(project_id, user_id)
@@ -104,7 +116,7 @@ class EventsProcessor
     def self.assign_attrs(review, review_data, payload)
       review.pull_request = find_pull_request(payload)
       review.owner = find_or_create_user(review_data['user'])
-      review.review_request = find_or_create_review_request(review.pull_request, review.owner_id)
+      review.review_request = find_last_review_request(review.pull_request, review.owner_id)
     end
 
     def self.assign_user_project(review, payload)
