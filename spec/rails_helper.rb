@@ -39,6 +39,7 @@ end
 
 RSpec.configure do |config|
   include ActionHelper
+  include MetricsHelper
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -69,6 +70,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include ActionHelper
+  config.include MetricsHelper
 
   config.include StubEnv::Helpers
 
