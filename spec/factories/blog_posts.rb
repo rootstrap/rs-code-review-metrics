@@ -22,10 +22,11 @@
 #
 FactoryBot.define do
   factory :blog_post do
-    blog_id { 1111 }
+    blog_id { Faker::Number.number(digits: 4) }
     slug { 'ruby-is-awesome' }
     url { 'https://www.rotstrap.com/blog/ruby_is_awesome' }
     status { BlogPost.statuses[:publish] }
+    published_at { Faker::Time.backward }
 
     association :technology
   end

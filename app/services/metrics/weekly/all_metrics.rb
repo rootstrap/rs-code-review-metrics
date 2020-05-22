@@ -25,7 +25,7 @@ module Metrics
         return metric.update!(value: value) if metric.persisted?
 
         metric.value = value
-        metric.value_timestamp = current_time
+        metric.value_timestamp = current_time.beginning_of_week
         metric.save!
       end
 

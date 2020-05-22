@@ -1,10 +1,10 @@
 @import "bootstrap";
 
 // Abstracts
-@import "abstracts/*";
+@import "abstracts/variables";
 
 // Layout
-@import "layout/*";
+@import "layout/navigation";
 
-// Metrics
-@import "metrics/*"
+//shared
+@import 'shared/sidebar';
