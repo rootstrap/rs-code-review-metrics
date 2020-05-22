@@ -32,6 +32,8 @@ module ActionHandlers
     end
 
     def review_requested
+      raise PullRequests::RequestTeamAsReviewerError if @payload['requested_team']
+
       pr_data = @payload['pull_request']
       reviewer = find_or_create_user(@payload['requested_reviewer'])
       owner = find_or_create_user(pr_data['user'])

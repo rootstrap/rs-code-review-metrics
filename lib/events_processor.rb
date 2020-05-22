@@ -12,7 +12,8 @@ class EventsProcessor
         Projects::Builder.call(payload['repository'])
         process_event(event, event_name)
       rescue StandardError => e
-        errors << error_msg(event, e)
+        error = error_msg(event, e)
+        errors << error unless error.nil?
       end
       Rails.logger.error errors unless errors.empty?
     end
@@ -39,7 +40,15 @@ class EventsProcessor
     end
 
     def error_msg(event, error)
+      return if rescued_errors.include?(error.class)
+
       "#{event.name.humanize} with ID: '#{event.id}', failed with '#{error.message}'"
+    end
+
+    def rescued_errors
+      [Events::NotHandleableError,
+       Reviews::NoReviewRequestError,
+       PullRequests::RequestTeamAsReviewerError]
     end
 
     def find_or_create_event_type(event_class, payload)
