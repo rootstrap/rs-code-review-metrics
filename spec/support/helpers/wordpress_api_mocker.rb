@@ -1,4 +1,4 @@
-module WordpressApiHelper
+module WordpressApiMocker
   def stub_blog_post_views_response(
     blog_post_id,
     blog_post_views_payload = create(:blog_post_views_payload)
