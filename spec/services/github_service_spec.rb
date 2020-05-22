@@ -80,7 +80,8 @@ RSpec.describe GithubService do
 
           expect {
             subject
-          }.to raise_error(PullRequests::RequestTeamAsReviewerError)
+          }.to raise_error(PullRequests::RequestTeamAsReviewerError,
+                           'Teams review requests are not supported.')
         end
       end
     end
