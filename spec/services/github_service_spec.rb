@@ -74,6 +74,14 @@ RSpec.describe GithubService do
             subject
           }.to change(ReviewRequest, :count).by(1).and change(User, :count).by(2)
         end
+
+        it 'raises an error when a team is requested as reviewer' do
+          payload['requested_team'] = payload.delete('requested_reviewer')
+
+          expect {
+            subject
+          }.to raise_error(PullRequests::RequestTeamAsReviewerError)
+        end
       end
     end
 
