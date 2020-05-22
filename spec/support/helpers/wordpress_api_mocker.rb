@@ -22,7 +22,7 @@ module WordpressApiMocker
 
     request_params = {
       status: BlogPost.statuses[:publish],
-      after: nil
+      after: default_starting_time.iso8601
     }.merge(request_params)
 
     found_blog_posts = blog_post_payloads.count
@@ -128,5 +128,9 @@ module WordpressApiMocker
 
   def password
     'rootstrap'
+  end
+
+  def default_starting_time
+    Time.zone.at(0)
   end
 end
