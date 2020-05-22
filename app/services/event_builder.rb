@@ -13,8 +13,11 @@ class EventBuilder < BaseService
     Events::PullRequest.find_by!(github_id: @payload['pull_request']['id'])
   end
 
-  def find_first_review_request(pull_request, reviewer_id)
-    pull_request.review_requests.where(reviewer_id: reviewer_id).order(:created_at).first
+  def find_last_review_request(pull_request, reviewer_id)
+    review_request = pull_request.review_requests.where(reviewer_id: reviewer_id).last
+    return review_request unless review_request.nil?
+
+    raise Reviews::NoReviewRequestError
   end
 
   def find_or_create_user_project(project_id, user_id)

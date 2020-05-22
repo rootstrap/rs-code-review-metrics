@@ -1,11 +1,5 @@
-class AddReviewedStateReviewRequests < ActiveRecord::Migration[6.0]
+class Revert20200511180927 < ActiveRecord::Migration[6.0]
   def up
-    execute <<-SQL
-      ALTER TYPE review_request_state ADD VALUE 'reviewed';
-    SQL
-  end
-
-  def down
     change_column_default(:review_requests, :state, nil)
     execute <<-SQL
       ALTER TYPE review_request_state RENAME TO review_request_state_old;
@@ -14,5 +8,11 @@ class AddReviewedStateReviewRequests < ActiveRecord::Migration[6.0]
       DROP TYPE review_request_state_old;
     SQL
     change_column_default(:review_requests, :state, 'active')
+  end
+
+  def down
+    execute <<-SQL
+      ALTER TYPE review_request_state ADD VALUE 'reviewed';
+    SQL
   end
 end
