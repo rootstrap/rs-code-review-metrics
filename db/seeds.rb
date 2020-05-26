@@ -6,6 +6,13 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 if Rails.env.development?
+  AdminUser.delete_all
+  User.delete_all
+  UsersProject.delete_all
+  Metric.delete_all
+  Technology.delete_all
+  Project.delete_all
+
   AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 
   project = FactoryBot.create(:project, name: 'rs-code-review-metrics')
@@ -18,7 +25,7 @@ if Rails.env.development?
 
   UsersProject.all.each do |uspr|
     20.times do |v|
-      FactoryBot.create(:metric, ownable: uspr, created_at: Time.zone.now - v.days)
+      FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
     end
 
     6.times do |v|

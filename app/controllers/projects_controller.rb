@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
-  def review_turnaround
-    return if params.dig(:metric, :period).blank?
+  def metrics
+    return if params.dig(:metric, :project_name).blank?
 
     period = metric_params[:period]
     @metrics = if period == 'daily'
@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_id
-    params[:project_id]
+    Project.find_by(name: params[:metric][:project_name])
   end
 
   def metric_params
