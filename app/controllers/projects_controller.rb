@@ -2,20 +2,10 @@ class ProjectsController < ApplicationController
   def user_project_metric
     if valid_params?
       if params[:period].present?
-        period = metric_params[:period]
-        @metrics = if period == 'daily'
-                    Queries::DailyMetrics.call(
-                      project_id: project_id,
-                      metric_name: 'review_turnaround'
-                    )
-                  elsif period == 'weekly'
-                    Queries::WeeklyMetrics.call(
-                      project_id: project_id,
-                      metric_name: 'review_turnaround'
-                    )
-                  else
-                    raise Graph::RangeDateNotSupported
-                  end
+        @metrics = determinate_metric_period(metric_params[:period]).call(
+          project_id: params[:project_id],
+          metric_name: params[:metric_type]
+        )
       end
     else
       not_found

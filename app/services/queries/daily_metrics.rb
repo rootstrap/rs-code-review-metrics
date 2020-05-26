@@ -17,9 +17,5 @@ module Queries
     def value_timestamp
       FROM.ago(current_time)..current_time
     end
-
-    def users_project
-      @users_project ||= UsersProject.where(project_id: @project_id)
-    end
   end
 end
