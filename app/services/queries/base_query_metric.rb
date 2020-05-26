@@ -9,7 +9,7 @@ module Queries
       )
     end
 
-    def determinate_metric_period(period)
+    def self.determinate_metric_period(period)
       raise Graph::RangeDateNotSupported unless INTERVALS.include?(period)
 
       Queries.const_get("#{period.capitalize}Metrics")

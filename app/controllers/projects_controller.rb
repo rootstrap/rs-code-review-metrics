@@ -1,8 +1,9 @@
 class ProjectsController < ApplicationController
   def user_project_metric
     if valid_params?
-      if params[:period].present?
-        @metrics = determinate_metric_period(metric_params[:period]).call(
+      period = params[:period]
+      if period.present?
+        @metrics = Queries::BaseQueryMetric.determinate_metric_period(period).call(
           project_id: params[:project_id],
           metric_name: params[:metric_type]
         )

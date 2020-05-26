@@ -22,6 +22,5 @@ module GithubAnalyzer
     config.autoload_paths << "#{Rails.root}/lib"
 
     config.hosts << ENV.fetch('HEROKU_URL', '')
-    config.hosts << 'www.example.com'
   end
 end
