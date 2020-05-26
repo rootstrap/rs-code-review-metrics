@@ -2,20 +2,34 @@ require 'rails_helper'
 
 RSpec.describe Queries::DailyMetrics do
   describe '.call' do
-    context 'when metric type is review turnaround' do
-      before do
-        generate_metrics('review_turnaround', users_projects_amount: 2,
-                                              metrics_amount_per_user_project: 3)
-      end
-      include_examples 'user project example', 'review_turnaround'
+    let(:project) { create(:project, name: 'rs-code-review-metrics') }
+
+    let(:first_user) { create(:user) }
+    let(:second_user) { create(:user) }
+
+    let(:first_user_project) do
+      create(:users_project, user_id: first_user.id, project_id: project.id)
     end
 
-    context 'when metric type is merge time' do
+    let(:second_user_project) do
+      create(:users_project, user_id: second_user.id, project_id: project.id)
+    end
+
+    context 'with a given project' do
       before do
-        generate_metrics('merge_time', users_projects_amount: 2,
-                                       metrics_amount_per_user_project: 3)
+        create(:metric, ownable: first_user_project, created_at: Time.zone.now)
+        create(:metric, ownable: first_user_project, created_at: Time.zone.now - 1.day)
+        create(:metric, ownable: first_user_project, created_at: Time.zone.now - 2.days)
+
+        create(:metric, ownable: second_user_project, created_at: Time.zone.now)
+        create(:metric, ownable: second_user_project, created_at: Time.zone.now - 1.day)
+        create(:metric, ownable: second_user_project, created_at: Time.zone.now - 2.days)
       end
-      include_examples 'user project example', 'merge_time'
+
+      let(:range) { (Time.zone.today - 14.days)..Time.zone.today }
+      let(:user_of_another_project) { create(:users_project) }
+
+      it_behaves_like 'query metric'
     end
   end
 end

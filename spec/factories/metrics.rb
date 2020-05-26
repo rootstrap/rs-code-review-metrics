@@ -22,8 +22,14 @@ FactoryBot.define do
     value { Faker::Number.number(digits: 4) }
     interval { 'daily' }
     name { 'review_turnaround' }
+    value_timestamp { Time.zone.now }
 
     association :ownable, factory: :project
+
+    factory :weekly_metric do
+      interval { 'weekly' }
+      value_timestamp { Time.zone.today.benning_of_week }
+    end
   end
 
   trait :for_user do

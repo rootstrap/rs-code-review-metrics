@@ -1,5 +1,5 @@
 class WordpressService
-  def blog_posts(since: nil, posts: [], next_page_token: nil)
+  def blog_posts(since: Time.zone.at(0), posts: [], next_page_token: nil)
     request_params = {
       status: BlogPost.statuses[:publish],
       after: since&.iso8601,

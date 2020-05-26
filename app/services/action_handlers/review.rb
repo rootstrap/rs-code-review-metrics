@@ -10,7 +10,6 @@ module ActionHandlers
     end
 
     def submitted
-      @entity.review_request.reviewed!
       state = @payload['review']['state']
       return unless valid_state?(state)
 
