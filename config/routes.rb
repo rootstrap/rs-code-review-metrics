@@ -14,4 +14,5 @@ Rails.application.routes.draw do
       get 'review_turnaround', controller: :projects
     end
   end
+  get 'tech_blog', to: 'tech_blog#index'
 end
