@@ -10,6 +10,7 @@
 #
 class Technology < ApplicationRecord
   has_many :blog_posts, dependent: :nullify
+  has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, uniqueness: true
 
