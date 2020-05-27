@@ -5,13 +5,20 @@ module EventBuilders
                          draft: 'draft', opened_at: 'created_at' }.freeze
 
     def build
-      pr_data = @payload['pull_request']
-      Events::PullRequest.find_or_create_by!(github_id: pr_data['id']) do |pr|
-        pr.owner = find_or_create_user(pr_data['user'])
-        pr.project = Projects::Builder.call(@payload['repository'])
-        find_or_create_user_project(pr.project.id, pr.owner.id)
-        ATTR_PAYLOAD_MAP.each { |key, value| pr.public_send("#{key}=", pr_data.fetch(value)) }
+      pull_request_data = @payload['pull_request']
+      Events::PullRequest.find_or_create_by!(github_id: pull_request_data['id']) do |pull_request|
+        assign_attrs(pull_request, pull_request_data)
+
+        ATTR_PAYLOAD_MAP.each do |key, value|
+          pull_request.public_send("#{key}=", pull_request_data.fetch(value))
+        end
       end
+    end
+
+    def assign_attrs(pull_request, pull_request_data)
+      pull_request.owner = find_or_create_user(pull_request_data['user'])
+      pull_request.project = Projects::Builder.call(@payload['repository'])
+      find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
     end
   end
 end
