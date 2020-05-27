@@ -6,13 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 if Rails.env.development?
-  AdminUser.delete_all
-  User.delete_all
-  UsersProject.delete_all
-  Metric.delete_all
-  Technology.delete_all
-  Project.delete_all
-
   AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 
   project = FactoryBot.create(:project, name: 'rs-code-review-metrics')
