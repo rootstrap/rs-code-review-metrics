@@ -21,7 +21,7 @@ class ProjectsController < ApplicationController
   private
 
   def project_id
-    Project.find_by(name: params[:metric][:project_name])
+    @project_id ||= Project.find_by(name: params[:metric][:project_name])
   end
 
   def metric_params
