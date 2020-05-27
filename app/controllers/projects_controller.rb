@@ -1,30 +1,21 @@
 class ProjectsController < ApplicationController
-  def review_turnaround
-    return if params.dig(:metric, :period).blank?
-
-    period = metric_params[:period]
-    @metrics = if period == 'daily'
-                 Queries::DailyMetrics.call(
-                   project_id: project_id,
-                   metric_name: 'review_turnaround'
-                 )
-               elsif period == 'weekly'
-                 Queries::WeeklyMetrics.call(
-                   project_id: project_id,
-                   metric_name: 'review_turnaround'
-                 )
-               else
-                 raise Graph::RangeDateNotSupported
-               end
+  def user_project_metric
+    if valid_params?
+      period = params[:period]
+      if period.present?
+        @metrics = Queries::BaseQueryMetric.determinate_metric_period(period).call(
+          project_id: params[:project_id],
+          metric_name: params[:metric_type]
+        )
+      end
+    else
+      not_found
+    end
   end
 
   private
 
-  def project_id
-    params[:project_id]
-  end
-
-  def metric_params
-    params.require(:metric).permit(:period)
+  def valid_params?
+    Metric.names.include?(params[:metric_type])
   end
 end

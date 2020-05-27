@@ -1,6 +1,6 @@
-<nav class="nav nav-style nav-txt-color p-2">
-  <a class="navbar-brand nav-txt-color" href="/">Github Analyzer</a>
-  <div class="nav-item">
-    <%= link_to "Review Turnaround", review_turnaround_project_metrics_path, class: 'nav-link active nav-txt-color' %>
-  </div>
+<nav class="nav nav-style nav-txt-color p-2 nav-items-container">
+  <span class="navbar-brand nav-txt-color">Engineering Metrics</span>
+    <%= link_to "Review Turnaround ", user_project_metric_project_metrics_path(metric_type: 'review_turnaround'), class: 'nav-link active nav-txt-color' %>
+    <%= link_to "Merge Time ", user_project_metric_project_metrics_path(metric_type: 'merge_time'), class: 'nav-link active nav-txt-color' %>
+    <a class="nav-link active nav-txt-color admin-button" href="/">Admin</a>
 </nav>
