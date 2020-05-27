@@ -1,7 +1,7 @@
 <div class="col container-height sidebar-border">
   <div class="container-md">
     <div class="row p-3">
-      <%= simple_form_for :metric, url: metrics_projects_path,
+      <%= simple_form_for :metric, url: user_project_metric_project_metrics_path,
         method: 'GET', html: { class: 'sidebar-form' } do |f| %>
           <%= f.input :project_name,
             input_html: {class: 'project-selection'},
