@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   def user_project_metric
     return if metric_params.blank?
 
-    @metrics = Queries::BaseQueryMetric.determinate_metric_period(period).call(
+    @metrics = Queries::BaseQueryMetric.determinate_metric_period(metric_params[:period]).call(
       project_id: project_id,
       metric_name: metric_params[:name]
     )
