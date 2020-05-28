@@ -1,4 +1,4 @@
-import { handleSelectFilterChange, initializeSelect2} from '../modules/graph';
+import { handleSelectFilterChange, initializeSelect2 } from '../modules/graph';
 
 document.addEventListener('DOMContentLoaded', () => {
   handleSelectFilterChange();

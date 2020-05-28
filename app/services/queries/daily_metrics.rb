@@ -3,7 +3,7 @@ module Queries
     FROM = 14.days
     INTERVAL = 'daily'.freeze
 
-    def initialize(project_id, metric_name)
+    def initialize(project_id:, metric_name:)
       @project_id = project_id
       @metric_name = metric_name
     end

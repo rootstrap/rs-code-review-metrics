@@ -10,12 +10,8 @@ const selectInputObject = (className) => {
   return object
 }
 
-const invalidSelectOption = (projectOptionSelected) => {
-  return optionIsEmpty(projectOptionSelected) || projectOptionSelected === 'no project'
-}
-
-const optionIsEmpty = (option) => {
-  return option === ''
+const noOptionSelected = (option) => {
+  return option === 'no option selected'
 }
 
 export const handleSelectFilterChange = () => {
@@ -24,12 +20,14 @@ export const handleSelectFilterChange = () => {
   sidebarForm.onchange = function () {
     let projectSelect = selectInputObject('project');
     let periodSelect = selectInputObject('period');
+    let metricNameSelect = selectInputObject('metric-name');
 
-    if (invalidSelectOption(projectSelect.optionSelected)) {
+    if (noOptionSelected(projectSelect.optionSelected)) {
       const url = window.location.href.split('?')[0]
       window.location.assign(url);
     } else {
-      optionIsEmpty(periodSelect.optionSelected) && (periodSelect.element.selectedIndex = 1)
+      noOptionSelected(periodSelect.optionSelected) && (periodSelect.element.selectedIndex = 1)
+      noOptionSelected(metricNameSelect.optionSelected) && (metricNameSelect.element.selectedIndex = 1)
       this.submit();
     }
   }

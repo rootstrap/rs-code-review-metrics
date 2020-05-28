@@ -2,7 +2,7 @@ module Queries
   class WeeklyMetrics < BaseQueryMetric
     INTERVAL = 'weekly'.freeze
 
-    def initialize(project_id, metric_name, number_of_previous = 3)
+    def initialize(project_id:, metric_name:, number_of_previous: 3)
       @project_id = project_id
       @number_of_previous = number_of_previous
       @metric_name = metric_name

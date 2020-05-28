@@ -1,25 +1,20 @@
 class ProjectsController < ApplicationController
   def user_project_metric
-    if valid_params?
-      period = params[:period]
-      if period.present?
-        @metrics = Queries::BaseQueryMetric.determinate_metric_period(period).call(
-          project_id: project_id,
-          metric_name: params[:metric_type]
-        )
-      end
-    else
-      not_found
-    end
+    return if metric_params.blank?
+
+    @metrics = Queries::BaseQueryMetric.determinate_metric_period(period).call(
+      project_id: project_id,
+      metric_name: metric_params[:name]
+    )
   end
 
   private
 
   def project_id
-    @project_id ||= Project.find_by(name: params[:name])
+    @project_id ||= Project.find_by(name: metric_params[:project_name]).id
   end
 
-  def valid_params?
-    Metric.names.include?(params[:metric_type])
+  def metric_params
+    @metric_params ||= params[:metric]
   end
 end
