@@ -10,7 +10,7 @@
 #
 FactoryBot.define do
   factory :technology do
-    name { 'Ruby' }
-    keyword_string { 'ruby,rails' }
+    name { Faker::Lorem.word }
+    keyword_string { Faker::Lorem.word }
   end
 end

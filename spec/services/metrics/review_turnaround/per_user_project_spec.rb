@@ -8,6 +8,8 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
     end
 
+    before { travel_to(Time.zone.today.beginning_of_day) }
+
     context 'when processing a collection containing no review request events' do
       it 'does not create a metric' do
         expect { described_class.call }.not_to change { Metric.count }

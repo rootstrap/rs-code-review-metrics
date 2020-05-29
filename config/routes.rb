@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'
   resources :projects, only: [] do
-    resource :metrics, only: [] do
-      get 'review_turnaround', controller: :projects
+    collection do
+      get :user_project_metric
     end
   end
+  get 'tech_blog', to: 'tech_blog#index'
 end
