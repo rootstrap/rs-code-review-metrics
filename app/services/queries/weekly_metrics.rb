@@ -17,12 +17,5 @@ module Queries
     def value_timestamp
       (current_time - @number_of_previous.weeks).beginning_of_week..current_time.end_of_week
     end
-<<<<<<< HEAD
-
-    def users_project
-      UsersProject.where(project_id: @project_id)
-    end
-=======
->>>>>>> origin
   end
 end

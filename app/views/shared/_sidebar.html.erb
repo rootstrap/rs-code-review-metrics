@@ -1,16 +1,6 @@
 <div class="col container-height sidebar-border">
   <div class="container-md">
     <div class="row p-3">
-<<<<<<< HEAD
-      <%= simple_form_for :metric, url: review_turnaround_project_metrics_path,
-        method: 'GET', html: { class: 'sidebar-form' } do |f| %>
-          <%= f.input :period,
-            input_html: {class: 'period-selection'},
-            required: false,
-            collection: [[],['Daily', 'daily'], ['Weekly', 'weekly']],
-            selected: value_from_query_param
-          %>
-=======
       <%= simple_form_for :metric, url: user_project_metric_projects_path,
         method: 'GET', html: { class: 'sidebar-form' } do |f| %>
           <%= f.input :project_name,
@@ -21,7 +11,6 @@
             include_blank: 'no option selected'
           %>
           <%= yield f if block_given? %>
->>>>>>> origin
       <% end %>
     </div>
   </div>
