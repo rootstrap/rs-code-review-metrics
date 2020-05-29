@@ -18,7 +18,16 @@ if Rails.env.development?
 
   UsersProject.all.each do |uspr|
     20.times do |v|
-      FactoryBot.create(:metric, ownable: uspr, created_at: Time.zone.now - v.days)
+      FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
+    end
+
+    6.times do |v|
+      FactoryBot.create(
+        :metric,
+        interval: :weekly,
+        ownable: uspr,
+        value_timestamp: (Time.zone.now - v.weeks).beginning_of_week
+      )
     end
 
     6.times do |v|

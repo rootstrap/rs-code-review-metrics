@@ -9,8 +9,12 @@ RSpec.shared_examples 'query metric' do
 
   it 'returns only data with dates between today and the past 14 days' do
     described_class.call(
+<<<<<<< HEAD
       project_id: project.id,
       metric_name: 'review_turnaround'
+=======
+      project_id: project.id, metric_name: 'review_turnaround'
+>>>>>>> origin
     ).each do |metric_data|
       metric_data[:data].keys.each do |string_date|
         expect(range).to cover(string_date.to_date)
@@ -20,8 +24,12 @@ RSpec.shared_examples 'query metric' do
 
   it 'returns only the metrics of the users in the given project' do
     described_class.call(
+<<<<<<< HEAD
       project_id: project.id,
       metric_name: 'review_turnaround'
+=======
+      project_id: project.id, metric_name: 'review_turnaround'
+>>>>>>> origin
     ).each do |metric_data|
       expect(metric_data[:name]).not_to eq(user_of_another_project.user.login)
     end

@@ -1,8 +1,8 @@
 module EventBuilders
   class PullRequest < EventBuilder
-    ATTR_PAYLOAD_MAP = { github_id: 'id', number: 'number', state: 'state',
-                         node_id: 'node_id', title: 'title', locked: 'locked',
-                         draft: 'draft', opened_at: 'created_at' }.freeze
+    ATTR_PAYLOAD_MAP = { number: 'number', state: 'state', node_id: 'node_id',
+                         title: 'title', locked: 'locked', draft: 'draft',
+                         opened_at: 'created_at' }.freeze
 
     def build
       pull_request_data = @payload['pull_request']

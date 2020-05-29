@@ -12,6 +12,7 @@ module Queries
 
     def interval
       INTERVAL
+<<<<<<< HEAD
     end
 
     def value_timestamp
@@ -20,6 +21,12 @@ module Queries
 
     def users_project
       @users_project ||= UsersProject.where(project_id: @project_id)
+=======
+    end
+
+    def value_timestamp
+      FROM.ago(current_time)..current_time
+>>>>>>> origin
     end
   end
 end

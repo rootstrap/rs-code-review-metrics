@@ -9,6 +9,8 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
                             owner_id: user_project.user_id)
     end
 
+    before { travel_to(Time.zone.today.beginning_of_day) }
+
     context 'when processing a collection containing no pull request events' do
       it 'does not create a metric' do
         expect { described_class.call }.not_to change { Metric.count }

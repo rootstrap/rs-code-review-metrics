@@ -6,3 +6,12 @@
 .nav-txt-color { color: $white; }
 
 a:hover { color: $white }
+
+.nav-items-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.admin-button {
+  margin-left: auto;
+}

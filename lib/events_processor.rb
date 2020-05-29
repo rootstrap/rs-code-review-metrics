@@ -85,21 +85,26 @@ class EventsProcessor
 
   class PullRequestBuilder < EventsProcessor
     def self.build(payload)
-      pr_data = payload['pull_request']
-      Events::PullRequest.find_or_initialize_by(github_id: pr_data['id']).tap do |pr|
-        pr.owner = find_or_create_user(pr_data['user'])
-        pr.project = Projects::Builder.call(payload['repository'])
+      pull_request_data = payload['pull_request']
+      Events::PullRequest.find_or_initialize_by(github_id: pull_request_data['id'])
+                         .tap do |pull_request|
+        assign_attrs(pull_request, pull_request_data, payload)
+
         EventBuilders::PullRequest::ATTR_PAYLOAD_MAP.each do |key, value|
-          pr.public_send("#{key}=", pr_data.fetch(value))
+          pull_request.public_send("#{key}=", pull_request_data.fetch(value))
         end
-        pr.save!
+        pull_request.save!
       end
+    end
+
+    def self.assign_attrs(pull_request, pull_request_data, payload)
+      pull_request.owner = find_or_create_user(pull_request_data['user'])
+      pull_request.project = Projects::Builder.call(payload['repository'])
+      find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
     end
   end
 
   class ReviewBuilder < EventsProcessor
-    ATTR_PAYLOAD_MAP = { body: 'body', state: 'state', opened_at: 'submitted_at' }.freeze
-
     def self.build(payload)
       review_data = payload['review']
       Events::Review.find_or_initialize_by(github_id: review_data['id']).tap do |review|
