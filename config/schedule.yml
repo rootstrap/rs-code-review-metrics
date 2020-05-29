@@ -7,5 +7,5 @@ weekly_metrics:
   class: 'WeeklyMetricsJob'
 
 merge_time_generator:
-  cron: '* 23 * * *'
+  cron: '00 23 * * *'
   class: 'ProcessMergeTimeMetricsJob'
