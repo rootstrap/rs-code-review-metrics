@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  root to: 'admin/events#index'
+  root to: 'projects#user_project_metric'
   devise_for :admin_users, ActiveAdmin::Devise.config
   authenticate :admin_user do
     ExceptionHunter.routes(self)

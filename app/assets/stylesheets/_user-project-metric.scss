@@ -1,5 +1,6 @@
 .metric-container{
-  @include flex-column;
+  display: flex;
+  flex-direction: column;
 }
 
 .period-selection{

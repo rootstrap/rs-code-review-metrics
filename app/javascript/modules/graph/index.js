@@ -3,19 +3,13 @@ import 'select2';
 import 'select2/dist/css/select2.css';
 import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css';
 
-const selectInputObject = (className) => {
-  let object = { element: document.querySelector(`select.${className}-selection`) }
-  object.optionSelected = object.element.options[object.element.selectedIndex].text;
-  return object
+let elementSelector = (className) => {
+  return document.querySelector(`.${className}`)
 }
 
-const noOptionSelected = (option) => {
-  return option === 'no option selected'
-}
-
-export const handleSelectFilterChange = () => {
-  const sidebarProjectSelectionInput = document.querySelector('.project-selection');
-  const navFilterForm = document.querySelector('.nav-filter');
+export const handleChangeSidebar = () => {
+  const sidebarProjectSelectionInput = elementSelector('project-selection');
+  let navFilterForm = elementSelector('nav-filter');
 
   sidebarProjectSelectionInput.onchange = () => {
     const periodSelected = document.getElementById('metric_period');
@@ -24,9 +18,12 @@ export const handleSelectFilterChange = () => {
     }
     navFilterForm.submit();
   }
+}
 
+export const handleChangeNavForm = () => {
+  const navFilterForm = elementSelector('nav-filter');
   navFilterForm.onchange = function () {
-    let sidebarProjectSelectionInput = document.querySelector('.project-selection');
+    let sidebarProjectSelectionInput = elementSelector('project-selection');
     if (sidebarProjectSelectionInput.selectedIndex !== 0){
       this.submit();
     } else {
