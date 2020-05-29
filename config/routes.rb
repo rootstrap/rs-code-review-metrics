@@ -14,4 +14,5 @@ Rails.application.routes.draw do
       get :user_project_metric
     end
   end
+  get 'tech_blog', to: 'tech_blog#index'
 end
