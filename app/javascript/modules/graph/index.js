@@ -1,8 +1,7 @@
 import $ from 'jquery';
 import 'select2';
 import 'select2/dist/css/select2.css';
-import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css'
-
+import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css';
 
 const selectInputObject = (className) => {
   let object = { element: document.querySelector(`select.${className}-selection`) }
@@ -15,20 +14,24 @@ const noOptionSelected = (option) => {
 }
 
 export const handleSelectFilterChange = () => {
-  const sidebarForm = document.querySelector('.sidebar-form');
+  const sidebarProjectSelectionInput = document.querySelector('.project-selection');
+  const navFilterForm = document.querySelector('.nav-filter');
 
-  sidebarForm.onchange = function () {
-    let projectSelect = selectInputObject('project');
-    let periodSelect = selectInputObject('period');
-    let metricNameSelect = selectInputObject('metric-name');
+  sidebarProjectSelectionInput.onchange = () => {
+    const periodSelected = document.getElementById('metric_period');
+    if (periodSelected.selectedIndex === 0) {
+      periodSelected.selectedIndex = 1
+    }
+    navFilterForm.submit();
+  }
 
-    if (noOptionSelected(projectSelect.optionSelected)) {
-      const url = window.location.href.split('?')[0]
-      window.location.assign(url);
-    } else {
-      noOptionSelected(periodSelect.optionSelected) && (periodSelect.element.selectedIndex = 1)
-      noOptionSelected(metricNameSelect.optionSelected) && (metricNameSelect.element.selectedIndex = 1)
+  navFilterForm.onchange = function () {
+    let sidebarProjectSelectionInput = document.querySelector('.project-selection');
+    if (sidebarProjectSelectionInput.selectedIndex !== 0){
       this.submit();
+    } else {
+      const url = window.location.href.split('?')[0];
+      window.location.assign(url);
     }
   }
 }

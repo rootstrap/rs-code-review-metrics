@@ -1,0 +1,15 @@
+.metric-container{
+  @include flex-column;
+}
+
+.period-selection{
+  max-width: 15rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.metric-title{
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 20px;
+}

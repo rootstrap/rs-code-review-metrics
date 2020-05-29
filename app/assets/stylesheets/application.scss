@@ -2,9 +2,16 @@
 
 // Abstracts
 @import "abstracts/variables";
+@import "abstracts/utils";
+
+//mixins
+@import "mixins/*";
 
 // Layout
 @import "layout/navigation";
 
 //shared
-@import 'shared/sidebar';
+@import "shared/sidebar";
+
+@import "user-project-metric";
+@import "nav-filter";

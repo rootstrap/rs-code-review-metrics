@@ -1,19 +1,21 @@
-<%= render 'shared/sidebar'  do |f|%>
-    <%= f.input :period,
-    input_html: {class: 'period-selection'},
-    required: false,
-    collection: Metric.intervals.to_a,
-    selected: value_from_query_param(:period),
-    include_blank: 'no option selected'
-  %>
-  <%= f.input :name,
-    input_html: {class: 'metric-name-selection'},
-    required: false,
-    collection: Metric.names.to_a,
-    selected: value_from_query_param(:name),
-    include_blank: 'no option selected'
-  %>
-<%end%>
-<div class='col-md-10 p-3'>
-  <%= line_chart @metrics, ytitle: "Time as hours", suffix: " hours" %>
+<div class="col-md-10">
+  <%= render 'shared/nav-filter' do |f|%>
+      <%= f.input :period,
+      wrapper_html: { class: 'period-selection' },
+      input_html: { class: 'margin-left' },
+      required: false,
+      collection: Metric.intervals.to_a,
+      selected: value_from_query_param(:period),
+      prompt: '- select option -'
+
+    %>
+  <%end%>
+  <div class='p-3 metric-container'>
+    <span class='metric-title'>Review Turnaround</span>
+    <%= line_chart @review_turnaround, ytitle: "Time as hours", suffix: " hours" %>
+  </div>
+  <div class='p-3 metric-container'>
+    <span class='metric-title'>Merge Time</span>
+    <%= line_chart @merge_time, ytitle: "Time as hours", suffix: " hours" %>
+  </div>
 </div>
