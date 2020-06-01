@@ -14,7 +14,7 @@ module Processors
     end
 
     def update_technologies_visits_metrics
-      BlogTechnologyViewsUpdater.call
+      technology_views_updater.call
     end
   end
 end
