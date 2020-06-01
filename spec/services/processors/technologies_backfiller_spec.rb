@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Processors::TechnologiesBackfiller do
-  describe '.call' do
+  describe '#call' do
     it 'creates all the needed technologies' do
       described_class.call
 

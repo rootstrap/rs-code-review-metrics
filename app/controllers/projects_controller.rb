@@ -2,17 +2,14 @@ class ProjectsController < ApplicationController
   def user_project_metric
     return if metric_params.blank?
 
-    period = metric_params[:period]
-    @review_turnaround = Queries::BaseQueryMetric.determinate_metric_period(period)
-                                                 .call(
-                                                   project_id: project_id,
-                                                   metric_name: 'review_turnaround'
-                                                 )
-    @merge_time = Queries::BaseQueryMetric.determinate_metric_period(period)
-                                          .call(
-                                            project_id: project_id,
-                                            metric_name: 'merge_time'
-                                          )
+    period_metric_query = Queries::PeriodMetricRetriever.call(metric_params[:period])
+
+    @review_turnaround = period_metric_query.call(
+      project_id: project_id, metric_name: 'review_turnaround'
+    )
+    @merge_time = period_metric_query.call(
+      project_id: project_id, metric_name: 'merge_time'
+    )
   end
 
   private

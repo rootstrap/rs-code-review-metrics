@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Processors::BlogPostsUpdater do
-  describe '.call' do
+  describe '#call' do
     subject { Processors::BlogPostsFullUpdater.call }
 
     before do

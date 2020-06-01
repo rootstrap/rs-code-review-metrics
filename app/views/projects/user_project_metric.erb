@@ -4,7 +4,7 @@
       wrapper_html: { class: 'period-selection' },
       input_html: { class: 'margin-left' },
       required: false,
-      collection: Metric.intervals.to_a,
+      collection: [['Daily', 'daily'], ['Weekly', 'weekly']],
       selected: value_from_query_param(:period),
       prompt: '- select option -'
 

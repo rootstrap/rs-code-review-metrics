@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Processors::BlogTechnologyViewsUpdater do
-  describe '.call' do
+  describe '#call' do
     let!(:technology) { create(:technology) }
     let(:metric_timestamp) { Time.zone.now.end_of_month }
     let(:blog_post_1) { create(:blog_post, technology: technology) }

@@ -8,7 +8,7 @@
         <%else%>
           <option value disabled>-select option-</option>
         <%end%>
-        <% Project.pluck(:name).each do |name|%>
+        <% projects_names.each do |name|%>
           <%if params[:project_name] == name %>
             <option selected value=<%= name %>> <%= name%> </option>
           <% else %>

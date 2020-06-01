@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ChartkickDataBuilder do
-  describe '.call' do
+  describe '#call' do
     context 'for a given entity' do
       let(:range) do
         Time.zone.today.beginning_of_week..Time.zone.today.end_of_week
