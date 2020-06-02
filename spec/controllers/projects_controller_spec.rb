@@ -13,7 +13,7 @@ RSpec.describe ProjectsController, type: :controller do
 
   context 'when metric type and period are valid' do
     it 'returns status ok' do
-      allow(Queries::DailyMetrics).to receive(:call).and_return(true)
+      allow(Metrics::Group::ByDay).to receive(:call).and_return(true)
       get :user_project_metric, params: { project_id: 1,
                                           metric_type: 'review_turnaround',
                                           period: 'daily' }
