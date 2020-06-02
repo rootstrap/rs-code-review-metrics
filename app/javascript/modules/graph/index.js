@@ -14,7 +14,7 @@ export const handleChangeSidebar = () => {
   sidebarProjectSelectionInput.onchange = () => {
     const periodSelected = document.getElementById('metric_period');
     if (periodSelected.selectedIndex === 0) {
-      periodSelected.selectedIndex = 1
+      periodSelected.selectedIndex = 1;
     }
     navFilterForm.submit();
   }
