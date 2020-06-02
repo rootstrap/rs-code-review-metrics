@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Queries::DailyMetrics do
-  describe '#call' do
+  describe '.call' do
     let(:project) { create(:project, name: 'rs-code-review-metrics') }
 
     let(:first_user) { create(:user) }

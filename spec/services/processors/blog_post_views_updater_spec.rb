@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Processors::BlogPostViewsUpdater do
-  describe '#call' do
+  describe '.call' do
     let(:blog_post) { create(:blog_post, published_at: publish_date) }
     let(:blog_post_views_payload) do
       create(:blog_post_views_payload, publish_datetime: publish_date).with_indifferent_access

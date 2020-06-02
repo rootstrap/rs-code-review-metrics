@@ -3,18 +3,18 @@
     <div class="row p-3">
       <label for="project_name">Project Name:</label>
       <select name="project_name" class="project-selection" form='nav-filter-form'>
-        <%if params[:project_name].blank? %>
+        <% if params[:project_name].blank? %>
           <option selected value disabled>-select option-</option>
-        <%else%>
+        <% else %>
           <option value disabled>-select option-</option>
-        <%end%>
-        <% projects_names.each do |name|%>
+        <% end %>
+        <% all_projects_names.each do |name|%>
           <%if params[:project_name] == name %>
             <option selected value=<%= name %>> <%= name%> </option>
           <% else %>
            <option value=<%= name%>> <%= name%></option> %>
-          <%end%>
-        <%end%>
+          <% end %>
+        <% end %>
       </select>
     </div>
   </div>

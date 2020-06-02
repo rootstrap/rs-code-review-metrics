@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Metrics::Weekly::AllMetrics do
-  describe '#call' do
+  describe '.call' do
     let(:user_project) { create(:users_project) }
 
     before do

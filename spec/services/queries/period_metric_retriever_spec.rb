@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Queries::PeriodMetricRetriever do
-  describe '#call' do
+  describe '.call' do
     context 'when daily period' do
       it 'returns query dialy metric class' do
         expect(described_class.call('daily')).to eq(Queries::DailyMetrics)

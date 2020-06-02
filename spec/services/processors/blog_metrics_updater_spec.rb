@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Processors::BlogMetricsUpdater do
-  describe '#call' do
+  describe '.call' do
     let!(:technology) { create(:technology) }
     let(:blog_post_1) { create(:blog_post, technology: technology) }
     let(:blog_post_2) { create(:blog_post, technology: technology) }

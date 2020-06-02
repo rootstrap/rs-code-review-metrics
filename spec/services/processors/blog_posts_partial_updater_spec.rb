@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Processors::BlogPostsPartialUpdater do
-  describe '#call' do
+  describe '.call' do
     context 'when there is already a blog post stored in the DB' do
       let(:api_service) { instance_double(WordpressService) }
       let(:publish_date) { Faker::Time.backward }
