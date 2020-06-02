@@ -19,7 +19,7 @@ detectors:
   DuplicateMethodCall:
     enabled: true
     exclude: ['GithubService#handle_event',
-              'EventBuilders::Review#assign_attrs',
+              'Builders::Events::Review#assign_attrs',
               'EventsProcessor::ReviewBuilder#self.assign_attrs']
     max_calls: 1
     allow_calls: []
