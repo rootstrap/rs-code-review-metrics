@@ -9,3 +9,19 @@ weekly_metrics:
 merge_time_generator:
   cron: '00 23 * * *'
   class: 'ProcessMergeTimeMetricsJob'
+
+blog_posts_partial_update:
+  cron: '00 4 * * 3'
+  class: 'BlogPostsPartialUpdaterJob'
+
+blog_posts_full_update:
+  cron: '00 2 1 * *'
+  class: 'BlogPostsFullUpdaterJob'
+
+blog_metrics_partial_update:
+  cron: '30 4 * * *'
+  class: 'BlogMetricsPartialUpdaterJob'
+
+blog_metrics_full_update:
+  cron: '00 3 1 * *'
+  class: 'BlogMetricsFullUpdaterJob'
