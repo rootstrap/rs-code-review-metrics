@@ -1,5 +1,5 @@
 module ProjectsNamesHelper
-  def projects_names
+  def all_projects_names
     Project.pluck(:name)
   end
 end
