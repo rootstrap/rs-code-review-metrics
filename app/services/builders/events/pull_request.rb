@@ -2,12 +2,13 @@ module Builders
   module Events
     class PullRequest < EventBuilder
       ATTR_PAYLOAD_MAP = { number: 'number', state: 'state', node_id: 'node_id',
-                          title: 'title', locked: 'locked', draft: 'draft',
-                          opened_at: 'created_at' }.freeze
+                           title: 'title', locked: 'locked', draft: 'draft',
+                           opened_at: 'created_at' }.freeze
 
       def build
         pull_request_data = @payload['pull_request']
-        ::Events::PullRequest.find_or_create_by!(github_id: pull_request_data['id']) do |pull_request|
+        ::Events::PullRequest
+          .find_or_create_by!(github_id: pull_request_data['id']) do |pull_request|
           assign_attrs(pull_request, pull_request_data)
 
           ATTR_PAYLOAD_MAP.each do |key, value|

@@ -87,7 +87,7 @@ class EventsProcessor
     def self.build(payload)
       pull_request_data = payload['pull_request']
       ::Events::PullRequest.find_or_initialize_by(github_id: pull_request_data['id'])
-                         .tap do |pull_request|
+                           .tap do |pull_request|
         assign_attrs(pull_request, pull_request_data, payload)
 
         Builders::Events::PullRequest::ATTR_PAYLOAD_MAP.each do |key, value|
