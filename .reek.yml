@@ -20,7 +20,8 @@ detectors:
     enabled: true
     exclude: ['GithubService#handle_event',
               'EventBuilders::Review#assign_attrs',
-              'EventsProcessor::ReviewBuilder#self.assign_attrs']
+              'EventsProcessor::ReviewBuilder#self.assign_attrs',
+              'ProjectsController#user_project_metric']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:

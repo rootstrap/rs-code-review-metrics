@@ -1,6 +1,7 @@
-import { handleSelectFilterChange, initializeSelect2 } from '../modules/graph';
+import { initializeSelect2, handleChangeSidebar, handleChangeNavForm } from '../modules/graph';
 
-document.addEventListener('DOMContentLoaded', () => {
-  handleSelectFilterChange();
+document.addEventListener('turbolinks:load', () => {
   initializeSelect2();
+  handleChangeSidebar();
+  handleChangeNavForm();
 })

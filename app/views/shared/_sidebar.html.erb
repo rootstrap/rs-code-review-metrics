@@ -1,17 +1,21 @@
-<div class="col container-height sidebar-border">
+<div class="col container-height shadow-box sticky-top">
   <div class="container-md">
     <div class="row p-3">
-      <%= simple_form_for :metric, url: user_project_metric_projects_path,
-        method: 'GET', html: { class: 'sidebar-form' } do |f| %>
-          <%= f.input :project_name,
-            input_html: {class: 'project-selection'},
-            required: false,
-            collection: Project.pluck(:name),
-            selected: value_from_query_param(:project_name),
-            include_blank: 'no option selected'
-          %>
-          <%= yield f if block_given? %>
-      <% end %>
+      <label for="project_name">Project Name:</label>
+      <select name="project_name" class="project-selection" form='nav-filter-form'>
+        <% if params[:project_name].blank? %>
+          <option selected value disabled>-select option-</option>
+        <% else %>
+          <option value disabled>-select option-</option>
+        <% end %>
+        <% all_projects_names.each do |name|%>
+          <%if params[:project_name] == name %>
+            <option selected value=<%= name %>> <%= name%> </option>
+          <% else %>
+           <option value=<%= name%>> <%= name%></option> %>
+          <% end %>
+        <% end %>
+      </select>
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  root to: 'admin/events#index'
+  root to: 'users_projects#metrics'
   devise_for :admin_users, ActiveAdmin::Devise.config
   authenticate :admin_user do
     ExceptionHunter.routes(self)
@@ -9,9 +9,9 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'
-  resources :projects, only: [] do
+  resources :users_projects, only: [] do
     collection do
-      get :user_project_metric
+      get :metrics
     end
   end
   get 'tech_blog', to: 'tech_blog#index'
