@@ -13,7 +13,7 @@ module Metrics
       def self.determinate_metric_period(period)
         raise Graph::RangeDateNotSupported unless INTERVALS.include?(period)
 
-        Queries.const_get("#{period.capitalize}Metrics")
+        Metrics::Group.const_get("#{period.capitalize}")
       end
 
       private
