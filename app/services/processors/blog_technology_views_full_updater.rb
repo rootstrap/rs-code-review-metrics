@@ -3,7 +3,7 @@ module Processors
     private
 
     def metrics_by_timestamp
-      Metric
+      Metric.all
     end
   end
 end
