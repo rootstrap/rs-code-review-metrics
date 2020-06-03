@@ -1,4 +1,6 @@
 class AddValueToMetricNameEnum < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
     execute <<-SQL
       ALTER TYPE metric_name ADD VALUE 'merge_time';
