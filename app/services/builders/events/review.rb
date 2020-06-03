@@ -1,6 +1,6 @@
 module Builders
   module Events
-    class Review < EventBuilder
+    class Review < Builders::Events::Base
       ATTR_PAYLOAD_MAP = { body: 'body', state: 'state', opened_at: 'submitted_at' }.freeze
 
       def build

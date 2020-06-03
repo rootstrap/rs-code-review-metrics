@@ -1,6 +1,6 @@
 module Builders
   module Events
-    class PullRequest < EventBuilder
+    class PullRequest < Builders::Events::Base
       ATTR_PAYLOAD_MAP = { number: 'number', state: 'state', node_id: 'node_id',
                            title: 'title', locked: 'locked', draft: 'draft',
                            opened_at: 'created_at' }.freeze

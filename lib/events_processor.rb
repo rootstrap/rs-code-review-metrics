@@ -68,7 +68,7 @@ class EventsProcessor
     end
 
     def find_pull_request(payload)
-      Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
+      ::Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
     end
 
     def find_last_review_request(pull_request, reviewer_id)

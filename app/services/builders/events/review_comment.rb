@@ -1,6 +1,6 @@
 module Builders
   module Events
-    class ReviewComment < EventBuilder
+    class ReviewComment < Builders::Events::Base
       def build
         comment_data = @payload['comment']
         ::Events::ReviewComment.find_or_create_by!(github_id: comment_data['id']) do |rc|
