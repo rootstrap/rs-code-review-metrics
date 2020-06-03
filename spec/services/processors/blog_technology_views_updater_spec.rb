@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Processors::BlogTechnologyViewsUpdater do
+RSpec.describe Processors::BlogTechnologyViewsUpdater do
   describe '.call' do
     let!(:technology) { create(:technology) }
     let(:metric_timestamp) { Time.zone.now.end_of_month }
@@ -26,8 +26,10 @@ describe Processors::BlogTechnologyViewsUpdater do
     end
     let(:technology_visits) { blog_post_1_views_metric.value + blog_post_2_views_metric.value }
 
+    subject(:updater) { Processors::BlogTechnologyViewsPartialUpdater }
+
     it 'creates the technologies visits metric' do
-      described_class.call
+      updater.call
 
       metric = Metric.find_by!(
         ownable: technology,
@@ -51,7 +53,7 @@ describe Processors::BlogTechnologyViewsUpdater do
       end
 
       it 'updates it with the latest info' do
-        expect { described_class.call }
+        expect { updater.call }
           .to change { technology_visits_metric.reload.value }
           .to technology_visits
       end
@@ -71,7 +73,7 @@ describe Processors::BlogTechnologyViewsUpdater do
       end
 
       it 'creates metrics for all of them' do
-        expect { described_class.call }.to change { Metric.count }.by 2
+        expect { updater.call }.to change { Metric.count }.by 2
       end
     end
 
@@ -87,35 +89,7 @@ describe Processors::BlogTechnologyViewsUpdater do
       end
 
       it 'creates a technology metric for each one of those months' do
-        expect { described_class.call }.to change { Metric.count }.by 2
-      end
-
-      context 'but technologies visits metrics have already been registered' do
-        before do
-          create(
-            :metric,
-            name: Metric.names[:blog_visits],
-            interval: Metric.intervals[:monthly],
-            value: last_month_blog_post_1_views_metric.value,
-            value_timestamp: metric_timestamp.last_month,
-            ownable: technology
-          )
-
-          create(
-            :metric,
-            name: Metric.names[:blog_visits],
-            interval: Metric.intervals[:monthly],
-            value: technology_visits,
-            value_timestamp: metric_timestamp,
-            ownable: technology
-          )
-        end
-
-        it 'just tries to update the last of them' do
-          expect(Metric).to receive(:find_or_initialize_by).once.and_call_original
-
-          described_class.call
-        end
+        expect { updater.call }.to change { Metric.count }.by 2
       end
     end
   end
