@@ -10,8 +10,7 @@
     %>
   <% end %>
   <%= render partial: 'shared/line-chart',
-              locals: { metric_name: 'Review Turnaround', metric: @review_turnaround } %>
+              locals: { metric_name: 'Review Turnaround', metric: @review_turnaround } if @review_turnaround %>
   <%= render partial: 'shared/line-chart',
-              locals: { metric_name: 'Merge Time', metric: @merge_time } %>
-
+              locals: { metric_name: 'Merge Time', metric: @merge_time } if @merge_time %>
 </div>
