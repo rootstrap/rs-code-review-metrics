@@ -1,6 +1,6 @@
 module Metrics
   module Group
-    class ByDay < Metrics::Group::Base
+    class Daily < Metrics::Group::Base
       FROM = 14.days
       INTERVAL = 'daily'.freeze
 

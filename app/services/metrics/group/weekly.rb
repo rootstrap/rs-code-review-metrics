@@ -1,6 +1,6 @@
 module Metrics
   module Group
-    class ByWeek < Metrics::Group::Base
+    class Weekly < Metrics::Group::Base
       INTERVAL = 'weekly'.freeze
 
       def initialize(project_id:, metric_name:, number_of_previous: 3)
