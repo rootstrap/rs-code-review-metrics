@@ -1,34 +1,34 @@
 import $ from 'jquery';
 import 'select2';
 import 'select2/dist/css/select2.css';
-import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css'
+import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css';
 
-
-const selectInputObject = (className) => {
-  let object = { element: document.querySelector(`select.${className}-selection`) }
-  object.optionSelected = object.element.options[object.element.selectedIndex].text;
-  return object
+let elementSelector = (className) => {
+  return document.querySelector(`.${className}`);
 }
 
-const noOptionSelected = (option) => {
-  return option === 'no option selected'
+export const handleChangeSidebar = () => {
+  const sidebarProjectSelectionInput = elementSelector('project-selection');
+  let navFilterForm = elementSelector('nav-filter');
+
+  sidebarProjectSelectionInput.onchange = () => {
+    const periodSelected = document.getElementById('metric_period');
+    if (periodSelected.selectedIndex === 0) {
+      periodSelected.selectedIndex = 1;
+    }
+    navFilterForm.submit();
+  }
 }
 
-export const handleSelectFilterChange = () => {
-  const sidebarForm = document.querySelector('.sidebar-form');
-
-  sidebarForm.onchange = function () {
-    let projectSelect = selectInputObject('project');
-    let periodSelect = selectInputObject('period');
-    let metricNameSelect = selectInputObject('metric-name');
-
-    if (noOptionSelected(projectSelect.optionSelected)) {
-      const url = window.location.href.split('?')[0]
-      window.location.assign(url);
-    } else {
-      noOptionSelected(periodSelect.optionSelected) && (periodSelect.element.selectedIndex = 1)
-      noOptionSelected(metricNameSelect.optionSelected) && (metricNameSelect.element.selectedIndex = 1)
+export const handleChangeNavForm = () => {
+  const navFilterForm = elementSelector('nav-filter');
+  navFilterForm.onchange = function () {
+    let sidebarProjectSelectionInput = elementSelector('project-selection');
+    if (sidebarProjectSelectionInput.selectedIndex !== 0){
       this.submit();
+    } else {
+      const url = window.location.href.split('?')[0];
+      window.location.assign(url);
     }
   }
 }

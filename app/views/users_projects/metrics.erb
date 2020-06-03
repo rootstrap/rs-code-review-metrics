@@ -1,0 +1,20 @@
+<div class="col-md-10">
+  <%= render 'shared/nav-filter' do |f|%>
+      <%= f.input :period,
+      wrapper_html: { class: 'period-selection' },
+      input_html: { class: 'margin-left' },
+      required: false,
+      collection: [['Daily', 'daily'], ['Weekly', 'weekly']],
+      selected: value_from_query_param(:period),
+      prompt: '- select option -'
+    %>
+  <% end %>
+  <div class='p-3 metric-container'>
+    <span class='metric-title'>Review Turnaround</span>
+    <%= line_chart @review_turnaround, ytitle: "Time as hours", suffix: " hours" %>
+  </div>
+  <div class='p-3 metric-container'>
+    <span class='metric-title'>Merge Time</span>
+    <%= line_chart @merge_time, ytitle: "Time as hours", suffix: " hours" %>
+  </div>
+</div>
