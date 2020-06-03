@@ -2,9 +2,13 @@
 
 // Abstracts
 @import "abstracts/variables";
+@import "abstracts/utils";
 
 // Layout
 @import "layout/navigation";
 
 //shared
-@import 'shared/sidebar';
+@import "shared/sidebar";
+
+@import "user-project-metric";
+@import "nav-filter";

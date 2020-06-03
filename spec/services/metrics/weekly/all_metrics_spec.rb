@@ -77,5 +77,43 @@ RSpec.describe Metrics::Weekly::AllMetrics do
         end
       end
     end
+
+    context 'when processing same type of metric' do
+      let!(:daily_metric) do
+        create(:metric,
+               interval: :daily,
+               name: :merge_time,
+               ownable: user_project,
+               value_timestamp: current_time,
+               value: 120)
+      end
+
+      before { Metrics::Weekly::AllMetrics.call }
+
+      context 'and the first metric for that week was on thursday' do
+        it 'creates the weekly metric with valuestimestamp on monday of that week' do
+          expect(Metric.last.value_timestamp.monday?).to eq(true)
+        end
+
+        it 'creates a weekly metric with same value as daily metric' do
+          expect(Metric.last.value).to eq(daily_metric.value)
+        end
+      end
+
+      context 'and have metrics from tuesday to thursday' do
+        let!(:weekly_metric_previously_created) do
+          create(:metric,
+                 interval: :daily,
+                 name: :merge_time,
+                 ownable: user_project,
+                 value_timestamp: current_time.beginning_of_week,
+                 value: 60)
+        end
+
+        it 'updates the metric that should have been created on monday of that week' do
+          expect(Metric.last.value).to eq(60)
+        end
+      end
+    end
   end
 end

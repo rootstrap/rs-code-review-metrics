@@ -1,4 +1,6 @@
 class AddReviewedStateReviewRequests < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
     execute <<-SQL
       ALTER TYPE review_request_state ADD VALUE 'reviewed';

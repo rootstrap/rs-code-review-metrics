@@ -15,11 +15,13 @@ describe Processors::BlogMetricsUpdater do
       stub_blog_post_views_response(blog_post_2.blog_id, blog_post_views_payload_2)
     end
 
+    subject(:updater) { Processors::BlogMetricsPartialUpdater }
+
     describe '#update_blog_post_visits_metrics' do
       let(:total_metrics_generated) { blog_post_1_month_count + blog_post_2_month_count }
 
       it 'updates visits metrics for all blog posts' do
-        expect { described_class.call }
+        expect { updater.call }
           .to change(Metric.where(ownable_type: BlogPost.to_s), :count)
           .by total_metrics_generated
       end
@@ -31,7 +33,7 @@ describe Processors::BlogMetricsUpdater do
       end
 
       it 'creates as much technology visits metrics as months with blog post visits' do
-        expect { described_class.call }
+        expect { updater.call }
           .to change(Metric.where(ownable: technology), :count)
           .by total_months_with_blog_post_visits
       end
