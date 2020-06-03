@@ -1,6 +1,6 @@
 <nav class="nav nav-style nav-txt-color p-2 nav-items-container">
   <span class="navbar-brand nav-txt-color">Engineering Metrics</span>
-  <a class="nav-link active nav-txt-color" href="/users_projects/metrics">Development Metrics</a>
-  <a class="nav-link active nav-txt-color" href="/tech_blog">Blog Metrics</a>
-    <a class="nav-link active nav-txt-color admin-button" href="/">Admin</a>
+  <%= link_to 'Development Metrics', metrics_users_projects_path, class: 'nav-link active nav-txt-color'%>
+  <%= link_to 'Blog Metrics', tech_blog_path, class: 'nav-link active nav-txt-color'%>
+  <%= link_to 'Admin', new_admin_user_session_path, class: 'nav-link active nav-txt-color admin-button'%>
 </nav>
