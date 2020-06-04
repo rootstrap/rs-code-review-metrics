@@ -24,6 +24,14 @@ RSpec.describe Processors::BlogTechnologyViewsPartialUpdater do
       )
     end
 
+    context 'when technologies visits metrics have not been registered' do
+      it 'creates all of them' do
+        expect(Metric).to receive(:find_or_initialize_by).twice.and_call_original
+
+        described_class.call
+      end
+    end
+
     context 'when technologies visits metrics have been registered' do
       before do
         create(

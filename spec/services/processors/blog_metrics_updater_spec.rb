@@ -47,7 +47,10 @@ describe Processors::BlogMetricsUpdater do
 
       it 'creates as many blog post count metrics as months since the first publication' do
         expect { updater.call }
-          .to change(Metric.where(ownable: technology, name: Metric.names[:blog_post_count]), :count)
+          .to change(
+            Metric.where(ownable: technology, name: Metric.names[:blog_post_count]),
+            :count
+          )
           .by total_months_since_first_blog_post_published
       end
     end
