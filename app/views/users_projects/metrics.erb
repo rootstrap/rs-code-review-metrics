@@ -9,18 +9,8 @@
       prompt: '- select option -'
     %>
   <% end %>
-  <div class='p-3 metric-container'>
-    <span class='metric-title'>Review Turnaround</span>
-    <%= line_chart @review_turnaround,
-        ytitle: "Time as hours",
-        suffix: " hours",
-        library: { spanGaps: true } %>
-  </div>
-  <div class='p-3 metric-container'>
-    <span class='metric-title'>Merge Time</span>
-    <%= line_chart @merge_time,
-        ytitle: "Time as hours",
-        suffix: " hours",
-        library: { spanGaps: true } %>
-  </div>
+  <%= render partial: 'shared/line-chart',
+              locals: { metric_name: 'Review Turnaround', metric: @review_turnaround } if @review_turnaround %>
+  <%= render partial: 'shared/line-chart',
+              locals: { metric_name: 'Merge Time', metric: @merge_time } if @merge_time %>
 </div>
