@@ -21,11 +21,11 @@ module Processors
     def new_blog_posts_by_month_for(technology)
       technology
         .blog_posts
-        .group_by_month(:published_at, range: starting_time_to_update..Time.zone.now)
+        .group_by_month(:published_at, range: starting_time_to_update(technology)..Time.zone.now)
         .count
     end
 
-    def starting_time_to_update
+    def first_publication_time
       BlogPost.pluck(:published_at).min
     end
 

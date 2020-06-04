@@ -9,8 +9,10 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
       create(:blog_post, published_at: publish_time, technology: technology)
     end
 
+    subject(:updater) { Processors::BlogPostCountMetricsPartialUpdater }
+
     it 'creates a blog post count metric for that technology' do
-      described_class.call
+      updater.call
 
       metric = Metric.find_by!(
         name: Metric.names[:blog_post_count],
@@ -28,7 +30,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
       end
 
       it 'creates metrics for all of them' do
-        expect { described_class.call }.to change { Metric.count }.by 2
+        expect { updater.call }.to change { Metric.count }.by 2
       end
     end
 
@@ -45,7 +47,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
       end
 
       it 'updates it' do
-        expect { described_class.call }
+        expect { updater.call }
           .to change { blog_post_count_metric.reload.value }
           .from(0)
           .to(1)
@@ -58,11 +60,11 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
       end
 
       it 'creates a metric for every month' do
-        expect { described_class.call }.to change { Metric.count }.by 2
+        expect { updater.call }.to change { Metric.count }.by 2
       end
 
       it 'calculates the metrics values by the amount of blog posts published up to that month' do
-        described_class.call
+        updater.call
 
         last_month_metric = Metric.find_by!(
           name: Metric.names[:blog_post_count],
@@ -88,7 +90,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
         let(:publish_time) { empty_month_timestamp.last_month }
 
         it 'adds the metric for that month with the unchanged value' do
-          described_class.call
+          updater.call
 
           empty_month_metric = Metric.find_by!(
             name: Metric.names[:blog_post_count],
@@ -109,7 +111,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
         end
 
         it 'adds the metric for that month with the unchanged value' do
-          described_class.call
+          updater.call
 
           empty_month_metric = Metric.find_by!(
             name: Metric.names[:blog_post_count],
@@ -130,7 +132,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
         end
 
         it 'adds the metric for that month with the unchanged value' do
-          described_class.call
+          updater.call
 
           empty_month_metric = Metric.find_by!(
             name: Metric.names[:blog_post_count],
