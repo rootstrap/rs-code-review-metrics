@@ -16,6 +16,7 @@ RSpec.describe UsersProjectsController, type: :controller do
     context 'when metric type and period are valid' do
       let(:params) do
         {
+          controller: 'users_projects',
           project_name: 'rs-metrics',
           metric: {
             metric_name: 'review_turnaround',
@@ -25,15 +26,15 @@ RSpec.describe UsersProjectsController, type: :controller do
       end
 
       it 'returns status ok' do
-        allow(Queries::DailyMetrics).to receive(:call).and_return(true)
-        allow(Queries::DailyMetrics).to receive(:call).and_return(true)
+        allow(Metrics::Group::Daily).to receive(:call).and_return(true)
+        allow(Metrics::Group::Daily).to receive(:call).and_return(true)
         get :metrics, params: params
 
         assert_response :success
       end
 
       it 'calls perdio metric retriever class' do
-        expect(Queries::PeriodMetricRetriever).to receive(:call).and_return(Queries::DailyMetrics)
+        expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
 
         get :metrics, params: params
       end
