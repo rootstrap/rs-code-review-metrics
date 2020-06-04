@@ -24,14 +24,14 @@ class Metric < ApplicationRecord
                merge_time: 'merge_time' }
 
   belongs_to :ownable, polymorphic: true
-  belongs_to :users_project, -> { includes(:metrics)
-                                  .where(metrics: { ownable_type: UsersProject.to_s }) },
-                                  foreign_key: :ownable_id, optional: true
+  belongs_to :users_project, lambda {
+    includes(:metrics).where(metrics: { ownable_type: UsersProject.to_s })
+  }, foreign_key: :ownable_id, optional: true, inverse_of: :users_project
 
   validates :interval, inclusion: { in: intervals.keys }
   validates :name, inclusion: { in: names.keys }
 
-  scope :today_daily_metrics, -> {
+  scope :today_daily_metrics, lambda {
     where(value_timestamp: Time.zone.today.all_day, interval: :daily)
   }
 end

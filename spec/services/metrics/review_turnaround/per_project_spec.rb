@@ -21,18 +21,18 @@ RSpec.describe Metrics::ReviewTurnaround::PerProject do
       context 'when a project has 30 minutes of review turnaround' do
         let!(:first_review) do
           create(:review,
-                  pull_request: pull_request,
-                  opened_at: 30.minutes.from_now(current_time),
-                  project: user_project.project,
-                  owner: review_request.reviewer)
+                 pull_request: pull_request,
+                 opened_at: 30.minutes.from_now(current_time),
+                 project: user_project.project,
+                 owner: review_request.reviewer)
         end
 
         let!(:second_review) do
           create(:review,
-                  pull_request: pull_request,
-                  opened_at: 30.minutes.from_now(current_time),
-                  project: user_project.project,
-                  owner: review_request.reviewer)
+                 pull_request: pull_request,
+                 opened_at: 30.minutes.from_now(current_time),
+                 project: user_project.project,
+                 owner: review_request.reviewer)
         end
 
         it 'generates a metric with value expressed as decimal equal to 30 minutes' do
@@ -50,26 +50,26 @@ RSpec.describe Metrics::ReviewTurnaround::PerProject do
         let(:third_user_project) { create(:users_project) }
         let!(:review) do
           create(:review,
-                  pull_request: pull_request,
-                  opened_at: current_time,
-                  project: user_project.project,
-                  owner: review_request.reviewer)
+                 pull_request: pull_request,
+                 opened_at: current_time,
+                 project: user_project.project,
+                 owner: review_request.reviewer)
         end
 
         let!(:second_review) do
           create(:review,
-                  pull_request: pull_request,
-                  opened_at: 2.hours.from_now(current_time),
-                  project: second_user_project.project,
-                  owner: review_request.reviewer)
+                 pull_request: pull_request,
+                 opened_at: 2.hours.from_now(current_time),
+                 project: second_user_project.project,
+                 owner: review_request.reviewer)
         end
 
         let!(:third_review) do
           create(:review,
-                  pull_request: pull_request,
-                  opened_at: 4.hours.from_now(current_time),
-                  project: third_user_project.project,
-                  owner: review_request.reviewer)
+                 pull_request: pull_request,
+                 opened_at: 4.hours.from_now(current_time),
+                 project: third_user_project.project,
+                 owner: review_request.reviewer)
         end
 
         it 'creates three metrics' do
@@ -78,25 +78,27 @@ RSpec.describe Metrics::ReviewTurnaround::PerProject do
 
         describe 'reviews from different users' do
           let(:second_review_request) do
-            create(:review_request, pull_request: pull_request, reviewer_id: second_user_project.user_id)
+            create(:review_request, pull_request: pull_request,
+                                    reviewer_id: second_user_project.user_id)
           end
           let(:third_review_request) do
-            create(:review_request, pull_request: pull_request, reviewer_id: third_user_project.user_id)
+            create(:review_request, pull_request: pull_request,
+                                    reviewer_id: third_user_project.user_id)
           end
           let!(:fourth_review) do
             create(:review,
-                    pull_request: pull_request,
-                    opened_at: current_time,
-                    project: second_user_project.project,
-                    owner: second_review_request.reviewer)
+                   pull_request: pull_request,
+                   opened_at: current_time,
+                   project: second_user_project.project,
+                   owner: second_review_request.reviewer)
           end
-  
+
           let!(:fifth_review) do
             create(:review,
-                    pull_request: pull_request,
-                    opened_at: 2.hours.from_now(current_time),
-                    project: third_user_project.project,
-                    owner: third_review_request.reviewer)
+                   pull_request: pull_request,
+                   opened_at: 2.hours.from_now(current_time),
+                   project: third_user_project.project,
+                   owner: third_review_request.reviewer)
           end
 
           before { described_class.call }

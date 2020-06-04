@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.shared_examples 'query metric' do
   it 'returns the correct number of metrics based on the amount of users in the project' do
     expect(
-      described_class.call(entity_name: 'users_project', entity_id: project.id, metric_name: 'review_turnaround').count
+      described_class.call(entity_name: 'users_project', entity_id: project.id,
+                           metric_name: 'review_turnaround').count
     ).to eq(2)
   end
 

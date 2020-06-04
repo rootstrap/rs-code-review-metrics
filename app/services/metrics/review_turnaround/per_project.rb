@@ -14,12 +14,13 @@ module Metrics
       def process
         retrieve_projects_and_review_count.each do |project_id, reviews_count|
           turnaround = calculate_turnaround(project_id, reviews_count)
-          create_or_update_metric(project_id, Project.to_s, metric_interval, turnaround, :review_turnaround)
+          create_or_update_metric(project_id, Project.to_s, metric_interval,
+                                  turnaround, :review_turnaround)
         end
       end
 
       def filtered_reviews_ids
-        @filtered_reviews_ids ||= 
+        @filtered_reviews_ids ||=
           Events::Review.joins(:review_request)
                         .where(opened_at: metric_interval)
                         .order(:pull_request_id, :owner_id, :project_id, :opened_at)
@@ -29,15 +30,18 @@ module Metrics
       end
 
       def retrieve_projects_and_review_count
-        filtered_reviews_ids.inject(Hash.new(0)) { |hash, arr| hash[arr.first] += 1; hash }
+        filtered_reviews_ids.each_with_object(Hash.new(0)) do |arr, hash|
+          hash[arr.first] += 1
+          hash
+        end
       end
 
       def calculate_turnaround(project_id, reviews_count)
         filtered_reviews_ids
           .select { |arr| arr.first == project_id }
-          .inject(0) do |sum, (project_id, opened_at, created_at)|
+          .inject(0) { |sum, (_project_id, opened_at, created_at)|
             sum + (opened_at.to_i - created_at.to_i)
-          end./(reviews_count)
+          }./(reviews_count)
       end
 
       def metric_interval
