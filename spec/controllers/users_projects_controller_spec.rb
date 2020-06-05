@@ -38,6 +38,13 @@ RSpec.describe UsersProjectsController, type: :controller do
 
         get :metrics, params: params
       end
+
+      it 'the CodeClimateSummary information in the instance variable @code_climate_summary' do
+        expect { get :metrics, params: params }.to change { assigns(:code_climate_summary) }
+          .to(code_climate_invalid_issues_count: 1,
+              code_climate_rate: 'A',
+              code_climate_wont_fix_issues_count: 2)
+      end
     end
 
     context 'when period is not handleable' do
