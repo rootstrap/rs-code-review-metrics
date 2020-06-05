@@ -5,9 +5,7 @@
         <%= render 'project_metrics_filter', form: f %>
       </div>
       <div class="col-md-8 col-md-offset-1">
-        <% if @code_climate_summary -%>
-          <%= render 'code_climate_summary', @code_climate_summary %>
-        <% end -%>
+      <%= render 'code_climate_summary', code_climate: @code_climate %>
       </div>
     </div>
   <% end %>

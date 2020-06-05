@@ -7,11 +7,7 @@ module Queries
     end
 
     def call
-      {
-        code_climate_rate: 'A',
-        code_climate_invalid_issues_count: 1,
-        code_climate_wont_fix_issues_count: 2
-      }
+      CodeClimateProjectMetric.joins(:project).where(projects: { id: project_id }).first
     end
   end
 end
