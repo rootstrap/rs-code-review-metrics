@@ -1,6 +1,11 @@
 module Builders
   module Chartkick
     class Base < BaseService
+      def initialize(entity_id, query)
+        @entity_id = entity_id
+        @query = query
+      end
+
       private
 
       def build_data(metrics)
