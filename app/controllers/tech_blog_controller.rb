@@ -7,10 +7,10 @@ class TechBlogController < ApplicationController
   private
 
   def visits_per_technology
-    BlogMetricChartBuilder.new.technology_visits
+    Builders::BlogMetricChart::TechnologyVisits.call
   end
 
   def technology_blog_post_count
-    BlogMetricChartBuilder.new.technology_blog_post_count
+    Builders::BlogMetricChart::TechnologyBlogPostCount.call
   end
 end
