@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Queries::WeeklyMetrics do
+RSpec.describe Metrics::Group::Weekly do
   describe '.call' do
     let(:project) { create(:project, name: 'rs-code-review-metrics') }
 

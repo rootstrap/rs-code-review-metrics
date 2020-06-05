@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersProjectsController, type: :controller do
+RSpec.describe ProjectsController, type: :controller do
   describe '#metrics' do
     before { create(:project, name: 'rs-metrics') }
     context 'when metric params are empty' do
@@ -16,7 +16,7 @@ RSpec.describe UsersProjectsController, type: :controller do
     context 'when metric type and period are valid' do
       let(:params) do
         {
-          controller: 'users_projects',
+          controller: 'projects',
           project_name: 'rs-metrics',
           metric: {
             metric_name: 'review_turnaround',

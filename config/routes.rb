@@ -15,5 +15,10 @@ Rails.application.routes.draw do
       get :metrics
     end
   end
+  resources :projects, only: [] do
+    collection do
+      get :metrics
+    end
+  end
   get 'tech_blog', to: 'tech_blog#index'
 end

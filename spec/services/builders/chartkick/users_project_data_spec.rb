@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe ChartkickDataBuilder do
+RSpec.describe Builders::Chartkick::UsersProjectData do
   describe '.call' do
     context 'for a given entity' do
       let(:range) do
         Time.zone.today.beginning_of_week..Time.zone.today.end_of_week
       end
 
-      let(:entity) { UsersProject.where(project: Project.last) }
+      let(:entity_id) { Project.last.id }
 
       let(:query) do
         { interval: :weekly, value_timestamp: range }
@@ -16,10 +16,7 @@ RSpec.describe ChartkickDataBuilder do
       let(:user_project) { create(:users_project) }
 
       subject do
-        described_class.call(
-          entity: entity,
-          query: query
-        )
+        described_class.call(entity_id, query)
       end
 
       before do

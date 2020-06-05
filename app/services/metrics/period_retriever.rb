@@ -1,5 +1,5 @@
-module Queries
-  class PeriodMetricRetriever < BaseService
+module Metrics
+  class PeriodRetriever < BaseService
     INTERVALS = %w[daily weekly].freeze
 
     def initialize(period)
@@ -9,7 +9,7 @@ module Queries
     def call
       raise Graph::RangeDateNotSupported unless INTERVALS.include?(@period)
 
-      Queries.const_get("#{@period.capitalize}Metrics")
+      Metrics::Group.const_get(@period.capitalize)
     end
   end
 end
