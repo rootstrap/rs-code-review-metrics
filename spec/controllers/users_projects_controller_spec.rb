@@ -53,7 +53,7 @@ RSpec.describe UsersProjectsController, type: :controller do
                  wont_fix_issues_count: 2
         end
 
-        it 'CodeClimate metrics is set to the instance variable @code_climate_summary' do
+        it 'CodeClimate metrics is set to the instance variable @code_climate' do
           expect { get :metrics, params: params }.to change { assigns(:code_climate) }
             .to(code_climate_metric)
         end
