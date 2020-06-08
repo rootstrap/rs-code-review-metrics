@@ -7,7 +7,7 @@ module Metrics
     end
 
     def call
-      CodeClimateProjectMetric.joins(:project).where(projects: { id: project_id }).first
+      CodeClimateProjectMetric.joins(:project).find_by(projects: { id: project_id })
     end
   end
 end
