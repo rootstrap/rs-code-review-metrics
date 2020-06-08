@@ -48,7 +48,9 @@ RSpec.describe UsersProjectsController, type: :controller do
 
         let(:code_climate_metric) do
           create :code_climate_project_metric,
-                 project: project, code_climate_rate: 'A', invalid_issues_count: 1, wont_fix_issues_count: 2
+                 project: project, code_climate_rate: 'A',
+                 invalid_issues_count: 1,
+                 wont_fix_issues_count: 2
         end
 
         it 'CodeClimate metrics is set to the instance variable @code_climate_summary' do

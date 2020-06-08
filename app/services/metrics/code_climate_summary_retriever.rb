@@ -1,4 +1,4 @@
-module Queries
+module Metrics
   class CodeClimateSummaryRetriever < BaseService
     attr_reader :project_id
 
