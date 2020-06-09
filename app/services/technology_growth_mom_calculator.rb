@@ -39,6 +39,7 @@ class TechnologyGrowthMomCalculator < BaseService
   end
 
   def growth_for(metric, previous_metric)
-    (metric.value - previous_metric.value) / previous_metric.value * 100
+    previous_month_value = previous_metric.value
+    (metric.value - previous_month_value) / previous_month_value * 100
   end
 end
