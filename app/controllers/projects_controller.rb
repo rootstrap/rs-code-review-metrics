@@ -1,2 +1,2 @@
-class ProjectsController < MetricsController
+class ProjectsController < ApplicationController
 end

@@ -1,0 +1,5 @@
+<%= render partial: 'shared/line-chart',
+            locals: {
+              metric_name: 'Merge Time',
+              metric: @merge_time
+            } if @merge_time %>
