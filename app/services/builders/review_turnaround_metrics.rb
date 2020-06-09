@@ -8,7 +8,7 @@ module Builders
     def call
       build
     end
-    
+
     private
 
     def build
