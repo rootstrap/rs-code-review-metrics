@@ -9,6 +9,8 @@
       prompt: '- select option -'
     %>
   <% end %>
-  <%= render 'review_turnaround', locals: { review_turnaround: @review_turnaround } %>
-  <%= render 'merge_time', locals: { merge_time: @merge_time } %>
+
+  <%= render 'review_turnaround', review_turnaround: @review_turnaround %>
+
+  <%= render 'merge_time', merge_time: @merge_time %>
 </div>
