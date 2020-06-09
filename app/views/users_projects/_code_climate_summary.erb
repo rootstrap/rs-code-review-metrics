@@ -1,0 +1,20 @@
+  <div class="row">
+    <div class="col-md-2">
+      <span class="h6">CodeClimate</span>
+    </div>
+    <% if code_climate -%>
+      <div class="col-md-1">
+        <span class="h6 text-success"><%= code_climate.code_climate_rate %></span>
+      </div>
+      <div class="col-md-3">
+        <span class="code-climate-summary text-danger"><%= code_climate.invalid_issues_count %> invalid issues</span>
+      </div>
+      <div class="col-md-3">
+        <span class="code-climate-summary text-danger"><%= code_climate.wont_fix_issues_count %> won't fix issues</span>
+      </div>
+    <% else -%>
+      <div class="col-md-9">
+        <span class="code-climate-summary text-danger">No information available</span>
+      </div>
+    <% end -%>
+  </div>

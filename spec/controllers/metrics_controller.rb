@@ -1,8 +1,16 @@
 require 'rails_helper'
 
+<<<<<<< HEAD:spec/controllers/metrics_controller.rb
 RSpec.describe MetricsController, type: :request do
   describe '#index' do
     before { create(:project, name: 'rs-metrics') }
+=======
+RSpec.describe UsersProjectsController, type: :controller do
+  describe '#metrics' do
+    before { project }
+    let(:project) { create :project, name: 'rs-metrics' }
+
+>>>>>>> 2515dda84b510a6253c0a14c68e1832b1c712d6e:spec/controllers/users_projects_controller_spec.rb
     context 'when metric params are empty' do
       let(:params) { { metric: {} } }
 
@@ -37,11 +45,43 @@ RSpec.describe MetricsController, type: :request do
 
         get '/development_metrics', params: params
       end
+
+      context 'and there is CodeClimate information' do
+        before do
+          code_climate_metric
+        end
+
+        let(:code_climate_metric) do
+          create :code_climate_project_metric,
+                 project: project, code_climate_rate: 'A',
+                 invalid_issues_count: 1,
+                 wont_fix_issues_count: 2
+        end
+
+        it 'CodeClimate metrics is set to the instance variable @code_climate' do
+          expect { get :metrics, params: params }.to change { assigns(:code_climate) }
+            .to(code_climate_metric)
+        end
+
+        it 'the response has no errors' do
+          assert_response :success
+        end
+      end
+
+      context 'and there is no CodeClimate information' do
+        it 'CodeClimate metrics is set to nil' do
+          expect { get :metrics, params: params }.not_to change { assigns(:code_climate) }
+        end
+
+        it 'the response has no errors' do
+          assert_response :success
+        end
+      end
     end
 
     context 'when period is not handleable' do
       let(:params) do
-        { project_name: 'rs-metrics', metric: { metric_name: 'merge_time', period: 'monthly' } }
+        { project_name: project.name, metric: { metric_name: 'merge_time', period: 'monthly' } }
       end
       it 'raises Graph::RangeDateNotSupported' do
         expect {
