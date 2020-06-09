@@ -1,0 +1,17 @@
+<%= render 'shared/sidebar'%>
+<div class="col-md-10">
+  <%= render 'shared/nav-filter' do |f|%>
+    <div class="row">
+      <div class="col-md-3">
+        <%= render 'project_metrics_filter', form: f %>
+      </div>
+      <div class="col-md-8 col-md-offset-1">
+      <%= render 'code_climate_summary', code_climate: @code_climate %>
+      </div>
+    </div>
+  <% end %>
+  <%= render partial: 'shared/line-chart',
+              locals: { metric_name: 'Review Turnaround', metric: @review_turnaround } if @review_turnaround %>
+  <%= render partial: 'shared/line-chart',
+              locals: { metric_name: 'Merge Time', metric: @merge_time } if @merge_time %>
+</div>
