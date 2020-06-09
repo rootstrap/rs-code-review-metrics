@@ -9,8 +9,6 @@
       prompt: '- select option -'
     %>
   <% end %>
-  <%= render template: "projects/review_turnaround", locals: { review_turnaround: @review_turnaround } %>
-  <button type="button" class="btn btn-secondary details-button">View details</button>
-  <%= render template: "users_projects/review_turnaround", locals: { review_turnaround: @review_turnaround } %>
-  <%= render template: "users_projects/merge_time", locals: { merge_time: @merge_time } %>
+  <%= render 'review_turnaround', locals: { review_turnaround: @review_turnaround } %>
+  <%= render 'merge_time', locals: { merge_time: @merge_time } %>
 </div>
