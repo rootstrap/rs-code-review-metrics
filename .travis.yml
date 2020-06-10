@@ -27,6 +27,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
+  - bundle exec rails webpacker:compile
   - bundle exec rspec
   - bundle exec rake code_analysis
 
