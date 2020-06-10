@@ -1,9 +1,5 @@
 module Builders
   class MergeTimeMetrics < MetricsBase
-    def call
-      build
-    end
-
     private
 
     def build

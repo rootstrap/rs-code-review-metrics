@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetricsController, type: :request do
+RSpec.describe DevelopmentMetricsController, type: :request do
   describe '#index' do
     before { create(:project, name: 'rs-metrics') }
     context 'when metric params are empty' do

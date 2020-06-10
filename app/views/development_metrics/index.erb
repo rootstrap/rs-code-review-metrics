@@ -1,0 +1,17 @@
+<%= render 'shared/sidebar'%>
+<div class="col-md-10">
+  <%= render 'shared/nav-filter' do |f|%>
+    <div class="row">
+      <div class="col-md-3">
+        <%= render 'shared/interval-filter', form: f %>
+      </div>
+      <div class="col-md-8 col-md-offset-1">
+      <%= render 'shared/code-climate-summary', code_climate: @code_climate %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render 'review_turnaround', review_turnaround: @review_turnaround %>
+
+  <%= render 'merge_time', merge_time: @merge_time %>
+</div>

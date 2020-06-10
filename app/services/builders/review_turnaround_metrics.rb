@@ -1,9 +1,5 @@
 module Builders
   class ReviewTurnaroundMetrics < MetricsBase
-    def call
-      build
-    end
-
     private
 
     def build

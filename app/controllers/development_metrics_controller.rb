@@ -1,4 +1,4 @@
-class MetricsController < ApplicationController
+class DevelopmentMetricsController < ApplicationController
   def index
     return if metric_params.blank?
 
