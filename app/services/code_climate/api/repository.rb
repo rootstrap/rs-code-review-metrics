@@ -7,11 +7,15 @@ module CodeClimate
         end
       end
 
-      private
-
       def id
         @json['id']
       end
+
+      def name
+        @json['name']
+      end
+
+      private
 
       def default_branch_most_recent_snapshot
         api_client.snapshot(repo_id: id, snapshot_id: snapshot_id)

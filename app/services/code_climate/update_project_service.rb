@@ -1,5 +1,7 @@
 module CodeClimate
   class UpdateProjectService < BaseService
+    CODE_CLIMATE_API_ORG_NAME = 'rootstrap'.freeze
+
     def initialize(project)
       @project = project
     end
@@ -40,7 +42,7 @@ module CodeClimate
     end
 
     def project_name
-      @project.name
+      "#{CODE_CLIMATE_API_ORG_NAME}/#{@project.name}"
     end
   end
 end

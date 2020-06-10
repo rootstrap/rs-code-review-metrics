@@ -33,7 +33,7 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project not registered in CodeClimate' do
     before do
-      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=#{project.name}")
+      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=rootstrap/#{project.name}")
         .to_return(status: 404)
     end
 
@@ -44,7 +44,7 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project registered in CodeClimate that has not been updated before' do
     before do
-      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=#{project.name}")
+      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=rootstrap/#{project.name}")
         .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
     end
 
@@ -72,7 +72,7 @@ describe CodeClimate::UpdateProjectService do
     before do
       existing_code_climate_project_metric
 
-      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=#{project.name}")
+      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=rootstrap/#{project.name}")
         .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
     end
 
@@ -109,7 +109,7 @@ describe CodeClimate::UpdateProjectService do
     before do
       existing_code_climate_project_metric
 
-      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=#{project.name}")
+      stub_request(:get, "https://api.codeclimate.com/v1/repos?github_slug=rootstrap/#{project.name}")
         .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
     end
 

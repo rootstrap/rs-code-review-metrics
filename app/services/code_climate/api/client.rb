@@ -9,7 +9,7 @@ module CodeClimate
       }.freeze
 
       def repositories(org_id:)
-        response_json = get_json("orgs/#{org_id}/repos")
+        response_json = get_json(RemoteQuery.new("orgs/#{org_id}/repos"))
         response_json['data'].map do |repository_json|
           Repository.new(repository_json)
         end
