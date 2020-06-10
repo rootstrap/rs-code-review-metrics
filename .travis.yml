@@ -30,6 +30,7 @@ before_install:
   - sudo service redis-server start
 
 install:
+  - bundle install
   - nvm install node
   - node -v
   - npm i -g yarn
