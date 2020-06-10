@@ -25,5 +25,6 @@ FactoryBot.define do
     code_climate_rate { %w[A B C D].sample }
     invalid_issues_count { Faker::Number.between(from: 0, to: 99) }
     wont_fix_issues_count { Faker::Number.between(from: 0, to: 99) }
+    updated_at { Datetime.current }
   end
 end

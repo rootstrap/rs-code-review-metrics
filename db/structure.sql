@@ -107,7 +107,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+SET default_with_oids = false;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
