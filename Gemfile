@@ -58,15 +58,17 @@ gem 'exception_hunter', '~> 0.2.0'
 
 gem 'rack-mini-profiler', '~> 2.0'
 
+gem 'groupdate', '~> 5.0'
+
 group :development, :test do
   gem 'brakeman', '~> 4.7', '>= 4.7.2'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'colorize', '~> 0.8.1'
   gem 'factory_bot_rails', '~> 5.1'
+  gem 'faker', '~> 2.10', '>= 2.10.2'
   gem 'rspec-collection_matchers', '~> 1.2.0'
   gem 'rspec-rails', '4.0.0.beta3'
-  gem 'faker', '~> 2.10', '>= 2.10.2'
 end
 
 group :development do
@@ -86,6 +88,7 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
+  gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 4.2.0', require: false
   gem 'simplecov', require: false
   gem 'stub_env', '~> 1.0'

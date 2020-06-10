@@ -7,6 +7,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
     let(:review_request) do
       create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
     end
+    let(:current_time) { Time.zone.now }
 
     before { travel_to(Time.zone.today.beginning_of_day) }
 
@@ -21,7 +22,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         let!(:review) do
           create(:review,
                  pull_request: pull_request,
-                 opened_at: Time.zone.now + 30.minutes,
+                 opened_at: 30.minutes.from_now(current_time),
                  project: user_project.project,
                  owner: review_request.reviewer)
         end
@@ -41,7 +42,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
           let!(:review) do
             create(:review,
                    pull_request: pull_request,
-                   opened_at: Time.zone.now,
+                   opened_at: current_time,
                    project: user_project.project,
                    owner: review_request.reviewer)
           end
@@ -49,7 +50,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
           let!(:second_review) do
             create(:review,
                    pull_request: pull_request,
-                   opened_at: Time.zone.now + 2.hours,
+                   opened_at: 2.hours.from_now(current_time),
                    project: user_project.project,
                    owner: review_request.reviewer)
           end
@@ -57,13 +58,18 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
           let!(:third_review) do
             create(:review,
                    pull_request: pull_request,
-                   opened_at: Time.zone.now + 4.hours,
+                   opened_at: 4.hours.from_now(current_time),
                    project: user_project.project,
                    owner: review_request.reviewer)
           end
 
           it 'creates just one metric' do
             expect { described_class.call }.to change { Metric.count }.from(0).to(1)
+          end
+
+          it 'creates one metric with the first review' do
+            described_class.call
+            expect(Metric.first.value.seconds).to eq(0.minutes)
           end
         end
       end
@@ -81,7 +87,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       let!(:review) do
         create(:review,
                pull_request: pull_request,
-               opened_at: Time.zone.now + 20.minutes,
+               opened_at: 20.minutes.from_now(current_time),
                project: user_project.project,
                owner: review_request.reviewer)
       end
@@ -105,7 +111,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
       let!(:second_project_review) do
         create(:review,
                pull_request: second_project_pull_request,
-               opened_at: Time.zone.now + 45.minutes,
+               opened_at: 45.minutes.from_now(current_time),
                project: second_user_project.project,
                owner: second_project_review_request.reviewer)
       end
@@ -126,7 +132,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: pull_request,
                project_id: user_project.project_id,
-               opened_at: Time.zone.now + 25.minutes,
+               opened_at: 25.minutes.from_now(current_time),
                owner: review_request.reviewer)
       end
 
@@ -138,7 +144,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: second_pull_request,
                project: user_project.project,
-               opened_at: Time.zone.now + 15.minutes,
+               opened_at: 15.minutes.from_now(current_time),
                owner: review_request.reviewer)
       end
 
@@ -159,7 +165,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
           create(:review,
                  pull_request: third_pull_request,
                  project: second_user_project.project,
-                 opened_at: Time.zone.now + 35.minutes,
+                 opened_at: 35.minutes.from_now(current_time),
                  owner: review_request.reviewer)
         end
 
@@ -180,7 +186,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: pull_request,
                project_id: user_project.project_id,
-               opened_at: Time.zone.now + 25.minutes,
+               opened_at: 25.minutes.from_now(current_time),
                owner: review_request.reviewer)
       end
 
@@ -195,16 +201,44 @@ RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
         create(:review,
                pull_request: second_pull_request,
                project_id: second_project.id,
-               opened_at: Time.zone.now + 25.minutes,
+               opened_at: 25.minutes.from_now(current_time),
                owner: review_request.reviewer)
       end
 
       it 'creates one metric and then rollbacks the transaction' do
-        suppress(ActiveRecord::RecordInvalid) do
+        suppress(NoMethodError) do
           described_class.call
         end
 
         expect(Metric.count).to eq(0)
+      end
+    end
+
+    context 'when there are reviews from different user in the same pr' do
+      let!(:review) do
+        create(:review,
+               pull_request: pull_request,
+               project_id: user_project.project_id,
+               opened_at: 25.minutes.from_now(current_time),
+               owner: review_request.reviewer)
+      end
+      let!(:second_user_project) do
+        create(:users_project, user: create(:user), project_id: user_project.project_id)
+      end
+      let!(:second_review_request) do
+        create(:review_request, pull_request: pull_request,
+                                reviewer_id: second_user_project.user_id)
+      end
+      let!(:second_review) do
+        create(:review,
+               pull_request: pull_request,
+               project_id: user_project.project_id,
+               opened_at: 25.minutes.from_now(current_time),
+               owner: second_review_request.reviewer)
+      end
+
+      it 'creates two metrics' do
+        expect { described_class.call }.to change { Metric.count }.from(0).to(2)
       end
     end
   end

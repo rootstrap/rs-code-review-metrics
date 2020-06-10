@@ -10,20 +10,11 @@ module Processors
     private
 
     def blog_views_by_technology_and_month
-      Metric.where(name: Metric.names[:blog_visits], ownable_type: BlogPost.to_s)
-            .where('value_timestamp >= ?', latest_technology_metrics_updated_at)
-            .joins('JOIN blog_posts on metrics.ownable_id = blog_posts.id')
-            .group(:value_timestamp, :technology_id)
-            .sum(:value)
-    end
-
-    def latest_technology_metrics_updated_at
-      latest_visits_metrics_by_technology =
-        Metric.where(name: Metric.names[:blog_visits], ownable_type: Technology.to_s)
-              .group(:ownable_id)
-              .maximum(:value_timestamp)
-
-      latest_visits_metrics_by_technology.values.min || Time.zone.at(0)
+      metrics_by_timestamp
+        .where(name: Metric.names[:blog_visits], ownable_type: BlogPost.to_s)
+        .joins('JOIN blog_posts on metrics.ownable_id = blog_posts.id')
+        .group(:value_timestamp, :technology_id)
+        .sum(:value)
     end
 
     def update_technology_visits_metric(technology_id, visits, timestamp)

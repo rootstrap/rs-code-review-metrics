@@ -19,8 +19,9 @@ detectors:
   DuplicateMethodCall:
     enabled: true
     exclude: ['GithubService#handle_event',
-              'Builders::Events::Review#assign_attrs',
-              'EventsProcessor::ReviewBuilder#self.assign_attrs']
+              'EventBuilders::Review#assign_attrs',
+              'EventsProcessor::ReviewBuilder#self.assign_attrs',
+              'ProjectsController#user_project_metric']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
@@ -33,7 +34,8 @@ detectors:
     exclude: []
   LongParameterList:
     enabled: true
-    exclude: ['WordpressApiMocker#stub_single_blog_post_response']
+    exclude: ['WordpressApiMocker#stub_single_blog_post_response',
+              'BaseMetricService#create_or_update_metric']
     max_params: 4
     overrides:
       initialize:
