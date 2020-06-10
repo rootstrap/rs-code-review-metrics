@@ -12,13 +12,20 @@ module Processors
 
     def init_attributes
       [
-        { name: 'ruby', keyword_string: 'ruby,rails' },
-        { name: 'python', keyword_string: 'python,django' },
-        { name: 'ios', keyword_string: 'ios' },
-        { name: 'android', keyword_string: 'android' },
-        { name: 'react', keyword_string: 'react' },
-        { name: 'machine learning', keyword_string: 'machine learning' },
-        { name: 'other', keyword_string: '' }
+        { name: 'ruby',
+          keyword_string: 'ruby,rails' },
+        { name: 'python',
+          keyword_string: 'python,django' },
+        { name: 'ios',
+          keyword_string: 'ios,swift' },
+        { name: 'android',
+          keyword_string: 'android' },
+        { name: 'react',
+          keyword_string: 'react,reactjs' },
+        { name: 'machine learning',
+          keyword_string: 'machine learning,data science,artificial intelligence' },
+        { name: 'other',
+          keyword_string: '' }
       ]
     end
   end
