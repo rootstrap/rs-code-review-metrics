@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DevelopmentMetricsController, type: :request do
+RSpec.describe DevelopmentMetricsController, type: :controller do
   let(:project) { create(:project, name: 'rs-metrics') }
 
   describe '#index' do
@@ -8,7 +8,7 @@ RSpec.describe DevelopmentMetricsController, type: :request do
       let(:params) { { metric: {} } }
 
       it 'returns status ok although the absence of content' do
-        get '/development_metrics', params: params
+        get :index, params: params
 
         expect(response).to have_http_status(:ok)
       end
@@ -34,7 +34,7 @@ RSpec.describe DevelopmentMetricsController, type: :request do
       it 'returns status ok' do
         allow(Metrics::Group::Daily).to receive(:call).and_return(true)
         allow(Metrics::Group::Daily).to receive(:call).and_return(true)
-        get '/development_metrics', params: params
+        get :index, params: params
 
         assert_response :success
       end
@@ -42,13 +42,13 @@ RSpec.describe DevelopmentMetricsController, type: :request do
       it 'calls period metric retriever class' do
         expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
 
-        get '/development_metrics', params: params
+        get :index, params: params
       end
 
       it 'calls CodeClimate summary retriever class' do
         expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
 
-        get '/development_metrics', params: params
+        get :index, params: params
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe DevelopmentMetricsController, type: :request do
       end
       it 'raises Graph::RangeDateNotSupported' do
         expect {
-          get '/development_metrics', params: params
+          get :index, params: params
         }.to raise_error(Graph::RangeDateNotSupported)
       end
     end

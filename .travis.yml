@@ -1,10 +1,6 @@
 language: ruby
 
-cache: 
-  bundler: true
-  directories:
-    - node_modules
-  yarn: true
+cache: bundler
 
 rvm:
   - 2.6.3
@@ -24,18 +20,6 @@ env:
     - PGPORT=5433
     - CC_TEST_REPORTER_ID=e54f24c60ea55d00f23cba6796704ec633938d432fde7da52a872511496a36b8
 
-before_install:
-  - sudo sed -e 's/^bind.*/bind 127.0.0.1/' /etc/redis/redis.conf > redis.conf
-  - sudo mv redis.conf /etc/redis
-  - sudo service redis-server start
-
-install:
-  - bundle install
-  - nvm install node
-  - node -v
-  - npm i -g yarn
-  - yarn
-
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
   - psql -U travis -q -d code_review_metrics_travis -f db/structure.sql
@@ -45,7 +29,6 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - bundle exec rails webpacker:compile
   - bundle exec rspec
   - bundle exec rake code_analysis
 
