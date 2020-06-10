@@ -10,6 +10,7 @@ class MetricsController < ApplicationController
     @merge_time = period_metric_query.call(
       entity_name: controller_name, entity_id: project_id, metric_name: 'merge_time'
     )
+    @code_climate = Metrics::CodeClimateSummaryRetriever.call(project_id)
   end
 
   private

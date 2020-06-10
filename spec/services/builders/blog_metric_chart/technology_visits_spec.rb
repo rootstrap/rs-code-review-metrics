@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe BlogMetricChartBuilder do
-  describe '#technology_visits' do
+describe Builders::BlogMetricChart::TechnologyVisits do
+  describe '.call' do
     let(:technology) { create(:technology) }
     let!(:last_month_metric) do
       create(
@@ -27,14 +27,14 @@ describe BlogMetricChartBuilder do
       {
         name: technology.name.titlecase,
         data: {
-          last_month_metric.value_timestamp.strftime('%B') => last_month_metric.value,
-          this_month_metric.value_timestamp.strftime('%B') => this_month_metric.value
+          last_month_metric.value_timestamp.strftime('%B %Y') => last_month_metric.value,
+          this_month_metric.value_timestamp.strftime('%B %Y') => this_month_metric.value
         }
       }
     end
 
     it 'returns the technology visits formatted by technology and month' do
-      expect(subject.technology_visits).to contain_exactly(technology_metrics_hash)
+      expect(described_class.call).to contain_exactly(technology_metrics_hash)
     end
   end
 end
