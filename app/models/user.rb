@@ -43,6 +43,9 @@ class User < ApplicationRecord
            class_name: 'Events::PullRequest',
            dependent: :destroy,
            inverse_of: :owner
+  has_and_belongs_to_many :projects_as_code_owner,
+                          class_name: 'Project',
+                          join_table: 'projects_users'
   validates :github_id,
             :login,
             :node_id,

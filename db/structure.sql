@@ -404,6 +404,16 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: projects_users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.projects_users (
+    project_id bigint NOT NULL,
+    user_id bigint NOT NULL
+);
+
+
+--
 -- Name: pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -976,6 +986,20 @@ CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USIN
 
 
 --
+-- Name: index_projects_users_on_project_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_users_on_project_id_and_user_id ON public.projects_users USING btree (project_id, user_id);
+
+
+--
+-- Name: index_projects_users_on_user_id_and_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_users_on_user_id_and_project_id ON public.projects_users USING btree (user_id, project_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1272,4 +1296,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200511180927'),
 ('20200518155135'),
 ('20200518155136'),
-('20200518160851');
+('20200518160851'),
+('20200608150702');
