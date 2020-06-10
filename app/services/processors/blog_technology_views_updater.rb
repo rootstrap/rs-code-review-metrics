@@ -17,15 +17,6 @@ module Processors
         .sum(:value)
     end
 
-    def latest_technology_metrics_updated_at
-      latest_visits_metrics_by_technology =
-        Metric.where(name: Metric.names[:blog_visits], ownable_type: Technology.to_s)
-              .group(:ownable_id)
-              .maximum(:value_timestamp)
-
-      latest_visits_metrics_by_technology.values.min || Time.zone.at(0)
-    end
-
     def update_technology_visits_metric(technology_id, visits, timestamp)
       metric = Metric.find_or_initialize_by(
         ownable_id: technology_id,

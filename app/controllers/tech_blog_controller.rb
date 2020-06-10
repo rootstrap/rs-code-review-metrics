@@ -1,11 +1,21 @@
 class TechBlogController < ApplicationController
   def index
     @visits_per_technology = visits_per_technology
+    @visits_growth_mom = visits_growth_mom
+    @blog_post_count_per_technology = technology_blog_post_count
   end
 
   private
 
   def visits_per_technology
-    BlogMetricChartBuilder.new.technology_visits
+    Builders::BlogMetricChart::TechnologyVisits.call
+  end
+
+  def visits_growth_mom
+    TechnologyGrowthMomCalculator.call(Metric.names[:blog_visits], 12)
+  end
+
+  def technology_blog_post_count
+    Builders::BlogMetricChart::TechnologyBlogPostCount.call
   end
 end
