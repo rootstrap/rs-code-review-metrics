@@ -1,10 +1,5 @@
 module Builders
-  class MergeTimeMetrics < BaseService
-    def initialize(project_id, period_metric_query)
-      @project_id = project_id
-      @period_metric_query = period_metric_query
-    end
-
+  class MergeTimeMetrics < MetricsBase
     def call
       build
     end
