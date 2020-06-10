@@ -26,7 +26,7 @@ module Metrics
       end
 
       def parse_entity
-        "#{@entity_name.singularize.classify}Data"
+        "#{@entity_name.classify}Data"
       end
     end
   end

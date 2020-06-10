@@ -20,7 +20,5 @@ module GithubAnalyzer
     config.active_record.schema_format = :sql
     # Autoload lib folder
     config.autoload_paths << "#{Rails.root}/lib"
-
-    config.hosts << ENV.fetch('HEROKU_URL', '')
   end
 end
