@@ -32,10 +32,26 @@ describe Processors::BlogMetricsUpdater do
         [blog_post_1_month_count, blog_post_2_month_count].max
       end
 
-      it 'creates as much technology visits metrics as months with blog post visits' do
+      it 'creates as many technology visits metrics as months with blog post visits' do
         expect { updater.call }
-          .to change(Metric.where(ownable: technology), :count)
+          .to change(Metric.where(ownable: technology, name: Metric.names[:blog_visits]), :count)
           .by total_months_with_blog_post_visits
+      end
+    end
+
+    describe '#update_technologies_blog_post_count_metrics' do
+      let(:total_months_since_first_blog_post_published) do
+        earliest_publish_date = [blog_post_1.published_at, blog_post_2.published_at].min.to_date
+        (earliest_publish_date..Time.zone.today).map(&:beginning_of_month).uniq.count
+      end
+
+      it 'creates as many blog post count metrics as months since the first publication' do
+        expect { updater.call }
+          .to change(
+            Metric.where(ownable: technology, name: Metric.names[:blog_post_count]),
+            :count
+          )
+          .by total_months_since_first_blog_post_published
       end
     end
   end

@@ -21,7 +21,8 @@ class Metric < ApplicationRecord
   enum interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', all_times: 'all_times' }
   enum name: { review_turnaround: 'review_turnaround',
                blog_visits: 'blog_visits',
-               merge_time: 'merge_time' }
+               merge_time: 'merge_time',
+               blog_post_count: 'blog_post_count' }
 
   belongs_to :ownable, polymorphic: true
 
