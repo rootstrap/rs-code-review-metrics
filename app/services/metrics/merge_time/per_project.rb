@@ -28,8 +28,10 @@ module Metrics
       end
 
       def calculate_turnaround(project)
-        project.pull_requests.inject(0) { |sum, pr| sum + (pr.merged_at.to_i - pr.opened_at.to_i) }
-          ./(pull_requests_count.fetch(project.id))
+        total = project.pull_requests.inject(0) do |sum, pr|
+          sum + (pr.merged_at.to_i - pr.opened_at.to_i)
+        end
+        total / pull_requests_count.fetch(project.id)
       end
 
       def metric_interval
