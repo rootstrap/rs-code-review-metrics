@@ -3,9 +3,10 @@ class DevelopmentMetricsController < ApplicationController
     return if metric_params.blank?
 
     period_metric_query = Metrics::PeriodRetriever.call(metric_params[:period])
-    @review_turnaround = Builders::ReviewTurnaroundMetrics.call(project_id, period_metric_query)
-    @merge_time = Builders::MergeTimeMetrics.call(project_id, period_metric_query)
-    @code_climate = Metrics::CodeClimateSummaryRetriever.call(project_id)
+    metrics = Builders::Chartkick::DevelopmentMetrics.call(project_id, period_metric_query)
+    @review_turnaround = metrics[:review_turnaround]
+    @merge_time = metrics[:merge_time]
+    @code_climate = CodeClimateSummaryRetriever.call(project_id)
   end
 
   private
