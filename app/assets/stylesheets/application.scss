@@ -1,14 +1,15 @@
 @import "bootstrap";
 
 // Abstracts
-@import "abstracts/variables";
-@import "abstracts/utils";
+@import "abstracts/*";
 
 // Layout
-@import "layout/navigation";
+@import "layout/*";
 
 //shared
 @import "shared/*";
 
-@import "user-project-metric";
+// Metrics
+@import "metrics/*";
+
 @import "nav-filter";
