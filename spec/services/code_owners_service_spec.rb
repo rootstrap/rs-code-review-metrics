@@ -23,7 +23,6 @@ RSpec.describe CodeOwnersService do
     end
 
     context 'when project content from the github repo api is present' do
-
       before do
         create(:user, login: 'hdamico')
         create(:user, login: 'santiagovidal')

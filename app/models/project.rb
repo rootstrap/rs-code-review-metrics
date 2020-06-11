@@ -28,9 +28,11 @@ class Project < ApplicationRecord
   has_many :users_projects, dependent: :destroy
   has_many :users, through: :users_projects
   has_many :metrics, as: :ownable, dependent: :destroy
-  has_and_belongs_to_many :code_owners,
-                          class_name: 'User',
-                          join_table: 'projects_users'
+
+  has_many :code_owner_projects, dependent: :destroy
+  has_many :code_owners,
+           through: :code_owner_projects,
+           source: :user
 
   validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true

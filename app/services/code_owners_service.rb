@@ -9,9 +9,8 @@ class CodeOwnersService < BaseService
     end
   end
 
-
   def save_code_owners_from_file(project, content)
-    content.split('*').second.split("@").each do |code_owner_name|
+    content.split('*').second.split('@').each do |code_owner_name|
       user = User.find_by(login: code_owner_name.strip)
       next if user.nil?
 

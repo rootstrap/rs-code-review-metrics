@@ -263,6 +263,38 @@ ALTER SEQUENCE public.code_climate_project_metrics_id_seq OWNED BY public.code_c
 
 
 --
+-- Name: code_owner_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.code_owner_projects (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: code_owner_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.code_owner_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: code_owner_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_projects.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -731,6 +763,13 @@ ALTER TABLE ONLY public.code_climate_project_metrics ALTER COLUMN id SET DEFAULT
 
 
 --
+-- Name: code_owner_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval('public.code_owner_projects_id_seq'::regclass);
+
+
+--
 -- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -852,6 +891,14 @@ ALTER TABLE ONLY public.blog_posts
 
 ALTER TABLE ONLY public.code_climate_project_metrics
     ADD CONSTRAINT code_climate_project_metrics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: code_owner_projects code_owner_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_projects
+    ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -1005,6 +1052,20 @@ CREATE INDEX index_blog_posts_on_technology_id ON public.blog_posts USING btree 
 --
 
 CREATE INDEX index_code_climate_project_metrics_on_project_id ON public.code_climate_project_metrics USING btree (project_id);
+
+
+--
+-- Name: index_code_owner_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_code_owner_projects_on_project_id ON public.code_owner_projects USING btree (project_id);
+
+
+--
+-- Name: index_code_owner_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects USING btree (user_id);
 
 
 --
@@ -1246,6 +1307,22 @@ ALTER TABLE ONLY public.pull_requests
 
 
 --
+-- Name: code_owner_projects fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_projects
+    ADD CONSTRAINT fk_rails_8b5e8dfa3f FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: code_owner_projects fk_rails_98029d380a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_projects
+    ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: review_requests fk_rails_9ece0f7518; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1364,6 +1441,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200518160851'),
 ('20200602181502'),
 ('20200605192032'),
-('20200608150702');
+('20200608150702'),
+('20200611153414');
 
 
