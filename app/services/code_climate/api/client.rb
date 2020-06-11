@@ -10,7 +10,7 @@ module CodeClimate
 
       def repositories(org_id:)
         response_json = get_json(RemoteQuery.new("orgs/#{org_id}/repos"))
-        response_json['data'].map do |repository_json|
+        response_json && response_json['data'].map do |repository_json|
           Repository.new(repository_json)
         end
       end
@@ -22,22 +22,28 @@ module CodeClimate
                  get_json(RemoteQuery.new("repos/#{repository_id}"))
                end
         # Despite of the name this endpoint returns a collection of repositories
-        json ? Repository.new(json['data'].first) : nil
+        json && Repository.new(json['data'].first)
       end
 
       def snapshot(repo_id:, snapshot_id:)
         json = get_json(RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}"))
-        json ? Snapshot.new(json['data'], repo_id) : nil
+        json && Snapshot.new(json['data'], repo_id)
       end
 
       def snapshot_issues(repo_id:, snapshot_id:)
         json = get_json(RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues"))
-        json ? json['data'].map { |issue_json| SnapshotIssue.new(issue_json) } : nil
+        json && json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
       end
+
+      private
 
       def get_json(remote_query)
         body = get_body(remote_query)
-        body ? JSON.parse(body) : nil
+        body && JSON.parse(body)
+      end
+
+      def unsafe_get_json(remote_query)
+        JSON.parse(get_body(remote_query))
       end
 
       def get_body(remote_query)
