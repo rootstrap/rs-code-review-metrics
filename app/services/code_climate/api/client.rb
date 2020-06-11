@@ -21,7 +21,8 @@ module CodeClimate
                else
                  get_json(RemoteQuery.new("repos/#{repository_id}"))
                end
-        json ? Repository.new(json['data']) : nil
+        # Despite of the name this endpoint returns a collection of repositories
+        json ? Repository.new(json['data'].first) : nil
       end
 
       def snapshot(repo_id:, snapshot_id:)

@@ -5,7 +5,7 @@ describe CodeClimate::UpdateProjectService do
 
   before do
     base_url = 'https://api.codeclimate.com/v1'
-    repo_id = code_climate_repository_json['data']['id']
+    repo_id = code_climate_repository_json['data'].first['id']
     snapshot_id = code_climate_snapshot_json['data']['id']
     stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}")
       .to_return(status: 200, body: JSON.generate(code_climate_snapshot_json))

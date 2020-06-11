@@ -2,9 +2,7 @@ module CodeClimate
   module Api
     class Repository < CodeClimate::Api::Object
       def summary
-        default_branch_most_recent_snapshot.summary.tap do |hash|
-          hash[id] = id
-        end
+        default_branch_most_recent_snapshot&.summary
       end
 
       def id
