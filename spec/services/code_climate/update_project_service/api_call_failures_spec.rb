@@ -32,36 +32,73 @@ describe CodeClimate::UpdateProjectService do
   let(:project) { create :project, name: 'rs-code-review-metrics' }
   let(:update_project_code_climate_info) { subject.call(project) }
 
-  context 'when the /repos call returns anything but 200' do
-    before do
-      stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-        .to_return(status: 500)
+  context 'when the call to /repos' do
+    let(:endpoint) { "#{base_url}/repos?github_slug=rootstrap/#{project.name}" }
+    context 'returns anything but 200' do
+      before do
+        stub_request(:get, endpoint).to_return(status: 500)
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
 
-    it 'does not update a CodeClimateProjectMetric record' do
-      expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+    context 'returns an unexpected json structure' do
+      let(:endpoint) { "#{base_url}/repos?github_slug=rootstrap/#{project.name}" }
+      before do
+        stub_request(:get, endpoint).to_return(status: 200, body: '')
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
   end
 
-  context 'when the /repos/:id/snapshots/ call returns anything but 200' do
-    before do
-      stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}")
-        .to_return(status: 500)
+  context 'when the call to /repos/:id/snapshots/' do
+    let(:endpoint) { "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}" }
+    context 'returns anything but 200' do
+      before do
+        stub_request(:get, endpoint).to_return(status: 500)
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
 
-    it 'does not update a CodeClimateProjectMetric record' do
-      expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+    context 'returns an unexpected json structure' do
+      before do
+        stub_request(:get, endpoint).to_return(status: 200, body: '')
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
   end
 
-  context 'when the /repos/:id/snapshots/issues call returns anything but 200' do
-    before do
-      stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
-        .to_return(status: 500)
+  context 'when the call to /repos/:id/snapshots/issues' do
+    let(:endpoint) { "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues" }
+    context 'returns anything but 200' do
+      before do
+        stub_request(:get, endpoint).to_return(status: 500)
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
 
-    it 'does not update a CodeClimateProjectMetric record' do
-      expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+    context 'returns an unexpected json structure' do
+      before do
+        stub_request(:get, endpoint).to_return(status: 200, body: '')
+      end
+
+      it 'does not update a CodeClimateProjectMetric record' do
+        expect { update_project_code_climate_info }.not_to change { CodeClimateProjectMetric.count }
+      end
     end
   end
 end
