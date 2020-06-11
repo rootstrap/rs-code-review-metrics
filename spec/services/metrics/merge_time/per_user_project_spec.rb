@@ -159,7 +159,7 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
       end
 
       it 'creates one metric and then rollbacks the transaction' do
-        suppress(ActiveRecord::RecordInvalid) do
+        suppress(NoMethodError) do
           described_class.call
         end
 

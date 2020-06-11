@@ -16,20 +16,27 @@ module Metrics
       def process
         ActiveRecord::Base.transaction do
           entities = Hash.new(0)
-          filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |ids|
-            reviews_reviews(ids) do |review|
+          reviews_ids_in_batches do |ids|
+            retrieve_reviews(ids) do |review|
               entity = find_user_project(review.owner, review.project)
               entities[entity] += 1
               turnaround = calculate_turnaround(review)
 
-              create_or_update_metric(entity, turnaround, :review_turnaround)
+              create_or_update_metric(entity.id, UsersProject.to_s, metric_interval,
+                                      turnaround, :review_turnaround)
             end
           end
           calculate_avg(entities, :review_turnaround)
         end
       end
 
-      def reviews_reviews(ids)
+      def reviews_ids_in_batches
+        filtered_reviews_ids.lazy.each_slice(BATCH_SIZE) do |ids|
+          yield(ids)
+        end
+      end
+
+      def retrieve_reviews(ids)
         Events::Review.includes(:project, :review_request, owner: :users_projects)
                       .find(ids).each do |review|
           yield(review)

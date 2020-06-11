@@ -9,9 +9,10 @@ class BaseMetricService < BaseService
     end
   end
 
-  def create_or_update_metric(entity, metric_value, metric_type)
-    metric = Metric.find_or_initialize_by(ownable: entity,
-                                          value_timestamp: Time.zone.today.all_day,
+  def create_or_update_metric(entity_id, entity_type, interval, metric_value, metric_type)
+    metric = Metric.find_or_initialize_by(ownable_id: entity_id,
+                                          ownable_type: entity_type,
+                                          value_timestamp: interval,
                                           name: metric_type)
     return metric.update!(value: (metric_value + metric.value)) if metric.persisted?
 

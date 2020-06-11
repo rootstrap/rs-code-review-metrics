@@ -58,7 +58,8 @@ CREATE TYPE public.metric_interval AS ENUM (
 CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround',
     'blog_visits',
-    'merge_time'
+    'merge_time',
+    'blog_post_count'
 );
 
 
@@ -225,6 +226,40 @@ CREATE SEQUENCE public.blog_posts_id_seq
 --
 
 ALTER SEQUENCE public.blog_posts_id_seq OWNED BY public.blog_posts.id;
+
+
+--
+-- Name: code_climate_project_metrics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.code_climate_project_metrics (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    code_climate_rate character varying,
+    invalid_issues_count integer,
+    wont_fix_issues_count integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.code_climate_project_metrics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.code_climate_project_metrics_id_seq OWNED BY public.code_climate_project_metrics.id;
 
 
 --
@@ -679,6 +714,13 @@ ALTER TABLE ONLY public.blog_posts ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
+-- Name: code_climate_project_metrics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_project_metrics ALTER COLUMN id SET DEFAULT nextval('public.code_climate_project_metrics_id_seq'::regclass);
+
+
+--
 -- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -792,6 +834,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.blog_posts
     ADD CONSTRAINT blog_posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: code_climate_project_metrics code_climate_project_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_project_metrics
+    ADD CONSTRAINT code_climate_project_metrics_pkey PRIMARY KEY (id);
 
 
 --
@@ -938,6 +988,13 @@ CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_us
 --
 
 CREATE INDEX index_blog_posts_on_technology_id ON public.blog_posts USING btree (technology_id);
+
+
+--
+-- Name: index_code_climate_project_metrics_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_code_climate_project_metrics_on_project_id ON public.code_climate_project_metrics USING btree (project_id);
 
 
 --
@@ -1141,6 +1198,14 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
+-- Name: code_climate_project_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_project_metrics
+    ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: pull_requests fk_rails_5df700b412; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1272,4 +1337,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200511180927'),
 ('20200518155135'),
 ('20200518155136'),
-('20200518160851');
+('20200518160851'),
+('20200602181502'),
+('20200605192032');
+
+
