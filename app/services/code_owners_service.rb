@@ -23,12 +23,8 @@ class CodeOwnersService < BaseService
   end
 
   def build_code_owners_array(content_file)
-    content_file
-      .split('*')
-      .second
-      .remove(' ')
-      .strip
-      .split('@')
-      .reject(&:blank?)
+    content_file.lines.flat_map do |line|
+      line.scan(%r{@(\w+)}).flatten
+    end
   end
 end
