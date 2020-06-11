@@ -10,7 +10,20 @@
       </div>
     </div>
   <% end %>
-
+  <div class='code-owners'>
+    <span class='code-owners-title'>Code Owners</span>
+    <div class="code-owners-list">
+      <%if @code_owners.present? %>
+        <ul>
+          <% @code_owners.each do |code_owner|%>
+            <li>
+              <span class="badge badge-secondary"><%= code_owner %></span>
+            </li>
+          <%end%>
+        </ul>
+      <%end%>
+    </div>
+  </div>
   <%= render 'review_turnaround', review_turnaround: @review_turnaround %>
 
   <%= render 'merge_time', merge_time: @merge_time %>
