@@ -1,5 +1,5 @@
 <%= render 'shared/sidebar'%>
-<div class="col-md-10">
+<div class='col-md-10'>
   <%= render 'shared/nav-filter' do |f|%>
     <div class="row">
       <div class="col-md-3">
@@ -10,6 +10,20 @@
       </div>
     </div>
   <% end %>
+  <div class='code-owners'>
+    <span class='code-owners-title'>Code Owners</span>
+    <div class="code-owners-list">
+      <%if @code_owners.present? %>
+        <ul>
+          <% @code_owners.each do |code_owner|%>
+            <li>
+              <span class="badge badge-secondary"><%= code_owner %></span>
+            </li>
+          <%end%>
+        </ul>
+      <%end%>
+    </div>
+  </div>
   <%= render partial: 'shared/line-chart',
               locals: { metric_name: 'Review Turnaround', metric: @review_turnaround } if @review_turnaround %>
   <%= render partial: 'shared/line-chart',

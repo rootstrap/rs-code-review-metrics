@@ -443,6 +443,7 @@ DEPENDENCIES
   factory_bot_rails (~> 5.1)
   faker (~> 2.10, >= 2.10.2)
   faraday (~> 1.0, >= 1.0.1)
+  groupdate (~> 5.0)
   honeybadger (~> 4.0)
   jbuilder (~> 2.7)
   jquery-rails (~> 4.3, >= 4.3.5)

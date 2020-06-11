@@ -5,18 +5,19 @@ class MetricsController < ApplicationController
     period_metric_query = Metrics::PeriodRetriever.call(metric_params[:period])
 
     @review_turnaround = period_metric_query.call(
-      entity_name: controller_name, entity_id: project_id, metric_name: 'review_turnaround'
+      entity_name: controller_name, entity_id: project.id, metric_name: 'review_turnaround'
     )
     @merge_time = period_metric_query.call(
-      entity_name: controller_name, entity_id: project_id, metric_name: 'merge_time'
+      entity_name: controller_name, entity_id: project.id, metric_name: 'merge_time'
     )
-    @code_climate = Metrics::CodeClimateSummaryRetriever.call(project_id)
+    @code_climate = Metrics::CodeClimateSummaryRetriever.call(project.id)
+    @code_owners = project.code_owners.pluck(:login)
   end
 
   private
 
-  def project_id
-    @project_id ||= Project.find_by(name: params[:project_name]).id
+  def project
+    @project ||= Project.find_by(name: params[:project_name])
   end
 
   def controller_name
