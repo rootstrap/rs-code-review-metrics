@@ -26,15 +26,15 @@ describe Builders::BlogMetricChart::TechnologyVisits do
     let(:technology_metrics_hash) do
       {
         name: technology.name.titlecase,
-        data: {
+        data: a_hash_including(
           last_month_metric.value_timestamp.strftime('%B %Y') => last_month_metric.value,
           this_month_metric.value_timestamp.strftime('%B %Y') => this_month_metric.value
-        }
+        )
       }
     end
 
     it 'returns the technology visits formatted by technology and month' do
-      expect(described_class.call).to contain_exactly(technology_metrics_hash)
+      expect(described_class.call).to include(technology_metrics_hash)
     end
   end
 end
