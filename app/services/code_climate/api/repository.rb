@@ -9,10 +9,6 @@ module CodeClimate
         @json['id']
       end
 
-      def name
-        @json['name']
-      end
-
       private
 
       def default_branch_most_recent_snapshot
