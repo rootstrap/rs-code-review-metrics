@@ -19,11 +19,11 @@ module CodeClimate
 
       def repository(repository_id: nil, github_slug: nil)
         safely do
-          json = if github_slug
-                   get_json(RemoteQuery.new('repos', github_slug: github_slug))
-                 else
-                   get_json(RemoteQuery.new("repos/#{repository_id}"))
-                 end
+          json = get_json(
+            repository_remote_query(
+              repository_id: repository_id, github_slug: github_slug
+            )
+          )
           # Despite of the name this endpoint returns a collection of repositories
           json && Repository.new(json['data'].first)
         end
@@ -44,6 +44,14 @@ module CodeClimate
       end
 
       private
+
+      def repository_remote_query(repository_id:, github_slug:)
+        if github_slug
+          RemoteQuery.new('repos', github_slug: github_slug)
+        else
+          RemoteQuery.new("repos/#{repository_id}")
+        end
+      end
 
       def snapshot_remote_query(repo_id:, snapshot_id:)
         RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}")
