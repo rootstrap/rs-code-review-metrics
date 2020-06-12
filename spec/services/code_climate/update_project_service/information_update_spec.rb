@@ -1,17 +1,23 @@
-require 'rails_helper'
+require_relative '../code_climate_spec_helper'
 
 describe CodeClimate::UpdateProjectService do
   subject { CodeClimate::UpdateProjectService }
 
   before do
-    base_url = 'https://api.codeclimate.com/v1'
-    repo_id = code_climate_repository_json['data'].first['id']
-    snapshot_id = code_climate_snapshot_json['data']['id']
-    stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}")
-      .to_return(status: 200, body: JSON.generate(code_climate_snapshot_json))
-    stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
-      .to_return(status: 200, body: JSON.generate(code_climate_snapshot_issues_json))
+    on_request_repository(project_name: project.name,
+                          respond: { status: 200, body: code_climate_repository_json })
+
+    on_request_snapshot(repo_id: repo_id,
+                        snapshot_id: snapshot_id,
+                        respond: { status: 200, body: code_climate_snapshot_json })
+
+    on_request_issues(repo_id: repo_id,
+                      snapshot_id: snapshot_id,
+                      respond: { status: 200, body: code_climate_snapshot_issues_json })
   end
+
+  let(:repo_id) { code_climate_repository_json['data'].first['id'] }
+  let(:snapshot_id) { code_climate_snapshot_json['data']['id'] }
 
   let(:code_climate_repository_json) do
     build :code_climate_repository_payload,
@@ -33,9 +39,8 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project not registered in CodeClimate' do
     before do
-      base_url = 'https://api.codeclimate.com/v1'
-      stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-        .to_return(status: 404)
+      on_request_repository(project_name: project.name,
+                            respond: { status: 404 })
     end
 
     it 'does not create a CodeClimateProjectMetric record' do
@@ -44,12 +49,6 @@ describe CodeClimate::UpdateProjectService do
   end
 
   context 'with a project registered in CodeClimate that has not been updated before' do
-    before do
-      base_url = 'https://api.codeclimate.com/v1'
-      stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-        .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
-    end
-
     it 'creates a CodeClimateProjectMetric record' do
       expect { update_project_code_climate_info }.to change { CodeClimateProjectMetric.count }.by(1)
     end
@@ -72,11 +71,7 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project registered in CodeClimate that is outdated' do
     before do
-      base_url = 'https://api.codeclimate.com/v1'
       existing_code_climate_project_metric
-
-      stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-        .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
     end
 
     let(:existing_code_climate_project_metric) do
@@ -110,11 +105,7 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project registered in CodeClimate that is up to date' do
     before do
-      base_url = 'https://api.codeclimate.com/v1'
       existing_code_climate_project_metric
-
-      stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-        .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
     end
 
     let(:existing_code_climate_project_metric) do

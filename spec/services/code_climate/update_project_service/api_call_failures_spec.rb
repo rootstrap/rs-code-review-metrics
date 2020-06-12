@@ -1,18 +1,21 @@
-require 'rails_helper'
+require_relative '../code_climate_spec_helper'
 
 describe CodeClimate::UpdateProjectService do
   subject { CodeClimate::UpdateProjectService }
 
   before do
-    stub_request(:get, "#{base_url}/repos?github_slug=rootstrap/#{project.name}")
-      .to_return(status: 200, body: JSON.generate(code_climate_repository_json))
-    stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}")
-      .to_return(status: 200, body: JSON.generate(code_climate_snapshot_json))
-    stub_request(:get, "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
-      .to_return(status: 200, body: JSON.generate(code_climate_snapshot_issues_json))
+    on_request_repository(project_name: project.name,
+                          respond: { status: 200, body: code_climate_repository_json })
+
+    on_request_snapshot(repo_id: repo_id,
+                        snapshot_id: snapshot_id,
+                        respond: { status: 200, body: code_climate_snapshot_json })
+
+    on_request_issues(repo_id: repo_id,
+                      snapshot_id: snapshot_id,
+                      respond: { status: 200, body: code_climate_snapshot_issues_json })
   end
 
-  let(:base_url) { 'https://api.codeclimate.com/v1' }
   let(:repo_id) { code_climate_repository_json['data'].first['id'] }
   let(:snapshot_id) { code_climate_snapshot_json['data']['id'] }
 
@@ -33,10 +36,10 @@ describe CodeClimate::UpdateProjectService do
   let(:update_project_code_climate_info) { subject.call(project) }
 
   context 'when the call to /repos' do
-    let(:endpoint) { "#{base_url}/repos?github_slug=rootstrap/#{project.name}" }
     context 'returns anything but 200' do
       before do
-        stub_request(:get, endpoint).to_return(status: 500)
+        on_request_repository(project_name: project.name,
+                              respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -45,9 +48,9 @@ describe CodeClimate::UpdateProjectService do
     end
 
     context 'returns an unexpected json structure' do
-      let(:endpoint) { "#{base_url}/repos?github_slug=rootstrap/#{project.name}" }
       before do
-        stub_request(:get, endpoint).to_return(status: 200, body: '')
+        on_request_repository(project_name: project.name,
+                              respond: { status: 200, body: '' })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -57,10 +60,11 @@ describe CodeClimate::UpdateProjectService do
   end
 
   context 'when the call to /repos/:id/snapshots/' do
-    let(:endpoint) { "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}" }
     context 'returns anything but 200' do
       before do
-        stub_request(:get, endpoint).to_return(status: 500)
+        on_request_snapshot(repo_id: repo_id,
+                            snapshot_id: snapshot_id,
+                            respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -70,7 +74,9 @@ describe CodeClimate::UpdateProjectService do
 
     context 'returns an unexpected json structure' do
       before do
-        stub_request(:get, endpoint).to_return(status: 200, body: '')
+        on_request_snapshot(repo_id: repo_id,
+                            snapshot_id: snapshot_id,
+                            respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -80,10 +86,11 @@ describe CodeClimate::UpdateProjectService do
   end
 
   context 'when the call to /repos/:id/snapshots/issues' do
-    let(:endpoint) { "#{base_url}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues" }
     context 'returns anything but 200' do
       before do
-        stub_request(:get, endpoint).to_return(status: 500)
+        on_request_issues(repo_id: repo_id,
+                          snapshot_id: snapshot_id,
+                          respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -93,7 +100,9 @@ describe CodeClimate::UpdateProjectService do
 
     context 'returns an unexpected json structure' do
       before do
-        stub_request(:get, endpoint).to_return(status: 200, body: '')
+        on_request_issues(repo_id: repo_id,
+                          snapshot_id: snapshot_id,
+                          respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
