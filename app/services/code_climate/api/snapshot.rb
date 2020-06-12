@@ -1,6 +1,6 @@
 module CodeClimate
   module Api
-    class Snapshot < CodeClimate::Api::Object
+    class Snapshot < Resource
       attr_reader :repo_id
 
       def initialize(json, repo_id)

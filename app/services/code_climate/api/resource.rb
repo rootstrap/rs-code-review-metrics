@@ -1,6 +1,6 @@
 module CodeClimate
   module Api
-    class Object
+    class Resource
       def initialize(api_json)
         @json = api_json
       end

@@ -1,6 +1,6 @@
 module CodeClimate
   module Api
-    class Repository < CodeClimate::Api::Object
+    class Repository < Resource
       def summary
         default_branch_most_recent_snapshot&.summary
       end

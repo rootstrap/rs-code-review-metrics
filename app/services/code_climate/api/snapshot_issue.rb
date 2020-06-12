@@ -1,6 +1,6 @@
 module CodeClimate
   module Api
-    class SnapshotIssue < CodeClimate::Api::Object
+    class SnapshotIssue < Resource
       def status
         @status ||= @json.dig('attributes', 'status', 'name')
       end
