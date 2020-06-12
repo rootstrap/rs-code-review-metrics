@@ -7,8 +7,7 @@ module CodeClimate
     end
 
     def call
-      return unless update_metric?
-      return unless code_climate_project_info
+      return unless update_metric? && code_climate_project_info
 
       create_project_code_climate_metric unless project_code_climate_metric
 
