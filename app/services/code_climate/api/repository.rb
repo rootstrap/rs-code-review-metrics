@@ -5,14 +5,14 @@ module CodeClimate
         default_branch_most_recent_snapshot&.summary
       end
 
-      def id
+      def repository_id
         @json['id']
       end
 
       private
 
       def default_branch_most_recent_snapshot
-        api_client.snapshot(repo_id: id, snapshot_id: snapshot_id)
+        api_client.snapshot(repo_id: repository_id, snapshot_id: snapshot_id)
       end
 
       def snapshot_id

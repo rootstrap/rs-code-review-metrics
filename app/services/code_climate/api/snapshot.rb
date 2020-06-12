@@ -18,7 +18,7 @@ module CodeClimate
 
       private
 
-      def id
+      def snapshot_id
         @json['id']
       end
 
@@ -28,7 +28,7 @@ module CodeClimate
       end
 
       def issues
-        @issues || api_client.snapshot_issues(repo_id: repo_id, snapshot_id: id)
+        @issues || api_client.snapshot_issues(repo_id: repo_id, snapshot_id: snapshot_id)
       end
 
       def invalid_issues_count
