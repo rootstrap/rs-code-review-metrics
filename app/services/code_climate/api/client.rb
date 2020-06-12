@@ -38,12 +38,16 @@ module CodeClimate
 
       def snapshot_issues(repo_id:, snapshot_id:)
         safely do
-          json = get_json(RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues"))
+          json = get_json(snapshot_issues_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
           json && json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
         end
       end
 
       private
+
+      def snapshot_issues_remote_query(repo_id:, snapshot_id:)
+        RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
+      end
 
       def safely
         yield
