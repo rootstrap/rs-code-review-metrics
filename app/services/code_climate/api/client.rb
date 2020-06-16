@@ -9,7 +9,7 @@ module CodeClimate
       }.freeze
 
       def repositories(org_id:)
-        safely do
+        ignoring_raised_errors do
           response_json = get_json(RemoteQuery.new("orgs/#{org_id}/repos"))
           response_json && response_json['data'].map do |repository_json|
             Repository.new(repository_json)
@@ -18,7 +18,7 @@ module CodeClimate
       end
 
       def repository(repository_id: nil, github_slug: nil)
-        safely do
+        ignoring_raised_errors do
           json = get_json(
             repository_remote_query(
               repository_id: repository_id, github_slug: github_slug
@@ -30,14 +30,14 @@ module CodeClimate
       end
 
       def snapshot(repo_id:, snapshot_id:)
-        safely do
+        ignoring_raised_errors do
           json = get_json(snapshot_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
           json && Snapshot.new(json['data'], repo_id)
         end
       end
 
       def snapshot_issues(repo_id:, snapshot_id:)
-        safely do
+        ignoring_raised_errors do
           json = get_json(snapshot_issues_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
           json && json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
         end
@@ -61,7 +61,7 @@ module CodeClimate
         RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
       end
 
-      def safely
+      def ignoring_raised_errors
         yield
       rescue StandardError
         nil
