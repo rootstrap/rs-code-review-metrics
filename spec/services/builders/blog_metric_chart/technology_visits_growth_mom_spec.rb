@@ -42,12 +42,12 @@ describe Builders::BlogMetricChart::TechnologyVisitsGrowthMom do
     describe 'totals' do
       let(:other_tecnology) { create(:technology) }
       let(:totals_hash) do
-        {
+        a_hash_including(
           name: 'Totals',
           data: a_hash_including(
             Time.zone.now.strftime('%B %Y') => 10
           )
-        }
+        )
       end
 
       before do
