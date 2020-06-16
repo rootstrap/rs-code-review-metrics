@@ -12,7 +12,7 @@ module CodeOwners
     def call
       @content_file.scan(/\*(?<user>\s+@\w+(\g<user>)?)/).flat_map do |one_line_names_string|
         one_line_names_string.first.strip.split(/\s/).map do |name|
-          name.scan(/@(\w+)/).flatten.first
+          name.sub!('@', '')
         end
       end
     end
