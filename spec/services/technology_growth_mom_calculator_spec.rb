@@ -38,5 +38,40 @@ RSpec.describe TechnologyGrowthMomCalculator do
           .not_to include(a_hash_including(data: a_hash_including(Time.zone.now.strftime('%B %Y'))))
       end
     end
+
+    describe 'totals' do
+      let(:other_tecnology) { create(:technology) }
+      let(:totals_hash) do
+        {
+          name: 'Totals',
+          data: a_hash_including(
+            Time.zone.now.strftime('%B %Y') => 10
+          )
+        }
+      end
+
+      before do
+        create(
+          :metric,
+          name: metric_name,
+          interval: Metric.intervals[:monthly],
+          ownable: other_tecnology,
+          value: 100,
+          value_timestamp: Time.zone.now.last_month.end_of_month
+        )
+        create(
+          :metric,
+          name: metric_name,
+          interval: Metric.intervals[:monthly],
+          ownable: other_tecnology,
+          value: 100,
+          value_timestamp: Time.zone.now.end_of_month
+        )
+      end
+
+      it 'returns a hash with the growth month over month rate of each month total visits' do
+        expect(described_class.call(metric_name, 1)).to include(totals_hash)
+      end
+    end
   end
 end
