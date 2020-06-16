@@ -15,9 +15,7 @@ module CodeOwners
     def add_new_code_owners
       @code_owners.each do |code_owner_name|
         user = User.find_by(login: code_owner_name)
-        next if user.nil?
-
-        project_code_owners << user unless project_code_owners.include?(user)
+        project_code_owners << user unless project_code_owners.include?(user) || user.nil?
       end
     end
 
