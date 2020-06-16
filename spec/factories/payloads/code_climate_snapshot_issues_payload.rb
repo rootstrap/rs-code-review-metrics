@@ -3,7 +3,7 @@ FactoryBot.define do
     skip_create
 
     transient do
-      status { ['invalid'] }
+      status { %w[new open confirmed invalid wontfix] }
     end
 
     data do
