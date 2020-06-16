@@ -9,11 +9,7 @@ describe CodeClimate::UpdateAllProjectsService do
   end
 
   context 'with a project' do
-    before do
-      first_project
-    end
-
-    let(:first_project) { create :project }
+    let!(:first_project) { create :project }
 
     it('calls UpdateProjectService on that project') do
       expect(CodeClimate::UpdateProjectService).to receive(:call).once.with(first_project)
@@ -22,13 +18,8 @@ describe CodeClimate::UpdateAllProjectsService do
   end
 
   context 'with many projects' do
-    before do
-      first_project
-      second_project
-    end
-
-    let(:first_project) { create :project }
-    let(:second_project) { create :project }
+    let!(:first_project) { create :project }
+    let!(:second_project) { create :project }
 
     it('calls UpdateProjectService on each project') do
       expect(CodeClimate::UpdateProjectService).to receive(:call).once.with(first_project)
