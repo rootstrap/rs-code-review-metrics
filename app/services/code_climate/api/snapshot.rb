@@ -13,6 +13,7 @@ module CodeClimate
 
         ProjectSummary.new(rate: ratings.first,
                            invalid_issues_count: invalid_issues_count,
+                           open_issues_count: open_issues_count,
                            wont_fix_issues_count: wont_fix_issues_count)
       end
 
@@ -33,6 +34,10 @@ module CodeClimate
 
       def invalid_issues_count
         issues.count(&:invalid?)
+      end
+
+      def open_issues_count
+        issues.count(&:open?)
       end
 
       def wont_fix_issues_count

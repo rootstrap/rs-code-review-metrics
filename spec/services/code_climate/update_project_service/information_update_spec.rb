@@ -29,7 +29,7 @@ describe CodeClimate::UpdateProjectService do
   end
   let(:code_climate_snapshot_issues_json) do
     build :code_climate_snapshot_issues_payload,
-          status: %w[invalid wontfix invalid]
+          status: %w[invalid wontfix invalid new open confirmed]
   end
 
   let(:project) { create :project, name: 'rs-code-review-metrics' }
@@ -67,6 +67,11 @@ describe CodeClimate::UpdateProjectService do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.wont_fix_issues_count).to eq(1)
     end
+
+    it 'sets the new CodeClimate open_issues_count for the project' do
+      update_project_code_climate_info
+      expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
+    end
   end
 
   context 'with a project registered in CodeClimate that is outdated' do
@@ -80,6 +85,7 @@ describe CodeClimate::UpdateProjectService do
              code_climate_rate: 'C',
              invalid_issues_count: 0,
              wont_fix_issues_count: 0,
+             open_issues_count: 0,
              updated_at: yesterday
     end
 
@@ -100,6 +106,11 @@ describe CodeClimate::UpdateProjectService do
     it 'sets the new CodeClimate wont_fix_issues_count for the project' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.wont_fix_issues_count).to eq(1)
+    end
+
+    it 'sets the new CodeClimate open_issues_count for the project' do
+      update_project_code_climate_info
+      expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
     end
   end
 

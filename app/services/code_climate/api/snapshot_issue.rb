@@ -9,6 +9,10 @@ module CodeClimate
         status && status.downcase == 'invalid'
       end
 
+      def open?
+        status && %w[new open confirmed].include?(status.downcase)
+      end
+
       def wontfix?
         status && status.downcase == 'wontfix'
       end
