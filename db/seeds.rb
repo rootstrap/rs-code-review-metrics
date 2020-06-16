@@ -10,7 +10,7 @@ if Rails.env.development?
 
   project = FactoryBot.create(:project, name: 'rs-code-review-metrics')
 
-  %w[santi_vidal santi_barte hernan horacio hosward sandro].each do |name|
+  %w[santiagovidal santib hdamico horacio hvilloria sandro].each do |name|
     FactoryBot.create(:user, login: name)
   end
 
