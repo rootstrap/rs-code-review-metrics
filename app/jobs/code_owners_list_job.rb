@@ -2,6 +2,6 @@ class CodeOwnersListJob < ApplicationJob
   queue_as :default
 
   def perform
-    CodeOwnersService.call
+    CodeOwners::Request.call
   end
 end

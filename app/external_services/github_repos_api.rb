@@ -8,8 +8,6 @@ class GithubReposApi
   def get_content_from_file(file_name)
     response = Faraday.get("#{URL}/#{@project_name}/contents/#{file_name}", {},
                            'Accept' => 'application/vnd.github.v3.raw')
-    return response.body if response.success?
-
-    {}
+    response.success? ? response.body : ''
   end
 end
