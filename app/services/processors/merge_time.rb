@@ -1,6 +1,6 @@
 module Processors
   class MergeTime < BaseService
-    ENTITIES = ['UserProject'].freeze
+    ENTITIES = %w[UserProject Project].freeze
 
     def call
       process
