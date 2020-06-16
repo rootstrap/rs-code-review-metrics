@@ -1,30 +1,49 @@
 module Builders
   module BlogMetricChart
     class Base < BaseService
+      def initialize(months = 13)
+        @months = months
+      end
+
       def call
-        formatted_metrics = Technology.all.map do |technology|
-          {
-            name: technology.name.titlecase,
-            data: data_for(technology.metrics)
-          }
+        metrics_result = Technology.all.map do |technology|
+          generate_results_for(
+            entity_name: technology.name.titlecase,
+            metrics: technology.metrics
+          )
         end
 
-        formatted_metrics << totals_hash
+        metrics_result << generate_results_for(
+          entity_name: 'Totals',
+          metrics: Metric.where(ownable_type: Technology.to_s)
+        )
       end
 
       private
 
-      def data_for(technology_metrics)
+      attr_reader :months
+
+      def generate_results_for(entity_name:, metrics:)
+        metrics_data = collect_data(metrics)
+        processed_data = process_data(metrics_data)
+        {
+          name: entity_name,
+          data: format_data(processed_data)
+        }
+      end
+
+      def collect_data(technology_metrics)
         technology_metrics.where(name: metric_name)
-                          .group_by_month(:value_timestamp, last: 13, format: '%B %Y')
+                          .group_by_month(:value_timestamp, last: months)
                           .sum(:value)
       end
 
-      def totals_hash
-        {
-          name: 'Totals',
-          data: data_for(Metric.where(ownable_type: Technology.to_s))
-        }
+      def process_data(metrics_data)
+        metrics_data
+      end
+
+      def format_data(metrics_data)
+        metrics_data.transform_keys { |date| date.strftime('%B %Y') }
       end
     end
   end
