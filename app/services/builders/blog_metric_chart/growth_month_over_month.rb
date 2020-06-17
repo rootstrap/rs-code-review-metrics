@@ -8,14 +8,11 @@ module Builders
       private
 
       def process_data(metrics_data)
-        metrics_data.each.inject({}) do |hash, key_value_pair|
-          month, metric_value = key_value_pair
+        metrics_data.each_with_object({}) do |(month, metric_value), hash|
           previous_metric_value = metrics_data[month.last_month]
           next(hash) if previous_metric_value.nil? || previous_metric_value.zero?
 
-          hash.merge!(
-            month => growth_for(metric_value, previous_metric_value)
-          )
+          hash[month] = growth_for(metric_value, previous_metric_value)
         end
       end
 
