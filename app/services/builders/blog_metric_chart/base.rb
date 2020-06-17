@@ -9,13 +9,15 @@ module Builders
         metrics_result = Technology.all.map do |technology|
           generate_results_for(
             entity_name: technology.name.titlecase,
-            metrics: technology.metrics
+            metrics: technology.metrics,
+            hidden: true
           )
         end
 
         metrics_result << generate_results_for(
           entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: Technology.to_s)
+          metrics: Metric.where(ownable_type: Technology.to_s),
+          hidden: false
         )
       end
 
@@ -23,12 +25,13 @@ module Builders
 
       attr_reader :months
 
-      def generate_results_for(entity_name:, metrics:)
+      def generate_results_for(entity_name:, metrics:, hidden:)
         metrics_data = collect_data(metrics)
         processed_data = process_data(metrics_data)
         {
           name: entity_name,
-          data: format_data(processed_data)
+          data: format_data(processed_data),
+          dataset: { hidden: hidden }
         }
       end
 
