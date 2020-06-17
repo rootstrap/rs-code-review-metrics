@@ -12,7 +12,7 @@ class TechBlogController < ApplicationController
   end
 
   def visits_growth_mom
-    TechnologyGrowthMomCalculator.call(Metric.names[:blog_visits], 12)
+    Builders::BlogMetricChart::TechnologyVisitsGrowthMom.call
   end
 
   def technology_blog_post_count
