@@ -1,6 +1,4 @@
-require 'rails_helper'
-
-module CodeClimateSpecHelper
+module CodeClimateApiMocker
   CODE_CLIMATE_API_URL = ENV['CODE_CLIMATE_API_URL']
 
   def on_request_repository(project_name:, respond:)
@@ -17,8 +15,4 @@ module CodeClimateSpecHelper
     stub_request(:get, "#{CODE_CLIMATE_API_URL}/repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
       .to_return(status: respond[:status], body: JSON.generate(respond[:body]))
   end
-end
-
-RSpec.configure do |c|
-  c.include CodeClimateSpecHelper
 end

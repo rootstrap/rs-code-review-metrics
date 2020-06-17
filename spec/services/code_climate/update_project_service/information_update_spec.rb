@@ -1,5 +1,3 @@
-require_relative '../code_climate_spec_helper'
-
 describe CodeClimate::UpdateProjectService do
   subject { CodeClimate::UpdateProjectService }
 

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 describe CodeClimate::UpdateAllProjectsService do
   subject { CodeClimate::UpdateAllProjectsService }
   let(:update_all_projects_code_climate_info) { subject.call }
