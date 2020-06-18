@@ -120,7 +120,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+SET default_with_oids = false;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -252,7 +252,8 @@ CREATE TABLE public.code_climate_project_metrics (
     invalid_issues_count integer,
     wont_fix_issues_count integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    open_issues_count integer
 );
 
 
@@ -1502,6 +1503,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200611153414'),
 ('20200611190026'),
 ('20200612195323'),
-('20200617145408');
-
-
+('20200617145408'),
+('20200616154910');
