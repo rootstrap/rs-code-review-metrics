@@ -1,6 +1,6 @@
 module Metrics
   module MergeTime
-    class PerProject < BaseMetricService
+    class PerProject < Metrics::Base
       def initialize(interval = nil)
         @interval = interval
       end

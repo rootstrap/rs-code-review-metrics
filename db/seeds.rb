@@ -50,5 +50,9 @@ if Rails.env.development?
   Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
   Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
+  Department.create(name: 'backend')
+  Department.create(name: 'frontend')
+  Department.create(name: 'mobile')
+
   FactoryBot.create(:code_climate_project_metric, project: project)
 end

@@ -25,6 +25,9 @@ class Metric < ApplicationRecord
                blog_post_count: 'blog_post_count' }
 
   belongs_to :ownable, polymorphic: true
+  belongs_to :project, lambda {
+    includes(:metrics).where(metrics: { ownable_type: Project.to_s })
+  }, foreign_key: :ownable_id, optional: true
 
   validates :interval, inclusion: { in: intervals.keys }
   validates :name, inclusion: { in: names.keys }
