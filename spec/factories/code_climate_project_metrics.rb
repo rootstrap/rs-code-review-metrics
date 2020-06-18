@@ -5,6 +5,7 @@
 #  id                    :bigint           not null, primary key
 #  code_climate_rate     :string
 #  invalid_issues_count  :integer
+#  open_issues_count     :integer
 #  wont_fix_issues_count :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -23,7 +24,9 @@ FactoryBot.define do
   factory :code_climate_project_metric do
     project
     code_climate_rate { %w[A B C D].sample }
-    invalid_issues_count { Faker::Number.between(from: 0, to: 99) }
-    wont_fix_issues_count { Faker::Number.between(from: 0, to: 99) }
+    invalid_issues_count { Faker::Number.between(from: 0, to: 30) }
+    open_issues_count { Faker::Number.between(from: 0, to: 30) }
+    wont_fix_issues_count { Faker::Number.between(from: 0, to: 30) }
+    updated_at { DateTime.current }
   end
 end
