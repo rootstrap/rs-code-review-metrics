@@ -24,7 +24,7 @@ env:
     - CODE_CLIMATE_API_ORG_NAME: rootstrap
 
 install:
-  - nvm 12.16.1
+  - nvm install 12.16.1
   - npm install -g yarn
 
 before_script:
