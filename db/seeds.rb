@@ -10,7 +10,7 @@ if Rails.env.development?
 
   project = FactoryBot.create(:project, name: 'rs-code-review-metrics')
 
-  %w[santi_vidal santi_barte hernan horacio hosward sandro].each do |name|
+  %w[santiagovidal santib hdamico horacio hvilloria sandro].each do |name|
     FactoryBot.create(:user, login: name)
   end
 
@@ -28,6 +28,21 @@ if Rails.env.development?
         ownable: uspr,
         value_timestamp: (Time.zone.now - v.weeks).beginning_of_week
       )
+    end
+
+    6.times do |v|
+      FactoryBot.create(
+        :metric,
+        interval: :weekly,
+        ownable: uspr,
+        value_timestamp: (Time.zone.now - v.weeks).beginning_of_week
+      )
+    end
+  end
+
+  Project.all.each do |uspr|
+    20.times do |v|
+      FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
     end
 
     6.times do |v|

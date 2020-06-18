@@ -5,6 +5,7 @@
 #  id                    :bigint           not null, primary key
 #  code_climate_rate     :string
 #  invalid_issues_count  :integer
+#  open_issues_count     :integer
 #  wont_fix_issues_count :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -22,7 +23,29 @@
 require 'rails_helper'
 
 RSpec.describe CodeClimateProjectMetric, type: :model do
-  context 'validations' do
-    it { is_expected.to belong_to(:project) }
+  it { is_expected.to belong_to(:project) }
+
+  it do
+    is_expected.to have_db_column(:code_climate_rate)
+      .of_type(:string)
+      .with_options(null: true)
+  end
+
+  it do
+    is_expected.to have_db_column(:invalid_issues_count)
+      .of_type(:integer)
+      .with_options(null: true)
+  end
+
+  it do
+    is_expected.to have_db_column(:open_issues_count)
+      .of_type(:integer)
+      .with_options(null: true)
+  end
+
+  it do
+    is_expected.to have_db_column(:wont_fix_issues_count)
+      .of_type(:integer)
+      .with_options(null: true)
   end
 end
