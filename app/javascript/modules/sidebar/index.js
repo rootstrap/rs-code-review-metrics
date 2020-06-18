@@ -22,13 +22,15 @@ export const handleChangeSidebar = () => {
 
 export const handleChangeNavForm = () => {
   const navFilterForm = elementSelector('nav-filter');
-  navFilterForm.onchange = function () {
-    let sidebarProjectSelectionInput = elementSelector('project-selection');
-    if (sidebarProjectSelectionInput.selectedIndex !== 0){
-      this.submit();
-    } else {
-      const url = window.location.href.split('?')[0];
-      window.location.assign(url);
+  if (navFilterForm != null) {
+    navFilterForm.onchange = function () {
+      let sidebarProjectSelectionInput = elementSelector('project-selection');
+      if (sidebarProjectSelectionInput.selectedIndex !== 0){
+        this.submit();
+      } else {
+        const url = window.location.href.split('?')[0];
+        window.location.assign(url);
+      }
     }
   }
 }

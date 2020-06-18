@@ -1,4 +1,25 @@
 <%= render 'shared/sidebar'%>
 <div class="col-md-10">
-  <span><%= @user.login%></span>
+  <h2 class='user-name'><%= @user.login%></h2>
+  <hr>
+  <span>Code Owner in:</span>
+  <% if @projects.present? %>
+    <ul>
+      <% @projects.each do |project|%>
+        <li>
+          <%= link_to project.name,
+              development_metrics_path(project_name: project.name, metric: {period: 'daily'}),
+              class: 'link-none-style-black'
+          %>
+        </li>
+      <%end%>
+    </ul>
+  <%else%>
+    <p>
+      <br>
+      <strong>
+        <em>This user is not participating at any project as code owner</em>
+      </strong>
+    </p>
+  <%end%>
 </div>

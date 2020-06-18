@@ -1,8 +1,7 @@
 module CodeOwners
   class ProjectsController < ApplicationController
     def index
-      @user = code_owner.user
-      @projects = @user.projects
+      @projects = user.projects_as_code_owner
     end
 
     private
@@ -11,8 +10,8 @@ module CodeOwners
       params.require(:code_owner).permit(:user_id)
     end
 
-    def code_owner
-      @code_owner ||= CodeOwnerProject.find_by_user_id(code_owner_params[:user_id])
+    def user
+      @user ||= User.find_by(id: code_owner_params[:user_id])
     end
   end
 end
