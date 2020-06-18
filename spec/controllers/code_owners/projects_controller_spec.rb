@@ -13,13 +13,12 @@ RSpec.describe CodeOwners::ProjectsController, type: :request do
       it 'returns no projects' do
         expect(assigns(:projects)).to be_empty
       end
-
     end
 
     context 'when projects has projects as code owner' do
       before do
         create_list(:project, projects_count)
-        Project.all.each { |project| project.code_owners << user}
+        Project.all.each { |project| project.code_owners << user }
         get '/code_owners/projects', params: { code_owner: { user_id: user.id } }
       end
 

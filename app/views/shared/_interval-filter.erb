@@ -2,7 +2,7 @@
   wrapper_html: { class: 'period-selection' },
   input_html: { class: 'margin-left' },
   required: false,
-  collection: [['Daily', 'daily'], ['Weekly', 'weekly']],
+  collection: [['- select option - ', 0],['Daily', 'daily'], ['Weekly', 'weekly']],
   selected: value_from_metric_param(:period),
-  prompt: '- select option -'
+  disabled: 0
 %>

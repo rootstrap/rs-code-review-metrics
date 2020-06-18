@@ -5,7 +5,7 @@
       <%= select_tag 'project_name',
         options_for_select(
           all_projects_names,
-          selected: value_from_param('project_name'),
+          selected: value_from_project_param,
           disabled: 0
         ),
         class: 'project-selection',
