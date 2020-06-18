@@ -26,6 +26,7 @@ env:
 install:
   - nvm install 12.16.1
   - npm install -g yarn
+  - bundle install
 
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
