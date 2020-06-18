@@ -33,8 +33,15 @@ export const handleChangeNavForm = () => {
   }
 }
 
+export const handleChangeUserSelectionForm = () => {
+  const userSelectionForm = document.getElementById('user-selection-form');
+  userSelectionForm.onchange = function() {
+    this.submit();
+  }
+}
+
 export const initializeSelect2 = () => {
-  $('.project-selection').select2({
+  $('.project-selection, .user-selection').select2({
     theme: 'bootstrap4',
   })
 }

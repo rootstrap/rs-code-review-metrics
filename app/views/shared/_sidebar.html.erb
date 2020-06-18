@@ -1,21 +1,28 @@
-<div class="col container-height shadow-box sticky-top">
-  <div class="container-md">
-    <div class="row p-3">
-      <label for="project_name">Project Name:</label>
-      <select name="project_name" class="project-selection" form='nav-filter-form'>
-        <% if params[:project_name].blank? %>
-          <option selected value disabled>-select option-</option>
-        <% else %>
-          <option value disabled>-select option-</option>
-        <% end %>
-        <% all_projects_names.each do |name|%>
-          <%if params[:project_name] == name %>
-            <option selected value=<%= name %>> <%= name%> </option>
-          <% else %>
-           <option value=<%= name%>> <%= name%></option> %>
-          <% end %>
-        <% end %>
-      </select>
+<div class='col container-height shadow-box sticky-top'>
+  <div class='container-md'>
+    <div class='row p-3'>
+      <%= label_tag 'project_name', 'Project Name'%>
+      <%= select_tag 'project_name',
+        options_for_select(
+          all_projects_names,
+          selected: value_from_param('project_name'),
+          disabled: 0
+        ),
+        class: 'project-selection',
+        form:'nav-filter-form'
+      %>
+    </div>
+    <div class='row p-3'>
+      <%= simple_form_for :code_owner, url: code_owners_projects_path,
+        method: 'GET', html: { id: 'user-selection-form' }  do |f|%>
+          <%= f.input :user_id,
+            input_html: { class: 'user-selection margin-left' },
+            required: false,
+            collection: all_users_names,
+            selected: value_from_user_param,
+            disabled: 0
+          %>
+      <% end %>
     </div>
   </div>
 </div>

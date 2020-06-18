@@ -3,6 +3,6 @@
   input_html: { class: 'margin-left' },
   required: false,
   collection: [['Daily', 'daily'], ['Weekly', 'weekly']],
-  selected: value_from_query_param(:period),
+  selected: value_from_metric_param(:period),
   prompt: '- select option -'
 %>
