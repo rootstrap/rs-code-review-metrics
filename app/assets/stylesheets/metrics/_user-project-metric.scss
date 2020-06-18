@@ -3,3 +3,27 @@
   display: flex;
   align-items: baseline;
 }
+
+.code-owners{
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  .code-owners-title{
+    align-self: center;
+    font-size: 1.25rem;
+  }
+
+  .code-owners-list{
+    margin: 1rem;
+    border: 1px solid #ab9eab;
+    ul{
+      margin: 0;
+      padding: 1rem;
+      list-style: none;
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+    }
+  }
+}

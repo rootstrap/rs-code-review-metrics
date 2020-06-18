@@ -16,7 +16,7 @@ class GithubService < BaseService
   end
 
   def handle_event
-    project = Projects::Builder.call(@payload['repository'])
+    project = Builders::Project.call(@payload['repository'])
     event = Event.new(project: project, data: @payload, name: @event)
     if handleable_event?
       @entity = find_or_create_event_type
@@ -39,7 +39,7 @@ class GithubService < BaseService
   end
 
   def find_or_create_event_type
-    EventBuilders.const_get(@event.classify).call(payload: @payload)
+    Builders::Events.const_get(@event.classify).call(payload: @payload)
   end
 
   def handle_action

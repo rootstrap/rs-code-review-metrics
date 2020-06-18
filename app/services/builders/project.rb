@@ -1,5 +1,5 @@
-module Projects
-  class Builder < BaseService
+module Builders
+  class Project < BaseService
     def initialize(repository_data)
       @repository_data = repository_data
     end
@@ -11,7 +11,7 @@ module Projects
     private
 
     def fetch_or_create
-      Project.find_or_create_by!(github_id: @repository_data['id']) do |project|
+      ::Project.find_or_create_by!(github_id: @repository_data['id']) do |project|
         project.name = @repository_data['name']
         project.description = @repository_data['description']
       end

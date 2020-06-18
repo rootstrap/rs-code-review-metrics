@@ -10,8 +10,7 @@
       </div>
     </div>
   <% end %>
-
+  <%= render 'code_owners', code_owners: @code_owners%>
   <%= render 'review_turnaround', review_turnaround: @review_turnaround %>
-
   <%= render 'merge_time', merge_time: @merge_time %>
 </div>
