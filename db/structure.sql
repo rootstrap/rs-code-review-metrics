@@ -120,7 +120,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -1503,5 +1503,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200611153414'),
 ('20200611190026'),
 ('20200612195323'),
-('20200617145408'),
-('20200616154910');
+('20200616154910'),
+('20200617145408');
+
+

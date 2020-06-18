@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <%= render 'code_owners', code_owners: @code_owners%>
+  <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
 
   <%= render 'development_metrics/review_turnaround/project', review_turnaround: @review_turnaround %>
   <%= render 'development_metrics/review_turnaround/users_project', review_turnaround: @review_turnaround %>
