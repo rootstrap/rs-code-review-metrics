@@ -34,10 +34,7 @@ export const handleChangeNavForm = () => {
 }
 
 export const initializeSelect2 = () => {
-  $('.project-selection').select2({
-    theme: 'bootstrap4',
-  })
-  $('.department-selection').select2({
+  $('.project-selection, .department-selection').select2({
     theme: 'bootstrap4',
   })
 }
