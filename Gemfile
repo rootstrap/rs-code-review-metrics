@@ -30,8 +30,6 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-gem 'github_api', '~> 0.18'
-
 gem 'annotate', '~> 3.0'
 
 # Use Sidekiq to enqueue job in the background
@@ -57,6 +55,9 @@ gem 'honeybadger', '~> 4.0'
 gem 'exception_hunter', '~> 0.2.0'
 
 gem 'rack-mini-profiler', '~> 2.0'
+gem 'faraday', '~> 1.0', '>= 1.0.1'
+
+gem 'groupdate', '~> 5.0'
 
 gem 'groupdate', '~> 5.0'
 
