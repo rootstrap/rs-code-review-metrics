@@ -107,7 +107,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+SET default_with_oids = false;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -239,7 +239,8 @@ CREATE TABLE public.code_climate_project_metrics (
     invalid_issues_count integer,
     wont_fix_issues_count integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    open_issues_count integer
 );
 
 
@@ -468,16 +469,6 @@ CREATE SEQUENCE public.projects_id_seq
 --
 
 ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
-
-
---
--- Name: projects_users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.projects_users (
-    project_id bigint NOT NULL,
-    user_id bigint NOT NULL
-);
 
 
 --
@@ -1104,20 +1095,6 @@ CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USIN
 
 
 --
--- Name: index_projects_users_on_project_id_and_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_users_on_project_id_and_user_id ON public.projects_users USING btree (project_id, user_id);
-
-
---
--- Name: index_projects_users_on_user_id_and_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_users_on_user_id_and_project_id ON public.projects_users USING btree (user_id, project_id);
-
-
---
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1441,5 +1418,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200518160851'),
 ('20200602181502'),
 ('20200605192032'),
-('20200608150702'),
-('20200611153414');
+('20200611153414'),
+('20200616154910');
+
+
