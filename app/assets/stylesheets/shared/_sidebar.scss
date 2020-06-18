@@ -7,6 +7,26 @@
   width: 100%;
 }
 
+.entities-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.entity-btn {
+  border-radius: 0px;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.deparment-selection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 .metric_project{
   width: 100%;
 }
