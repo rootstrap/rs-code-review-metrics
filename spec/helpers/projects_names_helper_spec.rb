@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ProjectsNamesHelper, type: :helper do
-  describe '.all_project_names' do
+  context '.all_project_names' do
     let(:size_of_projects) { 10 }
 
     before { create_list(:project, size_of_projects) }

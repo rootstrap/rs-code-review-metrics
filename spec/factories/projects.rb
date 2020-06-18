@@ -21,10 +21,8 @@
 #
 
 FactoryBot.define do
-  sequence(:project_id, 100)
-
   factory :project do
-    github_id { generate(:project_id) }
+    sequence(:github_id, 1000)
     name { Faker::App.name }
     description { Faker::FunnyName.name }
     lang { %w[ruby python nodejs react ios android others unassigned].sample }

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
   describe '.call' do
     before(:all) do
-      3.times { create(:department) }
+      3.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
       travel_to(Time.zone.today.beginning_of_day)
     end
 
