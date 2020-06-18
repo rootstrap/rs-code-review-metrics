@@ -34,6 +34,10 @@ class DevelopmentMetricsController < ApplicationController
     @department_id ||= Department.find_by(name: params[:department_name]).id
   end
 
+  def department_id
+    @department_id ||= Department.find_by(name: params[:department_name]).id
+  end
+
   def metric_params
     @metric_params ||= params[:metric]
   end
