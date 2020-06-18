@@ -5,7 +5,7 @@ class DevelopmentMetricsController < ApplicationController
   def project
     return if metric_params.blank?
 
-    build_metrics(project_id, Project.to_s)
+    build_metrics(project.id, Project.to_s)
   end
 
   def department
@@ -23,10 +23,11 @@ class DevelopmentMetricsController < ApplicationController
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @code_climate = CodeClimateSummaryRetriever.call(entity_id)
+    @code_owners = project.code_owners.pluck(:login)
   end
 
-  def project_id
-    @project_id ||= Project.find_by(name: params[:project_name]).id
+  def project
+    @project ||= Project.find_by(name: params[:project_name])
   end
 
   def department_id

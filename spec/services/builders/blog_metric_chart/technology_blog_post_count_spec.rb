@@ -25,17 +25,17 @@ describe Builders::BlogMetricChart::TechnologyBlogPostCount do
     end
 
     let(:technology_metrics_hash) do
-      {
+      a_hash_including(
         name: technology.name.titlecase,
-        data: {
+        data: a_hash_including(
           last_month_metric.value_timestamp.strftime('%B %Y') => last_month_metric.value,
           this_month_metric.value_timestamp.strftime('%B %Y') => this_month_metric.value
-        }
-      }
+        )
+      )
     end
 
     it 'returns the blog post count per technology formatted by technology and month' do
-      expect(described_class.call).to contain_exactly(technology_metrics_hash)
+      expect(described_class.call).to include(technology_metrics_hash)
     end
   end
 end
