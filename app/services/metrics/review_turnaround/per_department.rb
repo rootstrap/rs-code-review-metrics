@@ -23,16 +23,17 @@ module Metrics
         Metric.joins(project: :department)
               .where(name: :review_turnaround)
               .pluck('departments.id', :value)
-              .inject({}) do |hash, (id, value)|
-                (hash[id] ||= [ ]) << value
+              .each_with_object({}) do |(id, value), hash|
+                (hash[id] ||= []) << value
                 hash
               end
       end
 
       def calculate_turnaround(metrics_values)
-        return metrics_values.first if metrics_values.size == 1 
+        metrics_values_size = metrics_values.size
+        return metrics_values.first if metrics_values_size == 1
 
-        metrics_values.sum / metrics_values.size
+        metrics_values.sum / metrics_values_size
       end
 
       def metric_interval

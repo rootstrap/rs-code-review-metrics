@@ -23,9 +23,9 @@ module Metrics
       def department_metrics_values
         Department.names.keys.each_with_object({}) do |department_name, hash|
           hash[department_name] = Metric.joins(project: :department)
-                                         .where(departments: { name: department_name })
-                                         .where(name: :merge_time)
-                                         .pluck(:value)
+                                        .where(departments: { name: department_name })
+                                        .where(name: :merge_time)
+                                        .pluck(:value)
           hash
         end
       end

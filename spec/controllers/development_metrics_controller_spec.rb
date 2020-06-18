@@ -42,13 +42,13 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
       it 'calls period metric retriever class' do
         expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
 
-        get :index, params: params
+        get :projects, params: params
       end
 
       it 'calls CodeClimate summary retriever class' do
         expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
 
-        get :index, params: params
+        get :projects, params: params
       end
     end
 
@@ -58,7 +58,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
       end
       it 'raises Graph::RangeDateNotSupported' do
         expect {
-          get :index, params: params
+          get :projects, params: params
         }.to raise_error(Graph::RangeDateNotSupported)
       end
     end
