@@ -2,18 +2,10 @@ class DevelopmentMetricsController < ApplicationController
   def index
     return if metric_params.blank?
 
-<<<<<<< HEAD
-    period_metric_query = Metrics::PeriodRetriever.call(metric_params[:period])
-    metrics = Builders::Chartkick::DevelopmentMetrics.call(project_id, period_metric_query)
-    @review_turnaround = metrics[:review_turnaround]
-    @merge_time = metrics[:merge_time]
-    @code_climate = CodeClimateSummaryRetriever.call(project_id)
-=======
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @code_climate = CodeClimateSummaryRetriever.call(project.id)
     @code_owners = project.code_owners.pluck(:login)
->>>>>>> 5962d374ca096e1f7b8ce2b82535b2e3281ab2cb
   end
 
   private
