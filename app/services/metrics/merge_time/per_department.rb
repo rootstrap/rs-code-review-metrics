@@ -13,7 +13,7 @@ module Metrics
 
       def process
         project_metrics_per_department.each do |department_id, amount, metrics_value|
-          turnaround = amount != 1 ? calculate_turnaround(metrics_value, amount) : metrics_value
+          turnaround = calculate_average(metrics_value, amount)
           create_or_update_metric(department_id, Department.to_s, metric_interval,
                                   turnaround, :merge_time)
         end
@@ -26,7 +26,7 @@ module Metrics
                   .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
 
-      def calculate_turnaround(metrics_value, amount)
+      def calculate_average(metrics_value, amount)
         metrics_value / amount
       end
 

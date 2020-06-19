@@ -61,7 +61,11 @@ class Project < ApplicationRecord
   def associate_department
     return unless department.nil? || lang_changed?
 
-    department_name = DEPARTMENT_LANGS.select { |_key, values| values.include?(lang) }.keys.first
+    department_name = find_department_name(lang)
     self.department = Department.find_or_create_by!(name: department_name) if department_name
+  end
+
+  def find_department_name(lang)
+    DEPARTMENT_LANGS.select { |_key, values| values.include?(lang) }.keys.first
   end
 end
