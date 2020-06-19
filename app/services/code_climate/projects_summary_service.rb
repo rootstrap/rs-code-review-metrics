@@ -15,8 +15,6 @@ module CodeClimate
     private
 
     def build_summary
-      return ProjectsSummary.new if department != 'web'
-
       ProjectsSummary.new(
         invalid_issues_count_average: invalid_issues_count_average,
         wontfix_issues_count_average: wont_fix_issues_count_average,
@@ -26,18 +24,26 @@ module CodeClimate
     end
 
     def invalid_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size
     end
 
     def wont_fix_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:wont_fix_issues_count).sum / code_climate_metrics.size
     end
 
     def open_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size
     end
 
     def ratings
+      return if code_climate_metrics.empty?
+
       hash = Hash.new { |hash, rate| hash[rate] = 0 }
       code_climate_metrics.each_with_object(hash) do |cc, ratings|
         ratings[cc.code_climate_rate] += 1
@@ -45,7 +51,9 @@ module CodeClimate
     end
 
     def code_climate_metrics
-      @code_climate_metrics ||= CodeClimateProjectMetric.all
+      return [] if department != 'web'
+
+      @code_climate_metrics ||= CodeClimateProjectMetric.where('snapshot_time >= ?', from)
     end
   end
 end
