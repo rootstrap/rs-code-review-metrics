@@ -2,7 +2,7 @@ module CodeClimate
   class ProjectsSummaryService < BaseService
     attr_reader :department, :from, :technologies
 
-    def initialize(department:, from:, technologies:)
+    def initialize(department:, from:, technologies: [])
       @department = department
       @from = from
       @technologies = technologies
@@ -44,7 +44,7 @@ module CodeClimate
     def ratings
       return if code_climate_metrics.empty?
 
-      hash = Hash.new { |hash, rate| hash[rate] = 0 }
+      hash = Hash.new { |h, rate| h[rate] = 0 }
       code_climate_metrics.each_with_object(hash) do |cc, ratings|
         ratings[cc.code_climate_rate] += 1
       end
@@ -53,7 +53,20 @@ module CodeClimate
     def code_climate_metrics
       return [] if department != 'web'
 
-      @code_climate_metrics ||= CodeClimateProjectMetric.where('snapshot_time >= ?', from)
+      @code_climate_metrics ||=
+        technologies.empty? ? metrics_in_any_technology : metrics_in_given_technologies
+    end
+
+    def metrics_in_given_technologies
+      CodeClimateProjectMetric
+        .joins(:project)
+        .where('snapshot_time >= ? AND projects.lang IN (?)', from, technologies)
+    end
+
+    def metrics_in_any_technology
+      CodeClimateProjectMetric
+        .joins(:project)
+        .where('snapshot_time >= ?', from)
     end
   end
 end

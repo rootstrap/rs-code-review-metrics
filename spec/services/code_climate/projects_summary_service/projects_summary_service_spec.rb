@@ -5,11 +5,11 @@ describe CodeClimate::ProjectsSummaryService do
 
   let(:department) { 'web' }
   let(:from) { DateTime.parse('2020-06-02') }
-  let(:technologies) { %w[ruby python] }
+  let(:technologies) { %w[] }
 
   let!(:projects) do
-    project_1 = create :project
-    project_2 = create :project
+    project_1 = create :project, lang: 'ruby'
+    project_2 = create :project, lang: 'python'
 
     create :code_climate_project_metric,
            project: project_1,
@@ -36,7 +36,7 @@ describe CodeClimate::ProjectsSummaryService do
     )
   end
 
-  context 'for a department' do
+  context 'with a department, date from and technologies including projects' do
     it 'shows the invalid issues count in the selected department' do
       expect(projects_summary.invalid_issues_count_average).to eq(1)
     end
@@ -62,7 +62,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
   end
 
-  context 'for other department than the selected one' do
+  context 'with a department with no projects' do
     let(:department) { 'mobile' }
 
     it 'shows no invalid issues count' do
@@ -86,7 +86,31 @@ describe CodeClimate::ProjectsSummaryService do
     end
   end
 
-  context 'for from a date previous to the projects date' do
+  context 'with a from date after the projects date' do
+    let(:from) { DateTime.parse('2020-06-04') }
+
+    it 'shows no invalid issues count' do
+      expect(projects_summary.invalid_issues_count_average).to be_nil
+    end
+
+    it 'shows no wontfix issues count' do
+      expect(projects_summary.wontfix_issues_count_average).to be_nil
+    end
+
+    it 'shows no open issues count' do
+      expect(projects_summary.open_issues_count_average).to be_nil
+    end
+
+    it 'shows no total of "A" projects' do
+      expect(projects_summary.projects_rated_with('A')).to be_nil
+    end
+
+    it 'shows no total of "Z" projects' do
+      expect(projects_summary.projects_rated_with('Z')).to be_nil
+    end
+  end
+
+  context 'with technologies including projects' do
     it 'shows the invalid issues count in the selected department' do
       expect(projects_summary.invalid_issues_count_average).to eq(1)
     end
@@ -112,8 +136,8 @@ describe CodeClimate::ProjectsSummaryService do
     end
   end
 
-  context 'for a from date after the projects date' do
-    let(:from) { DateTime.parse('2020-06-04') }
+  context 'with technologies with no projects' do
+    let(:technologies) { %w[ios] }
 
     it 'shows no invalid issues count' do
       expect(projects_summary.invalid_issues_count_average).to be_nil
