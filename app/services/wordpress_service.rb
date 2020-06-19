@@ -32,6 +32,15 @@ class WordpressService
     JSON.parse(response.body).with_indifferent_access
   end
 
+  def blog_post(blog_post_id)
+    response = connection.get(
+      "https://public-api.wordpress.com/rest/v1.1/sites/#{site_id}/posts/#{blog_post_id}",
+      {},
+      Authorization: "Bearer #{access_token}"
+    )
+    JSON.parse(response.body).with_indifferent_access
+  end
+
   private
 
   def access_token

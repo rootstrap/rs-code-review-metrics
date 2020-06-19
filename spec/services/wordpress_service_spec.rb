@@ -90,4 +90,17 @@ RSpec.describe WordpressService do
       expect(subject.blog_post_views(blog_post_id)).to eq blog_post_views_payload
     end
   end
+
+  describe '#blog_post' do
+    let(:blog_post_payload) { create(:blog_post_payload) }
+    let(:blog_post_id) { blog_post_payload['ID'] }
+
+    before do
+      stub_blog_post_response(blog_post_payload)
+    end
+
+    it 'returns the payload of the requested post' do
+      expect(subject.blog_post(blog_post_id)).to eq blog_post_payload
+    end
+  end
 end
