@@ -20,5 +20,9 @@ module CodeClimate
     def projects_rated_with(letter)
       ratings&.fetch(letter.to_s, 0)
     end
+
+    def rating_names
+      ratings.keys
+    end
   end
 end
