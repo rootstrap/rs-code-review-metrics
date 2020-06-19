@@ -12,28 +12,22 @@ module Metrics
       private
 
       def process
-        department_metrics_values.each do |department_id, metrics_values|
-          turnaround = calculate_turnaround(metrics_values)
+        project_metrics_per_department.each do |department_id, amount, metrics_value|
+          turnaround = amount != 1 ? calculate_turnaround(metrics_value, amount) : metrics_value
           create_or_update_metric(department_id, Department.to_s, metric_interval,
                                   turnaround, :review_turnaround)
         end
       end
 
-      def department_metrics_values
-        Metric.joins(project: :department)
-              .where(name: :review_turnaround)
-              .pluck('departments.id', :value)
-              .each_with_object({}) do |(id, value), hash|
-                (hash[id] ||= []) << value
-                hash
-              end
+      def project_metrics_per_department
+        Department.joins(projects: :metrics)
+                  .where(metrics: { name: :review_turnaround })
+                  .group(:id)
+                  .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
 
-      def calculate_turnaround(metrics_values)
-        metrics_values_size = metrics_values.size
-        return metrics_values.first if metrics_values_size == 1
-
-        metrics_values.sum / metrics_values_size
+      def calculate_turnaround(metrics_value, amount)
+        metrics_value / amount
       end
 
       def metric_interval

@@ -3,10 +3,8 @@ require 'rails_helper'
 RSpec.describe DepartmentsNamesHelper, type: :helper do
   describe '.all_department_names' do
     let(:size_of_departments) { 3 }
-    before do
-      size_of_departments.times do |n|
-        create(:project, lang: %w[ruby react android][n - 1])
-      end
+    let!(:departments) do
+      size_of_departments.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
     end
 
     it 'returns a departments names collection' do

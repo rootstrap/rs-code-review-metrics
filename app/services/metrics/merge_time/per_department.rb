@@ -1,5 +1,5 @@
 module Metrics
-  module ReviewTurnaround
+  module MergeTime
     class PerDepartment < Metrics::Base
       def initialize(interval = nil)
         @interval = interval
@@ -12,26 +12,22 @@ module Metrics
       private
 
       def process
-        department_metrics_values.each do |department_name, metrics_values|
-          department_id = Department.find_by!(name: department_name)
-          turnaround = calculate_turnaround(metrics_values)
+        project_metrics_per_department.each do |department_id, amount, metrics_value|
+          turnaround = amount != 1 ? calculate_turnaround(metrics_value, amount) : metrics_value
           create_or_update_metric(department_id, Department.to_s, metric_interval,
-                                  turnaround, :review_turnaround)
+                                  turnaround, :merge_time)
         end
       end
 
-      def department_metrics_values
-        Department.names.keys.each_with_object({}) do |department_name, hash|
-          hash[department_name] = Metric.joins(project: :department)
-                                        .where(departments: { name: department_name })
-                                        .where(name: :merge_time)
-                                        .pluck(:value)
-          hash
-        end
+      def project_metrics_per_department
+        Department.joins(projects: :metrics)
+                  .where(metrics: { name: :merge_time })
+                  .group(:id)
+                  .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
 
-      def calculate_turnaround(metrics_values)
-        metrics_values.sum / metrics_values.size
+      def calculate_turnaround(metrics_value, amount)
+        metrics_value / amount
       end
 
       def metric_interval

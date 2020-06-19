@@ -2,8 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Metrics::MergeTime::PerDepartment do
   describe '.call' do
+    let!(:departments) do
+      3.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
+    end
+
     before(:all) do
-      3.times { create(:department) }
       travel_to(Time.zone.today.beginning_of_day)
     end
 
