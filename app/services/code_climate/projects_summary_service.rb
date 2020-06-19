@@ -30,14 +30,20 @@ module CodeClimate
     end
 
     def invalid_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size
     end
 
     def wont_fix_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:wont_fix_issues_count).sum / code_climate_metrics.size
     end
 
     def open_issues_count_average
+      return if code_climate_metrics.empty?
+
       code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size
     end
 
