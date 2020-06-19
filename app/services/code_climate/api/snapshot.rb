@@ -14,7 +14,8 @@ module CodeClimate
         ProjectSummary.new(rate: ratings.first,
                            invalid_issues_count: invalid_issues_count,
                            open_issues_count: open_issues_count,
-                           wont_fix_issues_count: wont_fix_issues_count)
+                           wont_fix_issues_count: wont_fix_issues_count,
+                           snapshot_time: snapshot_time)
       end
 
       private
@@ -26,6 +27,10 @@ module CodeClimate
       def ratings
         ratings_json = @json.dig('attributes', 'ratings')
         ratings_json ? ratings_json.map { |json| json['letter'] } : []
+      end
+
+      def snapshot_time
+        DateTime.parse(@json.dig('attributes', 'committed_at'))
       end
 
       def issues

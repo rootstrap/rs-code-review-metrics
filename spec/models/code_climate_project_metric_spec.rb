@@ -6,6 +6,7 @@
 #  code_climate_rate     :string
 #  invalid_issues_count  :integer
 #  open_issues_count     :integer
+#  snapshot_time         :datetime         not null
 #  wont_fix_issues_count :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -47,5 +48,11 @@ RSpec.describe CodeClimateProjectMetric, type: :model do
     is_expected.to have_db_column(:wont_fix_issues_count)
       .of_type(:integer)
       .with_options(null: true)
+  end
+
+  it do
+    is_expected.to have_db_column(:snapshot_time)
+      .of_type(:datetime)
+      .with_options(null: false)
   end
 end

@@ -253,7 +253,8 @@ CREATE TABLE public.code_climate_project_metrics (
     wont_fix_issues_count integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    open_issues_count integer
+    open_issues_count integer,
+    snapshot_time timestamp without time zone NOT NULL
 );
 
 
@@ -1505,5 +1506,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200612195323'),
 ('20200616154910'),
 ('20200617145408');
-
-
