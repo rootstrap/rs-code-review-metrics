@@ -19,8 +19,8 @@ RSpec.describe 'running the rake task code_climate:update' do
     load_code_climate_update
   end
 
-  it 'creates a CodeClimate::UpdateAllProjectsService and calls it' do
-    expect(CodeClimate::UpdateAllProjectsService).to receive(:call)
+  it 'creates a Processors::CodeClimateUpdateAllProjectsService and calls it' do
+    expect(Processors::CodeClimateUpdateAllProjectsService).to receive(:call)
 
     rake_code_climate_update
   end
