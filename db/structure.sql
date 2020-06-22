@@ -24,6 +24,17 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 
 --
+-- Name: department_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.department_name AS ENUM (
+    'mobile',
+    'frontend',
+    'backend'
+);
+
+
+--
 -- Name: lang; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -35,7 +46,9 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned'
+    'unassigned',
+    'vuejs',
+    'react_native'
 );
 
 
@@ -107,7 +120,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -296,6 +309,37 @@ ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_proj
 
 
 --
+-- Name: departments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.departments (
+    id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    name public.department_name NOT NULL
+);
+
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.departments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.departments_id_seq OWNED BY public.departments.id;
+
+
+--
 -- Name: events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -448,7 +492,8 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lang public.lang DEFAULT 'unassigned'::public.lang
+    lang public.lang DEFAULT 'unassigned'::public.lang,
+    department_id bigint
 );
 
 
@@ -761,6 +806,13 @@ ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: departments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.departments ALTER COLUMN id SET DEFAULT nextval('public.departments_id_seq'::regclass);
+
+
+--
 -- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -890,6 +942,14 @@ ALTER TABLE ONLY public.code_climate_project_metrics
 
 ALTER TABLE ONLY public.code_owner_projects
     ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: departments departments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.departments
+    ADD CONSTRAINT departments_pkey PRIMARY KEY (id);
 
 
 --
@@ -1060,6 +1120,13 @@ CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects 
 
 
 --
+-- Name: index_departments_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_departments_on_name ON public.departments USING btree (name);
+
+
+--
 -- Name: index_events_on_handleable_type_and_handleable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1092,6 +1159,13 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 --
 
 CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USING btree (ownable_type, ownable_id);
+
+
+--
+-- Name: index_projects_on_department_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_department_id ON public.projects USING btree (department_id);
 
 
 --
@@ -1308,6 +1382,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: projects fk_rails_bca7ec3858; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_bca7ec3858 FOREIGN KEY (department_id) REFERENCES public.departments(id);
+
+
+--
 -- Name: reviews fk_rails_bcf65590e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1419,6 +1501,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200602181502'),
 ('20200605192032'),
 ('20200611153414'),
-('20200616154910');
+('20200611190026'),
+('20200612195323'),
+('20200616154910'),
+('20200617145408');
 
 

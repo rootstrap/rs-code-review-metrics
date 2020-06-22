@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'
+  resources :development_metrics, only: [] do
+    collection do
+      get 'projects'
+      get 'departments'
+    end
+  end
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
 end

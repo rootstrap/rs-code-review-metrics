@@ -22,7 +22,7 @@ describe Processors::BlogMetricsUpdater do
 
       it 'updates visits metrics for all blog posts' do
         expect { updater.call }
-          .to change(Metric.where(ownable_type: BlogPost.to_s), :count)
+          .to change(Metric.where(ownable_type: BlogPost.name), :count)
           .by total_metrics_generated
       end
     end
