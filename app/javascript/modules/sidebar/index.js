@@ -8,10 +8,10 @@ let elementSelector = (className) => {
 }
 
 export const handleChangeSidebar = () => {
-  const sidebarProjectSelectionInput = elementSelector('project-selection');
+  const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
   let navFilterForm = elementSelector('nav-filter');
 
-  sidebarProjectSelectionInput.onchange = () => {
+  sidebarSelectionInput.onchange = () => {
     const periodSelected = document.getElementById('metric_period');
     if (periodSelected.selectedIndex === 0) {
       periodSelected.selectedIndex = 1;
@@ -24,8 +24,8 @@ export const handleChangeNavForm = () => {
   const navFilterForm = elementSelector('nav-filter');
   if (navFilterForm != null) {
     navFilterForm.onchange = function () {
-      let sidebarProjectSelectionInput = elementSelector('project-selection');
-      if (sidebarProjectSelectionInput.selectedIndex !== 0){
+      let sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
+      if (sidebarSelectionInput !== 0){
         this.submit();
       } else {
         const url = window.location.href.split('?')[0];
@@ -46,7 +46,7 @@ export const handleChangeUser = () => {
 }
 
 export const initializeSelect2 = () => {
-  $('.project-selection, .user-selection').select2({
+  $('.project-selection, .department-selection, .user-selection').select2({
     theme: 'bootstrap4',
   })
 }

@@ -1,27 +1,13 @@
-<div class='col container-height shadow-box sticky-top'>
-  <div class='container-md'>
-    <div class='row p-3'>
-      <%= label_tag 'project_name', 'Project Name'%>
-      <%= select_tag 'project_name',
-        options_for_select(
-          all_projects_names,
-          selected: value_from_project_param,
-          disabled: 0
-        ),
-        class: 'project-selection',
-        form:'nav-filter-form'
-      %>
-    </div>
-    <div class='row p-3'>
-      <%= label_tag 'user_name', 'User Name'%>
-      <%= select_tag 'user_name',
-        options_for_select(
-          all_users_names,
-          selected: value_from_user_param,
-          disabled: 0
-        ),
-        class: 'user-selection'
-      %>
+<div class="col container-height shadow-box sticky-top">
+  <div class="container-md">
+    <div class="row p-3">
+      <div class="btn-group btn-entity-group">
+        <%= button_to 'Project', projects_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+        <%= button_to 'Department', departments_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+      </div>
     </div>
   </div>
+</div>
+
+<div class="col-md-10">
 </div>

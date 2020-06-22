@@ -1,9 +1,3 @@
-<%= render partial: 'shared/line-chart',
-            locals: {
-              metric_name: 'Merge Time',
-              metric: merge_time[:per_project]
-            } if merge_time && merge_time[:per_project] %>
-
 <button type="button" class="btn btn-secondary details-button">View details</button>
 
 <div style="display: none">

@@ -1,6 +1,11 @@
 .project-selection {
   @include flex-column-select;
 }
+.entity-btn {
+  border-radius: 0px;
+  margin-bottom: 5px;
+  width: 100%;
+}
 
 .metric_project{
   width: 100%;
