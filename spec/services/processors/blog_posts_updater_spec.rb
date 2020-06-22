@@ -6,7 +6,9 @@ RSpec.describe Processors::BlogPostsUpdater do
 
     before do
       create(:technology, name: 'other')
-      stub_blog_posts_response
+      blog_post_payload = create(:blog_post_payload)
+      stub_blog_posts_response(blog_post_payloads: [blog_post_payload])
+      stub_blog_post_response(blog_post_payload)
     end
 
     it 'saves all blog posts in the db' do

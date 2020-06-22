@@ -3,7 +3,6 @@ require 'rails_helper'
 describe Processors::BlogPostsFullUpdater do
   describe '.call' do
     context 'when there is already a blog post stored in the DB' do
-      let(:api_service) { instance_double(WordpressService) }
       let(:publish_date) { Faker::Time.backward }
       let!(:stored_blog_post) { create(:blog_post, published_at: publish_date) }
       let(:updated_slug) { 'newly-updated-slug' }
@@ -24,11 +23,10 @@ describe Processors::BlogPostsFullUpdater do
       let(:blog_post_payload) { [stored_blog_post_payload, new_blog_post_payload] }
 
       before do
-        allow_any_instance_of(described_class)
-          .to receive(:wordpress_service)
-          .and_return(api_service)
-        allow(api_service).to receive(:blog_posts).and_return(blog_post_payload)
         create(:technology, name: 'other')
+        stub_blog_posts_response(blog_post_payloads: blog_post_payload)
+        stub_blog_post_response(stored_blog_post_payload)
+        stub_blog_post_response(new_blog_post_payload)
       end
 
       it 'updates the stored blog post' do
