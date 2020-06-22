@@ -1,4 +1,4 @@
-class GithubReposApi
+class GithubRepositoryClient
   URL = 'https://api.github.com/repos/rootstrap'.freeze
 
   def initialize(project_name)
