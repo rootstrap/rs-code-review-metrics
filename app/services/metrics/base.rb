@@ -1,6 +1,6 @@
 module Metrics
   class Base < BaseService
-    def calculate_avg(entities, metric_type)
+    def calculate_metrics_avg(entities, metric_type)
       entities.reject { |_entity, count| count == 1 }.each do |entity, count|
         Metric.find_by!(ownable: entity, value_timestamp: metric_interval, name: metric_type)
               .tap do |metric|

@@ -24,7 +24,7 @@ module Metrics
             create_or_update_metric(entity.id, UsersProject.to_s,
                                     metric_interval, merge_time, :merge_time)
           end
-          calculate_avg(entities, :merge_time)
+          calculate_metrics_avg(entities, :merge_time)
         end
       end
 

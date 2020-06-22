@@ -26,7 +26,7 @@ module Metrics
                                       turnaround, :review_turnaround)
             end
           end
-          calculate_avg(entities, :review_turnaround)
+          calculate_metrics_avg(entities, :review_turnaround)
         end
       end
 
