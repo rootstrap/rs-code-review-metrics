@@ -1,11 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe CodeOwners::ProjectsController, type: :request do
+RSpec.describe 'Code Owner Projects' do
   describe '#index' do
     let(:user) { create(:user) }
+    subject { get "/users/#{user.id}/projects" }
     context 'when a user has not projects as code owner' do
       before do
-        get '/code_owners/projects', params: { code_owner: { user_id: user.id } }
+        subject
       end
 
       it_behaves_like 'controller index response'
@@ -19,7 +20,7 @@ RSpec.describe CodeOwners::ProjectsController, type: :request do
       before do
         create_list(:project, projects_count)
         Project.all.each { |project| project.code_owners << user }
-        get '/code_owners/projects', params: { code_owner: { user_id: user.id } }
+        subject
       end
 
       let(:projects_count) { 5 }

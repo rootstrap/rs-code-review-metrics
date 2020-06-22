@@ -12,7 +12,5 @@ Rails.application.routes.draw do
   post '/github_event_handler', to: 'webhook#handle'
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
-  namespace :code_owners do
-    get 'projects', to: 'projects#index'
-  end
+  get 'users/:id/projects', to: 'users/projects#index'
 end

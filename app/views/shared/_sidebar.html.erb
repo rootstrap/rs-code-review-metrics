@@ -13,16 +13,15 @@
       %>
     </div>
     <div class='row p-3'>
-      <%= simple_form_for :code_owner, url: code_owners_projects_path,
-        method: 'GET', html: { id: 'user-selection-form' }  do |f|%>
-          <%= f.input :user_id,
-            input_html: { class: 'user-selection margin-left' },
-            required: false,
-            collection: all_users_names,
-            selected: value_from_user_param,
-            disabled: 0
-          %>
-      <% end %>
+      <%= label_tag 'user_name', 'User Name'%>
+      <%= select_tag 'user_name',
+        options_for_select(
+          all_users_names,
+          selected: value_from_user_param,
+          disabled: 0
+        ),
+        class: 'user-selection'
+      %>
     </div>
   </div>
 </div>
