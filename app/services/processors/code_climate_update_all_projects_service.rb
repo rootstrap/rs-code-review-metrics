@@ -1,5 +1,5 @@
-module CodeClimate
-  class UpdateAllProjectsService < BaseService
+module Processors
+  class CodeClimateUpdateAllProjectsService < BaseService
     def call
       projects do |project|
         update_project(project)
@@ -13,7 +13,7 @@ module CodeClimate
     end
 
     def update_project(project)
-      UpdateProjectService.call(project)
+      CodeClimate::UpdateProjectService.call(project)
     end
   end
 end
