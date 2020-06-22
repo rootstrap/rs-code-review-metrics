@@ -45,13 +45,13 @@ module CodeClimate
       return if code_climate_metrics.empty?
 
       hash = Hash.new { |h, rate| h[rate] = 0 }
-      code_climate_metrics.each_with_object(hash) do |cc, ratings|
-        ratings[cc.code_climate_rate] += 1
+      code_climate_metrics.each_with_object(hash) do |code_climate_metrics, ratings|
+        ratings[code_climate_metrics.code_climate_rate] += 1
       end
     end
 
     def code_climate_metrics
-      return [] if department != 'web'
+      return [] if department != 'web' # waiting for department to be merged into develop
 
       @code_climate_metrics ||=
         technologies.empty? ? metrics_in_any_technology : metrics_in_given_technologies
