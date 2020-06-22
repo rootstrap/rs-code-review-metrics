@@ -22,7 +22,7 @@ module Metrics
               entities[entity] += 1
               turnaround = calculate_turnaround(review)
 
-              create_or_update_metric(entity.id, UsersProject.to_s, metric_interval,
+              create_or_update_metric(entity.id, UsersProject.name, metric_interval,
                                       turnaround, :review_turnaround)
             end
           end

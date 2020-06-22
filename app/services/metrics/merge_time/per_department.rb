@@ -14,7 +14,7 @@ module Metrics
       def process
         project_metrics_per_department.each do |department_id, amount, metrics_value|
           turnaround = calculate_average(metrics_value, amount)
-          create_or_update_metric(department_id, Department.to_s, metric_interval,
+          create_or_update_metric(department_id, Department.name, metric_interval,
                                   turnaround, :merge_time)
         end
       end

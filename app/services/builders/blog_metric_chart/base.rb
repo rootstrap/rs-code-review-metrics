@@ -16,7 +16,7 @@ module Builders
 
         metrics_result << generate_results_for(
           entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: Technology.to_s),
+          metrics: Metric.where(ownable_type: Technology.name),
           hidden: false
         )
       end

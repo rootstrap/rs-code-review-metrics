@@ -4,14 +4,14 @@ class DevelopmentMetricsController < ApplicationController
   def projects
     return if metric_params.blank?
 
-    build_metrics(project.id, Project.to_s)
+    build_metrics(project.id, Project.name)
     @code_owners = project.code_owners.pluck(:login)
   end
 
   def departments
     return if metric_params.blank?
 
-    build_metrics(department_id, Department.to_s)
+    build_metrics(department_id, Department.name)
   end
 
   private

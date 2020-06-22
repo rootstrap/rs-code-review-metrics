@@ -14,7 +14,7 @@ module Metrics
       def process
         filtered_projects.each do |project|
           turnaround = calculate_turnaround(project)
-          create_or_update_metric(project.id, Project.to_s, metric_interval,
+          create_or_update_metric(project.id, Project.name, metric_interval,
                                   turnaround, :merge_time)
         end
       end

@@ -25,7 +25,6 @@ module Builders
                 entity_name: 'project', entity_id: @entity_id, metric_name: metric_name
               )
             }
-            hash
           end
         end
       end
@@ -40,7 +39,6 @@ module Builders
                 entity_name: 'department', entity_id: @entity_id, metric_name: metric_name
               )
             }
-            hash
           end
         end
       end
