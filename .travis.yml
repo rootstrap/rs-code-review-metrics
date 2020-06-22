@@ -7,7 +7,6 @@ rvm:
 
 services:
   - postgresql
-  - redis-server
 
 addons:
   postgresql: 12
@@ -23,11 +22,6 @@ env:
     - CODE_CLIMATE_API_URL: https://api.codeclimate.com/v1
     - CODE_CLIMATE_API_ORG_NAME: rootstrap
 
-install:
-  - nvm install 12.16.1
-  - npm install -g yarn
-  - bundle install
-
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
   - psql -U travis -q -d code_review_metrics_travis -f db/structure.sql
@@ -37,7 +31,6 @@ before_script:
   - ./cc-test-reporter before-build
 
 script:
-  - bundle exec rails webpacker:compile
   - bundle exec rspec
   - bundle exec rake code_analysis
 
