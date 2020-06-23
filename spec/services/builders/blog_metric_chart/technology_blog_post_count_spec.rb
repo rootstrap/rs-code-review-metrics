@@ -35,7 +35,7 @@ describe Builders::BlogMetricChart::TechnologyBlogPostCount do
     end
 
     it 'returns the blog post count per technology formatted by technology and month' do
-      expect(described_class.call).to include(technology_metrics_hash)
+      expect(described_class.call.datasets).to include(technology_metrics_hash)
     end
   end
 end

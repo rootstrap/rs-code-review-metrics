@@ -20,11 +20,11 @@ class TechBlogController < ApplicationController
   end
 
   def year_to_date_visits
-    Builders::ChartSummary::YearToDateBlogVisits.call.to_i
+    Builders::ChartSummary::YearToDateBlogVisits.call
   end
 
   def month_to_date_visits
-    totals_for(@visits_per_technology)[:data][current_month_key].to_i
+    @visits_per_technology.totals_for(Time.zone.now).to_i
   end
 
   def technology_blog_post_count
@@ -44,26 +44,10 @@ class TechBlogController < ApplicationController
   end
 
   def this_month_visits_growth
-    totals_for(@visits_growth_mom)[:data][current_month_key].round(2)
+    @visits_growth_mom.totals_for(Time.zone.now).round(2)
   end
 
   def last_month_visits_growth
-    totals_for(@visits_growth_mom)[:data][last_month_key].round(2)
-  end
-
-  def totals_for(metric_datasets)
-    metric_datasets.find { |metric_dataset| metric_dataset[:name] == 'Totals' }
-  end
-
-  def current_month_key
-    Time.zone.now.strftime(monthly_key_format)
-  end
-
-  def last_month_key
-    Time.zone.now.last_month.strftime(monthly_key_format)
-  end
-
-  def monthly_key_format
-    '%B %Y'
+    @visits_growth_mom.totals_for(Time.zone.now.last_month).round(2)
   end
 end

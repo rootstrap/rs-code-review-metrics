@@ -1,19 +1,19 @@
 <div class='col-md-9 p-3'>
-  <%= line_chart @visits_per_technology, ytitle: "Visits" %>
+  <%= line_chart @visits_per_technology.all_datasets, ytitle: "Visits" %>
 </div>
 <div class='col-md-3 blog-metrics-summary-group'>
   <span class='blog-metrics-summary-item'><%= @month_to_date_visits %> visits this month</span>
   <span class='blog-metrics-summary-item'><%= @year_to_date_visits %> visits this year</span>
 </div>
 <div class='col-md-9 p-3'>
-  <%= line_chart @blog_post_count_per_technology, ytitle: "Blog posts" %>
+  <%= line_chart @blog_post_count_per_technology.all_datasets, ytitle: "Blog posts" %>
 </div>
 <div class='col-md-3 blog-metrics-summary-group'>
   <span class='blog-metrics-summary-item'><%= @month_to_date_new_blog_posts %> new posts this month</span>
   <span class='blog-metrics-summary-item'><%= @year_to_date_new_blog_posts %> new posts this year</span>
 </div>
 <div class='col-md-9 p-3'>
-  <%= line_chart @visits_growth_mom, suffix: "%", precision: 4, ytitle: "Visits Growth" %>
+  <%= line_chart @visits_growth_mom.all_datasets, suffix: "%", precision: 4, ytitle: "Visits Growth" %>
 </div>
 <div class='col-md-3 blog-metrics-summary-group'>
   <span class='blog-metrics-summary-item'><%= @this_month_visits_growth %>% growth this month</span>
