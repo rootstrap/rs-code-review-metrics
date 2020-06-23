@@ -1,4 +1,4 @@
-<div class="col container-height shadow-box sticky-top">
+<div class="col-md-2 container-height shadow-box sticky-top">
   <div class="container-md">
     <div class="row p-3">
       <div class="btn-group btn-entity-group">
@@ -6,9 +6,15 @@
         <%= button_to 'Department', departments_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
         <%= button_to 'User', users_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
       </div>
+      <%= label_tag 'user_name', 'User Name'%>
+      <%= select_tag 'user_name',
+        options_for_select(
+          all_users_names,
+          selected: value_from_user_param,
+          disabled: 0
+        ),
+        class: 'user-selection'
+      %>
     </div>
   </div>
-</div>
-
-<div class="col-md-10">
 </div>
