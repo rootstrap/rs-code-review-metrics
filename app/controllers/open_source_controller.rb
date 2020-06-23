@@ -1,0 +1,2 @@
+class OpenSourceController < ApplicationController
+end
