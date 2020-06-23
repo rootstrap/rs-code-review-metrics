@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     collection do
       get 'projects'
       get 'departments'
+      get 'users'
     end
   end
   get '/development_metrics', to: 'development_metrics#index'

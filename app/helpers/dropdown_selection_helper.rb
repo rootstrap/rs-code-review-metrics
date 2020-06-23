@@ -8,6 +8,6 @@ module DropdownSelectionHelper
   end
 
   def value_from_user_param
-    params.dig(:code_owner, :user_id) || 0
+    params.dig(:id) || 0
   end
 end

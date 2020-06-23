@@ -1,4 +1,4 @@
-<%= render 'shared/sidebar'%>
+<%= render 'shared/user/sidebar'%>
 <div class="col-md-10">
   <h2 class='user-name'><%= @user.login%></h2>
   <hr>
@@ -8,7 +8,7 @@
       <% @projects.each do |project|%>
         <li>
           <%= link_to project.name,
-              development_metrics_path(project_name: project.name, metric: {period: 'daily'}),
+              projects_development_metrics_path(project_name: project.name, metric: {period: 'daily'}),
               class: 'link-none-style-black'
           %>
         </li>

@@ -10,13 +10,14 @@ let elementSelector = (className) => {
 export const handleChangeSidebar = () => {
   const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
   let navFilterForm = elementSelector('nav-filter');
-
-  sidebarSelectionInput.onchange = () => {
-    const periodSelected = document.getElementById('metric_period');
-    if (periodSelected.selectedIndex === 0) {
-      periodSelected.selectedIndex = 1;
+  if (sidebarSelectionInput != null) {
+    sidebarSelectionInput.onchange = () => {
+      const periodSelected = document.getElementById('metric_period');
+      if (periodSelected.selectedIndex === 0) {
+        periodSelected.selectedIndex = 1;
+      }
+      navFilterForm.submit();
     }
-    navFilterForm.submit();
   }
 }
 
@@ -37,11 +38,13 @@ export const handleChangeNavForm = () => {
 
 export const handleChangeUser = () => {
   const userSelect = document.querySelector('.user-selection')
-  const current_base_url = window.location.origin;
-  userSelect.onchange = function() {
-    const optionSelected = userSelect.options.selectedIndex;
-    const resource = `users/${userSelect.options[optionSelected].value}/projects`;
-    window.location.href = `${current_base_url}/${resource}`
+  if (userSelect != null) {
+    const current_base_url = window.location.origin;
+    userSelect.onchange = function() {
+      const optionSelected = userSelect.options.selectedIndex;
+      const resource = `users/${userSelect.options[optionSelected].value}/projects`;
+      window.location.href = `${current_base_url}/${resource}`
+    }
   }
 }
 
