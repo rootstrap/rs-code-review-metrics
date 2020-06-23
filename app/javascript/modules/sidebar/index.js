@@ -7,6 +7,18 @@ let elementSelector = (className) => {
   return document.querySelector(`.${className}`);
 }
 
+const subscribeNavOnChange = (navElement) => {
+  navElement.onchange = function () {
+    let sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
+    if (sidebarSelectionInput !== 0){
+      this.submit();
+    } else {
+      const url = window.location.href.split('?')[0];
+      window.location.assign(url);
+    }
+  }
+}
+
 export const handleChangeSidebar = () => {
   const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
   let navFilterForm = elementSelector('nav-filter');
@@ -24,15 +36,7 @@ export const handleChangeSidebar = () => {
 export const handleChangeNavForm = () => {
   const navFilterForm = elementSelector('nav-filter');
   if (navFilterForm != null) {
-    navFilterForm.onchange = function () {
-      let sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
-      if (sidebarSelectionInput !== 0){
-        this.submit();
-      } else {
-        const url = window.location.href.split('?')[0];
-        window.location.assign(url);
-      }
-    }
+    subscribeNavOnChange(navFilterForm)
   }
 }
 
