@@ -9,6 +9,12 @@ module CodeClimate
     def call
       return unless update_metric? && code_climate_project_info
 
+      update_metric
+    end
+
+    private
+
+    def update_metric
       create_project_code_climate_metric unless project_code_climate_metric
 
       project_code_climate_metric.update!(
@@ -19,8 +25,6 @@ module CodeClimate
         snapshot_time: code_climate_project_info.snapshot_time
       )
     end
-
-    private
 
     def code_climate_project_info
       @code_climate_project_info ||= CodeClimate::GetProjectInfo.call(github_slug: project_name)

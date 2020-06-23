@@ -23,50 +23,60 @@ module CodeClimate
       )
     end
 
+    def metrics?
+      !code_climate_metrics.empty?
+    end
+
     def invalid_issues_count_average
-      return if code_climate_metrics.empty?
+      return unless metrics?
 
       code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size
     end
 
     def wont_fix_issues_count_average
-      return if code_climate_metrics.empty?
+      return unless metrics?
 
       code_climate_metrics.map(&:wont_fix_issues_count).sum / code_climate_metrics.size
     end
 
     def open_issues_count_average
-      return if code_climate_metrics.empty?
+      return unless metrics?
 
       code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size
     end
 
     def ratings
-      return if code_climate_metrics.empty?
+      return unless metrics?
 
-      hash = Hash.new { |h, rate| h[rate] = 0 }
-      code_climate_metrics.each_with_object(hash) do |code_climate_metrics, ratings|
+      code_climate_metrics.each_with_object(Hash.new(0)) do |code_climate_metrics, ratings|
         ratings[code_climate_metrics.code_climate_rate] += 1
       end
     end
 
     def code_climate_metrics
-      return [] if department != 'web' # waiting for department to be merged into develop
-
-      @code_climate_metrics ||=
-        technologies.empty? ? metrics_in_any_technology : metrics_in_given_technologies
+      @code_climate_metrics ||= metrics_in_given_technologies
     end
 
     def metrics_in_given_technologies
-      CodeClimateProjectMetric
-        .joins(:project)
-        .where('snapshot_time >= ? AND projects.lang IN (?)', from, technologies)
+      if technologies.empty?
+        metrics_in_time_period
+      else
+        metrics_in_time_period.where('projects.lang IN (?)', technologies)
+      end
     end
 
-    def metrics_in_any_technology
+    def metrics_in_time_period
+      if from
+        metrics_in_department.where('snapshot_time >= ?', from)
+      else
+        metrics_in_department
+      end
+    end
+
+    def metrics_in_department
       CodeClimateProjectMetric
         .joins(:project)
-        .where('snapshot_time >= ?', from)
+        .where('department_id = ?', department)
     end
   end
 end
