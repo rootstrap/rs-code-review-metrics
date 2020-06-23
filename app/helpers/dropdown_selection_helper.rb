@@ -3,10 +3,6 @@ module DropdownSelectionHelper
     params.dig(:metric, param) || 0
   end
 
-  def value_from_project_param
-    params.dig(:project_name) || 0
-  end
-
   def value_from_user_param
     params.dig(:id) || 0
   end
