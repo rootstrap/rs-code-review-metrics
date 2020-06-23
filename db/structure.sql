@@ -446,6 +446,36 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 
 --
+-- Name: languages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.languages (
+    id bigint NOT NULL,
+    name character varying,
+    department_id bigint
+);
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.languages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.languages_id_seq OWNED BY public.languages.id;
+
+
+--
 -- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -492,8 +522,7 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lang public.lang DEFAULT 'unassigned'::public.lang,
-    department_id bigint
+    language_id bigint
 );
 
 
@@ -834,6 +863,13 @@ ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages ALTER COLUMN id SET DEFAULT nextval('public.languages_id_seq'::regclass);
+
+
+--
 -- Name: metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -974,6 +1010,14 @@ ALTER TABLE ONLY public.exception_hunter_error_groups
 
 ALTER TABLE ONLY public.exception_hunter_errors
     ADD CONSTRAINT exception_hunter_errors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: languages languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages
+    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1155,6 +1199,13 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 
 
 --
+-- Name: index_languages_on_department_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_languages_on_department_id ON public.languages USING btree (department_id);
+
+
+--
 -- Name: index_metrics_on_ownable_type_and_ownable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1162,10 +1213,10 @@ CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USIN
 
 
 --
--- Name: index_projects_on_department_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_department_id ON public.projects USING btree (department_id);
+CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
 
 
 --
@@ -1358,6 +1409,14 @@ ALTER TABLE ONLY public.pull_requests
 
 
 --
+-- Name: languages fk_rails_822295ed05; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages
+    ADD CONSTRAINT fk_rails_822295ed05 FOREIGN KEY (department_id) REFERENCES public.departments(id);
+
+
+--
 -- Name: code_owner_projects fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1379,14 +1438,6 @@ ALTER TABLE ONLY public.code_owner_projects
 
 ALTER TABLE ONLY public.review_requests
     ADD CONSTRAINT fk_rails_9ece0f7518 FOREIGN KEY (owner_id) REFERENCES public.users(id);
-
-
---
--- Name: projects fk_rails_bca7ec3858; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT fk_rails_bca7ec3858 FOREIGN KEY (department_id) REFERENCES public.departments(id);
 
 
 --
@@ -1504,6 +1555,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200611190026'),
 ('20200612195323'),
 ('20200616154910'),
-('20200617145408');
+('20200617145408'),
+('20200622214544'),
+('20200622221335'),
+('20200622221651'),
+('20200622221729');
 
 

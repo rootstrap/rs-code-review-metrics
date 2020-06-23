@@ -14,6 +14,6 @@
 
 FactoryBot.define do
   factory :department do
-    sequence(:name) { |n| %i[backend frontend mobile][n - 1] }
+    sequence(:name) { |n| %i[backend frontend mobile][n % 3] }
   end
 end

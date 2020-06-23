@@ -1,19 +1,20 @@
 ActiveAdmin.register Project do
-  permit_params :lang
+  ## TODO
+  # permit_params :language
   remove_filter :events
-  filter :lang, label: 'Language', as: :select, collection: Project.langs
+  # filter :language, label: 'Language', as: :select, collection: Language.pluck(:name)
 
   index do
     id_column
     column :name
     column :description
-    column :lang
+    # column :language
   end
 
-  form do |f|
-    f.inputs 'Edit Project' do
-      f.input :lang, label: 'Language', as: :select, collection: Project.langs
-    end
-    f.actions
-  end
+  # form do |f|
+  #   f.inputs 'Edit Project' do
+  #     f.input :language, label: 'Language', as: :select, collection: Language.pluck(:name)
+  #   end
+  #   f.actions
+  # end
 end

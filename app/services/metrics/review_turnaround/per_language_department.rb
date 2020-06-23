@@ -1,6 +1,6 @@
 module Metrics
   module ReviewTurnaround
-    class PerDepartment < Metrics::Base
+    class PerLanguageDepartment < Metrics::Base
       def initialize(interval = nil)
         @interval = interval
       end
@@ -14,13 +14,13 @@ module Metrics
       def process
         project_metrics_per_department.each do |department_id, amount, metrics_value|
           turnaround = calculate_average(metrics_value, amount)
-          create_or_update_metric(department_id, Department.name, metric_interval,
+          create_or_update_metric(department_id, LanguagesDepartment.name, metric_interval,
                                   turnaround, :review_turnaround)
         end
       end
 
       def project_metrics_per_department
-        Department.joins(languages: { projects: :metrics })
+        Department.joins(projects: :metrics)
                   .where(metrics: { name: :review_turnaround })
                   .group(:id)
                   .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))

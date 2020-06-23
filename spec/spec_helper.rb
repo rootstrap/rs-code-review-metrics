@@ -93,4 +93,21 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  config.before(:suite) do
+    department = Department.create(name: 'backend')
+    %i[ruby nodejs python].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    department = Department.create(name: 'frontend')
+    %i[react vuejs].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    department = Department.create(name: 'mobile')
+    %i[ios android react_native].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    %i[others unassigned].each do |lang|
+      Language.create(name: lang)
+    end
+  end
 end

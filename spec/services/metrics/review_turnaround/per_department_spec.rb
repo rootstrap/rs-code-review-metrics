@@ -2,16 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
   describe '.call' do
-    let!(:departments) do
-      3.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
-    end
+    before { travel_to(Time.zone.today.beginning_of_day) }
 
-    before(:all) do
-      travel_to(Time.zone.today.beginning_of_day)
-    end
-
-    let!(:first_project) { create(:project, lang: 'ruby') }
-    let!(:second_project) { create(:project, lang: 'react') }
+    let(:ruby_lang)  { Language.find_by(name: 'ruby')  }
+    let(:react_lang) { Language.find_by(name: 'react') }
+    let!(:first_project)  { create(:project, language: ruby_lang)  }
+    let!(:second_project) { create(:project, language: react_lang) }
 
     context 'when there are two project metrics from different departments' do
       before do

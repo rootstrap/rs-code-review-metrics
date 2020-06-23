@@ -20,7 +20,7 @@ module Metrics
       end
 
       def project_metrics_per_department
-        Department.joins(projects: :metrics)
+        Department.joins(languages: { projects: :metrics })
                   .where(metrics: { name: :merge_time })
                   .group(:id)
                   .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))

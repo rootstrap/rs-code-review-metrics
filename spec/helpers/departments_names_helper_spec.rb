@@ -4,7 +4,7 @@ RSpec.describe DepartmentsNamesHelper, type: :helper do
   describe '.all_department_names' do
     let(:size_of_departments) { 3 }
     let!(:departments) do
-      size_of_departments.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
+      size_of_departments.times { create(:project) }
     end
 
     it 'returns a departments names collection' do
