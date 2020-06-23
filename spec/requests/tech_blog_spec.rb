@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe TechBlogController, type: :request do
+describe 'Tech Blog', type: :request do
   describe '#index' do
     let(:technology) { create(:technology) }
     let!(:blog_post) { create(:blog_post, published_at: Time.zone.now, technology: technology) }
