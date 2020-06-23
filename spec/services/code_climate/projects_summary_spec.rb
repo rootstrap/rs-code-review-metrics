@@ -33,7 +33,11 @@ describe CodeClimate::ProjectsSummary do
     expect(subject.projects_rated_with('C')).to eq(0)
   end
 
-  it 'gets all the projects rating names' do
-    expect(subject.rating_names).to eq(%w[A B])
+  it 'iterates the project rates count' do
+    rates_conter = {}
+    subject.project_rates do |rate, count|
+      rates_conter[rate] = count
+    end
+    expect(rates_conter).to eq('A' => 1, 'B' => 2)
   end
 end

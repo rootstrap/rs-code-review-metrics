@@ -12,7 +12,7 @@ class DevelopmentMetricsController < ApplicationController
   def departments
     return if metric_params.blank?
 
-    build_metrics(department_id, Department.name)
+    build_metrics(department.id, Department.name)
     @code_climate = code_climate_department_summary
   end
 
@@ -31,8 +31,8 @@ class DevelopmentMetricsController < ApplicationController
     @project ||= Project.find_by(name: params[:project_name])
   end
 
-  def department_id
-    @department_id ||= Department.find_by(name: params[:department_name]).id
+  def department
+    @department ||= Department.find_by(name: params[:department_name])
   end
 
   def metric_params
@@ -45,7 +45,7 @@ class DevelopmentMetricsController < ApplicationController
 
   def code_climate_department_summary
     CodeClimate::ProjectsSummaryService.call(
-      department: department_id,
+      department: department,
       from: nil,
       technologies: []
     )
