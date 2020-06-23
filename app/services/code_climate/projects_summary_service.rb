@@ -15,6 +15,8 @@ module CodeClimate
     private
 
     def build_summary
+      return ProjectsSummary.new unless metrics?
+
       ProjectsSummary.new(
         invalid_issues_count_average: invalid_issues_count_average,
         wontfix_issues_count_average: wont_fix_issues_count_average,
@@ -28,26 +30,18 @@ module CodeClimate
     end
 
     def invalid_issues_count_average
-      return unless metrics?
-
       code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size
     end
 
     def wont_fix_issues_count_average
-      return unless metrics?
-
       code_climate_metrics.map(&:wont_fix_issues_count).sum / code_climate_metrics.size
     end
 
     def open_issues_count_average
-      return unless metrics?
-
       code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size
     end
 
     def ratings
-      return unless metrics?
-
       code_climate_metrics.each_with_object(Hash.new(0)) do |code_climate_metrics, ratings|
         ratings[code_climate_metrics.code_climate_rate] += 1
       end
