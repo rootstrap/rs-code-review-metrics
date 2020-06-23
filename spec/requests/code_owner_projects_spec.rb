@@ -16,7 +16,7 @@ RSpec.describe 'Code Owner Projects' do
       end
     end
 
-    context 'when projects has projects as code owner' do
+    context 'when user has projects as code owner' do
       before do
         create_list(:project, projects_count)
         Project.all.each { |project| project.code_owners << user }
