@@ -3,13 +3,19 @@ module Builders
     class DevelopmentMetrics < BaseService
       METRIC_NAMES = %i[review_turnaround merge_time].freeze
 
-      def initialize(entity_id, period_metric_query)
+      def initialize(entity_id, period)
         @entity_id = entity_id
-        @period_metric_query = period_metric_query
+        @period = period_metric_query(period)
       end
 
       def call
         build
+      end
+
+      private
+
+      def period_metric_query(period)
+        Metrics::PeriodRetriever.call(period)
       end
 
       class Project < DevelopmentMetrics
@@ -18,10 +24,10 @@ module Builders
         def build
           METRIC_NAMES.each_with_object({}) do |metric_name, hash|
             hash[metric_name] = {
-              per_project: @period_metric_query.call(
+              per_project: @period.call(
                 entity_name: 'project', entity_id: @entity_id, metric_name: metric_name
               ),
-              per_users_project: @period_metric_query.call(
+              per_users_project: @period.call(
                 entity_name: 'users_project', entity_id: @entity_id, metric_name: metric_name
               )
             }
@@ -35,11 +41,11 @@ module Builders
         def build
           METRIC_NAMES.each_with_object({}) do |metric_name, hash|
             hash[metric_name] = {
-              per_department: @period_metric_query.call(
+              per_department: @period.call(
                 entity_name: 'department', entity_id: @entity_id, metric_name: metric_name
               ),
-              per_technology: @period_metric_query.call(
-                entity_name: 'languages_department', entity_id: @entity_id, metric_name: metric_name
+              per_language: @period.call(
+                entity_name: 'language', entity_id: @entity_id, metric_name: metric_name
               )
             }
           end

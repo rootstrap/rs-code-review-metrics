@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe DevelopmentMetricsController, type: :controller do
-  let(:ruby_lang)  { Language.find_by(name: 'ruby')  }
+  let(:ruby_lang) { Language.find_by(name: 'ruby') }
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
 
   describe '#index' do
