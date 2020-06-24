@@ -5,26 +5,28 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+ActiveRecord::Base.transaction do
+  # Departments and Languages
+  department = Department.create(name: 'backend')
+  %i[ruby nodejs python].each do |lang|
+    Language.create(name: lang, department: department)
+  end
+  department = Department.create(name: 'frontend')
+  %i[react vuejs].each do |lang|
+    Language.create(name: lang, department: department)
+  end
+  department = Department.create(name: 'mobile')
+  %i[ios android react_native].each do |lang|
+    Language.create(name: lang, department: department)
+  end
+  %i[others unassigned].each do |lang|
+    Language.create(name: lang)
+  end
+end
+
 if Rails.env.development?
   ActiveRecord::Base.transaction do
     AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
-
-    # Departments and Languages
-    department = Department.create(name: 'backend')
-    %i[ruby nodejs python].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    department = Department.create(name: 'frontend')
-    %i[react vuejs].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    department = Department.create(name: 'mobile')
-    %i[ios android react_native].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    %i[others unassigned].each do |lang|
-      Language.create(name: lang)
-    end
 
     project = Project.create(github_id: rand(1000), name: 'rs-code-review-metrics')
 
@@ -69,26 +71,5 @@ if Rails.env.development?
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
     FactoryBot.create(:code_climate_project_metric, project: project)
-  end
-end
-
-if Rails.env.test?
-  ActiveRecord::Base.transaction do
-    # Departments and Languages
-    department = Department.create(name: 'backend')
-    %i[ruby nodejs python].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    department = Department.create(name: 'frontend')
-    %i[react vuejs].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    department = Department.create(name: 'mobile')
-    %i[ios android react_native].each do |lang|
-      Language.create(name: lang, department: department)
-    end
-    %i[others unassigned].each do |lang|
-      Language.create(name: lang)
-    end
   end
 end

@@ -1,11 +1,7 @@
 module Metrics
   module MergeTime
-    class PerUserProject < Metrics::Base
+    class PerUserProject < Metrics::BaseDevelopmentMetrics
       BATCH_SIZE = 500
-
-      def initialize(interval = nil)
-        @interval = interval
-      end
 
       def call
         process

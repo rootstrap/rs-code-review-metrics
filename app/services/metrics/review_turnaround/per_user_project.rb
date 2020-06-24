@@ -3,10 +3,6 @@ module Metrics
     class PerUserProject < Metrics::Base
       BATCH_SIZE = 500
 
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
       def call
         process
       end

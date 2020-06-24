@@ -1,10 +1,6 @@
 module Metrics
   module MergeTime
-    class PerLanguage < Metrics::Base
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
+    class PerLanguage < Metrics::BaseDevelopmentMetrics
       def call
         process
       end

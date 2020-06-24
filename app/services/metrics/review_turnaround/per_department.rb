@@ -1,10 +1,6 @@
 module Metrics
   module ReviewTurnaround
-    class PerDepartment < Metrics::Base
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
+    class PerDepartment < Metrics::BaseDevelopmentMetrics
       def call
         process
       end
