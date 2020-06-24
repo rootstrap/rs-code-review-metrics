@@ -1,10 +1,6 @@
 module Metrics
   module ReviewTurnaround
     class PerProject < Metrics::BaseDevelopmentMetrics
-      def call
-        process
-      end
-
       private
 
       def process

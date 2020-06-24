@@ -1,10 +1,6 @@
 module Metrics
   module ReviewTurnaround
     class PerLanguage < Metrics::BaseDevelopmentMetrics
-      def call
-        process
-      end
-
       private
 
       def process

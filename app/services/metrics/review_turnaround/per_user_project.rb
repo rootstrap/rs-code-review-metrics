@@ -3,10 +3,6 @@ module Metrics
     class PerUserProject < Metrics::Base
       BATCH_SIZE = 500
 
-      def call
-        process
-      end
-
       private
 
       def process

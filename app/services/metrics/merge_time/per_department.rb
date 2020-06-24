@@ -1,10 +1,6 @@
 module Metrics
   module MergeTime
     class PerDepartment < Metrics::BaseDevelopmentMetrics
-      def call
-        process
-      end
-
       private
 
       def process
