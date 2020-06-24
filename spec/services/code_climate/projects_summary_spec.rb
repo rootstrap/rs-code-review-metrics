@@ -35,7 +35,7 @@ describe CodeClimate::ProjectsSummary do
 
   it 'iterates the project rates count' do
     rates_conter = {}
-    subject.project_rates do |rate, count|
+    subject.each_project_rate do |rate, count|
       rates_conter[rate] = count
     end
     expect(rates_conter).to eq('A' => 1, 'B' => 2)

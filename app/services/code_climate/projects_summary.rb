@@ -21,7 +21,7 @@ module CodeClimate
       ratings&.fetch(letter.to_s, 0)
     end
 
-    def project_rates(&block)
+    def each_project_rate(&block)
       ratings.each_pair(&block)
     end
 
