@@ -6,7 +6,7 @@
 </div>
 <% else -%>
 <div class="row">
-  <% code_climate.project_rates do |letter, projects_count| -%>
+  <% code_climate.each_project_rate do |letter, projects_count| -%>
     <div class="col-md-3">
       <span><%= projects_count %><%= projects_count ? ' project' : ' projects' %> with </span>
       <span class="code-climate-summary text-primary"><%= letter %></span>
