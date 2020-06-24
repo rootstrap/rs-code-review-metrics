@@ -15,7 +15,7 @@ module Builders
       private
 
       def build
-        METRIC_NAMES.inject({}) do |hash, metric_name|
+        METRIC_NAMES.each_with_object({}) do |metric_name, hash|
           hash[metric_name] = metric_data(metric_name)
         end
       end
