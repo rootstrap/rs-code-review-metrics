@@ -1,10 +1,6 @@
 module Processors
-  class MergeTime < BaseService
+  class MergeTime < Processors::Base
     ENTITIES = %w[UserProject Project Department Language].freeze
-
-    def call
-      process
-    end
 
     private
 

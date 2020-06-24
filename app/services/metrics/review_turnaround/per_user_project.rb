@@ -1,6 +1,6 @@
 module Metrics
   module ReviewTurnaround
-    class PerUserProject < Metrics::Base
+    class PerUserProject < Metrics::BaseDevelopmentMetrics
       BATCH_SIZE = 500
 
       private

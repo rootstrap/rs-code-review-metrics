@@ -1,10 +1,6 @@
 module Processors
-  class ReviewTurnaround < BaseService
+  class ReviewTurnaround < Processors::Base
     ENTITIES = %w[UserProject Project Department Language].freeze
-
-    def call
-      process
-    end
 
     private
 
