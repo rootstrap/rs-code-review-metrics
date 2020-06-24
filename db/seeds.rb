@@ -75,20 +75,20 @@ end
 if Rails.env.test?
   ActiveRecord::Base.transaction do
     # Departments and Languages
-    department = FactoryBot.create(:department, name: 'backend')
+    department = Department.create(name: 'backend')
     %i[ruby nodejs python].each do |lang|
-      FactoryBot.create(:language, name: lang, department: department)
+      Language.create(name: lang, department: department)
     end
-    department = FactoryBot.create(:department, 'frontend')
+    department = Department.create(name: 'frontend')
     %i[react vuejs].each do |lang|
-      FactoryBot.create(:language, name: lang, department: department)
+      Language.create(name: lang, department: department)
     end
-    department = FactoryBot.create(:department, 'mobile')
+    department = Department.create(name: 'mobile')
     %i[ios android react_native].each do |lang|
-      FactoryBot.create(:language, name: lang, department: department)
+      Language.create(name: lang, department: department)
     end
     %i[others unassigned].each do |lang|
-      FactoryBot.create(:language, name: lang)
+      Language.create(name: lang)
     end
   end
 end

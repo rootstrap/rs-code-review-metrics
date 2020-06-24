@@ -3,7 +3,6 @@ require 'rails_helper'
 describe Processors::BlogPostsPartialUpdater do
   describe '.call' do
     context 'when there is already a blog post stored in the DB' do
-      let(:api_service) { instance_double(WordpressService) }
       let(:publish_date) { Faker::Time.backward }
       let!(:stored_blog_post) { create(:blog_post, published_at: publish_date) }
       let(:updated_slug) { 'newly-updated-slug' }
@@ -24,14 +23,12 @@ describe Processors::BlogPostsPartialUpdater do
       let(:partial_blog_post_payload) { [new_blog_post_payload] }
 
       before do
-        allow_any_instance_of(described_class)
-          .to receive(:wordpress_service)
-          .and_return(api_service)
-        allow(api_service)
-          .to receive(:blog_posts)
-          .with(since: publish_date)
-          .and_return(partial_blog_post_payload)
         create(:technology, name: 'other')
+        stub_blog_posts_response(
+          request_params: { after: publish_date.utc.iso8601 },
+          blog_post_payloads: partial_blog_post_payload
+        )
+        stub_blog_post_response(new_blog_post_payload)
       end
 
       it 'does not update the stored blog post' do

@@ -14,6 +14,8 @@ class DevelopmentMetricsController < ApplicationController
     build_metrics(department_id, Department.name)
   end
 
+  def users; end
+
   private
 
   def build_metrics(entity_id, entity_name)

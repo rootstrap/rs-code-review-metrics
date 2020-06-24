@@ -1,3 +1,6 @@
+.project-selection {
+  @include flex-column-select;
+}
 .entity-btn {
   border-radius: 0px;
   margin-bottom: 5px;
@@ -10,4 +13,8 @@
 
 .container-height{
   height: 100vh;
+}
+
+.user-selection{
+  @include flex-column-select;
 }

@@ -1,5 +1,5 @@
-describe CodeClimate::UpdateAllProjectsService do
-  subject { CodeClimate::UpdateAllProjectsService }
+describe Processors::CodeClimateUpdateAllProjectsService do
+  subject { Processors::CodeClimateUpdateAllProjectsService }
   let(:update_all_projects_code_climate_info) { subject.call }
 
   it 'with no projects does no fail' do

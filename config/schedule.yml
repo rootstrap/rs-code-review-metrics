@@ -37,3 +37,8 @@ code_owners_list:
   cron: '00 23 * * 1-5'
   class: 'CodeOwnersListJob'
   active_job: true
+
+code_climate_metrics_update:
+  cron: '00 * * * *'
+  class: 'CodeClimateMetricsUpdaterJob'
+  active_job: true
