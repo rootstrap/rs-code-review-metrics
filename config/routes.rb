@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
   get 'users/:id/projects', to: 'users/projects#index'
+  get 'open_source', to: 'open_source#index'
 end
