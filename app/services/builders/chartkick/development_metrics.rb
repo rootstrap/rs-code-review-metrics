@@ -16,7 +16,7 @@ module Builders
 
       def build
         METRIC_NAMES.inject({}) do |hash, metric_name|
-          hash[metric_name] = send("#{resolve_entity_name}_metric_data", metric_name)
+          hash[metric_name] = metric_data(metric_name)
         end
       end
 
@@ -24,14 +24,10 @@ module Builders
         Metrics::PeriodRetriever.call(period)
       end
 
-      def resolve_entity_name
-        self.class.name.demodulize.downcase
-      end
-
       class Project < DevelopmentMetrics
         private
 
-        def project_metric_data(metric_name)
+        def metric_data(metric_name)
           {
             per_project: @period.call(
               entity_name: 'project', entity_id: @entity_id, metric_name: metric_name
@@ -46,7 +42,7 @@ module Builders
       class Department < DevelopmentMetrics
         private
 
-        def department_metric_data(metric_name)
+        def metric_data(metric_name)
           {
             per_department: @period.call(
               entity_name: 'department', entity_id: @entity_id, metric_name: metric_name
