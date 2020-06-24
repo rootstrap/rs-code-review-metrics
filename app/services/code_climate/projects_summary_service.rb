@@ -70,7 +70,7 @@ module CodeClimate
     def metrics_in_department
       CodeClimateProjectMetric
         .joins(:project)
-        .where('department_id = ?', department)
+        .where(projects: { department_id: department.id })
     end
   end
 end
