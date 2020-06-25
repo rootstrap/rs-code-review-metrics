@@ -35,7 +35,7 @@ describe Builders::BlogMetricChart::Base do
       end
 
       it 'includes each month totals in the hash response' do
-        expect(subject.call).to include(totals_hash)
+        expect(subject.call.totals).to match(totals_hash)
       end
     end
 
@@ -52,17 +52,13 @@ describe Builders::BlogMetricChart::Base do
       end
 
       it 'each technology dataset is hidden' do
-        technology_dataset = subject.call.find do |dataset|
-          dataset[:name] == technology.name.titleize
-        end
-
-        expect(technology_dataset[:dataset][:hidden]).to eq true
+        expect(subject.call.datasets).to all(satisfy do |dataset|
+          dataset[:dataset][:hidden] == true
+        end)
       end
 
       it 'the totals dataset is not hidden' do
-        totals_dataset = subject.call.find { |dataset| dataset[:name] == 'Totals' }
-
-        expect(totals_dataset[:dataset][:hidden]).to eq false
+        expect(subject.call.totals[:dataset][:hidden]).to eq false
       end
     end
   end

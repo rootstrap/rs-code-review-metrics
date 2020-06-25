@@ -34,7 +34,7 @@ describe Builders::BlogMetricChart::TechnologyVisits do
     end
 
     it 'returns the technology visits formatted by technology and month' do
-      expect(described_class.call).to include(technology_metrics_hash)
+      expect(described_class.call.datasets).to include(technology_metrics_hash)
     end
   end
 end
