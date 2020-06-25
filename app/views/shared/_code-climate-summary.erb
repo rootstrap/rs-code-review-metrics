@@ -12,6 +12,9 @@
       <div class="col-md-3">
         <span class="code-climate-summary text-danger"><%= code_climate.wont_fix_issues_count %> won't fix issues</span>
       </div>
+      <div class="col-md-3">
+        <span class="code-climate-summary text-danger"><%= code_climate.open_issues_count %> open issues</span>
+      </div>
     <% else -%>
       <div class="col-md-9">
         <span class="code-climate-summary text-danger">No information available</span>
