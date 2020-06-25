@@ -5,8 +5,12 @@ RSpec.describe Builders::Project do
     let(:repository_payload) { create(:repository_payload)['repository'] }
 
     context 'when the project has not been created' do
-      it 'creates it' do
+      it 'creates only one' do
         expect { described_class.call(repository_payload) }.to change(Project, :count).by(1)
+      end
+
+      it 'creates it' do
+        described_class.call(repository_payload)
 
         created_project = Project.find_by(github_id: repository_payload['id'])
         expect(created_project.name).to eq repository_payload['name']
