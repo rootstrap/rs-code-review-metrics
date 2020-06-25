@@ -5,7 +5,7 @@
 #
 #       rake projects:update_privacy
 namespace :projects do
-  desc 'Updates the private column for all projects'
+  desc 'Updates the is_private column for all projects'
   task update_privacy: :environment do
     Processors::ProjectPrivacyBackfiller.call
   end

@@ -4,8 +4,8 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
+#  is_private  :boolean
 #  name        :string
-#  private     :boolean
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null

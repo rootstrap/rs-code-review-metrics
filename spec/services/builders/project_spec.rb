@@ -11,7 +11,7 @@ RSpec.describe Builders::Project do
         created_project = Project.find_by(github_id: repository_payload['id'])
         expect(created_project.name).to eq repository_payload['name']
         expect(created_project.description).to eq repository_payload['description']
-        expect(created_project.private).to eq repository_payload['private']
+        expect(created_project.is_private).to eq repository_payload['private']
       end
     end
 
@@ -22,7 +22,7 @@ RSpec.describe Builders::Project do
           github_id: repository_payload['id'],
           name: repository_payload['name'],
           description: repository_payload['description'],
-          private: repository_payload['private']
+          is_private: repository_payload['private']
         )
       end
 
