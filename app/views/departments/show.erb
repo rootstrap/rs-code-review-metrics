@@ -1,0 +1,13 @@
+<%= render 'shared/department/sidebar'%>
+<div class="col-md-10">
+  <div class="row shadow-box sticky-top p-3">
+    <div class="col-md-12">
+        <h4 class="text-center">CodeClimate report for <%= @department.name %> projects Department</h4>
+    </div>
+  </div>
+  <div class="row p-3">
+    <div class="col-md-12">
+      <%= render 'departments/code_climate_department_report' %>
+    </div>
+  </div>
+</div>
