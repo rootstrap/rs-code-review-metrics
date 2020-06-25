@@ -5,9 +5,11 @@ describe CodeClimate::ProjectsSummaryService do
 
   let(:from) { DateTime.parse('2020-06-02') }
   let(:technologies) { %w[] }
-  let(:department) { project_1.department }
-  let(:project_1) { create :project, lang: 'ruby' }
-  let(:project_2) { create :project, lang: 'python' }
+  let(:department) { project_1.language.department }
+  let(:ruby_lang) { Language.find_by(name: 'ruby') }
+  let(:python_lang) { Language.find_by(name: 'python') }
+  let(:project_1) { create :project, language: ruby_lang }
+  let(:project_2) { create :project, language: python_lang }
 
   let!(:projects) do
     create :code_climate_project_metric,
@@ -62,7 +64,7 @@ describe CodeClimate::ProjectsSummaryService do
   end
 
   context 'with a department with no projects' do
-    let(:department) { create :department, name: 'mobile' }
+    let(:department) { Department.find_by(name: 'mobile') }
 
     it 'shows no invalid issues count' do
       expect(projects_summary.invalid_issues_count_average).to be_nil

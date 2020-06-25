@@ -5,22 +5,24 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-ActiveRecord::Base.transaction do
-  # Departments and Languages
-  department = Department.create(name: 'backend')
-  %i[ruby nodejs python].each do |lang|
-    Language.create(name: lang, department: department)
-  end
-  department = Department.create(name: 'frontend')
-  %i[react vuejs].each do |lang|
-    Language.create(name: lang, department: department)
-  end
-  department = Department.create(name: 'mobile')
-  %i[ios android react_native].each do |lang|
-    Language.create(name: lang, department: department)
-  end
-  %i[others unassigned].each do |lang|
-    Language.create(name: lang)
+unless Rails.env.production?
+  ActiveRecord::Base.transaction do
+    # Departments and Languages
+    department = Department.create(name: 'backend')
+    %i[ruby nodejs python].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    department = Department.create(name: 'frontend')
+    %i[react vuejs].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    department = Department.create(name: 'mobile')
+    %i[ios android react_native].each do |lang|
+      Language.create(name: lang, department: department)
+    end
+    %i[others unassigned].each do |lang|
+      Language.create(name: lang)
+    end
   end
 end
 
