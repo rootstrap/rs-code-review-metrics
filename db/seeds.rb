@@ -5,8 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-unless Rails.env.production?
+if Rails.env.development?
   ActiveRecord::Base.transaction do
+    AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
+
     # Departments and Languages
     department = Department.create(name: 'backend')
     %i[ruby nodejs python].each do |lang|
@@ -23,12 +25,6 @@ unless Rails.env.production?
     %i[others unassigned].each do |lang|
       Language.create(name: lang)
     end
-  end
-end
-
-if Rails.env.development?
-  ActiveRecord::Base.transaction do
-    AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 
     project = Project.create(github_id: rand(1000), name: 'rs-code-review-metrics')
 
