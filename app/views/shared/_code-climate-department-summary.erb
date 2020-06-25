@@ -11,6 +11,9 @@
       <span><%= projects_count %><%= projects_count ? ' project' : ' projects' %> with </span>
       <span class="code-climate-summary text-primary"><%= letter %></span>
     </div>
+    <div class="col-md-3 offset-md-6">
+      <%= link_to('See details...', department_path(@department)) %>
+    </div>
   <% end -%>
 </div>
 <div class="row">
