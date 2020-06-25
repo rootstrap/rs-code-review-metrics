@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
+RSpec.describe Metrics::MergeTime::PerLanguage do
   describe '.call' do
     before { travel_to(Time.zone.today.beginning_of_day) }
 
@@ -9,10 +9,10 @@ RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
     let!(:first_project)  { create(:project, language: ruby_lang)  }
     let!(:second_project) { create(:project, language: react_lang) }
 
-    context 'when there are two project metrics from different departments' do
+    context 'when there are two project metrics with different languages' do
       before do
-        create(:metric, value: 30.minutes, ownable: first_project)
-        create(:metric, value: 25.minutes, ownable: second_project)
+        create(:metric, value: 30.minutes, ownable: first_project, name: :merge_time)
+        create(:metric, value: 25.minutes, ownable: second_project, name: :merge_time)
       end
 
       it 'creates two metrics' do
@@ -25,12 +25,12 @@ RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
       end
     end
 
-    context 'when there are two project metrics per department' do
+    context 'when there are two project metrics per language' do
       before do
-        create(:metric, value: 15.minutes, ownable: first_project)
-        create(:metric, value: 25.minutes, ownable: first_project)
-        create(:metric, value: 45.minutes, ownable: second_project)
-        create(:metric, value: 15.minutes, ownable: second_project)
+        create(:metric, value: 15.minutes, ownable: first_project, name: :merge_time)
+        create(:metric, value: 25.minutes, ownable: first_project, name: :merge_time)
+        create(:metric, value: 45.minutes, ownable: second_project, name: :merge_time)
+        create(:metric, value: 15.minutes, ownable: second_project, name: :merge_time)
       end
 
       it 'creates two metrics' do

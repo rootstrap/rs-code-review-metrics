@@ -4,6 +4,8 @@
   <%= render partial: 'shared/line-chart',
               locals: {
                 metric_name: '',
-                metric: review_turnaround[:per_users_project]
-              } if review_turnaround && review_turnaround[:per_users_project] %>
+                metric: review_turnaround[:per_users_project] || review_turnaround[:per_language]
+              } if review_turnaround &&
+                   (review_turnaround[:per_users_project] ||
+                   review_turnaround[:per_language]) %>
 </div>

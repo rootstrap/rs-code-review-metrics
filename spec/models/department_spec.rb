@@ -15,7 +15,7 @@
 require 'rails_helper'
 
 RSpec.describe Department, type: :model do
-  subject { build :department }
+  subject { Department.first }
 
   context 'validations' do
     it 'is valid with valid attributes' do
@@ -27,7 +27,7 @@ RSpec.describe Department, type: :model do
       expect(subject).to_not be_valid
     end
 
-    it { is_expected.to have_many(:projects) }
+    it { is_expected.to have_many(:languages) }
     it { is_expected.to have_many(:metrics) }
   end
 end

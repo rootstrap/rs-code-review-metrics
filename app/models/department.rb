@@ -16,6 +16,7 @@ class Department < ApplicationRecord
   enum name: { mobile: 'mobile', backend: 'backend', frontend: 'frontend' }
 
   has_many :projects, dependent: :nullify
+  has_many :languages, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, inclusion: { in: names.keys }, uniqueness: true

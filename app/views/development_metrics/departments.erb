@@ -12,6 +12,8 @@
   <% end %>
 
   <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
+  <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
 
   <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+  <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
 </div>
