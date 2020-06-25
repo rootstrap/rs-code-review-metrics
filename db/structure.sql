@@ -452,7 +452,7 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 CREATE TABLE public.languages (
     id bigint NOT NULL,
-    name character varying,
+    name character varying NOT NULL,
     department_id bigint
 );
 

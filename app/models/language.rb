@@ -3,7 +3,7 @@
 # Table name: languages
 #
 #  id            :bigint           not null, primary key
-#  name          :string
+#  name          :string           not null
 #  department_id :bigint
 #
 # Indexes
