@@ -79,11 +79,11 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no total of "A" projects' do
-      expect(projects_summary.projects_rated_with('A')).to be_nil
+      expect(projects_summary.projects_rated_with('A')).to eq(0)
     end
 
     it 'shows no total of "Z" projects' do
-      expect(projects_summary.projects_rated_with('Z')).to be_nil
+      expect(projects_summary.projects_rated_with('Z')).to eq(0)
     end
   end
 
@@ -131,11 +131,11 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no total of "A" projects' do
-      expect(projects_summary.projects_rated_with('A')).to be_nil
+      expect(projects_summary.projects_rated_with('A')).to eq(0)
     end
 
     it 'shows no total of "Z" projects' do
-      expect(projects_summary.projects_rated_with('Z')).to be_nil
+      expect(projects_summary.projects_rated_with('Z')).to eq(0)
     end
   end
 
@@ -181,11 +181,11 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no total of "A" projects' do
-      expect(projects_summary.projects_rated_with('A')).to be_nil
+      expect(projects_summary.projects_rated_with('A')).to eq(0)
     end
 
     it 'shows no total of "Z" projects' do
-      expect(projects_summary.projects_rated_with('Z')).to be_nil
+      expect(projects_summary.projects_rated_with('Z')).to eq(0)
     end
   end
 end
