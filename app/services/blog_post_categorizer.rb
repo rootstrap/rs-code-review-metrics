@@ -1,14 +1,20 @@
 class BlogPostCategorizer
   def technology_for(blog_post_payload)
-    Technology.all.detect(default_technology) do |technology|
+    technologies.detect(default_technology) do |technology|
       keywords_for(blog_post_payload).any? do |keyword|
         technology.keywords.include?(keyword)
       end
     end
   end
 
+  private
+
+  def technologies
+    @technologies ||= Technology.all
+  end
+
   def default_technology
-    proc { Technology.other }
+    @default_technology ||= proc { Technology.other }
   end
 
   def keywords_for(blog_post_payload)

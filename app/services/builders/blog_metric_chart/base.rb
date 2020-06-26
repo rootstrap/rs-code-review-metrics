@@ -6,7 +6,7 @@ module Builders
       end
 
       def call
-        metrics_result = Technology.all.map do |technology|
+        datasets = Technology.all.map do |technology|
           generate_results_for(
             entity_name: technology.name.titlecase,
             metrics: technology.metrics,
@@ -14,11 +14,13 @@ module Builders
           )
         end
 
-        metrics_result << generate_results_for(
+        totals = generate_results_for(
           entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: Technology.to_s),
+          metrics: Metric.where(ownable_type: Technology.name),
           hidden: false
         )
+
+        BlogMetricsDatasetGroup.new(datasets, totals)
       end
 
       private

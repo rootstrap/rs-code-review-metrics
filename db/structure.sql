@@ -24,6 +24,17 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 
 --
+-- Name: department_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.department_name AS ENUM (
+    'mobile',
+    'frontend',
+    'backend'
+);
+
+
+--
 -- Name: lang; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -35,7 +46,9 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned'
+    'unassigned',
+    'vuejs',
+    'react_native'
 );
 
 
@@ -107,7 +120,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -240,7 +253,8 @@ CREATE TABLE public.code_climate_project_metrics (
     wont_fix_issues_count integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    open_issues_count integer
+    open_issues_count integer,
+    snapshot_time timestamp without time zone NOT NULL
 );
 
 
@@ -293,6 +307,37 @@ CREATE SEQUENCE public.code_owner_projects_id_seq
 --
 
 ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_projects.id;
+
+
+--
+-- Name: departments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.departments (
+    id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    name public.department_name NOT NULL
+);
+
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.departments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: departments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.departments_id_seq OWNED BY public.departments.id;
 
 
 --
@@ -402,6 +447,36 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 
 --
+-- Name: languages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.languages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    department_id bigint
+);
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.languages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: languages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.languages_id_seq OWNED BY public.languages.id;
+
+
+--
 -- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -448,7 +523,7 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    lang public.lang DEFAULT 'unassigned'::public.lang
+    language_id bigint
 );
 
 
@@ -761,6 +836,13 @@ ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: departments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.departments ALTER COLUMN id SET DEFAULT nextval('public.departments_id_seq'::regclass);
+
+
+--
 -- Name: events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -779,6 +861,13 @@ ALTER TABLE ONLY public.exception_hunter_error_groups ALTER COLUMN id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT nextval('public.exception_hunter_errors_id_seq'::regclass);
+
+
+--
+-- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages ALTER COLUMN id SET DEFAULT nextval('public.languages_id_seq'::regclass);
 
 
 --
@@ -893,6 +982,14 @@ ALTER TABLE ONLY public.code_owner_projects
 
 
 --
+-- Name: departments departments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.departments
+    ADD CONSTRAINT departments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -914,6 +1011,14 @@ ALTER TABLE ONLY public.exception_hunter_error_groups
 
 ALTER TABLE ONLY public.exception_hunter_errors
     ADD CONSTRAINT exception_hunter_errors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: languages languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages
+    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1060,6 +1165,13 @@ CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects 
 
 
 --
+-- Name: index_departments_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_departments_on_name ON public.departments USING btree (name);
+
+
+--
 -- Name: index_events_on_handleable_type_and_handleable_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1088,10 +1200,24 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 
 
 --
+-- Name: index_languages_on_department_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_languages_on_department_id ON public.languages USING btree (department_id);
+
+
+--
 -- Name: index_metrics_on_ownable_type_and_ownable_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USING btree (ownable_type, ownable_id);
+
+
+--
+-- Name: index_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
 
 
 --
@@ -1284,6 +1410,14 @@ ALTER TABLE ONLY public.pull_requests
 
 
 --
+-- Name: languages fk_rails_822295ed05; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.languages
+    ADD CONSTRAINT fk_rails_822295ed05 FOREIGN KEY (department_id) REFERENCES public.departments(id);
+
+
+--
 -- Name: code_owner_projects fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1419,6 +1553,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200602181502'),
 ('20200605192032'),
 ('20200611153414'),
-('20200616154910');
-
-
+('20200611190026'),
+('20200612195323'),
+('20200616154910'),
+('20200617145408'),
+('20200618174209'),
+('20200622214544'),
+('20200622221335'),
+('20200622221651'),
+('20200622221729');

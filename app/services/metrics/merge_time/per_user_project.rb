@@ -1,15 +1,7 @@
 module Metrics
   module MergeTime
-    class PerUserProject < BaseMetricService
+    class PerUserProject < Metrics::BaseDevelopmentMetrics
       BATCH_SIZE = 500
-
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
-      def call
-        process
-      end
 
       private
 
@@ -21,10 +13,10 @@ module Metrics
             entities[entity] += 1
             merge_time = calculate_merge_time(pull_request)
 
-            create_or_update_metric(entity.id, UsersProject.to_s,
+            create_or_update_metric(entity.id, UsersProject.name,
                                     metric_interval, merge_time, :merge_time)
           end
-          calculate_avg(entities, :merge_time)
+          calculate_metrics_avg(entities, :merge_time)
         end
       end
 

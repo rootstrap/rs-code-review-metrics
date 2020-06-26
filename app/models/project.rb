@@ -4,17 +4,19 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
-#  lang        :enum             default("unassigned")
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
+#  language_id :bigint
+#
+# Indexes
+#
+#  index_projects_on_language_id  (language_id)
 #
 
 class Project < ApplicationRecord
-  enum lang: { ruby: 'ruby', python: 'python', nodejs: 'nodejs',
-               react: 'react', ios: 'ios', android: 'android',
-               others: 'others', unassigned: 'unassigned' }
+  belongs_to :language
 
   has_many :events, dependent: :destroy
   has_many :pull_requests,
@@ -34,6 +36,15 @@ class Project < ApplicationRecord
            through: :code_owner_projects,
            source: :user
 
-  validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true
+
+  before_validation :set_default_language, on: :create
+
+  private
+
+  def set_default_language
+    return unless language.nil?
+
+    self.language = Language.find_by(name: 'unassigned')
+  end
 end

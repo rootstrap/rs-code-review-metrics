@@ -1,20 +1,12 @@
 module Metrics
   module ReviewTurnaround
-    class PerProject < BaseMetricService
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
-      def call
-        process
-      end
-
+    class PerProject < Metrics::BaseDevelopmentMetrics
       private
 
       def process
         retrieve_projects_and_review_count.each do |project_id, reviews_count|
           turnaround = calculate_turnaround(project_id, reviews_count)
-          create_or_update_metric(project_id, Project.to_s, metric_interval,
+          create_or_update_metric(project_id, Project.name, metric_interval,
                                   turnaround, :review_turnaround)
         end
       end

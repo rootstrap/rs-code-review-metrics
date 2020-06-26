@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe DevelopmentMetricsController, type: :controller do
-  let(:project) { create(:project, name: 'rs-metrics') }
+  fixtures :departments, :languages
+
+  let(:ruby_lang) { Language.find_by(name: 'ruby') }
+  let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -39,16 +42,35 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
         assert_response :success
       end
 
-      it 'calls period metric retriever class' do
-        expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
+      context '#projects' do
+        it 'calls period metric retriever class' do
+          expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
 
-        get :index, params: params
+          get :projects, params: params
+        end
+
+        it 'calls CodeClimate summary retriever class' do
+          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+
+          get :projects, params: params
+        end
       end
 
-      it 'calls CodeClimate summary retriever class' do
-        expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+      context '#departments' do
+        before { params[:department_name] = project.language.department.name }
 
-        get :index, params: params
+        it 'calls period metric retriever class' do
+          expect(Metrics::PeriodRetriever).to receive(:call).and_return(Metrics::Group::Daily)
+
+          get :departments, params: params
+        end
+
+        it 'calls ProjectsSummaryService service' do
+          expect(CodeClimate::ProjectsSummaryService).to receive(:call)
+            .and_return(code_climate_metric)
+
+          get :departments, params: params
+        end
       end
     end
 
@@ -58,7 +80,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
       end
       it 'raises Graph::RangeDateNotSupported' do
         expect {
-          get :index, params: params
+          get :projects, params: params
         }.to raise_error(Graph::RangeDateNotSupported)
       end
     end
