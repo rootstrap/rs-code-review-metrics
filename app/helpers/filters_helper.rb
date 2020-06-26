@@ -11,12 +11,16 @@ module FiltersHelper
     Department.pluck(:name).sort
   end
 
+  def any_choice
+    'all'
+  end
+
   def language_choices(department)
-    ['all'] + department.language_names
+    [any_choice] + department.language_names
   end
 
   def period_choices
-    ['all',
+    [any_choice,
      'last week', 'last 2 weeks', 'last 3 weeks',
      'last month', 'last 3 months', 'last 6 months',
      'last year']
@@ -28,5 +32,21 @@ module FiltersHelper
 
   def department_name_filter
     params[:department_name]
+  end
+
+  def chosen_period
+    params[:period] || any_choice
+  end
+
+  def chosen_language
+    params[:lang] || any_choice
+  end
+
+  def filter_url_query
+    {
+      project_name: params[:project_name],
+      department_name: params[:department_name],
+      metric: { period: params&.dig(:metric, :period) }
+    }
   end
 end

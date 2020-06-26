@@ -1,6 +1,7 @@
-<%= simple_form_for :code_climate, url: projects_development_metrics_path,
-  method: 'GET', html: {
-    class: 'nav-filter p-3 shadow-box' } do |form|%>
+<%= simple_form_for '',
+      url: code_climate_department_path(department),
+      method: 'GET',
+      html: { class: 'nav-filter p-3 shadow-box' } do |form|%>
   <h4 class="text-center">CodeClimate report for <%= department.name %> projects Department</h4>
   <div class="row sticky-top p-3">
     <div class="col-md-3">
@@ -9,20 +10,22 @@
         input_html: {},
         required: false,
         collection: period_choices,
-        selected: 'all',
+        selected: chosen_period,
         disabled: false
       %>
     </div>
-
     <div class="col-md-3">
-      <%= form.input :language,
+      <%= form.input :lang,
         wrapper_html: { class: 'drop-down-horizontal' },
         input_html: {},
         required: false,
         collection: language_choices(department),
-        selected: 'all',
+        selected: chosen_language,
         disabled: false
       %>
     </div>
   </div>
+  <%= form.input :project_name, as: :hidden, input_html: { value: params[:project_name] } %>
+  <%= form.input :department_name, as: :hidden, input_html: { value: params[:department_name] } %>
+  <%= form.input :metric, as: :hidden, input_html: { value: { period: params[:period] }} %>
 <% end %>
