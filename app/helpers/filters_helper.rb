@@ -21,4 +21,12 @@ module FiltersHelper
      'last month', 'last 3 months', 'last 6 months',
      'last year']
   end
+
+  def department_filter?
+    params[:department_name].present?
+  end
+
+  def department_name_filter
+    params[:department_name]
+  end
 end

@@ -8,16 +8,16 @@
       </div>
       <label for="department_name">Department Name:</label>
       <select name="department_name" class="department-selection" form='nav-filter-form'>
-        <% if params[:department_name].blank? %>
-          <option selected value disabled>-select option-</option>
-        <% else %>
+        <% if department_filter? %>
           <option value disabled>-select option-</option>
+        <% else %>
+          <option selected value disabled>-select option-</option>
         <% end %>
         <% all_departments_names.each do |name|%>
-          <%if params[:department_name] == name %>
+          <%if department_name_filter == name %>
             <option selected value=<%= name %>> <%= name%> </option>
           <% else %>
-          <option value=<%= name%>> <%= name%></option> %>
+            <option value=<%= name%>> <%= name%></option> %>
           <% end %>
         <% end %>
       </select>
