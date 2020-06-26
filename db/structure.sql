@@ -46,9 +46,7 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned',
-    'vuejs',
-    'react_native'
+    'unassigned'
 );
 
 
@@ -120,7 +118,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+SET default_with_oids = false;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -1562,3 +1560,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622221335'),
 ('20200622221651'),
 ('20200622221729');
+
+

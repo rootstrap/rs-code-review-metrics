@@ -8,6 +8,13 @@ table.code-climate-projects-report {
       border: none;
       border-right: solid 1px;
       text-align: center;
+
+      &:first-child {
+        border-right: none;
+      }
+      &:last-child {
+        border-right: none;
+      }
     }
   }
 }

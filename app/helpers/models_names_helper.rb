@@ -10,4 +10,15 @@ module ModelsNamesHelper
   def all_departments_names
     Department.pluck(:name).sort
   end
+
+  def language_choices(department)
+    ['all'] + department.language_names
+  end
+
+  def period_choices
+    ['all',
+     'last week', 'last 2 weeks', 'last 3 weeks',
+     'last month', 'last 3 months', 'last 6 months',
+     'last year']
+  end
 end

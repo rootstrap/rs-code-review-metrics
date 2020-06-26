@@ -5,3 +5,12 @@ select[name$=_name] {
   justify-content: center;
   flex-direction: column;
 }
+
+.drop-down-horizontal{
+  max-width: 15rem;
+  display: flex;
+  align-items: baseline;
+  label {
+    margin-right: 0.5rem;
+  }
+}

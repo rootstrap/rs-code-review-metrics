@@ -1,6 +1,6 @@
 <%= form.input :period,
-  wrapper_html: { class: 'period-selection' },
-  input_html: { class: 'margin-left' },
+  wrapper_html: { class: 'drop-down-horizontal' },
+  input_html: {},
   required: false,
   collection: [['- select option - ', 0],['Daily', 'daily'], ['Weekly', 'weekly']],
   selected: value_from_metric_param(:period),

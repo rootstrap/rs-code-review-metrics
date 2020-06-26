@@ -20,4 +20,8 @@ class Department < ApplicationRecord
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, inclusion: { in: names.keys }, uniqueness: true
+
+  def language_names
+    %w[ruby ios]
+  end
 end

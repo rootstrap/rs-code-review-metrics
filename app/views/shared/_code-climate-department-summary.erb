@@ -12,7 +12,7 @@
       <span class="code-climate-summary text-primary"><%= letter %></span>
     </div>
     <div class="col-md-3 offset-md-6">
-      <%= link_to('See details...', code_climate_department_path(@department)) %>
+      <%= link_to 'See details...', code_climate_department_path(@department), class: 'btn btn-secondary btn-sm' %>
     </div>
   <% end -%>
 </div>
