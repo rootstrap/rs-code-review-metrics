@@ -21,6 +21,7 @@ FactoryBot.define do
     sequence(:github_id, 1000)
     name { Faker::App.name }
     description { Faker::FunnyName.name }
-    language { Language.find_by(name: 'unassigned') }
+    language { Language.unassigned }
+    is_private { false }
   end
 end
