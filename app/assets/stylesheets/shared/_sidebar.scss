@@ -1,8 +1,10 @@
 .project-selection {
+  @include flex-column-select;
+}
+.entity-btn {
+  border-radius: 0px;
+  margin-bottom: 5px;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
 }
 
 .metric_project{
@@ -11,4 +13,8 @@
 
 .container-height{
   height: 100vh;
+}
+
+.user-selection{
+  @include flex-column-select;
 }

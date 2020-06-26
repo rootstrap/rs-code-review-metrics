@@ -59,6 +59,18 @@ module WordpressApiMocker
       .to_return(body: JSON.generate(blog_posts_response), status: 200)
   end
 
+  def stub_blog_post_response(blog_post_payload = create(:blog_post_payload))
+    stub_access_token_response
+    stub_env('WORDPRESS_SITE_ID', blog_site_id)
+
+    blog_post_id = blog_post_payload['ID']
+    url = 'https://public-api.wordpress.com/rest/v1.1/sites/' \
+          "#{blog_site_id}/posts/#{blog_post_id}"
+    stub_request(:get, url)
+      .with(headers: authorization_header)
+      .to_return(body: JSON.generate(blog_post_payload), status: 200)
+  end
+
   def stub_access_token_response(
     response_body: { access_token: access_token },
     response_status: 200

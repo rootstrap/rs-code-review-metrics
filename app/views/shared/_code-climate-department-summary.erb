@@ -1,0 +1,27 @@
+<% if !code_climate || code_climate.empty? -%>
+<div class="row">
+  <div class="col-md-9">
+    <span class="code-climate-summary text-danger">No information available</span>
+  </div>
+</div>
+<% else -%>
+<div class="row">
+  <% code_climate.each_project_rate do |letter, projects_count| -%>
+    <div class="col-md-3">
+      <span><%= projects_count %><%= projects_count ? ' project' : ' projects' %> with </span>
+      <span class="code-climate-summary text-primary"><%= letter %></span>
+    </div>
+  <% end -%>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <span class="code-climate-summary text-danger">Average of <%= code_climate.invalid_issues_count_average %> invalid issues</span>
+  </div>
+  <div class="col-md-4">
+    <span class="code-climate-summary text-danger">Average of <%= code_climate.wontfix_issues_count_average %> won't fix issues</span>
+  </div>
+  <div class="col-md-4">
+    <span class="code-climate-summary text-danger">Average of <%= code_climate.open_issues_count_average %> open issues</span>
+  </div>
+</div>
+<% end -%>

@@ -11,7 +11,7 @@ module Processors
 
     def blog_views_by_technology_and_month
       metrics_by_timestamp
-        .where(name: Metric.names[:blog_visits], ownable_type: BlogPost.to_s)
+        .where(name: Metric.names[:blog_visits], ownable_type: BlogPost.name)
         .joins('JOIN blog_posts on metrics.ownable_id = blog_posts.id')
         .group(:value_timestamp, :technology_id)
         .sum(:value)
@@ -20,7 +20,7 @@ module Processors
     def update_technology_visits_metric(technology_id, visits, timestamp)
       metric = Metric.find_or_initialize_by(
         ownable_id: technology_id,
-        ownable_type: Technology.to_s,
+        ownable_type: Technology.name,
         name: Metric.names[:blog_visits],
         interval: Metric.intervals[:monthly],
         value_timestamp: timestamp

@@ -11,6 +11,10 @@ FactoryBot.define do
       {
         'id' => id,
         'attributes' => {
+          'commit_sha': 'db36165a645accc5ac78d3c70dffffa4aef7d8a2',
+          'committed_at': '2017-07-14T20:00:26.765Z',
+          'created_at': '2017-07-14T20:03:14.042Z',
+          'lines_of_code': 456,
           'ratings' => [
             {
               'letter' => rate

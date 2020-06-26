@@ -1,20 +1,12 @@
 module Metrics
   module MergeTime
-    class PerProject < BaseMetricService
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
-      def call
-        process
-      end
-
+    class PerProject < Metrics::BaseDevelopmentMetrics
       private
 
       def process
         filtered_projects.each do |project|
           turnaround = calculate_turnaround(project)
-          create_or_update_metric(project.id, Project.to_s, metric_interval,
+          create_or_update_metric(project.id, Project.name, metric_interval,
                                   turnaround, :merge_time)
         end
       end

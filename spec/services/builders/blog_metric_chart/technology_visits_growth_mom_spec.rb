@@ -26,7 +26,7 @@ describe Builders::BlogMetricChart::TechnologyVisitsGrowthMom do
     end
 
     it 'returns a hash with the growth month over month rate of the given metric' do
-      expect(described_class.call(1))
+      expect(described_class.call(1).datasets)
         .to include(a_hash_including(data: a_hash_including(Time.zone.now.strftime('%B %Y') => 20)))
     end
 
@@ -34,7 +34,7 @@ describe Builders::BlogMetricChart::TechnologyVisitsGrowthMom do
       let(:last_month_value) { 0 }
 
       it 'this month metric is not calculated' do
-        expect(described_class.call(1))
+        expect(described_class.call(1).datasets)
           .not_to include(a_hash_including(data: a_hash_including(Time.zone.now.strftime('%B %Y'))))
       end
     end
@@ -70,7 +70,7 @@ describe Builders::BlogMetricChart::TechnologyVisitsGrowthMom do
       end
 
       it 'returns a hash with the growth month over month rate of each month total visits' do
-        expect(described_class.call(1)).to include(totals_hash)
+        expect(described_class.call(1).totals).to match(totals_hash)
       end
     end
   end

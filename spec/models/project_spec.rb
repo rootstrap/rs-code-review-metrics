@@ -4,11 +4,15 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
-#  lang        :enum             default("unassigned")
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
+#  language_id :bigint
+#
+# Indexes
+#
+#  index_projects_on_language_id  (language_id)
 #
 
 require 'rails_helper'

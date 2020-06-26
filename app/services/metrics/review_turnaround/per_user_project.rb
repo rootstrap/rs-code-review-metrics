@@ -1,15 +1,7 @@
 module Metrics
   module ReviewTurnaround
-    class PerUserProject < BaseMetricService
+    class PerUserProject < Metrics::BaseDevelopmentMetrics
       BATCH_SIZE = 500
-
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
-      def call
-        process
-      end
 
       private
 
@@ -22,11 +14,11 @@ module Metrics
               entities[entity] += 1
               turnaround = calculate_turnaround(review)
 
-              create_or_update_metric(entity.id, UsersProject.to_s, metric_interval,
+              create_or_update_metric(entity.id, UsersProject.name, metric_interval,
                                       turnaround, :review_turnaround)
             end
           end
-          calculate_avg(entities, :review_turnaround)
+          calculate_metrics_avg(entities, :review_turnaround)
         end
       end
 

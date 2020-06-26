@@ -8,7 +8,7 @@ module Processors
 
     def latest_technology_metrics_updated_at
       latest_visits_metrics_by_technology =
-        Metric.where(name: Metric.names[:blog_visits], ownable_type: Technology.to_s)
+        Metric.where(name: Metric.names[:blog_visits], ownable_type: Technology.name)
               .group(:ownable_id)
               .maximum(:value_timestamp)
 

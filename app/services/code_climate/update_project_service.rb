@@ -9,17 +9,22 @@ module CodeClimate
     def call
       return unless update_metric? && code_climate_project_info
 
+      update_metric
+    end
+
+    private
+
+    def update_metric
       create_project_code_climate_metric unless project_code_climate_metric
 
       project_code_climate_metric.update!(
         code_climate_rate: code_climate_project_info.rate,
         invalid_issues_count: code_climate_project_info.invalid_issues_count,
         open_issues_count: code_climate_project_info.open_issues_count,
-        wont_fix_issues_count: code_climate_project_info.wont_fix_issues_count
+        wont_fix_issues_count: code_climate_project_info.wont_fix_issues_count,
+        snapshot_time: code_climate_project_info.snapshot_time
       )
     end
-
-    private
 
     def code_climate_project_info
       @code_climate_project_info ||= CodeClimate::GetProjectInfo.call(github_slug: project_name)
@@ -38,7 +43,10 @@ module CodeClimate
     end
 
     def create_project_code_climate_metric
-      @project_code_climate_metric = CodeClimateProjectMetric.create!(project: @project)
+      @project_code_climate_metric = CodeClimateProjectMetric.create!(
+        project: @project,
+        snapshot_time: code_climate_project_info.snapshot_time
+      )
     end
 
     def project_name
