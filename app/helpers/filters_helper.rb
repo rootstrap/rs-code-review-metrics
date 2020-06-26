@@ -1,4 +1,4 @@
-module ModelsNamesHelper
+module FiltersHelper
   def all_projects_names
     Project.pluck(:name)
   end

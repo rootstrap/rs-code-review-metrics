@@ -2,12 +2,12 @@
 <div class="col-md-10">
   <div class="row p-3">
     <div class="col-md-12">
-      <%= render 'department_projects_report_header' %>
+      <%= render 'department_projects_report_header', department: @department %>
     </div>
   </div>
   <div class="row p-3">
     <div class="col-md-12">
-      <%= render 'code_climate_department_report' %>
+      <%= render 'code_climate_department_report', department: @department %>
     </div>
   </div>
 </div>
