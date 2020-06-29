@@ -3,18 +3,21 @@ module CodeClimate
     attr_reader :invalid_issues_count_average,
                 :wontfix_issues_count_average,
                 :open_issues_count_average,
-                :ratings
+                :ratings,
+                :projects_details
 
     def initialize(
       invalid_issues_count_average: nil,
       wontfix_issues_count_average: nil,
       open_issues_count_average: nil,
-      ratings: {}
+      ratings: {},
+      projects_details: []
     )
       @invalid_issues_count_average = invalid_issues_count_average
       @wontfix_issues_count_average = wontfix_issues_count_average
       @open_issues_count_average = open_issues_count_average
       @ratings = ratings
+      @projects_details = projects_details
     end
 
     def projects_rated_with(letter)
