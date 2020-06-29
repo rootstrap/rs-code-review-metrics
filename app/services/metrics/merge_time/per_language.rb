@@ -14,7 +14,7 @@ module Metrics
       def project_metrics_per_language
         Language.joins(projects: :metrics)
                 .where(metrics: { name: :merge_time })
-                .where(created_at: metric_interval)
+                .where(metrics: { created_at: metric_interval })
                 .group(:id)
                 .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
