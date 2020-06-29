@@ -14,6 +14,7 @@ module Metrics
       def project_metrics_per_department
         Department.joins(languages: { projects: :metrics })
                   .where(metrics: { name: :review_turnaround })
+                  .where(metrics: { created_at: metric_interval })
                   .group(:id)
                   .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
