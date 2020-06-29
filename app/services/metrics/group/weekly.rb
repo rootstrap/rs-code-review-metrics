@@ -4,7 +4,7 @@ module Metrics
       INTERVAL = 'weekly'.freeze
 
       def initialize(entity_name:, entity_id:, metric_name:, number_of_previous: 3)
-        @number_of_previous = number_of_previous
+        @number_of_previous = number_of_previous.to_i
         super(entity_name: entity_name, entity_id: entity_id, metric_name: metric_name)
       end
 

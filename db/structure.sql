@@ -46,7 +46,9 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned'
+    'unassigned',
+    'vuejs',
+    'react_native'
 );
 
 
@@ -118,7 +120,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -513,16 +515,6 @@ CREATE SEQUENCE public.projects_id_seq
 --
 
 ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
-
-
---
--- Name: projects_users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.projects_users (
-    project_id bigint NOT NULL,
-    user_id bigint NOT NULL
-);
 
 
 --
@@ -1178,20 +1170,6 @@ CREATE INDEX index_projects_on_department_id ON public.projects USING btree (dep
 
 
 --
--- Name: index_projects_users_on_project_id_and_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_users_on_project_id_and_user_id ON public.projects_users USING btree (project_id, user_id);
-
-
---
--- Name: index_projects_users_on_user_id_and_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_users_on_user_id_and_project_id ON public.projects_users USING btree (user_id, project_id);
-
-
---
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1523,7 +1501,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200518160851'),
 ('20200602181502'),
 ('20200605192032'),
-('20200608150702'),
 ('20200611153414'),
 ('20200611190026'),
 ('20200612195323'),

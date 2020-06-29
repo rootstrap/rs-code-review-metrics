@@ -1,7 +1,8 @@
 import { initializeSelect2,
          handleChangeSidebar,
          handleChangeNavForm,
-         handleChangeUser
+         handleChangeUser,
+         disablePeriod
         } from '../modules/sidebar';
 
 document.addEventListener('turbolinks:load', () => {
@@ -9,4 +10,5 @@ document.addEventListener('turbolinks:load', () => {
   handleChangeSidebar();
   handleChangeNavForm();
   handleChangeUser();
+  disablePeriod();
 })
