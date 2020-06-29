@@ -4,6 +4,7 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
+#  is_private  :boolean
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
