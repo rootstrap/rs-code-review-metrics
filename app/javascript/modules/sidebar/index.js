@@ -29,12 +29,6 @@ export const handleChangeSidebar = () => {
   }
 }
 
-export const handleChangeNavForm = () => {
-  const navFilterForm = elementSelector('nav-filter');
-  if (navFilterForm != null) {
-    subscribeNavOnChange(navFilterForm)
-  }
-}
 
 export const handleChangeUser = () => {
   const userSelect = document.querySelector('.user-selection')
