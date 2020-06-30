@@ -29,10 +29,6 @@ RSpec.describe ModelsNamesHelper, type: :helper do
   end
 
   describe '.all_departments_names' do
-    let!(:departments) do
-      size_of_models_to_create.times { |n| create(:project, lang: %w[ruby react android][n - 1]) }
-    end
-
     it_behaves_like 'models names collection helper', 'all_departments_names'
 
     it 'returns a collection of string' do

@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe DevelopmentMetricsController, type: :controller do
-  let(:project) { create(:project, name: 'rs-metrics', lang: 'ruby') }
+  fixtures :departments, :languages
+
+  let(:ruby_lang) { Language.find_by(name: 'ruby') }
+  let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -48,7 +51,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
       end
 
       context '#departments' do
-        before { params[:department_name] = project.department.name }
+        before { params[:department_name] = project.language.department.name }
 
         it 'calls CodeClimate summary retriever class' do
           expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)

@@ -55,7 +55,7 @@ module CodeClimate
       if technologies.empty?
         metrics_in_time_period
       else
-        metrics_in_time_period.where('projects.lang IN (?)', technologies)
+        metrics_in_time_period.where('languages.name IN (?)', technologies)
       end
     end
 
@@ -69,8 +69,8 @@ module CodeClimate
 
     def metrics_in_department
       CodeClimateProjectMetric
-        .joins(:project)
-        .where(projects: { department_id: department.id })
+        .joins(project: { language: :department })
+        .where(departments: { id: department.id })
     end
   end
 end

@@ -1,14 +1,6 @@
 module Metrics
   module ReviewTurnaround
-    class PerDepartment < Metrics::Base
-      def initialize(interval = nil)
-        @interval = interval
-      end
-
-      def call
-        process
-      end
-
+    class PerDepartment < Metrics::BaseDevelopmentMetrics
       private
 
       def process
@@ -20,7 +12,7 @@ module Metrics
       end
 
       def project_metrics_per_department
-        Department.joins(projects: :metrics)
+        Department.joins(languages: { projects: :metrics })
                   .where(metrics: { name: :review_turnaround })
                   .group(:id)
                   .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))

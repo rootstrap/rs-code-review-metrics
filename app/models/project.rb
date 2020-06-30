@@ -2,31 +2,23 @@
 #
 # Table name: projects
 #
-#  id            :bigint           not null, primary key
-#  description   :string
-#  lang          :enum             default("unassigned")
-#  name          :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  department_id :bigint
-#  github_id     :integer          not null
+#  id          :bigint           not null, primary key
+#  description :string
+#  is_private  :boolean
+#  name        :string
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  github_id   :integer          not null
+#  language_id :bigint
 #
 # Indexes
 #
-#  index_projects_on_department_id  (department_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (department_id => departments.id)
+#  index_projects_on_language_id  (language_id)
 #
 
 class Project < ApplicationRecord
-  enum lang: { ruby: 'ruby', python: 'python', nodejs: 'nodejs',
-               ios: 'ios', android: 'android', reactnative: 'react_native',
-               react: 'react', vuejs: 'vuejs',
-               others: 'others', unassigned: 'unassigned' }
+  belongs_to :language
 
-  belongs_to :department, optional: true
   has_many :events, dependent: :destroy
   has_many :pull_requests,
            class_name: 'Events::PullRequest',
@@ -45,27 +37,15 @@ class Project < ApplicationRecord
            through: :code_owner_projects,
            source: :user
 
-  validates :lang, inclusion: { in: langs.keys }
   validates :github_id, presence: true, uniqueness: true
 
-  before_save :associate_department
+  before_validation :set_default_language, on: :create
 
   private
 
-  DEPARTMENT_LANGS = {
-    backend: %w[ruby python nodejs].freeze,
-    frontend: %w[react vuejs].freeze,
-    mobile: %w[ios android react_native].freeze
-  }.freeze
+  def set_default_language
+    return unless language.nil?
 
-  def associate_department
-    return unless department.nil? || lang_changed?
-
-    department_name = find_department_name(lang)
-    self.department = Department.find_or_create_by!(name: department_name) if department_name
-  end
-
-  def find_department_name(lang)
-    DEPARTMENT_LANGS.select { |_key, values| values.include?(lang) }.keys.first
+    self.language = Language.find_by(name: 'unassigned')
   end
 end

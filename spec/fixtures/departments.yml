@@ -12,8 +12,12 @@
 #  index_departments_on_name  (name)
 #
 
-FactoryBot.define do
-  factory :department do
-    sequence(:name) { |n| %i[backend frontend mobile][n % 3] }
-  end
-end
+backend:
+  id: 1
+  name: 'backend'
+frontend:
+  id: 2
+  name: 'frontend'
+mobile:
+  id: 3
+  name: 'mobile'

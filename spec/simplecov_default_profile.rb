@@ -8,4 +8,5 @@ SimpleCov.profiles.define 'default' do
   add_filter 'spec'
   add_filter 'config'
   add_filter 'app/admin'
+  add_filter 'db/seeds'
 end

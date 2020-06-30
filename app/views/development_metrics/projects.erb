@@ -2,11 +2,11 @@
 <div class="col-md-10">
   <%= render 'shared/project/nav-filter' do |f|%>
     <div class="row">
-      <div class="col-md-6 period-input">
+      <div class="col-md-4 period-input">
         <%= render 'shared/interval-filter', form: f %>
       </div>
-      <div class="col-md-6">
-      <%= render 'shared/code-climate-summary', code_climate: @code_climate %>
+      <div class="col-md-8">
+      <%= render 'shared/code-climate-project-summary', code_climate: @code_climate %>
       </div>
     </div>
   <% end %>
@@ -17,4 +17,5 @@
   <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
 
   <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+  <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
 </div>
