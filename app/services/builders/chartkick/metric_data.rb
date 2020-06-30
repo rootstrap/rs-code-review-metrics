@@ -1,7 +1,6 @@
 module Builders
   module Chartkick
     class MetricData < BaseService
-
       def initialize(entity_id, entities, metric_name, period)
         @entity_id = entity_id
         @entities = entities

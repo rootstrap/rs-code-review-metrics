@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Builders::Chartkick::MetricData do
   describe '.call' do
-    let(:entities) { ['projects', 'users_project'] }
+    let(:entities) { %w[projects users_project] }
     let(:metric_name) { 'review_turnaround' }
     let(:period) { 3 }
     let(:entity_id) { 1 }
