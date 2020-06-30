@@ -20,22 +20,26 @@ module Builders
         end
       end
 
+      def metric_class
+        Metrics::Group::Weekly
+      end
+
       class Project < DevelopmentMetrics
         private
 
         def metric_data(metric_name)
           {
-            per_project: Metrics::Group::Weekly.call(
-              entity_name: 'project',
-              entity_id: @entity_id,
-              metric_name: metric_name,
-              number_of_previous: @period
-            ),
-            per_users_project: Metrics::Group::Weekly.call(
+            per_project: metric_class.call(
+                entity_name: 'project',
+                entity_id: @entity_id,
+                metric_name: metric_name,
+                prev: @period
+              ),
+            per_users_project: metric_class.call(
               entity_name: 'users_project',
               entity_id: @entity_id,
               metric_name: metric_name,
-              number_of_previous: @period
+              prev: @period
             )
           }
         end
@@ -46,17 +50,17 @@ module Builders
 
         def metric_data(metric_name)
           {
-            per_department: Metrics::Group::Weekly.call(
+            per_department: metric_class.call(
               entity_name: 'department',
               entity_id: @entity_id,
               metric_name: metric_name,
-              number_of_previous: @period
+              prev: @period
             ),
-            per_language: Metrics::Group::Weekly.call(
+            per_language: metric_class.call(
               entity_name: 'language',
               entity_id: @entity_id,
               metric_name: metric_name,
-              number_of_previous: @period
+              prev: @period
             )
           }
         end

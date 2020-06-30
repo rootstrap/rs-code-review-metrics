@@ -54,7 +54,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
         before { params[:department_name] = project.language.department.name }
 
         it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+          expect(CodeClimate::ProjectsSummaryService).to receive(:call).and_return(code_climate_metric)
 
           get :departments, params: params
         end

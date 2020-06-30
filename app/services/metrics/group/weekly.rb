@@ -3,8 +3,8 @@ module Metrics
     class Weekly < Metrics::Group::Base
       INTERVAL = 'weekly'.freeze
 
-      def initialize(entity_name:, entity_id:, metric_name:, number_of_previous: 3)
-        @number_of_previous = number_of_previous.to_i
+      def initialize(entity_name:, entity_id:, metric_name:, prev: 3)
+        @prev = prev.to_i
         super(entity_name: entity_name, entity_id: entity_id, metric_name: metric_name)
       end
 
@@ -15,7 +15,7 @@ module Metrics
       end
 
       def value_timestamp
-        (current_time - @number_of_previous.weeks).beginning_of_week..current_time.end_of_week
+        (current_time - @prev.weeks).beginning_of_week..current_time.end_of_week
       end
     end
   end
