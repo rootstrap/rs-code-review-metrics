@@ -36,7 +36,7 @@ module Builders
               entity_id: @entity_id,
               metric_name: metric_name,
               number_of_previous: @period
-            ),
+            )
           }
         end
       end
