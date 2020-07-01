@@ -72,7 +72,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'review_turnaround',
     'blog_visits',
     'merge_time',
-    'blog_post_count'
+    'blog_post_count',
+    'open_source_visits'
 );
 
 
@@ -523,8 +524,8 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    language_id bigint,
-    is_private boolean
+    is_private boolean,
+    language_id bigint
 );
 
 
@@ -1563,6 +1564,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622221335'),
 ('20200622221651'),
 ('20200622221729'),
-('20200625144922');
+('20200625144922'),
+('20200630165139');
 
 
