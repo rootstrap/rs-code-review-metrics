@@ -42,3 +42,8 @@ code_climate_metrics_update:
   cron: '00 * * * *'
   class: 'CodeClimateMetricsUpdaterJob'
   active_job: true
+
+open_source_metrics_update:
+  cron: '00 6 * * *'
+  class: 'OpenSourceMetricsUpdaterJob'
+  active_job: true
