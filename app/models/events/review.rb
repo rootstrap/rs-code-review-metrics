@@ -46,5 +46,15 @@ module Events
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id, :opened_at, presence: true
+
+    after_create :build_review_turnaround
+
+    private
+
+    def build_review_turnaround
+      if review_request.reviews.count.equal?(1)
+        ReviewTurnaround.new(review_request: review_request).send('build')
+      end
+    end
   end
 end
