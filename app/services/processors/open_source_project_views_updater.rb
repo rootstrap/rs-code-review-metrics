@@ -1,28 +1,29 @@
 module Processors
   class OpenSourceProjectViewsUpdater < BaseService
+    def initialize(project)
+      @project = project
+    end
+
     def call
-      Project.open_source.each do |project|
-        views_to_update_for(project).each do |project_views_payload|
-          update_views_metric_for_project(
-            project,
-            project_views_payload['timestamp'],
-            project_views_payload['uniques']
-          )
-        end
+      views_to_update.each do |project_views_payload|
+        update_views_metric(
+          project_views_payload['timestamp'],
+          project_views_payload['uniques']
+        )
       end
     end
 
     private
 
-    def views_to_update_for(project)
-      last_updated_timestamp = last_updated_timestamp_for(project)
+    attr_reader :project
 
-      views_for_project(project)['views'].select do |views_payload|
+    def views_to_update
+      views_payload['views'].select do |views_payload|
         last_updated_timestamp <= views_payload['timestamp']
       end
     end
 
-    def last_updated_timestamp_for(project)
+    def last_updated_timestamp
       Metric.where(
         name: Metric.names[:open_source_visits],
         interval: Metric.intervals[:daily],
@@ -30,11 +31,11 @@ module Processors
       ).maximum(:value_timestamp) || Time.zone.at(0)
     end
 
-    def views_for_project(project)
+    def views_payload
       GithubRepositoryClient.new(project.name).repository_views
     end
 
-    def update_views_metric_for_project(project, timestamp, views)
+    def update_views_metric(timestamp, views)
       metric = Metric.find_or_initialize_by(
         ownable: project,
         name: Metric.names[:open_source_visits],
