@@ -23,5 +23,10 @@ FactoryBot.define do
     description { Faker::FunnyName.name }
     language { Language.unassigned }
     is_private { false }
+
+    trait :open_source do
+      language { Language.find_by(name: 'ruby') }
+      is_private { false }
+    end
   end
 end
