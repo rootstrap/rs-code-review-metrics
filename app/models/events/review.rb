@@ -52,9 +52,9 @@ module Events
     private
 
     def build_review_turnaround
-      if review_request.reviews.count.equal?(1)
-        ReviewTurnaround.new(review_request: review_request).send('build')
-      end
+      return unless review_request.reviews.count.equal?(1)
+
+      ReviewTurnaround.new(review_request: review_request).send('build')
     end
   end
 end
