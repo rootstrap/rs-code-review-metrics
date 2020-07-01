@@ -2,10 +2,10 @@
 <div class="col-md-10">
   <%= render 'shared/department/nav-filter' do |f|%>
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-5 period-input">
         <%= render 'shared/interval-filter', form: f %>
       </div>
-      <div class="col-md-8 col-md-offset-1">
+      <div class="col-md-7">
         <%= render 'shared/code-climate-department-summary', code_climate: @code_climate %>
       </div>
     </div>
