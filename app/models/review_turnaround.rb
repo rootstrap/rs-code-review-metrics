@@ -18,11 +18,15 @@
 class ReviewTurnaround < ApplicationRecord
   belongs_to :review_request
 
+  def build
+    set_attributes
+  end
+
   private
 
-  def build
+  def set_attributes
     self.value = calculate_turnaround
-    save!
+    self
   end
 
   def calculate_turnaround
