@@ -18,4 +18,15 @@ RSpec.describe GithubRepositoryClient do
       end
     end
   end
+
+  describe '#repository_views' do
+    let(:project) { create(:project) }
+    let(:repository_views_payload) { create(:repository_views_payload) }
+
+    before { stub_repository_views(project.name, repository_views_payload) }
+
+    it 'returns the views hash of that project on Github' do
+      expect(described_class.new(project.name).repository_views).to eq repository_views_payload
+    end
+  end
 end
