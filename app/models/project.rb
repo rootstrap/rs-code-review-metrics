@@ -41,11 +41,19 @@ class Project < ApplicationRecord
 
   before_validation :set_default_language, on: :create
 
+  scope :open_source, lambda {
+    with_language.where(is_private: false)
+  }
+
+  scope :with_language, lambda {
+    joins(:language).where.not(languages: { name: 'unassigned' })
+  }
+
   private
 
   def set_default_language
     return unless language.nil?
 
-    self.language = Language.find_by(name: 'unassigned')
+    self.language = Language.unassigned
   end
 end
