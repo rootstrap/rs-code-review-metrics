@@ -16,7 +16,7 @@ describe BlogMetricsDatasetGroup do
 
   let(:datasets) { blog_metrics_dataset_group.datasets }
   let(:totals) { blog_metrics_dataset_group.totals }
-  subject(:blog_metrics_dataset_group) { Builders::BlogMetricChart::TechnologyBlogPostCount.call }
+  subject(:blog_metrics_dataset_group) { Builders::MetricChart::Blog::TechnologyBlogPostCount.call }
 
   describe '#all_datasets' do
     it 'returns datasets including the totals' do

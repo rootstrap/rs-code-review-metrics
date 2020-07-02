@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe Builders::BlogMetricChart::Base do
-  subject { Builders::BlogMetricChart::TechnologyBlogPostCount }
+describe Builders::MetricChart::Blog::Base do
+  subject { Builders::MetricChart::Blog::TechnologyBlogPostCount }
 
   describe '.call' do
     describe 'totals' do
