@@ -13,7 +13,7 @@ module Metrics
 
       def project_metrics_per_language
         Language.joins(projects: :metrics)
-                .where(metrics: { name: :review_turnaround })
+                .where(metrics: { name: :review_turnaround, created_at: metric_interval })
                 .group(:id)
                 .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
       end
