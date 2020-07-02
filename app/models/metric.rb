@@ -22,7 +22,8 @@ class Metric < ApplicationRecord
   enum name: { review_turnaround: 'review_turnaround',
                blog_visits: 'blog_visits',
                merge_time: 'merge_time',
-               blog_post_count: 'blog_post_count' }
+               blog_post_count: 'blog_post_count',
+               open_source_visits: 'open_source_visits' }
 
   belongs_to :ownable, polymorphic: true
 
