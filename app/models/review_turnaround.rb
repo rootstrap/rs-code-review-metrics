@@ -18,16 +18,15 @@
 class ReviewTurnaround < ApplicationRecord
   belongs_to :review_request
 
-  def build
-    set_attributes
-  end
+  validates :value, presence: true
+  validates :review_request_id, uniqueness: true
 
-  private
-
-  def set_attributes
+  def set_value
     self.value = calculate_turnaround
     self
   end
+
+  private
 
   def calculate_turnaround
     review_request.reviews.first.opened_at.to_i - review_request.created_at.to_i

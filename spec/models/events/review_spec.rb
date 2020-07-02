@@ -51,4 +51,28 @@ RSpec.describe Events::Review, type: :model do
       expect(subject).to_not be_valid
     end
   end
+
+  describe 'callbacks' do
+    context 'when a review is created' do
+      let(:review) { create :review, review_request: review_request }
+      let(:review_request) { create(:review_request) }
+
+      it 'triggers review turnaround creation' do
+        expect_any_instance_of(ReviewTurnaround).to receive_message_chain(:set_value, :save!)
+        review
+      end
+
+      it 'creates a review turnaround' do
+        expect { review }.to change { ReviewTurnaround.count }.from(0).to(1)
+      end
+
+      context 'when there is more than one review in a review request' do
+        let!(:second_review) { create :review, review_request: review_request }
+
+        it 'does not create review turnaround' do
+          expect { review }.to_not change { ReviewTurnaround.count }
+        end
+      end
+    end
+  end
 end

@@ -54,7 +54,7 @@ module Events
     def build_review_turnaround
       return unless review_request.reviews.count.equal?(1)
 
-      ReviewTurnaround.new(review_request: review_request).build.save!
+      ReviewTurnaround.new(review_request: review_request).set_value.save!
     end
   end
 end
