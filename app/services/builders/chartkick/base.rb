@@ -30,18 +30,17 @@ module Builders
       end
 
       def resolve_interval(entity)
-        case entity.value
-        when 0..12
+        if entity.value < 12
           '1-12'
-        when 12..24
+        elsif entity.value < 24
           '12-24'
-        when 24..36
+        elsif entity.value < 36
           '24-36'
-        when 36..48
+        elsif entity.value < 48
           '36-48'
-        when 48..60
+        elsif entity.value < 60
           '48-60'
-        when 60..72
+        elsif entity.value < 72
           '60-72'
         else
           '72+'
