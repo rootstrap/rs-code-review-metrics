@@ -31,7 +31,7 @@ module Builders
 
       def resolve_interval(entity)
         case entity.value
-        when 1..12
+        when 0..12
           '1-12'
         when 12..24
           '12-24'
