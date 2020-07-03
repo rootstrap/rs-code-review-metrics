@@ -10,13 +10,18 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
       let(:department) { Department.first }
       let(:entity_id) { department.id }
       let(:project) { create :project, language: department.languages.first }
-      let(:review_request) { create :review_request, project: project }
+      let(:values) { [2, 13, 25, 37, 49, 61, 73] }
 
       let(:query) do
         { value_timestamp: range }
       end
 
-      let!(:review_turnaround) { create(:review_turnaround, review_request: review_request) }
+      before do
+        values.each do |value|
+          review_request = create :review_request, project: project
+          create(:review_turnaround, review_request: review_request, value: value)
+        end
+      end
 
       subject do
         described_class.call(entity_id, query)
