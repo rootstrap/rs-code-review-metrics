@@ -1,6 +1,6 @@
 module Builders
   module Chartkick
-    class DepartmentData < Builders::Chartkick::Base
+    class DepartmentDistributionData < Builders::Chartkick::Base
       def call
         department_name = ::Department.find(@entity_id).name
 

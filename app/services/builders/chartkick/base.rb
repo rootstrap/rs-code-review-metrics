@@ -9,7 +9,7 @@ module Builders
       private
 
       def build_data(metrics)
-        metrics.each.inject({}) do |hash, metric|
+        metrics.inject({}) do |hash, metric|
           hash.merge!(
             metric.value_timestamp.strftime('%Y-%m-%d').to_s => value_in_hours_for(metric)
           )

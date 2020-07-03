@@ -668,7 +668,9 @@ ALTER SEQUENCE public.review_requests_id_seq OWNED BY public.review_requests.id;
 CREATE TABLE public.review_turnarounds (
     id bigint NOT NULL,
     review_request_id bigint NOT NULL,
-    value integer
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 

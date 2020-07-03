@@ -4,6 +4,8 @@
 #
 #  id                :bigint           not null, primary key
 #  value             :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  review_request_id :bigint           not null
 #
 # Indexes
