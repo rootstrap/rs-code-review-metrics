@@ -46,7 +46,7 @@ Metrics/ClassLength:
 
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
-  Max: 6
+  Max: 7
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
