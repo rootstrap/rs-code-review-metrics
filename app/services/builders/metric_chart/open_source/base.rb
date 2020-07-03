@@ -1,21 +1,21 @@
 module Builders
   module MetricChart
-    module Blog
+    module OpenSource
       class Base < Builders::MetricChart::Base
         def entity_type
-          Technology
+          Language
         end
 
-        def entity_name(technology)
-          technology.name.titlecase
+        def entity_name(language)
+          language.name.titlecase
         end
 
-        def entity_metrics(technology)
-          technology.metrics
+        def entity_metrics(language)
+          language.projects_metrics
         end
 
         def metric_ownable_type
-          entity_type
+          Project
         end
       end
     end

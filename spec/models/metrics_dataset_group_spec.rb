@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe BlogMetricsDatasetGroup do
+describe MetricsDatasetGroup do
   let(:technology) { create(:technology) }
   let!(:blog_post) { create(:blog_post, published_at: Time.zone.now, technology: technology) }
   let!(:this_month_post_count_metric) do
