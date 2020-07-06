@@ -50,6 +50,26 @@ module Builders
       def format_data(metrics_data)
         metrics_data.transform_keys { |date| date.strftime('%B %Y') }
       end
+
+      def entity_type
+        raise NoMethodError
+      end
+
+      def entity_name(_entity)
+        raise NoMethodError
+      end
+
+      def entity_metrics(_entity)
+        raise NoMethodError
+      end
+
+      def metric_ownable_type
+        raise NoMethodError
+      end
+
+      def metric_name
+        raise NoMethodError
+      end
     end
   end
 end
