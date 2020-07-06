@@ -54,12 +54,15 @@ RSpec.describe Events::Review, type: :model do
 
   describe 'callbacks' do
     context 'when a review is created' do
-      let(:review) { create :review, review_request: review_request }
+      before { travel_to(Time.zone.today.beginning_of_day) }
       let(:review_request) { create(:review_request) }
+      let(:review) { create :review, review_request: review_request }
 
-      it 'triggers review turnaround creation' do
-        expect_any_instance_of(ReviewTurnaround).to receive_message_chain(:set_value, :save!)
+      it 'creates a review turnaround with the correct values' do
         review
+        review_turnaround = ReviewTurnaround.last
+        expect(review_turnaround[:value]).to eq(0)
+        expect(review_turnaround[:review_request_id]).to eq(review_request.id)
       end
 
       it 'creates a review turnaround' do
