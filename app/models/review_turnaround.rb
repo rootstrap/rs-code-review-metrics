@@ -20,15 +20,4 @@ class ReviewTurnaround < ApplicationRecord
 
   validates :value, presence: true
   validates :review_request_id, uniqueness: true
-
-  def set_value
-    self.value = calculate_turnaround
-    self
-  end
-
-  private
-
-  def calculate_turnaround
-    review_request.reviews.first.opened_at.to_i - review_request.created_at.to_i
-  end
 end
