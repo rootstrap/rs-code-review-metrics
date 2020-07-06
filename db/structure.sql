@@ -661,6 +661,36 @@ ALTER SEQUENCE public.review_requests_id_seq OWNED BY public.review_requests.id;
 
 
 --
+-- Name: review_turnarounds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.review_turnarounds (
+    id bigint NOT NULL,
+    review_request_id bigint NOT NULL,
+    value integer
+);
+
+
+--
+-- Name: review_turnarounds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.review_turnarounds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: review_turnarounds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.review_turnarounds_id_seq OWNED BY public.review_turnarounds.id;
+
+
+--
 -- Name: reviews; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -908,6 +938,13 @@ ALTER TABLE ONLY public.review_requests ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: review_turnarounds id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.review_turnarounds_id_seq'::regclass);
+
+
+--
 -- Name: reviews id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1061,6 +1098,14 @@ ALTER TABLE ONLY public.review_comments
 
 ALTER TABLE ONLY public.review_requests
     ADD CONSTRAINT review_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: review_turnarounds review_turnarounds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_turnarounds
+    ADD CONSTRAINT review_turnarounds_pkey PRIMARY KEY (id);
 
 
 --
@@ -1300,6 +1345,13 @@ CREATE INDEX index_review_requests_on_state ON public.review_requests USING btre
 
 
 --
+-- Name: index_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_turnarounds_on_review_request_id ON public.review_turnarounds USING btree (review_request_id);
+
+
+--
 -- Name: index_reviews_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1369,6 +1421,14 @@ ALTER TABLE ONLY public.review_comments
 
 ALTER TABLE ONLY public.blog_posts
     ADD CONSTRAINT fk_rails_24521f9a19 FOREIGN KEY (technology_id) REFERENCES public.technologies(id);
+
+
+--
+-- Name: review_turnarounds fk_rails_33c3053604; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_turnarounds
+    ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
 
 
 --
@@ -1565,6 +1625,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622221651'),
 ('20200622221729'),
 ('20200625144922'),
-('20200630165139');
+('20200630165139'),
+('20200701133311');
 
 
