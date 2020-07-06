@@ -57,7 +57,7 @@ RSpec.describe Events::Review, type: :model do
       before { travel_to(Time.zone.today.beginning_of_day) }
       let(:review_request) { create(:review_request) }
       let(:review) { create :review, review_request: review_request }
-    
+
       it 'creates a review turnaround with the correct values' do
         review
         review_turnaround = ReviewTurnaround.last
