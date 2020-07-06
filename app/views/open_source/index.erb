@@ -6,7 +6,7 @@
   <li><b>4</b> iOS projects</li>
 </div>
 <div class='col-md-9 p-3'>
-  <%= line_chart [{}], ytitle: "Repository Visits" %>
+  <%= line_chart @visits_per_language.all_datasets, ytitle: "Repository Unique Visits" %>
 </div>
 <div class='col-md-3 metrics-summary-group'>
   <span class='metrics-summary-item'>800 visits this month</span>

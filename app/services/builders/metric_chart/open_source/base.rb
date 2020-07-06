@@ -15,7 +15,7 @@ module Builders
         end
 
         def metric_ownable_type
-          Project
+          ::Project
         end
       end
     end
