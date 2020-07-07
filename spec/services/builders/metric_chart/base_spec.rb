@@ -62,4 +62,28 @@ describe Builders::MetricChart::Base do
       end
     end
   end
+
+  describe 'abstract methods' do
+    subject { described_class.send(:new) }
+
+    describe '#entity_type' do
+      it_behaves_like 'abstract method', :entity_type, 0
+    end
+
+    describe '#entity_name' do
+      it_behaves_like 'abstract method', :entity_name, 1
+    end
+
+    describe '#entity_metrics' do
+      it_behaves_like 'abstract method', :entity_metrics, 1
+    end
+
+    describe '#metric_ownable_type' do
+      it_behaves_like 'abstract method', :metric_ownable_type, 0
+    end
+
+    describe '#metric_name' do
+      it_behaves_like 'abstract method', :metric_name, 0
+    end
+  end
 end
