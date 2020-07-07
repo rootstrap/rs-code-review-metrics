@@ -6,12 +6,12 @@
         <%= render 'shared/interval-filter', form: f %>
       </div>
       <div class="col-md-8 col-md-offset-1">
-        <%= render 'development_metrics/code_climate/code_climate_department_summary',
-            department: @department, code_climate: @code_climate %>
       </div>
     </div>
   <% end %>
 
+  <%= render 'development_metrics/code_climate/code_climate_department_summary',
+      department: @department, code_climate: @code_climate %>
   <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
   <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
 

@@ -10,7 +10,7 @@ module CodeClimate
 
     # this needs to be implemented and tested
     def code_climate_department_summary
-      CodeClimate::ProjectsSummaryService.call(
+      CodeClimate::ProjectsDetailsService.call(
         department: department,
         from: nil,
         technologies: []
@@ -18,7 +18,7 @@ module CodeClimate
     end
 
     def department
-      @department ||= Department.find(params[:id])
+      @department ||= Department.find_by_name(params[:department_name])
     end
   end
 end

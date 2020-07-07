@@ -7,7 +7,7 @@
         <%= button_to 'User', users_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
       </div>
       <label for="project_name">Project Name:</label>
-      <select name="project_name" class="project-selection" form='nav-filter-form'>
+      <select name="project_name" class="project-selection full-with" form='nav-filter-form'>
         <% if params[:project_name].blank? %>
           <option selected value disabled>-select option-</option>
         <% else %>

@@ -1,5 +1,5 @@
 <%= simple_form_for '',
-      url: code_climate_department_path(department),
+      url: department_code_climate_development_metrics_path(department),
       method: 'GET',
       html: { class: 'nav-filter p-3 shadow-box' } do |form|%>
   <h4 class="text-center">CodeClimate report for <%= department.name %> projects Department</h4>

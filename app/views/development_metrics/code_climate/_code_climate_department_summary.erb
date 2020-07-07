@@ -1,31 +1,38 @@
+<div class="row">
+  <div class="col-md-12 code-climate-title-container p-1 mt-3">
+    <span> Code Climate Info </span>
+  </div>
+</div>
 <% if !code_climate || code_climate.empty? -%>
-<div class="row">
-  <div class="col-md-9">
-    <span class="code-climate-summary text-danger">No information available</span>
+  <div class="row">
+    <div class="col-md-9">
+      <span class="code-climate-summary text-danger">No information available</span>
+    </div>
   </div>
-</div>
 <% else -%>
-<div class="row">
-  <% code_climate.each_project_rate do |letter, projects_count| -%>
-    <div class="col-md-3">
-      <span><%= projects_count %><%= projects_count ? ' project' : ' projects' %> with </span>
-      <span class="code-climate-summary text-primary"><%= letter %></span>
+  <div class="row">
+    <div class="col-md-3 code-climate-item">
+      <% code_climate.each_project_rate do |letter, projects_count| -%>
+        <p class='m-0'>
+          <%= projects_count %><%= projects_count ? ' project' : ' projects' %> with
+          <span class="code-climate-summary text-primary"><%= letter %></span>
+        </p>
     </div>
-    <div class="col-md-3 offset-md-6">
-      <%= link_to 'See details...', code_climate_department_path(department, filter_url_query),
-          class: 'btn btn-secondary btn-sm' %>
+    <% end -%>
+    <div class="col-md-3 code-climate-item">
+      <span class="code-climate-summary text-danger">Average of <%= code_climate.invalid_issues_count_average %> invalid issues</span>
     </div>
-  <% end -%>
-</div>
-<div class="row">
-  <div class="col-md-4">
-    <span class="code-climate-summary text-danger">Average of <%= code_climate.invalid_issues_count_average %> invalid issues</span>
+    <div class="col-md-3 code-climate-item">
+      <span class="code-climate-summary text-danger">Average of <%= code_climate.wontfix_issues_count_average %> won't fix issues</span>
+    </div>
+    <div class="col-md-3 code-climate-item">
+      <span class="code-climate-summary text-danger">Average of <%= code_climate.open_issues_count_average %> open issues</span>
+    </div>
   </div>
-  <div class="col-md-4">
-    <span class="code-climate-summary text-danger">Average of <%= code_climate.wontfix_issues_count_average %> won't fix issues</span>
+  <div class='row'>
+    <div class="col-md-12">
+      <%= link_to 'See details', department_code_climate_development_metrics_path(department.name),
+          class: 'btn btn-secondary code-climate-details full-with mt-1' %>
+    </div>
   </div>
-  <div class="col-md-4">
-    <span class="code-climate-summary text-danger">Average of <%= code_climate.open_issues_count_average %> open issues</span>
-  </div>
-</div>
 <% end -%>

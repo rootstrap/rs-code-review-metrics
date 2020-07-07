@@ -1,0 +1,12 @@
+.code-climate-title-container{
+  @include centered-flex-columns;
+  align-items: center;
+}
+
+.code-climate-item{
+  @include centered-flex-columns;
+}
+
+.code-climate-details{
+  background-color: $nav-bg-color;
+}

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       get 'departments'
       get 'users'
       namespace :code_climate do
-        resources :departments, only: %i[show]
+        get 'departments/:department_name', to: 'departments#show', as: :department
       end
     end
   end
