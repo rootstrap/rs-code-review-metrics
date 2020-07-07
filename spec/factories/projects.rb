@@ -4,6 +4,7 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
+#  is_private  :boolean
 #  name        :string
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
@@ -18,8 +19,14 @@
 FactoryBot.define do
   factory :project do
     sequence(:github_id, 1000)
-    name { Faker::App.name }
+    name { Faker::App.name.gsub(' ', '') }
     description { Faker::FunnyName.name }
-    language { Language.find_by(name: 'unassigned') }
+    language { Language.unassigned }
+    is_private { false }
+
+    trait :open_source do
+      language { Language.find_by(name: 'ruby') }
+      is_private { false }
+    end
   end
 end

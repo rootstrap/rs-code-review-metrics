@@ -1,5 +1,5 @@
   <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-3">
       <span class="h6">CodeClimate</span>
     </div>
     <% if code_climate -%>
@@ -12,11 +12,11 @@
       <div class="col-md-3">
         <span class="code-climate-summary text-danger"><%= code_climate.wont_fix_issues_count %> won't fix issues</span>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <span class="code-climate-summary text-danger"><%= code_climate.open_issues_count %> open issues</span>
       </div>
     <% else -%>
-      <div class="col-md-9">
+      <div class="col-md-8">
         <span class="code-climate-summary text-danger">No information available</span>
       </div>
     <% end -%>

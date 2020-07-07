@@ -1,8 +1,8 @@
 <%= form.input :period,
-  wrapper_html: { class: 'drop-down-horizontal' },
-  input_html: {},
+  label: 'Weeks Period',
+  wrapper_html: { class: 'period-selection' },
+  input_html: { class: 'margin-left', value: value_from_period_param },
   required: false,
-  collection: [['- select option - ', 0],['Daily', 'daily'], ['Weekly', 'weekly']],
-  selected: value_from_metric_param(:period),
-  disabled: 0
+  as: :numeric
 %>
+<%= form.button :submit, 'Seleccionar', class: 'btn-secondary', id: 'submitButton' %>
