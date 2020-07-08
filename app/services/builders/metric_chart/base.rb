@@ -1,12 +1,12 @@
 module Builders
   module MetricChart
     class Base < BaseService
-      def initialize(months = 13)
-        @months = months
+      def initialize(periods = 13)
+        @periods = periods
       end
 
       def call
-        datasets = entity_type.all.map do |entity|
+        datasets = entities.map do |entity|
           generate_results_for(
             entity_name: entity_name(entity),
             metrics: entity_metrics(entity),
@@ -25,7 +25,7 @@ module Builders
 
       private
 
-      attr_reader :months
+      attr_reader :periods
 
       def generate_results_for(entity_name:, metrics:, hidden:)
         metrics_data = collect_data(metrics)
@@ -38,8 +38,8 @@ module Builders
       end
 
       def collect_data(metrics)
-        metrics.where(name: metric_name)
-               .group_by_month(:value_timestamp, last: months)
+        metrics.where(name: metric_name, interval: metric_interval)
+               .group_by_period(grouping_period, :value_timestamp, last: periods)
                .sum(:value)
       end
 
@@ -48,10 +48,10 @@ module Builders
       end
 
       def format_data(metrics_data)
-        metrics_data.transform_keys { |date| date.strftime('%B %Y') }
+        metrics_data.transform_keys { |date| date.strftime(chart_date_format) }
       end
 
-      def entity_type
+      def entities
         raise NoMethodError
       end
 
@@ -68,6 +68,18 @@ module Builders
       end
 
       def metric_name
+        raise NoMethodError
+      end
+
+      def metric_interval
+        raise NoMethodError
+      end
+
+      def chart_date_format
+        raise NoMethodError
+      end
+
+      def grouping_period
         raise NoMethodError
       end
     end
