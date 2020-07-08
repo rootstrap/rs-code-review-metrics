@@ -1,4 +1,4 @@
-class BlogMetricsDatasetGroup
+class MetricsDatasetGroup
   def initialize(datasets, totals)
     @datasets = datasets
     @totals = totals

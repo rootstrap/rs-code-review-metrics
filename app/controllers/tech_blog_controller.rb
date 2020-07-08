@@ -16,7 +16,7 @@ class TechBlogController < ApplicationController
   private
 
   def visits_per_technology
-    Builders::BlogMetricChart::TechnologyVisits.call
+    Builders::MetricChart::Blog::TechnologyVisits.call
   end
 
   def year_to_date_visits
@@ -28,7 +28,7 @@ class TechBlogController < ApplicationController
   end
 
   def technology_blog_post_count
-    Builders::BlogMetricChart::TechnologyBlogPostCount.call
+    Builders::MetricChart::Blog::TechnologyBlogPostCount.call
   end
 
   def year_to_date_new_blog_posts
@@ -40,7 +40,7 @@ class TechBlogController < ApplicationController
   end
 
   def visits_growth_mom
-    Builders::BlogMetricChart::TechnologyVisitsGrowthMom.call
+    Builders::MetricChart::Blog::TechnologyVisitsGrowthMom.call
   end
 
   def this_month_visits_growth
