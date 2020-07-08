@@ -11,6 +11,7 @@ RSpec.describe Processors::TechnologiesBackfiller do
       expect(all_technologies).to include('ios')
       expect(all_technologies).to include('android')
       expect(all_technologies).to include('react')
+      expect(all_technologies).to include('react native')
       expect(all_technologies).to include('machine learning')
       expect(all_technologies).to include('other')
     end
@@ -31,7 +32,7 @@ RSpec.describe Processors::TechnologiesBackfiller do
       it 'updates the outdated technologies' do
         described_class.call
 
-        expect(Technology.find_by(name: 'ruby').keyword_string).to eq 'ruby,rails'
+        expect(Technology.find_by(name: 'ruby').keyword_string).to eq 'ruby,rails,ruby on rails'
       end
     end
   end
