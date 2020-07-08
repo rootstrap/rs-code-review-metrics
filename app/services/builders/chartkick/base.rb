@@ -17,12 +17,10 @@ module Builders
       end
 
       def build_distribution_data(entities)
-        entities.inject({}) do |hash, entity|
+        entities.each_with_object(Hash.new(0)) do |entity, hash|
           interval = resolve_interval(entity)
-          hash.merge!(
-            interval => value_in_hours_for(entity)
-          )
-        end
+          hash[interval] += 1
+        end.sort_by {|k, _| k}
       end
 
       def value_in_hours_for(entity)
