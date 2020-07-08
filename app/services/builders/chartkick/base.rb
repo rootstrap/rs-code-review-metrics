@@ -9,15 +9,43 @@ module Builders
       private
 
       def build_data(metrics)
-        metrics.each.inject({}) do |hash, metric|
+        metrics.inject({}) do |hash, metric|
           hash.merge!(
             metric.value_timestamp.strftime('%Y-%m-%d').to_s => value_in_hours_for(metric)
           )
         end
       end
 
-      def value_in_hours_for(metric)
-        (metric.value.to_f / 1.hour.seconds).round(2)
+      def build_distribution_data(entities)
+        entities.inject({}) do |hash, entity|
+          interval = resolve_interval(entity)
+          hash.merge!(
+            interval => value_in_hours_for(entity)
+          )
+        end
+      end
+
+      def value_in_hours_for(entity)
+        (entity.value.to_f / 1.hour.seconds).round(2)
+      end
+
+      def resolve_interval(entity)
+        entity_value = entity.value
+        if entity_value < 12
+          '1-12'
+        elsif entity_value < 24
+          '12-24'
+        elsif entity_value < 36
+          '24-36'
+        elsif entity_value < 48
+          '36-48'
+        elsif entity_value < 60
+          '48-60'
+        elsif entity_value < 72
+          '60-72'
+        else
+          '72+'
+        end
       end
     end
   end
