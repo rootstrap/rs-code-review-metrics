@@ -1,14 +1,12 @@
-<div class="col container-height shadow-box sticky-top">
-  <div class="container-md">
-    <div class="row p-3">
-      <div class="btn-group btn-entity-group">
-        <%= button_to 'Project', projects_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
-        <%= button_to 'Department', departments_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
-        <%= button_to 'User', users_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
-      </div>
+<div class="sidebar-container">
+  <div class="metric-filter">
+    <div class="btn-group btn-entity-group">
+      <%= button_to 'Project', projects_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+      <%= button_to 'Department', departments_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+      <%= button_to 'User', users_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
     </div>
   </div>
 </div>
 
-<div class="col-md-10">
+<div class='fl-4'>
 </div>

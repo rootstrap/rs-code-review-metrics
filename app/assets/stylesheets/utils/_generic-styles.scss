@@ -5,3 +5,15 @@ select[name$=_name] {
   justify-content: center;
   flex-direction: column;
 }
+
+.fl-1 {
+  flex: 1;
+}
+
+.fl-3 {
+  flex: 3;
+}
+
+.fl-4 {
+  flex: 4;
+}

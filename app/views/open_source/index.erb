@@ -1,21 +1,27 @@
-<div class="col-md-9 p-5">
-  <span><b>32</b> open source projects:</span>
-  <li><b>16</b> ruby projects</li>
-  <li><b>8</b> ruby projects</li>
-  <li><b>14</b> react projects</li>
-  <li><b>4</b> iOS projects</li>
-</div>
-<div class='col-md-9 p-3'>
-  <%= line_chart [{}], ytitle: "Repository Visits" %>
-</div>
-<div class='col-md-3 metrics-summary-group'>
-  <span class='metrics-summary-item'>800 visits this month</span>
-  <span class='metrics-summary-item'>3500 visits this year</span>
-</div>
-<div class='col-md-9 p-3'>
-  <%= line_chart [{}], ytitle: "Stars" %>
-</div>
-<div class='col-md-3 metrics-summary-group'>
-  <span class='metrics-summary-item'>56 new stars this month</span>
-  <span class='metrics-summary-item'>3600 total stars</span>
+<div class="metrics-container">
+  <div class="p-5">
+    <span><b>32</b> open source projects:</span>
+    <li><b>16</b> ruby projects</li>
+    <li><b>8</b> ruby projects</li>
+    <li><b>14</b> react projects</li>
+    <li><b>4</b> iOS projects</li>
+  </div>
+  <div class="main-container">
+    <div class='p-3 fl-3'>
+      <%= line_chart [{}], ytitle: "Repository Visits" %>
+    </div>
+    <div class='metrics-summary-group fl-1'>
+      <span class='metrics-summary-item'>800 visits this month</span>
+      <span class='metrics-summary-item'>3500 visits this year</span>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class='p-3 fl-3'>
+      <%= line_chart [{}], ytitle: "Stars" %>
+    </div>
+    <div class='metrics-summary-group fl-1'>
+      <span class='metrics-summary-item'>56 new stars this month</span>
+      <span class='metrics-summary-item'>3600 total stars</span>
+    </div>
+  </div>
 </div>
