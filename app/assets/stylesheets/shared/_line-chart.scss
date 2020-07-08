@@ -1,16 +1,10 @@
 .chart {
   height: 300px;
-  display: block;
 }
 
 .main-charts {
   display: flex;
   flex-direction: row;
-}
-
-.chart-container {
-  flex: 1;
-  flex-direction: column;
 }
 
 .metric-title{

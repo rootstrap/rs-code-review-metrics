@@ -1,5 +1,31 @@
-<div class="col container-height shadow-box sticky-top">
-  <div class="container-md">
+<div class="sidebar-container">
+  <div class="metric-filter">
+    <div class="btn-group btn-entity-group">
+      <%= button_to 'Project', projects_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+      <%= button_to 'Department', departments_development_metrics_path, class: 'btn btn-secondary entity-btn active', method: :get %>
+      <%= button_to 'User', users_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
+    </div>
+  </div>
+
+  <div class="list-department">
+    <label for="department_name">Department Name:</label>
+    <select name="department_name" class="department-selection" form='nav-filter-form'>
+      <% if params[:department_name].blank? %>
+        <option selected value disabled>-select option-</option>
+      <% else %>
+        <option value disabled>-select option-</option>
+      <% end %>
+      <% all_departments_names.each do |name|%>
+        <%if params[:department_name] == name %>
+          <option selected value=<%= name %>> <%= name%> </option>
+        <% else %>
+        <option value=<%= name%>> <%= name%></option> %>
+        <% end %>
+      <% end %>
+    </select>
+  </div>
+
+  <!--<div class="container-md">
     <div class="row p-3">
       <div class="btn-group btn-entity-group">
         <%= button_to 'Project', projects_development_metrics_path, class: 'btn btn-secondary entity-btn', method: :get %>
@@ -22,5 +48,5 @@
         <% end %>
       </select>
     </div>
-  </div>
+  </div>-->
 </div>

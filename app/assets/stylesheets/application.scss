@@ -18,3 +18,52 @@
 @import "nav-filter";
 @import "users/projects/*";
 
+.sidebar-container {
+  box-shadow: 1px 1px 5px 0 rgba(171,158,171,1);
+}
+
+canvas[style] {
+  width: 100% !important;
+}
+
+.main-container {
+  display: flex;
+
+  .sidebar-container {
+    flex: 1;
+    height: 100vh;
+    padding: 15px;
+
+    > div {
+      padding-bottom: 20px;
+    }
+  }
+
+  .metrics-container {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+
+    .filter {
+      padding: 0 15px;
+    }
+
+    .metrics {
+      display: flex;
+      flex-direction: column;
+
+      .graph {
+        display: flex;
+        flex: 1;
+
+        &.details {
+          flex-direction: column;
+        }
+
+        > div {
+          flex: 1;
+        }
+      }
+    }
+  }
+}

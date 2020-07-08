@@ -1,12 +1,11 @@
-<div class='main-charts'>
-  <%= render partial: 'shared/line-chart',
-              locals: {
-                metric_name: 'Review Turnaround',
-                metric: review_turnaround[:per_project] || review_turnaround[:per_department]
-              } if review_turnaround && (review_turnaround[:per_project] || review_turnaround[:per_department]) %>
-  <%= render partial: 'shared/column-chart',
-              locals: {
-                metric_name: 'Review Turnaround',
-                metric: review_turnaround[:per_department_distribution]
-              } if review_turnaround && review_turnaround[:per_department_distribution] %>
-</div>
+<%= render partial: 'shared/line-chart',
+            locals: {
+              metric_name: 'Review Turnaround',
+              metric: review_turnaround[:per_project] || review_turnaround[:per_department]
+            } if review_turnaround && (review_turnaround[:per_project] || review_turnaround[:per_department]) %>
+<%= render partial: 'shared/column-chart',
+            locals: {
+              metric_name: 'Review Turnaround',
+              metric: review_turnaround[:per_department_distribution]
+            } if review_turnaround && review_turnaround[:per_department_distribution] %>
+
