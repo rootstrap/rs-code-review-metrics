@@ -16,7 +16,7 @@ FactoryBot.define do
         node_id: Faker::Crypto.sha1,
         body: body,
         user: (attributes_for :user, id: generate(:user_id)).as_json,
-        state: generate(:review_state),
+        state: 'commented',
         submitted_at: submitted_at.to_time.iso8601
       }
     end

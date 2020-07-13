@@ -1,0 +1,12 @@
+.period-input {
+  @include flex-row-start;
+}
+
+.period-selection{
+  label.numeric{
+    width: 13rem;
+  }
+  input.numeric{
+    margin: 0 0.2rem;
+  }
+}

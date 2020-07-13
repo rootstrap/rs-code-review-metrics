@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe Builders::BlogMetricChart::Base do
-  subject { Builders::BlogMetricChart::TechnologyBlogPostCount }
+describe Builders::MetricChart::Base do
+  subject { Builders::MetricChart::Blog::TechnologyBlogPostCount }
 
   describe '.call' do
     describe 'totals' do
@@ -60,6 +60,30 @@ describe Builders::BlogMetricChart::Base do
       it 'the totals dataset is not hidden' do
         expect(subject.call.totals[:dataset][:hidden]).to eq false
       end
+    end
+  end
+
+  describe 'abstract methods' do
+    subject { described_class.send(:new) }
+
+    describe '#entity_type' do
+      it_behaves_like 'abstract method', :entity_type, 0
+    end
+
+    describe '#entity_name' do
+      it_behaves_like 'abstract method', :entity_name, 1
+    end
+
+    describe '#entity_metrics' do
+      it_behaves_like 'abstract method', :entity_metrics, 1
+    end
+
+    describe '#metric_ownable_type' do
+      it_behaves_like 'abstract method', :metric_ownable_type, 0
+    end
+
+    describe '#metric_name' do
+      it_behaves_like 'abstract method', :metric_name, 0
     end
   end
 end

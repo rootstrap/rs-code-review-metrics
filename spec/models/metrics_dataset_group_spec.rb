@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe BlogMetricsDatasetGroup do
+describe MetricsDatasetGroup do
   let(:technology) { create(:technology) }
   let!(:blog_post) { create(:blog_post, published_at: Time.zone.now, technology: technology) }
   let!(:this_month_post_count_metric) do
@@ -16,7 +16,7 @@ describe BlogMetricsDatasetGroup do
 
   let(:datasets) { blog_metrics_dataset_group.datasets }
   let(:totals) { blog_metrics_dataset_group.totals }
-  subject(:blog_metrics_dataset_group) { Builders::BlogMetricChart::TechnologyBlogPostCount.call }
+  subject(:blog_metrics_dataset_group) { Builders::MetricChart::Blog::TechnologyBlogPostCount.call }
 
   describe '#all_datasets' do
     it 'returns datasets including the totals' do

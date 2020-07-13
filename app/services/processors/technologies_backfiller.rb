@@ -13,7 +13,7 @@ module Processors
     def init_attributes
       [
         { name: 'ruby',
-          keyword_string: 'ruby,rails' },
+          keyword_string: 'ruby,rails,ruby on rails' },
         { name: 'python',
           keyword_string: 'python,django' },
         { name: 'ios',
@@ -22,6 +22,8 @@ module Processors
           keyword_string: 'android' },
         { name: 'react',
           keyword_string: 'react,reactjs' },
+        { name: 'react native',
+          keyword_string: 'react native,react-native' },
         { name: 'machine learning',
           keyword_string: 'machine learning,data science,artificial intelligence' },
         { name: 'other',
