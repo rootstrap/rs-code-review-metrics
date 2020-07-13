@@ -18,6 +18,10 @@
 @import "nav-filter";
 @import "users/projects/*";
 
+.main-column {
+  flex: 4;
+}
+
 .sidebar-container {
   box-shadow: 1px 1px 5px 0 rgba(171,158,171,1);
 }
