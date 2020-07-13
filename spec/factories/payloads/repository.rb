@@ -6,13 +6,15 @@ FactoryBot.define do
       id { Faker::Number.number(digits: 4) }
       name { Faker::App.name }
       description { '' }
+      is_private { false }
     end
 
     repository do
       {
         id: id,
         name: name,
-        description: description
+        description: description,
+        private: is_private
       }
     end
 

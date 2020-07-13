@@ -1,26 +1,26 @@
 module Builders
-  module BlogMetricChart
+  module MetricChart
     class Base < BaseService
       def initialize(months = 13)
         @months = months
       end
 
       def call
-        datasets = Technology.all.map do |technology|
+        datasets = entity_type.all.map do |entity|
           generate_results_for(
-            entity_name: technology.name.titlecase,
-            metrics: technology.metrics,
+            entity_name: entity_name(entity),
+            metrics: entity_metrics(entity),
             hidden: true
           )
         end
 
         totals = generate_results_for(
           entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: Technology.name),
+          metrics: Metric.where(ownable_type: metric_ownable_type.to_s),
           hidden: false
         )
 
-        BlogMetricsDatasetGroup.new(datasets, totals)
+        MetricsDatasetGroup.new(datasets, totals)
       end
 
       private
@@ -37,10 +37,10 @@ module Builders
         }
       end
 
-      def collect_data(technology_metrics)
-        technology_metrics.where(name: metric_name)
-                          .group_by_month(:value_timestamp, last: months)
-                          .sum(:value)
+      def collect_data(metrics)
+        metrics.where(name: metric_name)
+               .group_by_month(:value_timestamp, last: months)
+               .sum(:value)
       end
 
       def process_data(metrics_data)
@@ -49,6 +49,26 @@ module Builders
 
       def format_data(metrics_data)
         metrics_data.transform_keys { |date| date.strftime('%B %Y') }
+      end
+
+      def entity_type
+        raise NoMethodError
+      end
+
+      def entity_name(_entity)
+        raise NoMethodError
+      end
+
+      def entity_metrics(_entity)
+        raise NoMethodError
+      end
+
+      def metric_ownable_type
+        raise NoMethodError
+      end
+
+      def metric_name
+        raise NoMethodError
       end
     end
   end

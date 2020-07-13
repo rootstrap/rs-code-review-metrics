@@ -1,0 +1,8 @@
+<div class='p-3'>
+  <span class='metric-title'><%= metric_name %></span>
+  <div id='chart-2' class='chart'>
+    <%= column_chart metric,
+        suffix: " reviews",
+        library: { spanGaps: true } %>
+  </div>
+</div>

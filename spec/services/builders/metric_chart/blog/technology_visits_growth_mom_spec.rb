@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Builders::BlogMetricChart::TechnologyVisitsGrowthMom do
+describe Builders::MetricChart::Blog::TechnologyVisitsGrowthMom do
   describe '.call' do
     let(:technology) { create(:technology) }
     let(:metric_name) { Metric.names[:blog_visits] }

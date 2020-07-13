@@ -47,6 +47,8 @@ Metrics/ClassLength:
 # Avoid complex methods.
 Metrics/CyclomaticComplexity:
   Max: 6
+  Exclude:
+    - app/services/builders/chartkick/base.rb
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
