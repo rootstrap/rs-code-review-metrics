@@ -1,19 +1,33 @@
 <%= render 'shared/department/sidebar'%>
-<div class="col-md-10">
-  <%= render 'shared/department/nav-filter' do |f|%>
-    <div class="row">
-      <div class="col-md-5 period-input">
-        <%= render 'shared/interval-filter', form: f %>
+<div class="metrics-container">
+  <div class="filter sticky-top">
+    <%= render 'shared/department/nav-filter' do |f|%>
+      <div class="row">
+        <div class="col-md-5 period-input">
+          <%= render 'shared/interval-filter', form: f %>
+        </div>
+        <div class="col-md-7">
+          <%= render 'shared/code-climate-department-summary', code_climate: @code_climate %>
+        </div>
       </div>
-      <div class="col-md-7">
-        <%= render 'shared/code-climate-department-summary', code_climate: @code_climate %>
-      </div>
+    <% end %>
+  </div>
+
+  <div class="metrics">
+    <div class="graph">
+      <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
     </div>
-  <% end %>
+    <div class="graph details">
+      <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
+    </div>
+  </div>
 
-  <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
-  <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
-
-  <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
-  <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
+  <div class="metrics">
+    <div class="graph">
+      <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+    </div>
+    <div class="graph details">
+      <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
+    </div>
+  </div>
 </div>

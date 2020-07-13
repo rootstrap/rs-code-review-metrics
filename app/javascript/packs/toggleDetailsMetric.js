@@ -1,7 +1,7 @@
 $(document).on('turbolinks:load', function() {
   $(".details-button").click(function() {
-    const metric = $(this).next();
-    const slideSpeed = 600;
+    const metric = $(this.parentElement).next();
+    const slideSpeed = 0;
     if (metric.css('display') === 'none') {
       metric.slideDown(slideSpeed);
       $(this).text('Hide details');

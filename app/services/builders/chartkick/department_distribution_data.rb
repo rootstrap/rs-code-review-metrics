@@ -4,8 +4,7 @@ module Builders
       def call
         department_name = ::Department.find(@entity_id).name
 
-        review_turnarounds = retrieve_review_turnarounds
-        [{ name: department_name, data: build_distribution_data(review_turnarounds) }]
+        [{ name: department_name, data: build_distribution_data(retrieve_review_turnarounds) }]
       end
 
       private
