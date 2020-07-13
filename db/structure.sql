@@ -478,6 +478,38 @@ ALTER SEQUENCE public.languages_id_seq OWNED BY public.languages.id;
 
 
 --
+-- Name: merge_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.merge_times (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: merge_times_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.merge_times_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: merge_times_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.merge_times_id_seq OWNED BY public.merge_times.id;
+
+
+--
 -- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -906,6 +938,13 @@ ALTER TABLE ONLY public.languages ALTER COLUMN id SET DEFAULT nextval('public.la
 
 
 --
+-- Name: merge_times id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times ALTER COLUMN id SET DEFAULT nextval('public.merge_times_id_seq'::regclass);
+
+
+--
 -- Name: metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1061,6 +1100,14 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 ALTER TABLE ONLY public.languages
     ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: merge_times merge_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times
+    ADD CONSTRAINT merge_times_pkey PRIMARY KEY (id);
 
 
 --
@@ -1254,6 +1301,13 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 --
 
 CREATE INDEX index_languages_on_department_id ON public.languages USING btree (department_id);
+
+
+--
+-- Name: index_merge_times_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_merge_times_on_pull_request_id ON public.merge_times USING btree (pull_request_id);
 
 
 --
@@ -1546,6 +1600,14 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 
 --
+-- Name: merge_times fk_rails_f002296adb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times
+    ADD CONSTRAINT fk_rails_f002296adb FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+
+
+--
 -- Name: review_requests fk_rails_feb865e207; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1645,6 +1707,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200625144922'),
 ('20200630165139'),
 ('20200701133311'),
-('20200703141617');
+('20200703141617'),
+('20200713152004');
 
 
