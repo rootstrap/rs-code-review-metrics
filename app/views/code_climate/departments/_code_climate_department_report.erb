@@ -5,7 +5,7 @@
         <% projects_details.each do |project_summary| -%>
           <%= render 'code_climate_project_report',
             code_climate: {
-              name: 'rs-code-review-metrics',
+              name: project_summary.name,
               code_climate_rate: project_summary.rate,
               invalid_issues_count: project_summary.invalid_issues_count,
               wont_fix_issues_count: project_summary.wont_fix_issues_count,

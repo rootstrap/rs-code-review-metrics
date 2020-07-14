@@ -22,7 +22,9 @@ module CodeClimate
                            invalid_issues_count: metric.invalid_issues_count,
                            open_issues_count: metric.open_issues_count,
                            wont_fix_issues_count: metric.wont_fix_issues_count,
-                           snapshot_time: metric.snapshot_time)
+                           snapshot_time: metric.snapshot_time,
+                           name: metric.project.name
+                          )
       end
     end
 
