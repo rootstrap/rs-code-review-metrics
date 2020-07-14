@@ -69,9 +69,9 @@ RSpec.describe Events::PullRequest, type: :model do
       let!(:pull_request) { create(:pull_request, opened_at: Time.current) }
 
       it 'creates a merge time with the correct values' do
-        pull_request.update!(merged_at: Time.current)
+        pull_request.update!(merged_at: Time.current + 1.hour)
         merge_time = MergeTime.last
-        expect(merge_time[:value]).to eq(0)
+        expect(merge_time[:value].seconds).to eq(1.hour)
         expect(merge_time[:pull_request_id]).to eq(pull_request.id)
       end
 
