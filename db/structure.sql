@@ -46,7 +46,9 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned'
+    'unassigned',
+    'vuejs',
+    'react_native'
 );
 
 
@@ -119,7 +121,7 @@ CREATE TYPE public.review_state AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_admin_comments; Type: TABLE; Schema: public; Owner: -
@@ -522,8 +524,8 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    is_private boolean,
-    language_id bigint
+    language_id bigint,
+    is_private boolean
 );
 
 

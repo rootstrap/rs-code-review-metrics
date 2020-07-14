@@ -18,3 +18,12 @@ table.code-climate-projects-report {
     }
   }
 }
+
+.project-name-link{
+  text-decoration: none;
+  color: black;
+  &:hover{
+    text-decoration: none;
+    color: black;
+  }
+}

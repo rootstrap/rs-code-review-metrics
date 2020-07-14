@@ -1,6 +1,10 @@
 <tr>
   <td>
-    <%= code_climate[:name] %>
+    <%= link_to projects_development_metrics_path(
+        {project_name: code_climate[:name], metric: { period: params&.dig(:metric, :period) }}
+      ), class: 'project-name-link' do%>
+        <%= "#{code_climate[:name]}"%>
+    <%end%>
   </td>
   <td>
     <span class="h6 text-success"><%= code_climate[:code_climate_rate] %></span>

@@ -43,7 +43,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows the wontfix issues count in the selected department' do
-      expect(projects_summary.wontfix_issues_count_average).to eq(2)
+      expect(projects_summary.wont_fix_issues_count_average).to eq(2)
     end
 
     it 'shows the open issues count in the selected department' do
@@ -71,7 +71,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no wontfix issues count' do
-      expect(projects_summary.wontfix_issues_count_average).to be_nil
+      expect(projects_summary.wont_fix_issues_count_average).to be_nil
     end
 
     it 'shows no open issues count' do
@@ -95,7 +95,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows the wontfix issues count in the selected department' do
-      expect(projects_summary.wontfix_issues_count_average).to eq(2)
+      expect(projects_summary.wont_fix_issues_count_average).to eq(2)
     end
 
     it 'shows the open issues count in the selected department' do
@@ -123,7 +123,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no wontfix issues count' do
-      expect(projects_summary.wontfix_issues_count_average).to be_nil
+      expect(projects_summary.wont_fix_issues_count_average).to be_nil
     end
 
     it 'shows no open issues count' do
@@ -145,7 +145,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows the wontfix issues count in the selected department' do
-      expect(projects_summary.wontfix_issues_count_average).to eq(2)
+      expect(projects_summary.wont_fix_issues_count_average).to eq(2)
     end
 
     it 'shows the open issues count in the selected department' do
@@ -173,7 +173,7 @@ describe CodeClimate::ProjectsSummaryService do
     end
 
     it 'shows no wontfix issues count' do
-      expect(projects_summary.wontfix_issues_count_average).to be_nil
+      expect(projects_summary.wont_fix_issues_count_average).to be_nil
     end
 
     it 'shows no open issues count' do

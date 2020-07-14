@@ -19,9 +19,9 @@ module CodeClimate
 
       ProjectsSummary.new(
         invalid_issues_count_average: invalid_issues_count_average,
-        wontfix_issues_count_average: wont_fix_issues_count_average,
+        wont_fix_issues_count_average: wont_fix_issues_count_average,
         open_issues_count_average: open_issues_count_average,
-        ratings: ratings,
+        ratings: ratings
       )
     end
 
