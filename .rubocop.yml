@@ -73,8 +73,6 @@ Layout/LineLength:
 Metrics/ParameterLists:
   Max: 5
   CountKeywordArgs: true
-  Exclude:
-    - app/services/code_climate/project_summary.rb
 
 Metrics/PerceivedComplexity:
   Max: 12
