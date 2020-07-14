@@ -33,7 +33,6 @@ install:
   - node -v
   - npm i -g yarn
   - yarn
-  - yarn run lint
 
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis
@@ -47,6 +46,7 @@ script:
   - bundle exec rails webpacker:compile
   - bundle exec rspec
   - bundle exec rake code_analysis
+  - yarn run lint
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
