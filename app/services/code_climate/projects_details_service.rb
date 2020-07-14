@@ -19,9 +19,7 @@ module CodeClimate
 
       code_climate_metrics.map do |metric|
         ProjectSummary.new(rate: metric.code_climate_rate,
-                           invalid_issues_count: metric.invalid_issues_count,
-                           open_issues_count: metric.open_issues_count,
-                           wont_fix_issues_count: metric.wont_fix_issues_count,
+                           issues: issues_collection(metric),
                            snapshot_time: metric.snapshot_time,
                            name: metric.project.name)
       end
@@ -29,6 +27,14 @@ module CodeClimate
 
     def metrics?
       !code_climate_metrics.empty?
+    end
+
+    def issues_collection(metric)
+      {
+        invalid_issues_count: metric.invalid_issues_count,
+        open_issues_count: metric.open_issues_count,
+        wont_fix_issues_count: metric.wont_fix_issues_count
+      }
     end
 
     def code_climate_metrics
