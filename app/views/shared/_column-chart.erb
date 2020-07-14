@@ -1,9 +1,8 @@
 <div class='p-3'>
   <span class='metric-title'><%= metric_name %></span>
-  <div id='chart-1' class='chart'>
-    <%= line_chart metric,
-        ytitle: "Time as hours",
-        suffix: " hours",
+  <div id='chart-2' class='chart'>
+    <%= column_chart metric,
+        suffix: " reviews",
         library: { spanGaps: true } %>
   </div>
 </div>

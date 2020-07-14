@@ -637,7 +637,8 @@ CREATE TABLE public.review_requests (
     owner_id bigint,
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
-    state public.review_request_state DEFAULT 'active'::public.review_request_state
+    state public.review_request_state DEFAULT 'active'::public.review_request_state,
+    project_id bigint
 );
 
 
@@ -667,7 +668,9 @@ ALTER SEQUENCE public.review_requests_id_seq OWNED BY public.review_requests.id;
 CREATE TABLE public.review_turnarounds (
     id bigint NOT NULL,
     review_request_id bigint NOT NULL,
-    value integer
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1324,6 +1327,13 @@ CREATE INDEX index_review_requests_on_owner_id ON public.review_requests USING b
 
 
 --
+-- Name: index_review_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_requests_on_project_id ON public.review_requests USING btree (project_id);
+
+
+--
 -- Name: index_review_requests_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1520,6 +1530,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: review_requests fk_rails_dd17aeab6c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_requests
+    ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: exception_hunter_errors fk_rails_ee1d3d35a2; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1626,6 +1644,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200622221729'),
 ('20200625144922'),
 ('20200630165139'),
-('20200701133311');
+('20200701133311'),
+('20200703141617');
 
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Builders::BlogMetricChart::TechnologyVisits do
+describe Builders::MetricChart::Blog::TechnologyVisits do
   describe '.call' do
     let(:technology) { create(:technology) }
     let!(:last_month_metric) do

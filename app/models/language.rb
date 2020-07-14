@@ -19,6 +19,7 @@ class Language < ApplicationRecord
   belongs_to :department, optional: true
   has_many :projects, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
+  has_many :projects_metrics, through: :projects, source: :metrics
 
   def self.unassigned
     find_by(name: 'unassigned')

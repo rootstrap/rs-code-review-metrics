@@ -21,4 +21,4 @@ require('chartkick')
 require('chart.js')
 
 import './graphApplication'
-import './togglePerUserProject'
+import './toggleDetailsMetric'
