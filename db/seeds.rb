@@ -71,5 +71,8 @@ if Rails.env.development?
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
     FactoryBot.create(:code_climate_project_metric, project: project)
+
+    User.first(3).each { |user| CodeOwnerProject.create!(user: user, project: project) }
+
   end
 end
