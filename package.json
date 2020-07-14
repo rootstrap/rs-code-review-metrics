@@ -12,8 +12,12 @@
     "select2": "^4.0.13",
     "turbolinks": "^5.2.0"
   },
+  "scripts": {
+    "lint": "eslint app/javascript/**/*.js"
+  },
   "version": "0.1.0",
   "devDependencies": {
+    "eslint": "^7.4.0",
     "webpack-dev-server": "^3.11.0"
   }
 }

@@ -33,6 +33,7 @@ install:
   - node -v
   - npm i -g yarn
   - yarn
+  - yarn run lint
 
 before_script:
   - psql -c 'create database code_review_metrics_travis;' -U travis

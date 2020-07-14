@@ -14,11 +14,10 @@
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+require('@rails/ujs').start();
+require('turbolinks').start();
+require('chartkick');
+require('chart.js');
 
-require('@rails/ujs').start()
-require('turbolinks').start()
-require('chartkick')
-require('chart.js')
-
-import './graphApplication'
-import './toggleDetailsMetric'
+import './graphApplication';
+import './toggleDetailsMetric';
