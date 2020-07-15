@@ -6,7 +6,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
     let(:publish_time) { Time.zone.now }
 
     before do
-      create(:blog_post, published_at: publish_time, technology: technology)
+      create(:blog_post, published_at: publish_time, technologies: [technology])
     end
 
     subject(:updater) { Processors::BlogPostCountMetricsPartialUpdater }
@@ -26,7 +26,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
     context 'having more than one technology' do
       before do
         other_technology = create(:technology)
-        create(:blog_post, published_at: Time.zone.now, technology: other_technology)
+        create(:blog_post, published_at: Time.zone.now, technologies: [other_technology])
       end
 
       it 'creates metrics for all of them' do
@@ -56,7 +56,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
 
     context 'when there are blog posts published in different months' do
       before do
-        create(:blog_post, published_at: Time.zone.now.last_month, technology: technology)
+        create(:blog_post, published_at: Time.zone.now.last_month, technologies: [technology])
       end
 
       it 'creates a metric for every month' do
@@ -107,7 +107,11 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
         let(:publish_time) { empty_month_timestamp.last_month }
 
         before do
-          create(:blog_post, published_at: empty_month_timestamp.next_month, technology: technology)
+          create(
+            :blog_post,
+            published_at: empty_month_timestamp.next_month,
+            technologies: [technology]
+          )
         end
 
         it 'adds the metric for that month with the unchanged value' do
@@ -128,7 +132,7 @@ RSpec.describe Processors::BlogPostCountMetricsUpdater do
 
         before do
           other_technology = create(:technology)
-          create(:blog_post, published_at: empty_month_timestamp, technology: other_technology)
+          create(:blog_post, published_at: empty_month_timestamp, technologies: [other_technology])
         end
 
         it 'adds the metric for that month with the unchanged value' do

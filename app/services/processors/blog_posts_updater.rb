@@ -8,7 +8,7 @@ module Processors
         blog_post.slug = blog_post_payload[:slug]
         blog_post.status = blog_post_payload[:status]
         blog_post.url = blog_post_payload[:URL]
-        blog_post.technology = technology_for(blog_post_id)
+        blog_post.technologies << technology_for(blog_post_id)
 
         blog_post.save!
       end
