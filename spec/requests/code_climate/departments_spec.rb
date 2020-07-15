@@ -19,6 +19,10 @@ describe 'CodeClimate deparment projects report page ', type: :request do
           params: { metric: { period: 4, lang: ['ruby'] } }
     end
 
+    it 'returns status ok' do
+      expect(response).to have_http_status(:ok)
+    end
+
     it 'shows the title' do
       expect(response.body).to include(
         "CodeClimate report for #{department.name} projects Department"

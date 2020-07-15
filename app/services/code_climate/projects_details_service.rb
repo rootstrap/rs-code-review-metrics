@@ -9,12 +9,6 @@ module CodeClimate
     end
 
     def call
-      build_summary
-    end
-
-    private
-
-    def build_summary
       return ProjectsSummary.new unless metrics?
 
       code_climate_metrics.map do |metric|
@@ -24,6 +18,8 @@ module CodeClimate
                            name: metric.project.name)
       end
     end
+
+    private
 
     def metrics?
       !code_climate_metrics.empty?

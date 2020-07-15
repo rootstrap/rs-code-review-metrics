@@ -9,12 +9,6 @@ module CodeClimate
     end
 
     def call
-      build_summary
-    end
-
-    private
-
-    def build_summary
       return ProjectsSummary.new unless metrics?
 
       ProjectsSummary.new(
@@ -24,6 +18,8 @@ module CodeClimate
         ratings: ratings
       )
     end
+
+    private
 
     def metrics?
       !code_climate_metrics.empty?
