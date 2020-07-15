@@ -9,7 +9,7 @@ module CodeClimate
     end
 
     def call
-      return ProjectsSummary.new unless metrics?
+      return ProjectsSummary.new unless code_climate_metrics.any?
 
       code_climate_metrics.map do |metric|
         ProjectSummary.new(rate: metric.code_climate_rate,
@@ -20,10 +20,6 @@ module CodeClimate
     end
 
     private
-
-    def metrics?
-      !code_climate_metrics.empty?
-    end
 
     def issues_collection(metric)
       {
