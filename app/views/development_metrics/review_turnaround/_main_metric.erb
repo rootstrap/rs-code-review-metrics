@@ -5,7 +5,8 @@
             } if review_turnaround && (review_turnaround[:per_project] || review_turnaround[:per_department]) %>
 <%= render partial: 'shared/column-chart',
             locals: {
-              metric_name: 'Review Turnaround',
+              metric_name: 'Distribution',
+              suffix: " reviews",
               metric: review_turnaround[:per_department_distribution]
             } if review_turnaround && review_turnaround[:per_department_distribution] %>
 

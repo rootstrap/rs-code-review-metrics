@@ -4,15 +4,27 @@ module Builders
       def call
         department_name = ::Department.find(@entity_id).name
 
-        [{ name: department_name, data: build_distribution_data(retrieve_review_turnarounds) }]
+        [{ name: department_name, data: build_distribution_data(retrieve_records) }]
       end
 
       private
 
-      def retrieve_review_turnarounds
+      def retrieve_records
+        return review_turnarounds if @query[:name].equal?(:review_turnaround)
+
+        merge_times
+      end
+
+      def review_turnarounds
         ::ReviewTurnaround.joins(review_request: { project: { language: :department } })
                           .where(departments: { id: @entity_id })
                           .where(created_at: @query[:value_timestamp])
+      end
+
+      def merge_times
+        ::MergeTime.joins(pull_request: { project: { language: :department } })
+                   .where(departments: { id: @entity_id })
+                   .where(created_at: @query[:value_timestamp])
       end
     end
   end
