@@ -1,0 +1,29 @@
+table.code-climate-projects-report {
+  border: none;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+  tr {
+    border: none;
+    td {
+      border: none;
+      border-right: solid 1px;
+      text-align: center;
+
+      &:first-child {
+        border-right: none;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+.project-name-link{
+  text-decoration: none;
+  color: black;
+  &:hover{
+    text-decoration: none;
+    color: black;
+  }
+}

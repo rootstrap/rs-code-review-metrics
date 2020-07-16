@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Builders::Chartkick::ProjectData do
   describe '.call' do
     context 'for a given entity' do
+      let(:language) { create(:language) }
       let(:range) do
         Time.zone.today.beginning_of_week..Time.zone.today.end_of_week
       end
@@ -13,7 +14,11 @@ RSpec.describe Builders::Chartkick::ProjectData do
         { interval: :weekly, value_timestamp: range }
       end
 
-      let(:user_project) { create(:users_project) }
+      let(:user_project) do
+        create(:project, language: language).tap do |project|
+          create(:users_project, project: project)
+        end
+      end
 
       subject do
         described_class.call(entity_id, query)

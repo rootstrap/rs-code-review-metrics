@@ -10,15 +10,15 @@ if Rails.env.development?
     AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password')
 
     # Departments and Languages
-    department = Department.create(name: 'backend')
+    department = Department.create!(name: 'backend')
     %i[ruby nodejs python].each do |lang|
       Language.create(name: lang, department: department)
     end
-    department = Department.create(name: 'frontend')
+    department = Department.create!(name: 'frontend')
     %i[react vuejs].each do |lang|
       Language.create(name: lang, department: department)
     end
-    department = Department.create(name: 'mobile')
+    department = Department.create!(name: 'mobile')
     %i[ios android react_native].each do |lang|
       Language.create(name: lang, department: department)
     end
@@ -26,7 +26,9 @@ if Rails.env.development?
       Language.create(name: lang)
     end
 
-    project = Project.create(github_id: rand(1000), name: 'rs-code-review-metrics')
+    project = Project.create!(github_id: rand(1000),
+                              name: 'rs-code-review-metrics',
+                              language: Language.find_by(name: 'ruby'))
 
     %w[santiagovidal santib hdamico horacio hvilloria sandro].each do |name|
       FactoryBot.create(:user, login: name)
@@ -69,5 +71,8 @@ if Rails.env.development?
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
     FactoryBot.create(:code_climate_project_metric, project: project)
+
+    User.first(3).each { |user| CodeOwnerProject.create!(user: user, project: project) }
+
   end
 end

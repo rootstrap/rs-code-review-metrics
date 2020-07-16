@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-12">
+    <table class="code-climate-projects-report table">
+      <tbody>
+        <% projects_details.each do |project_summary| -%>
+          <%= render 'code_climate_project_report',
+            code_climate: {
+              name: project_summary.name,
+              code_climate_rate: project_summary.rate,
+              invalid_issues_count: project_summary.invalid_issues_count,
+              wont_fix_issues_count: project_summary.wont_fix_issues_count,
+              open_issues_count: project_summary.open_issues_count,
+            } %>
+        <% end -%>
+      </tbody>
+    </table>
+  </div>
+</div>

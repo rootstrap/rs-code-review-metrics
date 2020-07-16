@@ -8,7 +8,7 @@
       <% @projects.each do |project|%>
         <li class='ml-3'>
           <%= link_to project.name,
-              projects_development_metrics_path(project_name: project.name, metric: {period: 'daily'}),
+              projects_development_metrics_path(project_name: project.name, metric: {period: 4}),
               class: 'link-none-style-black'
           %>
         </li>

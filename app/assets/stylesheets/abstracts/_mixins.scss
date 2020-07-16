@@ -1,5 +1,4 @@
-@mixin flex-column-select {
-  width: 100%;
+@mixin centered-flex-columns {
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -7,7 +6,6 @@
 
 @mixin flex-row-start {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  align-items: flex-end;
   flex-direction: row;
 }

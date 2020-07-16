@@ -10,7 +10,7 @@
     <%= select_tag 'user_name',
       options_for_select(
         all_users_names,
-        selected: value_from_user_param,
+        selected: chosen_user,
         disabled: 0
       ),
       class: 'user-selection'

@@ -1,17 +1,15 @@
 <%= render 'shared/project/sidebar'%>
-<div class="metrics-container">
-  <div class="filter sticky-top">
-    <%= render 'shared/project/nav-filter' do |f|%>
-      <div class="row">
-        <div class="col-md-5 period-input">
-          <%= render 'shared/interval-filter', form: f %>
-        </div>
-        <div class="col-md-7">
-          <%= render 'shared/code-climate-project-summary', code_climate: @code_climate %>
-        </div>
+<div class="metrics-container container">
+  <%= render 'shared/project/nav-filter' do |f|%>
+    <div class="row">
+      <div class="col-md-5 period-input">
+        <%= render 'shared/interval-filter', form: f %>
       </div>
-    <% end %>
-  </div>
+      <div class="col-md-7">
+        <%= render 'development_metrics/code_climate/code_climate_project_summary', code_climate: @code_climate %>
+      </div>
+    </div>
+  <% end %>
 
   <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
 
