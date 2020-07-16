@@ -10,7 +10,7 @@ module Builders
       private
 
       def retrieve_review_turnarounds
-        ::ReviewTurnaround.joins(review_request: { project: { language: :department } })
+        ::ReviewTurnaround.joins(pull_request: { project: { language: :department } })
                           .where(departments: { id: @entity_id })
                           .where(created_at: @query[:value_timestamp])
       end

@@ -52,9 +52,9 @@ module Events
     private
 
     def build_review_turnaround
-      return unless review_request.reviews.count.equal?(1)
+      return unless pull_request.reviews.count.equal?(1)
 
-      Builders::ReviewTurnaround.call(review_request)
+      Builders::ReviewTurnaround.call(pull_request)
     end
   end
 end

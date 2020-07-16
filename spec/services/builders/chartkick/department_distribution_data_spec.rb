@@ -18,8 +18,8 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
       before do
         values.each do |value|
-          review_request = create :review_request, project: project
-          create(:review_turnaround, review_request: review_request, value: value)
+          pull_request = create :pull_request, project: project
+          create(:review_turnaround, pull_request: pull_request, value: value)
         end
       end
 
@@ -31,8 +31,26 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
         expect(subject).to be_an(Array)
       end
 
-      it 'returns an array with name key' do
-        expect(subject.first).to have_key(:name)
+      context 'when name is review turnaround' do
+        before do
+          values.each do |value|
+            pull_request = create :pull_request, project: project
+            create(:review_turnaround, pull_request: pull_request, value: value)
+          end
+          query.merge!(name: :review_turnaround)
+        end
+
+        it 'returns an array with name key' do
+          expect(subject.first).to have_key(:name)
+        end
+
+        it 'returns an array with name data' do
+          expect(subject.first).to have_key(:data)
+        end
+
+        it 'returns an array with filled value' do
+          expect(subject.first[:data].empty?).to be false
+        end
       end
 
       it 'returns an array with name data' do
