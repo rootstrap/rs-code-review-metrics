@@ -1,17 +1,17 @@
 module Builders
   class ReviewTurnaround < BaseService
-    def initialize(review_request)
-      @review_request = review_request
+    def initialize(pull_request)
+      @pull_request = pull_request
     end
 
     def call
-      ::ReviewTurnaround.create!(review_request: @review_request, value: calculate_turnaround)
+      ::ReviewTurnaround.create!(pull_request: @pull_request, value: calculate_turnaround)
     end
 
     private
 
     def calculate_turnaround
-      @review_request.reviews.first.opened_at.to_i - @review_request.created_at.to_i
+      @pull_request.opened_at.to_i - @pull_request.reviews.first.created_at.to_i
     end
   end
 end

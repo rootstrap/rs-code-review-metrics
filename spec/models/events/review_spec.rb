@@ -55,14 +55,14 @@ RSpec.describe Events::Review, type: :model do
   describe 'callbacks' do
     context 'when a review is created' do
       before { travel_to(Time.zone.today.beginning_of_day) }
-      let(:review_request) { create(:review_request) }
-      let(:review) { create :review, review_request: review_request }
+      let(:pull_request) { create(:pull_request, opened_at: Time.current + 1.hour) }
+      let(:review) { create :review, pull_request: pull_request }
 
       it 'creates a review turnaround with the correct values' do
         review
         review_turnaround = ReviewTurnaround.last
-        expect(review_turnaround[:value]).to eq(0)
-        expect(review_turnaround[:review_request_id]).to eq(review_request.id)
+        expect(review_turnaround[:value]).to eq(3600)
+        expect(review_turnaround[:pull_request_id]).to eq(pull_request.id)
       end
 
       it 'creates a review turnaround' do
@@ -70,7 +70,7 @@ RSpec.describe Events::Review, type: :model do
       end
 
       context 'when there is more than one review in a review request' do
-        let!(:second_review) { create :review, review_request: review_request }
+        let!(:second_review) { create :review, pull_request: pull_request }
 
         it 'does not create review turnaround' do
           expect { review }.to_not change { ReviewTurnaround.count }

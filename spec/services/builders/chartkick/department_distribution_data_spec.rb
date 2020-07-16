@@ -27,8 +27,8 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
       context 'when name is review turnaround' do
         before do
           values.each do |value|
-            review_request = create :review_request, project: project
-            create(:review_turnaround, review_request: review_request, value: value)
+            pull_request = create :pull_request, project: project
+            create(:review_turnaround, pull_request: pull_request, value: value)
           end
           query.merge!(name: :review_turnaround)
         end

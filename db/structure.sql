@@ -699,10 +699,10 @@ ALTER SEQUENCE public.review_requests_id_seq OWNED BY public.review_requests.id;
 
 CREATE TABLE public.review_turnarounds (
     id bigint NOT NULL,
-    review_request_id bigint NOT NULL,
     value integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    pull_request_id bigint
 );
 
 
@@ -1409,10 +1409,10 @@ CREATE INDEX index_review_requests_on_state ON public.review_requests USING btre
 
 
 --
--- Name: index_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_review_turnarounds_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_review_turnarounds_on_review_request_id ON public.review_turnarounds USING btree (review_request_id);
+CREATE INDEX index_review_turnarounds_on_pull_request_id ON public.review_turnarounds USING btree (pull_request_id);
 
 
 --
@@ -1488,14 +1488,6 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
--- Name: review_turnarounds fk_rails_33c3053604; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.review_turnarounds
-    ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
-
-
---
 -- Name: reviews fk_rails_4862a15e3a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1533,6 +1525,14 @@ ALTER TABLE ONLY public.pull_requests
 
 ALTER TABLE ONLY public.pull_requests
     ADD CONSTRAINT fk_rails_658eb0bfb4 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: review_turnarounds fk_rails_7bc2fb6ebc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_turnarounds
+    ADD CONSTRAINT fk_rails_7bc2fb6ebc FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
 
 
 --
@@ -1708,6 +1708,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200630165139'),
 ('20200701133311'),
 ('20200703141617'),
-('20200713152004');
+('20200713152004'),
+('20200716151200');
 
 
