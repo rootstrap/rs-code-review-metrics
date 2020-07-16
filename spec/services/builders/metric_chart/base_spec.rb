@@ -66,8 +66,8 @@ describe Builders::MetricChart::Base do
   describe 'abstract methods' do
     subject { described_class.send(:new) }
 
-    describe '#entity_type' do
-      it_behaves_like 'abstract method', :entity_type, 0
+    describe '#entities' do
+      it_behaves_like 'abstract method', :entities, 0
     end
 
     describe '#entity_name' do
@@ -84,6 +84,18 @@ describe Builders::MetricChart::Base do
 
     describe '#metric_name' do
       it_behaves_like 'abstract method', :metric_name, 0
+    end
+
+    describe '#metric_interval' do
+      it_behaves_like 'abstract method', :metric_interval, 0
+    end
+
+    describe '#chart_date_format' do
+      it_behaves_like 'abstract method', :chart_date_format, 0
+    end
+
+    describe '#grouping_period' do
+      it_behaves_like 'abstract method', :grouping_period, 0
     end
   end
 end

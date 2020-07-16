@@ -26,7 +26,7 @@ module Processors
     def last_updated_timestamp
       Metric.where(
         name: Metric.names[:open_source_visits],
-        interval: Metric.intervals[:daily],
+        interval: Metric.intervals[:weekly],
         ownable: project
       ).maximum(:value_timestamp) || Time.zone.at(0)
     end
@@ -39,7 +39,7 @@ module Processors
       metric = Metric.find_or_initialize_by(
         ownable: project,
         name: Metric.names[:open_source_visits],
-        interval: Metric.intervals[:daily],
+        interval: Metric.intervals[:weekly],
         value_timestamp: timestamp
       )
       metric.value = views

@@ -2,8 +2,10 @@ module Builders
   module MetricChart
     module Blog
       class Base < Builders::MetricChart::Base
-        def entity_type
-          Technology
+        private
+
+        def entities
+          Technology.all
         end
 
         def entity_name(technology)
@@ -15,7 +17,19 @@ module Builders
         end
 
         def metric_ownable_type
-          entity_type
+          Technology
+        end
+
+        def metric_interval
+          :monthly
+        end
+
+        def chart_date_format
+          '%B %Y'
+        end
+
+        def grouping_period
+          :month
         end
       end
     end
