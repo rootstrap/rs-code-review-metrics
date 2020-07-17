@@ -38,4 +38,36 @@ describe Builders::MetricChart::Blog::TechnologyBlogPostCount do
       expect(described_class.call.datasets).to include(technology_metrics_hash)
     end
   end
+
+  describe 'totals' do
+    context 'when a blog post has more than one technology' do
+      let(:technology_1) { create(:technology) }
+      let(:technology_2) { create(:technology) }
+      let!(:blog_post) { create(:blog_post, technologies: [technology_1, technology_2]) }
+      let(:current_month_key) { Time.zone.now.strftime('%B %Y') }
+
+      before do
+        create(
+          :metric,
+          ownable: technology_1,
+          interval: Metric.intervals[:monthly],
+          name: Metric.names[:blog_post_count],
+          value: 1,
+          value_timestamp: Time.zone.now.end_of_month
+        )
+        create(
+          :metric,
+          ownable: technology_2,
+          interval: Metric.intervals[:monthly],
+          name: Metric.names[:blog_post_count],
+          value: 1,
+          value_timestamp: Time.zone.now.end_of_month
+        )
+      end
+
+      it 'the totals hash only counts the blog post once' do
+        expect(described_class.call.totals[:data][current_month_key]).to eq 1
+      end
+    end
+  end
 end

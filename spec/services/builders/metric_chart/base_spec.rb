@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Builders::MetricChart::Base do
-  subject { Builders::MetricChart::Blog::TechnologyBlogPostCount }
+  subject { Builders::MetricChart::Blog::TechnologyVisits }
 
   describe '.call' do
     describe 'totals' do
@@ -12,7 +12,7 @@ describe Builders::MetricChart::Base do
           :metric,
           ownable: technology_1,
           interval: Metric.intervals[:monthly],
-          name: Metric.names[:blog_post_count],
+          name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
         )
       end
@@ -21,7 +21,7 @@ describe Builders::MetricChart::Base do
           :metric,
           ownable: technology_2,
           interval: Metric.intervals[:monthly],
-          name: Metric.names[:blog_post_count],
+          name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
         )
       end
