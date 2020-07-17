@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Builders::Chartkick::ProjectDistributionData do
   describe '.call' do
     context 'for a given entity' do
-      it_behaves_like 'merge time data distribution'
       let(:range) do
         Time.zone.today.beginning_of_week..Time.zone.today.end_of_week
       end
@@ -20,6 +19,8 @@ RSpec.describe Builders::Chartkick::ProjectDistributionData do
       subject do
         described_class.call(entity_id, query)
       end
+
+      it_behaves_like 'merge time data distribution'
     end
   end
 end
