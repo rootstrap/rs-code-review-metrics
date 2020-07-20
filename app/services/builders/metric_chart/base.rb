@@ -26,7 +26,7 @@ module Builders
       def calculate_totals
         generate_results_for(
           entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: metric_ownable_type.to_s),
+          metrics: Metric.where(ownable_type: metric_totals_ownable_type.to_s),
           hidden: false
         )
       end
@@ -67,7 +67,7 @@ module Builders
         raise NoMethodError
       end
 
-      def metric_ownable_type
+      def metric_totals_ownable_type
         raise NoMethodError
       end
 

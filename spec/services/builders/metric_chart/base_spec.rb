@@ -5,12 +5,12 @@ describe Builders::MetricChart::Base do
 
   describe '.call' do
     describe 'totals' do
-      let(:technology_1) { create(:technology) }
-      let(:technology_2) { create(:technology) }
+      let(:blog_post_1) { create(:blog_post) }
+      let(:blog_post_2) { create(:blog_post) }
       let!(:metric_1) do
         create(
           :metric,
-          ownable: technology_1,
+          ownable: blog_post_1,
           interval: Metric.intervals[:monthly],
           name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
@@ -19,7 +19,7 @@ describe Builders::MetricChart::Base do
       let!(:metric_2) do
         create(
           :metric,
-          ownable: technology_2,
+          ownable: blog_post_2,
           interval: Metric.intervals[:monthly],
           name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
@@ -78,8 +78,8 @@ describe Builders::MetricChart::Base do
       it_behaves_like 'abstract method', :entity_metrics, 1
     end
 
-    describe '#metric_ownable_type' do
-      it_behaves_like 'abstract method', :metric_ownable_type, 0
+    describe '#metric_totals_ownable_type' do
+      it_behaves_like 'abstract method', :metric_totals_ownable_type, 0
     end
 
     describe '#metric_name' do

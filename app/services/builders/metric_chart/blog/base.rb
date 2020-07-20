@@ -16,8 +16,8 @@ module Builders
           technology.metrics
         end
 
-        def metric_ownable_type
-          Technology
+        def metric_totals_ownable_type
+          BlogPost
         end
 
         def metric_interval
