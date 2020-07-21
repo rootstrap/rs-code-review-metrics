@@ -47,7 +47,7 @@ module Events
     validates :state, inclusion: { in: states.keys }
     validates :github_id, :opened_at, presence: true
 
-    after_create :build_review_turnaround
+    after_create :build_review_turnaround, :build_second_review_turnaround
 
     private
 
@@ -55,6 +55,16 @@ module Events
       return unless review_request.reviews.count.equal?(1)
 
       Builders::ReviewTurnaround.call(review_request)
+    end
+
+    def build_second_review_turnaround
+      return unless second_review_with_different_users?
+
+      Builders::SecondReviewTurnaround.call(self)
+    end
+
+    def second_review_with_different_users?
+      pull_request.reviews.select(:owner_id).distinct.count == 2
     end
   end
 end

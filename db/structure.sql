@@ -773,6 +773,38 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: second_review_turnarounds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.second_review_turnarounds (
+    id bigint NOT NULL,
+    review_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: second_review_turnarounds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.second_review_turnarounds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: second_review_turnarounds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.second_review_turnarounds_id_seq OWNED BY public.second_review_turnarounds.id;
+
+
+--
 -- Name: technologies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -994,6 +1026,13 @@ ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.revi
 
 
 --
+-- Name: second_review_turnarounds id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.second_review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.second_review_turnarounds_id_seq'::regclass);
+
+
+--
 -- Name: technologies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1172,6 +1211,14 @@ ALTER TABLE ONLY public.reviews
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: second_review_turnarounds second_review_turnarounds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.second_review_turnarounds
+    ADD CONSTRAINT second_review_turnarounds_pkey PRIMARY KEY (id);
 
 
 --
@@ -1451,6 +1498,13 @@ CREATE INDEX index_reviews_on_state ON public.reviews USING btree (state);
 
 
 --
+-- Name: index_second_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_second_review_turnarounds_on_review_request_id ON public.second_review_turnarounds USING btree (review_request_id);
+
+
+--
 -- Name: index_users_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1493,6 +1547,14 @@ ALTER TABLE ONLY public.blog_posts
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
+-- Name: second_review_turnarounds fk_rails_40a7c83d51; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.second_review_turnarounds
+    ADD CONSTRAINT fk_rails_40a7c83d51 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
 
 
 --
@@ -1708,6 +1770,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200630165139'),
 ('20200701133311'),
 ('20200703141617'),
-('20200713152004');
+('20200713152004'),
+('20200720155715');
 
 

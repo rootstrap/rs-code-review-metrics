@@ -52,29 +52,41 @@ RSpec.describe Events::Review, type: :model do
     end
   end
 
-  describe 'callbacks' do
-    context 'when a review is created' do
-      before { travel_to(Time.zone.today.beginning_of_day) }
-      let(:review_request) { create(:review_request) }
-      let(:review) { create :review, review_request: review_request }
-
-      it 'creates a review turnaround with the correct values' do
+  describe '#build_review_turnaround' do
+    context 'when the count of reviews is one' do
+      let(:review) { create :review }
+      it 'builds the review turnaround' do
+        expect(Builders::ReviewTurnaround). to receive(:call)
         review
-        review_turnaround = ReviewTurnaround.last
-        expect(review_turnaround[:value]).to eq(0)
-        expect(review_turnaround[:review_request_id]).to eq(review_request.id)
       end
+    end
+  end
 
-      it 'creates a review turnaround' do
-        expect { review }.to change { ReviewTurnaround.count }.from(0).to(1)
-      end
+  describe '#build_second_review_turnaround' do
+    let(:project) { create(:project, language: Language.first) }
+    let(:vita) { create(:user, login: 'santiagovidal') }
+    let(:santib) { create(:user, login: 'santib') }
+    let(:hernan) { create(:user, login: 'hdamico') }
+    let(:pr) { create(:pull_request, owner: vita, project: project) }
 
-      context 'when there is more than one review in a review request' do
-        let!(:second_review) { create :review, review_request: review_request }
+    let(:rr) do
+      create(:review_request, owner: vita, reviewer: santib, project: project, pull_request: pr)
+    end
+    let!(:review) do
+      create(:review, owner: santib, project: project, pull_request: pr, review_request: rr)
+    end
 
-        it 'does not create review turnaround' do
-          expect { review }.to_not change { ReviewTurnaround.count }
-        end
+    let(:second_rr) do
+      create(:review_request, owner: vita, reviewer: hernan, project: project, pull_request: pr)
+    end
+    let(:second_review) do
+      create(:review, owner: hernan, project: project, pull_request: pr, review_request: second_rr)
+    end
+    context 'only when is the second review for different users' do
+      it 'builds the second review turnaround' do
+        expect(Builders::SecondReviewTurnaround)
+          .to receive(:call)
+        second_review
       end
     end
   end

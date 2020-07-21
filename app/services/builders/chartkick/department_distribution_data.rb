@@ -16,9 +16,9 @@ module Builders
       end
 
       def review_turnarounds
-        ::ReviewTurnaround.joins(review_request: { project: { language: :department } })
-                          .where(departments: { id: @entity_id })
-                          .where(created_at: @query[:value_timestamp])
+        ::SecondReviewTurnaround.joins(review_request: { project: { language: :department } })
+                                .where(departments: { id: @entity_id })
+                                .where(created_at: @query[:value_timestamp])
       end
 
       def merge_times

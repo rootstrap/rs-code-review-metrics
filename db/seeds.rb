@@ -74,5 +74,16 @@ if Rails.env.development?
 
     User.first(3).each { |user| CodeOwnerProject.create!(user: user, project: project) }
 
+    # Review turnaround and Second review turnaround
+    santiagovidal = User.find_by(login: 'santiagovidal')
+    santib = User.find_by(login: 'santib')
+    hernan = User.find_by(login: 'hdamico')
+
+    vita_pr = FactoryBot.create(:pull_request, owner: santiagovidal, project: project)
+    vita_rr_santib = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: santib)
+    FactoryBot.create(:review, owner: santib, project: project, pull_request: vita_pr, review_request: vita_rr_santib)
+
+    vita_rr_hernan = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: hernan)
+    FactoryBot.create(:review, owner: hernan, project: project, pull_request: vita_pr, review_request: vita_rr_hernan)
   end
 end
