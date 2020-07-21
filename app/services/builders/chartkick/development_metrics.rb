@@ -26,7 +26,7 @@ module Builders
         def metric_data(metric_name)
           Builders::Chartkick::MetricData.call(
             @entity_id,
-            %w[project users_project],
+            %w[project users_project project_distribution],
             metric_name,
             @period
           )
