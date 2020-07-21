@@ -8,7 +8,7 @@ RSpec.describe Builders::Chartkick::ProjectDistributionData do
       end
 
       let(:department) { Department.first }
-      let(:project) { create :project, language: department.languages.first }
+      let(:project) { create(:project, language: department.languages.first) }
       let(:entity_id) { project.id }
       let(:values) { [2, 13, 25, 37, 49, 61, 73] }
 
