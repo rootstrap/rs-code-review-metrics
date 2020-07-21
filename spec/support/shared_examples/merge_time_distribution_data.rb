@@ -8,7 +8,7 @@ RSpec.shared_examples 'merge time data distribution' do
   context 'when name is merge time' do
     before do
       values.each do |value|
-        pull_request = create :pull_request, project: project
+        pull_request = create(:pull_request, project: project)
         create(:merge_time, pull_request: pull_request, value: value)
       end
       query.merge!(name: :merge_time)
@@ -23,7 +23,7 @@ RSpec.shared_examples 'merge time data distribution' do
     end
 
     it 'returns an array with filled value' do
-      expect(subject.first[:data].empty?).to be false
+      expect(subject.first[:data]).not_to be_empty
     end
   end
 end
