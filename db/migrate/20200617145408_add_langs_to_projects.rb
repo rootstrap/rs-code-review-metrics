@@ -1,4 +1,6 @@
 class AddLangsToProjects < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+
   def up
     execute <<-SQL
       ALTER TYPE lang ADD VALUE 'vuejs';

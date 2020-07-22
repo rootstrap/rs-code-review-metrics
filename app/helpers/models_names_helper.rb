@@ -10,4 +10,8 @@ module ModelsNamesHelper
   def all_departments_names
     Department.pluck(:name).sort
   end
+
+  def all_languages_names(department)
+    department.languages.pluck(:name)
+  end
 end

@@ -39,4 +39,12 @@ RSpec.describe ModelsNamesHelper, type: :helper do
       expect(helper.all_departments_names.size).to eq(size_of_models_to_create)
     end
   end
+
+  describe '.all_languages_names' do
+    let(:department) { Department.first }
+
+    it 'returns a collection of [name, id] to use in a drop down list' do
+      expect(helper.all_languages_names(department)).to eq(%w[ruby nodejs python])
+    end
+  end
 end

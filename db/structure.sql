@@ -207,6 +207,38 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: blog_post_technologies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_post_technologies (
+    id bigint NOT NULL,
+    blog_post_id bigint NOT NULL,
+    technology_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_post_technologies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_post_technologies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_post_technologies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_post_technologies_id_seq OWNED BY public.blog_post_technologies.id;
+
+
+--
 -- Name: blog_posts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -308,6 +340,38 @@ CREATE SEQUENCE public.code_owner_projects_id_seq
 --
 
 ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_projects.id;
+
+
+--
+-- Name: completed_review_turnarounds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.completed_review_turnarounds (
+    id bigint NOT NULL,
+    review_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: completed_review_turnarounds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.completed_review_turnarounds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: completed_review_turnarounds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.completed_review_turnarounds_id_seq OWNED BY public.completed_review_turnarounds.id;
 
 
 --
@@ -475,6 +539,38 @@ CREATE SEQUENCE public.languages_id_seq
 --
 
 ALTER SEQUENCE public.languages_id_seq OWNED BY public.languages.id;
+
+
+--
+-- Name: merge_times; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.merge_times (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: merge_times_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.merge_times_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: merge_times_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.merge_times_id_seq OWNED BY public.merge_times.id;
 
 
 --
@@ -850,6 +946,13 @@ ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: blog_post_technologies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies ALTER COLUMN id SET DEFAULT nextval('public.blog_post_technologies_id_seq'::regclass);
+
+
+--
 -- Name: blog_posts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -868,6 +971,13 @@ ALTER TABLE ONLY public.code_climate_project_metrics ALTER COLUMN id SET DEFAULT
 --
 
 ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval('public.code_owner_projects_id_seq'::regclass);
+
+
+--
+-- Name: completed_review_turnarounds id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.completed_review_turnarounds_id_seq'::regclass);
 
 
 --
@@ -903,6 +1013,13 @@ ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.languages ALTER COLUMN id SET DEFAULT nextval('public.languages_id_seq'::regclass);
+
+
+--
+-- Name: merge_times id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times ALTER COLUMN id SET DEFAULT nextval('public.merge_times_id_seq'::regclass);
 
 
 --
@@ -1000,6 +1117,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: blog_post_technologies blog_post_technologies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT blog_post_technologies_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: blog_posts blog_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1021,6 +1146,14 @@ ALTER TABLE ONLY public.code_climate_project_metrics
 
 ALTER TABLE ONLY public.code_owner_projects
     ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: completed_review_turnarounds completed_review_turnarounds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds
+    ADD CONSTRAINT completed_review_turnarounds_pkey PRIMARY KEY (id);
 
 
 --
@@ -1061,6 +1194,14 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 ALTER TABLE ONLY public.languages
     ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: merge_times merge_times_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times
+    ADD CONSTRAINT merge_times_pkey PRIMARY KEY (id);
 
 
 --
@@ -1187,6 +1328,20 @@ CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_us
 
 
 --
+-- Name: index_blog_post_technologies_on_blog_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_post_technologies_on_blog_post_id ON public.blog_post_technologies USING btree (blog_post_id);
+
+
+--
+-- Name: index_blog_post_technologies_on_technology_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_technologies USING btree (technology_id);
+
+
+--
 -- Name: index_blog_posts_on_technology_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1212,6 +1367,13 @@ CREATE INDEX index_code_owner_projects_on_project_id ON public.code_owner_projec
 --
 
 CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects USING btree (user_id);
+
+
+--
+-- Name: index_completed_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_completed_review_turnarounds_on_review_request_id ON public.completed_review_turnarounds USING btree (review_request_id);
 
 
 --
@@ -1254,6 +1416,13 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 --
 
 CREATE INDEX index_languages_on_department_id ON public.languages USING btree (department_id);
+
+
+--
+-- Name: index_merge_times_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_merge_times_on_pull_request_id ON public.merge_times USING btree (pull_request_id);
 
 
 --
@@ -1426,6 +1595,14 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
+-- Name: completed_review_turnarounds fk_rails_07677ca690; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds
+    ADD CONSTRAINT fk_rails_07677ca690 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
 -- Name: blog_posts fk_rails_24521f9a19; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1434,11 +1611,27 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
+-- Name: blog_post_technologies fk_rails_2b02d61b04; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT fk_rails_2b02d61b04 FOREIGN KEY (blog_post_id) REFERENCES public.blog_posts(id);
+
+
+--
 -- Name: review_turnarounds fk_rails_33c3053604; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
+-- Name: blog_post_technologies fk_rails_47acaaf20e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT fk_rails_47acaaf20e FOREIGN KEY (technology_id) REFERENCES public.technologies(id);
 
 
 --
@@ -1546,6 +1739,14 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 
 --
+-- Name: merge_times fk_rails_f002296adb; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.merge_times
+    ADD CONSTRAINT fk_rails_f002296adb FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+
+
+--
 -- Name: review_requests fk_rails_feb865e207; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1645,6 +1846,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200625144922'),
 ('20200630165139'),
 ('20200701133311'),
-('20200703141617');
+('20200703141617'),
+('20200713152004'),
+('20200714160138'),
+('20200720155715');
 
 

@@ -1,27 +1,27 @@
 require 'rails_helper'
 
 describe Builders::MetricChart::Base do
-  subject { Builders::MetricChart::Blog::TechnologyBlogPostCount }
+  subject { Builders::MetricChart::Blog::TechnologyVisits }
 
   describe '.call' do
     describe 'totals' do
-      let(:technology_1) { create(:technology) }
-      let(:technology_2) { create(:technology) }
+      let(:blog_post_1) { create(:blog_post) }
+      let(:blog_post_2) { create(:blog_post) }
       let!(:metric_1) do
         create(
           :metric,
-          ownable: technology_1,
+          ownable: blog_post_1,
           interval: Metric.intervals[:monthly],
-          name: Metric.names[:blog_post_count],
+          name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
         )
       end
       let!(:metric_2) do
         create(
           :metric,
-          ownable: technology_2,
+          ownable: blog_post_2,
           interval: Metric.intervals[:monthly],
-          name: Metric.names[:blog_post_count],
+          name: Metric.names[:blog_visits],
           value_timestamp: Time.zone.now.end_of_month
         )
       end
@@ -66,8 +66,8 @@ describe Builders::MetricChart::Base do
   describe 'abstract methods' do
     subject { described_class.send(:new) }
 
-    describe '#entity_type' do
-      it_behaves_like 'abstract method', :entity_type, 0
+    describe '#entities' do
+      it_behaves_like 'abstract method', :entities, 0
     end
 
     describe '#entity_name' do
@@ -78,12 +78,24 @@ describe Builders::MetricChart::Base do
       it_behaves_like 'abstract method', :entity_metrics, 1
     end
 
-    describe '#metric_ownable_type' do
-      it_behaves_like 'abstract method', :metric_ownable_type, 0
+    describe '#metric_totals_ownable_type' do
+      it_behaves_like 'abstract method', :metric_totals_ownable_type, 0
     end
 
     describe '#metric_name' do
       it_behaves_like 'abstract method', :metric_name, 0
+    end
+
+    describe '#metric_interval' do
+      it_behaves_like 'abstract method', :metric_interval, 0
+    end
+
+    describe '#chart_date_format' do
+      it_behaves_like 'abstract method', :chart_date_format, 0
+    end
+
+    describe '#grouping_period' do
+      it_behaves_like 'abstract method', :grouping_period, 0
     end
   end
 end

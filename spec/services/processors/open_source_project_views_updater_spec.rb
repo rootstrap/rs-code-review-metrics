@@ -14,23 +14,23 @@ RSpec.describe Processors::OpenSourceProjectViewsUpdater do
         .to change {
           Metric.where(
             name: Metric.names[:open_source_visits],
-            interval: Metric.intervals[:daily]
+            interval: Metric.intervals[:weekly]
           ).count
         }
         .by(repository_views_payload['views'].count)
     end
 
-    context 'when the project has already some views metrics' do
+    context 'when the project already has some views metrics' do
       let(:old_views) { 3 }
-      let(:today_views_payload) { repository_views_payload['views'].last }
-      let(:today_timestamp) { today_views_payload['timestamp'] }
-      let(:new_views) { today_views_payload['uniques'] }
-      let(:today_metric) do
+      let(:this_week_views_payload) { repository_views_payload['views'].last }
+      let(:this_week_timestamp) { this_week_views_payload['timestamp'] }
+      let(:new_views) { this_week_views_payload['uniques'] }
+      let(:this_week_metric) do
         Metric.find_by(
           name: Metric.names[:open_source_visits],
-          interval: Metric.intervals[:daily],
+          interval: Metric.intervals[:weekly],
           ownable: project,
-          value_timestamp: today_timestamp
+          value_timestamp: this_week_timestamp
         )
       end
 
@@ -38,7 +38,7 @@ RSpec.describe Processors::OpenSourceProjectViewsUpdater do
         repository_views_payload['views'].each do |views_payload|
           Metric.create(
             name: Metric.names[:open_source_visits],
-            interval: Metric.intervals[:daily],
+            interval: Metric.intervals[:weekly],
             ownable: project,
             value: old_views,
             value_timestamp: views_payload['timestamp']
@@ -48,7 +48,7 @@ RSpec.describe Processors::OpenSourceProjectViewsUpdater do
 
       it 'updates the last metric value' do
         expect { described_class.call(project) }
-          .to change { today_metric.reload.value }
+          .to change { this_week_metric.reload.value }
           .from(old_views)
           .to(new_views)
       end

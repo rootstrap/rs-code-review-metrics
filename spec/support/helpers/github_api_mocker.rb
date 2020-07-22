@@ -19,7 +19,7 @@ module GithubApiMock
     url = "#{GithubRepositoryClient::URL}/#{project_name}/traffic/views"
 
     stub_request(:get, url)
-      .with(basic_auth: [github_admin_user, github_admin_token])
+      .with(basic_auth: [github_admin_user, github_admin_token], query: { per: 'week' })
       .to_return(body: JSON.generate(repository_views_payload), status: 200)
   end
 

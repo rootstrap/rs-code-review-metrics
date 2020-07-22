@@ -2,8 +2,15 @@ module Builders
   module MetricChart
     module OpenSource
       class Base < Builders::MetricChart::Base
-        def entity_type
-          Language
+        def initialize(periods = 24)
+          Groupdate.week_start = :monday
+          super(periods)
+        end
+
+        private
+
+        def entities
+          Language.where.not(name: 'unassigned')
         end
 
         def entity_name(language)
@@ -14,8 +21,20 @@ module Builders
           language.projects_metrics
         end
 
-        def metric_ownable_type
+        def metric_totals_ownable_type
           ::Project
+        end
+
+        def metric_interval
+          :weekly
+        end
+
+        def chart_date_format
+          '%Y-%m-%d'
+        end
+
+        def grouping_period
+          :week
         end
       end
     end

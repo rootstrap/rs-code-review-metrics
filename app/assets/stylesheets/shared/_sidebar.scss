@@ -1,5 +1,5 @@
 .project-selection {
-  @include flex-column-select;
+  @include centered-flex-columns;
 }
 .entity-btn {
   border-radius: 0px;
@@ -16,5 +16,5 @@
 }
 
 .user-selection{
-  @include flex-column-select;
+  @include centered-flex-columns;
 }

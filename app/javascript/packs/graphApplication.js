@@ -9,4 +9,4 @@ document.addEventListener('turbolinks:load', () => {
   handleChangeSidebar();
   handleChangeUser();
   disablePeriod();
-})
+});

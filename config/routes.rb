@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       get 'projects'
       get 'departments'
       get 'users'
+      namespace :code_climate do
+        resources :departments, only: :show, param: :department_name
+      end
     end
   end
   get '/development_metrics', to: 'development_metrics#index'

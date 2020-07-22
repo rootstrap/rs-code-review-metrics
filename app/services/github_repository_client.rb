@@ -15,7 +15,7 @@ class GithubRepositoryClient
     connection = Faraday.new(url: "#{URL}/#{@project_name}/traffic/views") do |conn|
       conn.basic_auth(ENV['GITHUB_ADMIN_USER'], ENV['GITHUB_ADMIN_TOKEN'])
     end
-    response = connection.get
+    response = connection.get { |request| request.params['per'] = 'week' }
     JSON.parse(response.body).with_indifferent_access
   end
 end

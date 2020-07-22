@@ -9,21 +9,17 @@ module CodeClimate
     end
 
     def call
-      build_summary
-    end
-
-    private
-
-    def build_summary
       return ProjectsSummary.new unless metrics?
 
       ProjectsSummary.new(
         invalid_issues_count_average: invalid_issues_count_average,
-        wontfix_issues_count_average: wont_fix_issues_count_average,
+        wont_fix_issues_count_average: wont_fix_issues_count_average,
         open_issues_count_average: open_issues_count_average,
         ratings: ratings
       )
     end
+
+    private
 
     def metrics?
       !code_climate_metrics.empty?

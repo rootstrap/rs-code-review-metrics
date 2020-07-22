@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe CodeClimate::UpdateProjectService do
   subject { CodeClimate::UpdateProjectService }
 

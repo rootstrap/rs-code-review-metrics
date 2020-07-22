@@ -46,6 +46,7 @@ script:
   - bundle exec rails webpacker:compile
   - bundle exec rspec
   - bundle exec rake code_analysis
+  - yarn run lint
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

@@ -3,8 +3,8 @@ require 'rails_helper'
 describe Processors::BlogMetricsUpdater do
   describe '.call' do
     let!(:technology) { create(:technology) }
-    let(:blog_post_1) { create(:blog_post, technology: technology) }
-    let(:blog_post_2) { create(:blog_post, technology: technology) }
+    let(:blog_post_1) { create(:blog_post, technologies: [technology]) }
+    let(:blog_post_2) { create(:blog_post, technologies: [technology]) }
     let(:blog_post_views_payload_1) { create(:blog_post_views_payload) }
     let(:blog_post_views_payload_2) { create(:blog_post_views_payload) }
     let(:blog_post_1_month_count) { months_count_for(blog_post_views_payload_1) }

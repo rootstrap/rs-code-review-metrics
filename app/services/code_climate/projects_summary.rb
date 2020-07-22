@@ -1,18 +1,18 @@
 module CodeClimate
   class ProjectsSummary
     attr_reader :invalid_issues_count_average,
-                :wontfix_issues_count_average,
+                :wont_fix_issues_count_average,
                 :open_issues_count_average,
                 :ratings
 
     def initialize(
       invalid_issues_count_average: nil,
-      wontfix_issues_count_average: nil,
+      wont_fix_issues_count_average: nil,
       open_issues_count_average: nil,
       ratings: {}
     )
       @invalid_issues_count_average = invalid_issues_count_average
-      @wontfix_issues_count_average = wontfix_issues_count_average
+      @wont_fix_issues_count_average = wont_fix_issues_count_average
       @open_issues_count_average = open_issues_count_average
       @ratings = ratings
     end
@@ -22,9 +22,9 @@ module CodeClimate
     end
 
     def each_project_rate(&block)
-      ratings.each_pair(&block)
+      @ratings.each_pair(&block)
     end
 
-    delegate :empty?, to: :ratings
+    delegate :empty?, to: :@ratings
   end
 end

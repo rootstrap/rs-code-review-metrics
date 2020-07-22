@@ -8,7 +8,7 @@ module Processors
         blog_post.slug = blog_post_payload[:slug]
         blog_post.status = blog_post_payload[:status]
         blog_post.url = blog_post_payload[:URL]
-        blog_post.technology = technology_for(blog_post_id)
+        blog_post.technologies = technologies_for(blog_post_id)
 
         blog_post.save!
       end
@@ -24,9 +24,9 @@ module Processors
       @categorizer ||= BlogPostCategorizer.new
     end
 
-    def technology_for(blog_post_id)
+    def technologies_for(blog_post_id)
       blog_post_payload = wordpress_service.blog_post(blog_post_id)
-      categorizer.technology_for(blog_post_payload)
+      categorizer.technologies_for(blog_post_payload)
     end
   end
 end

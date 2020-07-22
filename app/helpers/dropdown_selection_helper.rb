@@ -1,9 +1,9 @@
 module DropdownSelectionHelper
-  def value_from_user_param
+  def chosen_user
     params.dig(:id) || 0
   end
 
-  def value_from_period_param
+  def chosen_period
     params.dig(:metric, :period) || 4
   end
 end

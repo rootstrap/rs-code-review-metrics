@@ -16,31 +16,32 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
         { value_timestamp: range }
       end
 
-      before do
-        values.each do |value|
-          review_request = create :review_request, project: project
-          create(:review_turnaround, review_request: review_request, value: value)
-        end
-      end
-
       subject do
         described_class.call(entity_id, query)
       end
 
-      it 'returns an array' do
-        expect(subject).to be_an(Array)
-      end
+      it_behaves_like 'merge time data distribution'
 
-      it 'returns an array with name key' do
-        expect(subject.first).to have_key(:name)
-      end
+      context 'when name is review turnaround' do
+        before do
+          values.each do |value|
+            review_request = create :review_request, project: project
+            create(:completed_review_turnaround, review_request: review_request, value: value)
+          end
+          query.merge!(name: :review_turnaround)
+        end
 
-      it 'returns an array with name data' do
-        expect(subject.first).to have_key(:data)
-      end
+        it 'returns an array with name key' do
+          expect(subject.first).to have_key(:name)
+        end
 
-      it 'returns an array with filled value' do
-        expect(subject.first[:data].empty?).to be false
+        it 'returns an array with name data' do
+          expect(subject.first).to have_key(:data)
+        end
+
+        it 'returns an array with filled value' do
+          expect(subject.first[:data].empty?).to be false
+        end
       end
     end
   end

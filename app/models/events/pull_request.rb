@@ -58,8 +58,12 @@ module Events
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true
 
-    ##
-    # Returns the number of reviews this pull_request has
-    delegate :count, to: :reviews, prefix: true
+    after_validation :build_merge_time, on: :update, if: :merged_at_changed?
+
+    private
+
+    def build_merge_time
+      Builders::MergeTime.call(self)
+    end
   end
 end

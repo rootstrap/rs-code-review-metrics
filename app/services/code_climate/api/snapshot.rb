@@ -12,9 +12,7 @@ module CodeClimate
         return unless issues
 
         ProjectSummary.new(rate: ratings.first,
-                           invalid_issues_count: invalid_issues_count,
-                           open_issues_count: open_issues_count,
-                           wont_fix_issues_count: wont_fix_issues_count,
+                           issues: issues_collection,
                            snapshot_time: snapshot_time)
       end
 
@@ -35,6 +33,14 @@ module CodeClimate
 
       def issues
         @issues || api_client.snapshot_issues(repo_id: repo_id, snapshot_id: snapshot_id)
+      end
+
+      def issues_collection
+        {
+          invalid_issues_count: invalid_issues_count,
+          open_issues_count: open_issues_count,
+          wont_fix_issues_count: wont_fix_issues_count
+        }
       end
 
       def invalid_issues_count

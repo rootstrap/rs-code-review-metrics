@@ -1,11 +1,12 @@
 .period-input {
   @include flex-row-start;
+  align-items: baseline;
 }
 
 .period-selection{
-  label.numeric{
-    width: 13rem;
-  }
+  display: flex;
+  align-items: baseline;
+
   input.numeric{
     margin: 0 0.2rem;
   }
