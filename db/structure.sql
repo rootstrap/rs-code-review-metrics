@@ -620,8 +620,8 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    is_private boolean,
-    language_id bigint
+    language_id bigint,
+    is_private boolean
 );
 
 
@@ -1848,4 +1848,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200701133311'),
 ('20200703141617'),
 ('20200713152004'),
+('20200714160138'),
 ('20200720155715');
+
+
