@@ -19,8 +19,8 @@
 
 require 'rails_helper'
 
-RSpec.describe SecondReviewTurnaround, type: :model do
-  subject { build :second_review_turnaround }
+RSpec.describe CompletedReviewTurnaround, type: :model do
+  subject { build :completed_review_turnaround }
 
   context 'validations' do
     it 'is valid with valid attributes' do

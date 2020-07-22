@@ -2,29 +2,31 @@ require 'rails_helper'
 
 RSpec.describe Builders::ReviewTurnaround do
   describe '.call' do
-    context 'when a review is created' do
-      before { travel_to(Time.zone.today.beginning_of_day) }
-      let(:review_request) { create(:review_request) }
-      let(:review) { create :review, review_request: review_request }
+    let(:project) { create(:project, language: Language.first) }
+    let(:vita) { create(:user, login: 'santiagovidal') }
+    let(:santib) { create(:user, login: 'santib') }
+    let(:pr) { create(:pull_request, owner: vita, project: project) }
 
-      it 'creates a review turnaround with the correct values' do
-        review
-        review_turnaround = ReviewTurnaround.last
-        expect(review_turnaround[:value]).to eq(0)
-        expect(review_turnaround[:review_request_id]).to eq(review_request.id)
-      end
+    let(:rr) do
+      create(:review_request, owner: vita, reviewer: santib, project: project, pull_request: pr)
+    end
 
-      it 'creates a review turnaround' do
-        expect { review }.to change { ReviewTurnaround.count }.from(0).to(1)
-      end
+    before(:all) { Events::Review.skip_callback(:create, :after, :build_review_turnaround) }
 
-      context 'when there is more than one review in a review request' do
-        let!(:second_review) { create :review, review_request: review_request }
+    let!(:review) do
+      create(:review, owner: santib, project: project, pull_request: pr, review_request: rr)
+    end
 
-        it 'does not create review turnaround' do
-          expect { review }.to_not change { ReviewTurnaround.count }
-        end
-      end
+    let(:correct_value) do
+      review.opened_at.to_i - rr.created_at.to_i
+    end
+
+    it 'returns the correct value for the review in seconds' do
+      expect(described_class.call(rr).value).to eq(correct_value)
+    end
+
+    it 'returns the correct value for the review in seconds' do
+      expect(described_class.call(rr)).to be_an(ReviewTurnaround)
     end
   end
 end

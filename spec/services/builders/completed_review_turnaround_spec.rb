@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Builders::SecondReviewTurnaround do
+RSpec.describe Builders::CompletedReviewTurnaround do
   describe '.call' do
     let(:project) { create(:project, language: Language.first) }
     let(:vita) { create(:user, login: 'santiagovidal') }
@@ -18,8 +18,8 @@ RSpec.describe Builders::SecondReviewTurnaround do
       review.opened_at.to_i - pr.opened_at.to_i
     end
 
-    it 'returns the second review turnaround created' do
-      expect(described_class.call(review)).to be_an(SecondReviewTurnaround)
+    it 'returns the completed review turnaround created' do
+      expect(described_class.call(review)).to be_an(CompletedReviewTurnaround)
     end
 
     it 'returns the correct value for the review in seconds' do

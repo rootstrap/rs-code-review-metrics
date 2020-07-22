@@ -18,7 +18,7 @@
 #
 
 FactoryBot.define do
-  factory :second_review_turnaround do
+  factory :completed_review_turnaround do
     value { Faker::Number.number(digits: 4) }
 
     association :review_request

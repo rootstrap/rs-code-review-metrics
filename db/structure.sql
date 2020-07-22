@@ -311,6 +311,38 @@ ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_proj
 
 
 --
+-- Name: completed_review_turnarounds; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.completed_review_turnarounds (
+    id bigint NOT NULL,
+    review_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: completed_review_turnarounds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.completed_review_turnarounds_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: completed_review_turnarounds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.completed_review_turnarounds_id_seq OWNED BY public.completed_review_turnarounds.id;
+
+
+--
 -- Name: departments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -773,38 +805,6 @@ CREATE TABLE public.schema_migrations (
 
 
 --
--- Name: second_review_turnarounds; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.second_review_turnarounds (
-    id bigint NOT NULL,
-    review_request_id bigint NOT NULL,
-    value integer,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: second_review_turnarounds_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.second_review_turnarounds_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: second_review_turnarounds_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.second_review_turnarounds_id_seq OWNED BY public.second_review_turnarounds.id;
-
-
---
 -- Name: technologies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -935,6 +935,13 @@ ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: completed_review_turnarounds id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.completed_review_turnarounds_id_seq'::regclass);
+
+
+--
 -- Name: departments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1026,13 +1033,6 @@ ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.revi
 
 
 --
--- Name: second_review_turnarounds id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.second_review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.second_review_turnarounds_id_seq'::regclass);
-
-
---
 -- Name: technologies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1099,6 +1099,14 @@ ALTER TABLE ONLY public.code_climate_project_metrics
 
 ALTER TABLE ONLY public.code_owner_projects
     ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: completed_review_turnarounds completed_review_turnarounds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds
+    ADD CONSTRAINT completed_review_turnarounds_pkey PRIMARY KEY (id);
 
 
 --
@@ -1214,14 +1222,6 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: second_review_turnarounds second_review_turnarounds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.second_review_turnarounds
-    ADD CONSTRAINT second_review_turnarounds_pkey PRIMARY KEY (id);
-
-
---
 -- Name: technologies technologies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1306,6 +1306,13 @@ CREATE INDEX index_code_owner_projects_on_project_id ON public.code_owner_projec
 --
 
 CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects USING btree (user_id);
+
+
+--
+-- Name: index_completed_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_completed_review_turnarounds_on_review_request_id ON public.completed_review_turnarounds USING btree (review_request_id);
 
 
 --
@@ -1498,13 +1505,6 @@ CREATE INDEX index_reviews_on_state ON public.reviews USING btree (state);
 
 
 --
--- Name: index_second_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_second_review_turnarounds_on_review_request_id ON public.second_review_turnarounds USING btree (review_request_id);
-
-
---
 -- Name: index_users_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1534,6 +1534,14 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
+-- Name: completed_review_turnarounds fk_rails_07677ca690; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds
+    ADD CONSTRAINT fk_rails_07677ca690 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
 -- Name: blog_posts fk_rails_24521f9a19; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1547,14 +1555,6 @@ ALTER TABLE ONLY public.blog_posts
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
-
-
---
--- Name: second_review_turnarounds fk_rails_40a7c83d51; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.second_review_turnarounds
-    ADD CONSTRAINT fk_rails_40a7c83d51 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
 
 
 --
