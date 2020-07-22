@@ -5,7 +5,9 @@ describe Processors::BlogPostCountMetricsFullUpdater do
     context 'when there are already metrics generated' do
       let(:publish_date) { Time.zone.now.last_month }
       let(:technology) { create(:technology) }
-      let!(:blog_post) { create(:blog_post, published_at: publish_date, technology: technology) }
+      let!(:blog_post) do
+        create(:blog_post, published_at: publish_date, technologies: [technology])
+      end
 
       before do
         create(

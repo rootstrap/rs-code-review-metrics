@@ -4,7 +4,7 @@ describe Processors::BlogTechnologyViewsFullUpdater do
   describe '.call' do
     let!(:technology) { create(:technology) }
     let(:metric_timestamp) { Time.zone.now.end_of_month }
-    let(:blog_post) { create(:blog_post, technology: technology) }
+    let(:blog_post) { create(:blog_post, technologies: [technology]) }
     let!(:blog_post_views_metric) do
       create(
         :metric,

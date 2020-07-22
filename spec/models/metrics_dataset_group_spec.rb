@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe MetricsDatasetGroup do
   let(:technology) { create(:technology) }
-  let!(:blog_post) { create(:blog_post, published_at: Time.zone.now, technology: technology) }
+  let!(:blog_post) { create(:blog_post, published_at: Time.zone.now, technologies: [technology]) }
   let!(:this_month_post_count_metric) do
     create(
       :metric,
