@@ -31,7 +31,8 @@ class BlogPost < ApplicationRecord
     auto_draft: 'auto-draft'
   }
 
-  belongs_to :technology
+  has_many :blog_post_technologies, dependent: :destroy
+  has_many :technologies, through: :blog_post_technologies
 
   validates :blog_id, uniqueness: true
   validates :status, inclusion: { in: statuses.keys }

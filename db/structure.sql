@@ -207,6 +207,38 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: blog_post_technologies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.blog_post_technologies (
+    id bigint NOT NULL,
+    blog_post_id bigint NOT NULL,
+    technology_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: blog_post_technologies_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.blog_post_technologies_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blog_post_technologies_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.blog_post_technologies_id_seq OWNED BY public.blog_post_technologies.id;
+
+
+--
 -- Name: blog_posts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -556,8 +588,8 @@ CREATE TABLE public.projects (
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    language_id bigint,
-    is_private boolean
+    is_private boolean,
+    language_id bigint
 );
 
 
@@ -882,6 +914,13 @@ ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: blog_post_technologies id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies ALTER COLUMN id SET DEFAULT nextval('public.blog_post_technologies_id_seq'::regclass);
+
+
+--
 -- Name: blog_posts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1036,6 +1075,14 @@ ALTER TABLE ONLY public.admin_users
 
 ALTER TABLE ONLY public.ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: blog_post_technologies blog_post_technologies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT blog_post_technologies_pkey PRIMARY KEY (id);
 
 
 --
@@ -1231,6 +1278,20 @@ CREATE UNIQUE INDEX index_admin_users_on_email ON public.admin_users USING btree
 --
 
 CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_users USING btree (reset_password_token);
+
+
+--
+-- Name: index_blog_post_technologies_on_blog_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_post_technologies_on_blog_post_id ON public.blog_post_technologies USING btree (blog_post_id);
+
+
+--
+-- Name: index_blog_post_technologies_on_technology_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_technologies USING btree (technology_id);
 
 
 --
@@ -1488,11 +1549,27 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
+-- Name: blog_post_technologies fk_rails_2b02d61b04; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT fk_rails_2b02d61b04 FOREIGN KEY (blog_post_id) REFERENCES public.blog_posts(id);
+
+
+--
 -- Name: review_turnarounds fk_rails_33c3053604; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
+-- Name: blog_post_technologies fk_rails_47acaaf20e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.blog_post_technologies
+    ADD CONSTRAINT fk_rails_47acaaf20e FOREIGN KEY (technology_id) REFERENCES public.technologies(id);
 
 
 --
@@ -1708,6 +1785,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200630165139'),
 ('20200701133311'),
 ('20200703141617'),
-('20200713152004');
+('20200713152004'),
+('20200714160138');
 
 
