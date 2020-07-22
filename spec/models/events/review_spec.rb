@@ -119,7 +119,7 @@ RSpec.describe Events::Review, type: :model do
 
       context 'when a different user make the second review' do
         it 'builds the complete review turnaround' do
-          expect { second_review }.to change{ CompletedReviewTurnaround.count}.by(1)
+          expect { second_review }.to change { CompletedReviewTurnaround.count }.by(1)
         end
       end
 
@@ -127,7 +127,7 @@ RSpec.describe Events::Review, type: :model do
         before { second_review }
 
         it 'does not build the completd review turnaround' do
-          expect { third_review }.not_to change{ CompletedReviewTurnaround.count}
+          expect { third_review }.not_to change { CompletedReviewTurnaround.count }
         end
       end
     end
