@@ -12,7 +12,9 @@ module Processors
     def blog_views_by_technology_and_month
       metrics_by_timestamp
         .where(name: Metric.names[:blog_visits], ownable_type: BlogPost.name)
-        .joins('JOIN blog_posts on metrics.ownable_id = blog_posts.id')
+        .joins(
+          'JOIN blog_post_technologies on metrics.ownable_id = blog_post_technologies.blog_post_id'
+        )
         .group(:value_timestamp, :technology_id)
         .sum(:value)
     end

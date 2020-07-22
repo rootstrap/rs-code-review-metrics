@@ -4,7 +4,7 @@ describe Processors::BlogPostCountMetricsPartialUpdater do
   describe '.call' do
     let(:publish_date) { Time.zone.now.last_month }
     let(:technology) { create(:technology) }
-    let!(:blog_post) { create(:blog_post, published_at: publish_date, technology: technology) }
+    let!(:blog_post) { create(:blog_post, published_at: publish_date, technologies: [technology]) }
 
     context 'when there are no metrics generated' do
       it 'generates all of them' do

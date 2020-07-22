@@ -4,7 +4,7 @@ RSpec.describe Processors::BlogTechnologyViewsUpdater do
   describe '.call' do
     let!(:technology) { create(:technology) }
     let(:metric_timestamp) { Time.zone.now.end_of_month }
-    let(:blog_post_1) { create(:blog_post, technology: technology) }
+    let(:blog_post_1) { create(:blog_post, technologies: [technology]) }
     let!(:blog_post_1_views_metric) do
       create(
         :metric,
@@ -14,7 +14,7 @@ RSpec.describe Processors::BlogTechnologyViewsUpdater do
         ownable: blog_post_1
       )
     end
-    let(:blog_post_2) { create(:blog_post, technology: technology) }
+    let(:blog_post_2) { create(:blog_post, technologies: [technology]) }
     let!(:blog_post_2_views_metric) do
       create(
         :metric,
@@ -61,7 +61,7 @@ RSpec.describe Processors::BlogTechnologyViewsUpdater do
 
     context 'when there is more than one technology' do
       let!(:technology_2) { create(:technology) }
-      let(:blog_post_for_tech_2) { create(:blog_post, technology: technology_2) }
+      let(:blog_post_for_tech_2) { create(:blog_post, technologies: [technology_2]) }
       let!(:blog_post_for_tech_2_views_metric) do
         create(
           :metric,

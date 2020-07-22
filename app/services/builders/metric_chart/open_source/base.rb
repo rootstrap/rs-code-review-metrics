@@ -21,7 +21,7 @@ module Builders
           language.projects_metrics
         end
 
-        def metric_ownable_type
+        def metric_totals_ownable_type
           ::Project
         end
 

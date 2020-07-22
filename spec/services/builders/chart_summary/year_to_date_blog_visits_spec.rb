@@ -3,12 +3,13 @@ require 'rails_helper'
 describe Builders::ChartSummary::YearToDateBlogVisits do
   describe '.call' do
     let(:technology) { create(:technology) }
+    let(:blog_post) { create(:blog_post, technologies: [technology]) }
     let!(:last_year_metric) do
       create(
         :metric,
         name: Metric.names[:blog_visits],
         interval: Metric.intervals[:monthly],
-        ownable: technology,
+        ownable: blog_post,
         value: 100,
         value_timestamp: Time.zone.now.last_year.end_of_month
       )
@@ -18,7 +19,7 @@ describe Builders::ChartSummary::YearToDateBlogVisits do
         :metric,
         name: Metric.names[:blog_visits],
         interval: Metric.intervals[:monthly],
-        ownable: technology,
+        ownable: blog_post,
         value: 50,
         value_timestamp: Time.zone.now.end_of_month
       )

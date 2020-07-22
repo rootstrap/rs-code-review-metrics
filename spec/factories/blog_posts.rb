@@ -27,7 +27,5 @@ FactoryBot.define do
     url { 'https://www.rotstrap.com/blog/ruby_is_awesome' }
     status { BlogPost.statuses[:publish] }
     published_at { Faker::Time.backward }
-
-    association :technology
   end
 end

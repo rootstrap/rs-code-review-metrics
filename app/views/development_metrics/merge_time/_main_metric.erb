@@ -7,5 +7,5 @@
             locals: {
               metric_name: 'Distribution',
               suffix: " pull requests",
-              metric: merge_time[:per_department_distribution]
-            } if merge_time && merge_time[:per_department_distribution] %>
+              metric: merge_time[:per_project_distribution] || merge_time[:per_department_distribution]
+            } if merge_time && (merge_time[:per_project_distribution] || merge_time[:per_department_distribution]) %>
