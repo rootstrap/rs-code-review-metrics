@@ -10,7 +10,7 @@
 #
 FactoryBot.define do
   factory :technology do
-    name { Faker::Lorem.word }
+    name { Faker::ProgrammingLanguage.unique.name }
     keyword_string { Faker::Lorem.word }
   end
 end
