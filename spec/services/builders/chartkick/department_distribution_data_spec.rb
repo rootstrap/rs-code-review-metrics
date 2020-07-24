@@ -10,7 +10,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
       let(:department) { Department.first }
       let(:entity_id) { department.id }
       let(:project) { create :project, language: department.languages.first }
-      let(:values) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
+      let(:values_in_seconds) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
 
       let(:query) do
         { value_timestamp: range }
@@ -24,7 +24,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
       context 'when name is review turnaround' do
         before do
-          values.each do |value|
+          values_in_seconds.each do |value|
             review_request = create :review_request, project: project
             create(:completed_review_turnaround, review_request: review_request, value: value)
           end

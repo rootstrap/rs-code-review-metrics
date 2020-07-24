@@ -7,7 +7,7 @@ RSpec.shared_examples 'merge time data distribution' do
 
   context 'when name is merge time' do
     before do
-      values.each do |value|
+      values_in_seconds.each do |value|
         pull_request = create(:pull_request, project: project)
         create(:merge_time, pull_request: pull_request, value: value)
       end
