@@ -6,7 +6,7 @@ RSpec.describe GithubRepositoryClient do
       before { stub_get_code_owners_not_found }
       it 'returns an empty string' do
         expect(described_class.new('rs-code-metrics').code_owners)
-          .to be_nil
+          .to be_empty
       end
     end
 

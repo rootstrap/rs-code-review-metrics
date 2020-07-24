@@ -6,8 +6,7 @@ class GithubRepositoryClient
   end
 
   def code_owners
-    ocurrences = find_in_locations
-    ocurrences.detect(&:present?)
+    find_in_locations
   end
 
   def repository_views
@@ -21,12 +20,14 @@ class GithubRepositoryClient
   private
 
   def find_in_locations
-    LOCATIONS.map do |location|
+    content = LOCATIONS.each do |location|
       connection = Faraday.new(url: "#{URL}/#{@project_name}/contents/#{location}") do |conn|
         conn.basic_auth(ENV['GITHUB_ADMIN_USER'], ENV['GITHUB_ADMIN_TOKEN'])
       end
+
       response = connection.get { |req| req.headers['Accept'] = 'application/vnd.github.v3.raw' }
-      response.success? ? response.body : ''
+      return response.body if response.success?
     end
+    content.kind_of?(Array) ? '' : content
   end
 end
