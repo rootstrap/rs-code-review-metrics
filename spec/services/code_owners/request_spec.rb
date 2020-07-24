@@ -5,7 +5,7 @@ RSpec.describe CodeOwners::Request do
     let!(:project) { create(:project, name: 'rs-code-metrics') }
     context 'when project content from the github repo api' do
       context 'was not found or is empty' do
-        before { stub_get_content_from_file_not_found }
+        before { stub_get_code_owners_not_found }
         it 'does not call the code owner file handler' do
           expect_any_instance_of(CodeOwners::FileHandler).not_to receive(:call)
           described_class.call
@@ -14,7 +14,7 @@ RSpec.describe CodeOwners::Request do
 
       context 'is present' do
         before do
-          stub_get_content_from_file_ok
+          stub_get_code_owners_file_ok
           allow_any_instance_of(CodeOwners::ProjectHandler).to receive(:call)
         end
 

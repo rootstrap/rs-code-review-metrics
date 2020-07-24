@@ -1,11 +1,11 @@
 module GithubApiMock
-  def stub_get_content_from_file_not_found
-    stub_request(:get, "#{GithubRepositoryClient::URL}/rs-code-metrics/contents/CODEOWNERS")
+  def stub_get_code_owners_not_found
+    stub_request(:get, %r{.*\/repos\/rootstrap.*})
       .to_return(body: not_found_body_from_github, status: 404)
   end
 
-  def stub_get_content_from_file_ok(custom_content_file = '')
-    stub_request(:get, "#{GithubRepositoryClient::URL}/rs-code-metrics/contents/CODEOWNERS")
+  def stub_get_code_owners_file_ok(custom_content_file = '')
+    stub_request(:get, %r{.*\/repos\/rootstrap.*/})
       .to_return(
         body: custom_content_file.presence || base_content_file,
         status: 200

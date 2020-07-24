@@ -10,7 +10,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
       let(:department) { Department.first }
       let(:entity_id) { department.id }
       let(:project) { create :project, language: department.languages.first }
-      let(:values) { [2, 13, 25, 37, 49, 61, 73] }
+      let(:values_in_seconds) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
 
       let(:query) do
         { value_timestamp: range }
@@ -24,7 +24,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
       context 'when name is review turnaround' do
         before do
-          values.each do |value|
+          values_in_seconds.each do |value|
             review_request = create :review_request, project: project
             create(:completed_review_turnaround, review_request: review_request, value: value)
           end
@@ -33,6 +33,16 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
         it 'returns an array with name key' do
           expect(subject.first).to have_key(:name)
+        end
+
+        it 'returns an array with size of number of values' do
+          expect(subject.first[:data]).to have_exactly(6).items
+        end
+
+        it 'returns an array with one value matched in every position' do
+          subject.first[:data].each do |data_array|
+            expect(data_array.second).to eq(1)
+          end
         end
 
         it 'returns an array with name data' do

@@ -29,7 +29,7 @@ module Builders
       end
 
       def resolve_interval(entity)
-        entity_value = entity.value
+        entity_value = value_in_hours_for(entity)
         if entity_value < 12
           '1-12'
         elsif entity_value < 24
