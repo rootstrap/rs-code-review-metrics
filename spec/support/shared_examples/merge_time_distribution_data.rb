@@ -7,11 +7,21 @@ RSpec.shared_examples 'merge time data distribution' do
 
   context 'when name is merge time' do
     before do
-      values.each do |value|
+      values_in_seconds.each do |value|
         pull_request = create(:pull_request, project: project)
         create(:merge_time, pull_request: pull_request, value: value)
       end
       query.merge!(name: :merge_time)
+    end
+
+    it 'returns an array with size of number of values' do
+      expect(subject.first[:data]).to have_exactly(6).items
+    end
+
+    it 'returns an array with one value matched in every position' do
+      subject.first[:data].each do |data_array|
+        expect(data_array.second).to eq(1)
+      end
     end
 
     it 'returns an array with name key' do
