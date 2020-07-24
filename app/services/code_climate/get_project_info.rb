@@ -6,6 +6,8 @@ module CodeClimate
     end
 
     def call
+      return if repository&.json.blank?
+
       repository&.summary
     end
 

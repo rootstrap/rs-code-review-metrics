@@ -1,6 +1,8 @@
 module CodeClimate
   module Api
     class Resource
+      attr_reader :json
+
       def initialize(api_json)
         @json = api_json
       end
