@@ -28,6 +28,6 @@ class GithubRepositoryClient
       response = connection.get { |req| req.headers['Accept'] = 'application/vnd.github.v3.raw' }
       return response.body if response.success?
     end
-    content.kind_of?(Array) ? '' : content
+    content.is_a?(Array) ? '' : content
   end
 end
