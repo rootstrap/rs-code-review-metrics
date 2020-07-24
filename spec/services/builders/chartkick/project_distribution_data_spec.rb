@@ -10,7 +10,7 @@ RSpec.describe Builders::Chartkick::ProjectDistributionData do
       let(:department) { Department.first }
       let(:project) { create(:project, language: department.languages.first) }
       let(:entity_id) { project.id }
-      let(:values) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
+      let(:values_in_seconds) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
 
       let(:query) do
         { value_timestamp: range }
