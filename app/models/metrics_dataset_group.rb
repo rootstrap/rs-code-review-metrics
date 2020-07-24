@@ -11,7 +11,7 @@ class MetricsDatasetGroup
   end
 
   def totals_for(date)
-    totals[:data][key_for(date)]
+    totals[:data][key_for(date)] || 0
   end
 
   private

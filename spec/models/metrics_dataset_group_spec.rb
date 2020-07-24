@@ -30,5 +30,13 @@ describe MetricsDatasetGroup do
     it 'returns the totals value matching the given date' do
       expect(blog_metrics_dataset_group.totals_for(date)).to eq this_month_post_count_metric.value
     end
+
+    context 'when there is no data for the given date' do
+      let(:date) { Time.zone.now.next_month }
+
+      it 'returns 0 as a default value instead of nil' do
+        expect(blog_metrics_dataset_group.totals_for(date)).to eq 0
+      end
+    end
   end
 end
