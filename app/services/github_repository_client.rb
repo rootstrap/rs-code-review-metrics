@@ -20,7 +20,7 @@ class GithubRepositoryClient
   private
 
   def find_in_locations
-    content = LOCATIONS.each do |location|
+    LOCATIONS.each do |location|
       connection = Faraday.new(url: "#{URL}/#{@project_name}/contents/#{location}") do |conn|
         conn.basic_auth(ENV['GITHUB_ADMIN_USER'], ENV['GITHUB_ADMIN_TOKEN'])
       end
@@ -28,6 +28,6 @@ class GithubRepositoryClient
       response = connection.get { |req| req.headers['Accept'] = 'application/vnd.github.v3.raw' }
       return response.body if response.success?
     end
-    content.is_a?(Array) ? '' : content
+    ''
   end
 end
