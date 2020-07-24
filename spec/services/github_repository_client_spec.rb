@@ -1,19 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe GithubRepositoryClient do
-  describe '#get_content_of_file' do
+  describe '#code_owners' do
     context 'when the project or the file is not found' do
-      before { stub_get_content_from_file_not_found }
+      before { stub_get_code_owners_not_found }
       it 'returns an empty string' do
-        expect(described_class.new('rs-code-metrics').get_content_from_file('CODEOWNERS'))
-          .to eq('')
+        expect(described_class.new('rs-code-metrics').code_owners)
+          .to be_empty
       end
     end
 
     context 'when the project or the file is found' do
-      before { stub_get_content_from_file_ok }
+      before { stub_get_code_owners_file_ok }
       it 'returns a string with the codeowners as mentions' do
-        expect(described_class.new('rs-code-metrics').get_content_from_file('CODEOWNERS'))
+        expect(described_class.new('rs-code-metrics').code_owners)
           .to include('@santiagovidal')
       end
     end
