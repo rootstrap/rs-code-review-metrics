@@ -14,6 +14,16 @@ RSpec.shared_examples 'merge time data distribution' do
       query.merge!(name: :merge_time)
     end
 
+    it 'returns an array with size of number of values' do
+      expect(subject.first[:data]).to have_exactly(6).items
+    end
+
+    it 'returns an array with one value matched in every position' do
+      subject.first[:data].each do |data_array|
+        expect(data_array.second).to eq(1)
+      end
+    end
+
     it 'returns an array with name key' do
       expect(subject.first).to have_key(:name)
     end
