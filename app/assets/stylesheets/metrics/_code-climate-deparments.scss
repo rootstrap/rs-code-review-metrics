@@ -27,3 +27,30 @@ table.code-climate-projects-report {
     color: black;
   }
 }
+
+.code-climate-summary-container {
+  background-color: gainsboro;
+}
+
+.code-climate-summary-title {
+  padding: 0.5em 4em;
+}
+
+.code-climate-summary-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 4em;
+}
+
+.code-climate-summary-ratings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.code-climate-summary-issues {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
