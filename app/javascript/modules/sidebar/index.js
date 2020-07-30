@@ -17,16 +17,20 @@ export const disablePeriod = () => {
 
 export const handleChangeSidebar = () => {
   const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
-  let navFilterForm = elementSelector('nav-filter');
   if (sidebarSelectionInput != null) {
     sidebarSelectionInput.onchange = () => {
-      const periodSelected = document.getElementById('metric_period');
-      if (periodSelected && periodSelected.selectedIndex === 0) {
-        periodSelected.selectedIndex = 1;
-      }
-      navFilterForm.submit();
+      submitNavForm()
     }
   }
+}
+
+const submitNavForm = () => {
+  let navFilterForm = elementSelector('nav-filter');
+  const periodSelected = document.getElementById('metric_period');
+  if (periodSelected && periodSelected.selectedIndex === 0) {
+    periodSelected.selectedIndex = 1;
+  }
+  navFilterForm.submit();
 }
 
 
