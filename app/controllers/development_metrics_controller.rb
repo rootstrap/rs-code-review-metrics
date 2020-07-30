@@ -1,4 +1,6 @@
 class DevelopmentMetricsController < ApplicationController
+  layout 'sidebar_metrics'
+
   def index; end
 
   def projects
