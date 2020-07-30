@@ -10,7 +10,7 @@ let elementSelector = (className) => {
 export const disablePeriod = () => {
   const button = document.getElementById('submitButton');
   let sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
-  if (sidebarSelectionInput.selectedIndex === 0){
+  if (sidebarSelectionInput && sidebarSelectionInput.selectedIndex === 0){
     button.disabled = true;
   }
 }
@@ -21,7 +21,7 @@ export const handleChangeSidebar = () => {
   if (sidebarSelectionInput != null) {
     sidebarSelectionInput.onchange = () => {
       const periodSelected = document.getElementById('metric_period');
-      if (periodSelected.selectedIndex === 0) {
+      if (periodSelected && periodSelected.selectedIndex === 0) {
         periodSelected.selectedIndex = 1;
       }
       navFilterForm.submit();
