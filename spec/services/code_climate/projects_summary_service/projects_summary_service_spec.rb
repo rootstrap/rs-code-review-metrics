@@ -18,7 +18,7 @@ describe CodeClimate::ProjectsSummaryService do
            wont_fix_issues_count: 0,
            open_issues_count: 0,
            code_climate_rate: 'A',
-           snapshot_time: 2.week.ago
+           snapshot_time: 2.weeks.ago
 
     create :code_climate_project_metric,
            project: project_2,
@@ -26,7 +26,7 @@ describe CodeClimate::ProjectsSummaryService do
            wont_fix_issues_count: 4,
            open_issues_count: 6,
            code_climate_rate: 'Z',
-           snapshot_time: 2.week.ago
+           snapshot_time: 2.weeks.ago
   end
 
   let(:projects_summary) do
