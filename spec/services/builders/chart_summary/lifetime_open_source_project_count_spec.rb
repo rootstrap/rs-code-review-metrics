@@ -8,8 +8,8 @@ describe Builders::ChartSummary::LifetimeOpenSourceProjectCount do
     let(:project_count_2) { 6 }
 
     before do
-      create_list(:project, project_count_1, language: language_1, is_private: false)
-      create_list(:project, project_count_2, language: language_2, is_private: false)
+      create_list(:project, project_count_1, :open_source, language: language_1)
+      create_list(:project, project_count_2, :open_source, language: language_2)
     end
 
     it 'returns the total amount of projects per language' do

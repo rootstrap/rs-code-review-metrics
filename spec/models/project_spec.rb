@@ -6,6 +6,7 @@
 #  description :string
 #  is_private  :boolean
 #  name        :string
+#  relevance   :enum             default("unassigned"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
@@ -37,9 +38,38 @@ RSpec.describe Project, type: :model do
 
   describe 'open_source' do
     let(:language) { Language.find_by(name: 'ruby') }
-    let!(:private_project) { create(:project, is_private: true, language: language) }
-    let!(:unassigned_project) { create(:project, language: Language.unassigned) }
-    let!(:open_source_project) { create(:project, is_private: false, language: language) }
+    let!(:private_project) do
+      create(
+        :project,
+        is_private: true,
+        language: language,
+        relevance: Project.relevances[:internal]
+      )
+    end
+    let!(:unassigned_project) do
+      create(
+        :project,
+        is_private: false,
+        language: Language.unassigned,
+        relevance: Project.relevances[:internal]
+      )
+    end
+    let!(:ignored_project) do
+      create(
+        :project,
+        is_private: false,
+        language: language,
+        relevance: Project.relevances[:ignored]
+      )
+    end
+    let!(:open_source_project) do
+      create(
+        :project,
+        is_private: false,
+        language: language,
+        relevance: Project.relevances[:internal]
+      )
+    end
 
     it 'returns the projects that have an assigned language and are not private' do
       expect(Project.open_source).to contain_exactly(open_source_project)
@@ -53,6 +83,16 @@ RSpec.describe Project, type: :model do
 
     it 'returns the projects that have an assigned language' do
       expect(Project.with_language).to contain_exactly(project_with_language)
+    end
+  end
+
+  describe 'internal' do
+    let!(:commercial_project) { create(:project, relevance: Project.relevances[:commercial]) }
+    let!(:internal_project) { create(:project, relevance: Project.relevances[:internal]) }
+    let!(:unassigned_project) { create(:project, relevance: Project.relevances[:unassigned]) }
+
+    it 'returns only the internal projects' do
+      expect(Project.internal).to contain_exactly(internal_project)
     end
   end
 end

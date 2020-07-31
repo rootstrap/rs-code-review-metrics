@@ -6,6 +6,7 @@
 #  description :string
 #  is_private  :boolean
 #  name        :string
+#  relevance   :enum             default("unassigned"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
@@ -17,6 +18,13 @@
 #
 
 class Project < ApplicationRecord
+  enum relevance: {
+    commercial: 'commercial',
+    internal: 'internal',
+    ignored: 'ignored',
+    unassigned: 'unassigned'
+  }
+
   belongs_to :language
 
   has_many :events, dependent: :destroy
@@ -38,15 +46,20 @@ class Project < ApplicationRecord
            source: :user
 
   validates :github_id, presence: true, uniqueness: true
+  validates :relevance, inclusion: { in: relevances.keys }
 
   before_validation :set_default_language, on: :create
 
   scope :open_source, lambda {
-    with_language.where(is_private: false)
+    internal.with_language.where(is_private: false)
   }
 
   scope :with_language, lambda {
     joins(:language).where.not(languages: { name: 'unassigned' })
+  }
+
+  scope :internal, lambda {
+    where(relevance: relevances[:internal])
   }
 
   private
