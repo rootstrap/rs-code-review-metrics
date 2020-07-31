@@ -1,42 +1,34 @@
-<div class="col-md-12">
-  <div class="shadow-box p-3">
-    <div class="row">
-      <div class="col-md-12 code-climate-title-container p-1 mt-3">
-        <span class="page-title"> Code Climate Info </span>
-      </div>
+<div class="code-climate-summary col-md-12">
+  <div class="container p-3">
+    <div class="title">
+      <b>CodeClimate summary</b>
     </div>
     <% if !code_climate || code_climate.empty? -%>
-    <div class="row">
-      <div class="col-md-12 text-center mt-2">
-        <span class="code-climate-summary text-danger">No information available</span>
-      </div>
-    </div>
-    <% else -%>
       <div class="row">
-        <div class="col-md-3 d-flex justify-content-center">
-          <ul class="unstyled-list">
-            <% code_climate.each_project_rate do |letter, projects_count| -%>
-              <li class='m-0'>
-                <%= projects_count %><%= projects_count ? ' project' : ' projects' %> with
-                <span class="code-climate-summary text-primary"><%= letter %></span>
-              </li>
-            <% end -%>
-          </ul>
-        </div>
-        <div class="col-md-3 d-flex justify-content-center">
-          <span class="code-climate-summary text-danger">Average of <%= code_climate.invalid_issues_count_average %> invalid issues</span>
-        </div>
-        <div class="col-md-3 d-flex justify-content-center">
-          <span class="code-climate-summary text-danger">Average of <%= code_climate.wont_fix_issues_count_average %> won't fix issues</span>
-        </div>
-        <div class="col-md-3 d-flex justify-content-center">
-          <span class="code-climate-summary text-danger">Average of <%= code_climate.open_issues_count_average %> open issues</span>
+        <div class="col-md-12 text-center mt-2">
+          <span class="text-danger">No information available</span>
         </div>
       </div>
-      <div class='row'>
-        <div class="col-md-12 d-flex justify-content-center mt-3">
-          <%= link_to 'See details', code_climate_department_path(department.name, filter_url_query),
-              class: 'btn btn-secondary code-climate-details' %>
+    <% else -%>
+      <div class="info">
+        <div class="item-list">
+          <% code_climate.each_project_rate do |letter, projects_count| -%>
+            <div>
+              <%= projects_count %> <%= 'project'.pluralize(projects_count) %> with
+              <span class="text-primary"><b><%= letter %></b></span>
+            </div>
+          <% end -%>
+        </div>
+        <div class="item-list">
+          <span>Average of <b><%= code_climate.invalid_issues_count_average %> invalid</b> issues</span>
+          <span>Average of <b><%= code_climate.wont_fix_issues_count_average %> won't fix</b> issues</span>
+          <span>Average of <b><%= code_climate.open_issues_count_average %> open</b> issues</span>
+        </div>
+        <div>
+          <%= link_to 'See report',
+                      code_climate_department_path(department.name, filter_url_query),
+                      class: 'btn btn-secondary'
+          %>
         </div>
       </div>
     <% end -%>
