@@ -14,11 +14,11 @@
             <% end %>
           </div>
         </div>
+        <div class="row">
+          <%= render 'development_metrics/code_climate/code_climate_department_summary',
+          department: @department, code_climate: @code_climate %>
+        </div>
         <% if @review_turnaround && @merge_time %>
-          <div class="row">
-            <%= render 'development_metrics/code_climate/code_climate_department_summary',
-            department: @department, code_climate: @code_climate %>
-          </div>
           <div class="row">
             <div class="metrics">
               <div class="graph">
