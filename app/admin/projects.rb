@@ -1,5 +1,5 @@
 ActiveAdmin.register Project do
-  permit_params :language_id, :description, :name, :github_id
+  permit_params :language_id, :description, :name, :github_id, :relevance
   remove_filter :events
 
   index do
@@ -11,6 +11,7 @@ ActiveAdmin.register Project do
     column :language_id do |r|
       r.language.name
     end
+    column :relevance
     actions
   end
 
@@ -20,6 +21,7 @@ ActiveAdmin.register Project do
       f.input :name
       f.input :description, required: false
       f.input :language
+      f.input :relevance, as: :radio, collection: Project.relevances.values
     end
     f.actions
   end
