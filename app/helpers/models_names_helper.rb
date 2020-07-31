@@ -4,7 +4,7 @@ module ModelsNamesHelper
   end
 
   def all_users_names
-    User.pluck(:login, :id).insert(0, ['- select option -', 0])
+    User.pluck(:login, :id).insert(0, ['Choose a user', 0])
   end
 
   def all_departments_names

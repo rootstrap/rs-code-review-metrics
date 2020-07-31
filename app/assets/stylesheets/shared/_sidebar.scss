@@ -18,3 +18,28 @@
 .user-selection{
   @include centered-flex-columns;
 }
+
+.custom-list{
+  margin: 0.7rem 0;
+  a{
+    margin-left: 0.5rem;
+    color: $white;
+    text-decoration: none;
+  }
+  a:hover{
+    text-decoration: none;
+  }
+}
+
+.logo-container{
+  margin: 0.5rem 0 2rem 0px;
+  img{
+    height: 3rem;
+  }
+}
+
+.txt-logo{
+  margin: 0;
+  font-size: 1rem;
+  color: $white;
+}

@@ -10,23 +10,27 @@ let elementSelector = (className) => {
 export const disablePeriod = () => {
   const button = document.getElementById('submitButton');
   let sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
-  if (sidebarSelectionInput.selectedIndex === 0){
+  if (sidebarSelectionInput && sidebarSelectionInput.selectedIndex === 0){
     button.disabled = true;
   }
 }
 
 export const handleChangeSidebar = () => {
   const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection');
-  let navFilterForm = elementSelector('nav-filter');
   if (sidebarSelectionInput != null) {
     sidebarSelectionInput.onchange = () => {
-      const periodSelected = document.getElementById('metric_period');
-      if (periodSelected.selectedIndex === 0) {
-        periodSelected.selectedIndex = 1;
-      }
-      navFilterForm.submit();
+      submitNavForm()
     }
   }
+}
+
+const submitNavForm = () => {
+  let navFilterForm = elementSelector('nav-filter');
+  const periodSelected = document.getElementById('metric_period');
+  if (periodSelected && periodSelected.selectedIndex === 0) {
+    periodSelected.selectedIndex = 1;
+  }
+  navFilterForm.submit();
 }
 
 
