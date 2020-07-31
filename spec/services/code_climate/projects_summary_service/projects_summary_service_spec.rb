@@ -3,7 +3,7 @@ require 'rails_helper'
 describe CodeClimate::ProjectsSummaryService do
   subject { CodeClimate::ProjectsSummaryService }
 
-  let(:from) { DateTime.parse('2020-06-02') }
+  let(:from) { 4 }
   let(:technologies) { %w[] }
   let(:department) { project_1.language.department }
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
@@ -18,7 +18,7 @@ describe CodeClimate::ProjectsSummaryService do
            wont_fix_issues_count: 0,
            open_issues_count: 0,
            code_climate_rate: 'A',
-           snapshot_time: DateTime.parse('2020-06-02')
+           snapshot_time: 2.week.ago
 
     create :code_climate_project_metric,
            project: project_2,
@@ -26,7 +26,7 @@ describe CodeClimate::ProjectsSummaryService do
            wont_fix_issues_count: 4,
            open_issues_count: 6,
            code_climate_rate: 'Z',
-           snapshot_time: DateTime.parse('2020-06-03')
+           snapshot_time: 2.week.ago
   end
 
   let(:projects_summary) do
@@ -116,7 +116,7 @@ describe CodeClimate::ProjectsSummaryService do
   end
 
   context 'with a from date after the projects date' do
-    let(:from) { DateTime.parse('2020-06-04') }
+    let(:from) { 1 }
 
     it 'shows no invalid issues count' do
       expect(projects_summary.invalid_issues_count_average).to be_nil
