@@ -29,7 +29,7 @@ module Builders
         end
 
         def period_start
-          @period_start ||= periods.months.ago.beginning_of_month
+          @period_start ||= (periods - 1).months.ago.beginning_of_month
         end
       end
     end
