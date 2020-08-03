@@ -12,11 +12,11 @@ module GithubApiMock
       )
   end
 
-  def stub_repository_views(project_name, repository_views_payload)
+  def stub_repository_views(project, repository_views_payload)
     stub_env('GITHUB_ADMIN_USER', github_admin_user)
     stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
 
-    url = "#{GithubRepositoryClient::URL}/#{project_name}/traffic/views"
+    url = "https://api.github.com/repositories/#{project.github_id}/traffic/views"
 
     stub_request(:get, url)
       .with(basic_auth: [github_admin_user, github_admin_token], query: { per: 'week' })
