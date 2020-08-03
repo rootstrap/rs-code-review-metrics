@@ -1,6 +1,6 @@
 module ModelsNamesHelper
   def all_projects_names
-    Project.pluck(:name)
+    Project.pluck(:name).sort
   end
 
   def all_users_names
