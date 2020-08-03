@@ -42,7 +42,7 @@ module CodeClimate
     end
 
     def metrics_in_time_period
-      if from && !from.zero?
+      if from.positive?
         metrics_in_department.where(snapshot_time: from.weeks.ago..Time.zone.now)
       else
         metrics_in_department
