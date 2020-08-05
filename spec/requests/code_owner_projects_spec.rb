@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Code Owner Projects' do
   describe '#index' do
     let(:user) { create(:user) }
-    subject { get "/users/#{user.id}/projects" }
+    subject { get "/development_metrics/users/#{user.id}/projects" }
     context 'when a user has not projects as code owner' do
       before do
         subject

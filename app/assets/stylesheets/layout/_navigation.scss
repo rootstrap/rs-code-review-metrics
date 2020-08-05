@@ -15,10 +15,13 @@
   }
 }
 
+.selected{
+  text-decoration: none;
+  color: $white;
+  background-color: $light-grey;
+}
+
 .nav-items-container {
   display: flex;
 }
 
-.admin-button {
-  margin-left: auto;
-}
