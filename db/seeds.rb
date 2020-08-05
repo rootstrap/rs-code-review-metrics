@@ -66,13 +66,26 @@ if Rails.env.development?
       end
     end
 
+    second_project= Project.create!(github_id: rand(1000),
+                                    name: 'forecast',
+                                    language: Language.find_by(name: 'ruby'))
+
+    %w[juan pedro].each do |name|
+      FactoryBot.create(:user, login: name)
+    end
+
+    User.all.each { |user| UsersProject.create!(user: user, project: second_project) }
+
     Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
     Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
     FactoryBot.create(:code_climate_project_metric, project: project)
+    FactoryBot.create(:code_climate_project_metric, project: second_project)
 
     User.first(3).each { |user| CodeOwnerProject.create!(user: user, project: project) }
+
+    User.last(2).each { |user| CodeOwnerProject.create!(user: user, project: second_project) }
 
     # Review turnaround and Second review turnaround
     santiagovidal = User.find_by(login: 'santiagovidal')

@@ -69,5 +69,18 @@ describe Builders::MetricChart::Blog::TechnologyBlogPostCount do
         expect(described_class.call.totals[:data][current_month_key]).to eq 1
       end
     end
+
+    describe 'periods returned' do
+      let(:technology) { create(:technology) }
+      let(:periods) { 13 }
+
+      before do
+        create(:blog_post, published_at: 3.years.ago, technologies: [technology])
+      end
+
+      it 'returns only the requested amount of periods' do
+        expect(described_class.call(periods).totals[:data].count).to eq periods
+      end
+    end
   end
 end

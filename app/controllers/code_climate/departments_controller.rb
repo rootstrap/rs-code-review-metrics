@@ -1,5 +1,7 @@
 module CodeClimate
   class DepartmentsController < ApplicationController
+    layout 'sidebar_metrics'
+
     def show
       @code_climate = code_climate_department_summary
     end

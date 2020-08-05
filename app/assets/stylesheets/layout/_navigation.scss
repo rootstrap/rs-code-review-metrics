@@ -1,16 +1,27 @@
-.nav-style { 
-  background-color: $nav-bg-color;
+.nav-style {
+  background-color: $white;
   border-bottom: $nav-border-color;
+
 }
 
-.nav-txt-color { color: $white; }
+.nav-txt-color { color: $light-grey; }
 
-a:hover { color: $white }
+.nav-link{
+  text-decoration: none;
+  &:hover{
+    text-decoration: none;
+    color: $white;
+    background-color: $light-grey;
+  }
+}
+
+.selected{
+  text-decoration: none;
+  color: $white;
+  background-color: $light-grey;
+}
 
 .nav-items-container {
   display: flex;
 }
 
-.admin-button {
-  margin-left: auto;
-}

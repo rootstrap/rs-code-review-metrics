@@ -19,11 +19,14 @@
 @import "users/projects/*";
 
 .main-column {
-  flex: 4;
+  flex: 6;
 }
 
 .sidebar-container {
   box-shadow: 1px 1px 5px 0 rgba(171,158,171,1);
+  background-color: $primary-color;
+  height: 100vh;
+  position: fixed;
 }
 
 canvas[style] {
@@ -31,12 +34,12 @@ canvas[style] {
 }
 
 .main-container {
-  display: flex;
-
   .sidebar-container {
-    flex: 1;
+
     height: 100vh;
     padding: 15px;
+    background-color: $primary-color;
+    position: fixed;
 
     > div {
       padding-bottom: 20px;
@@ -44,10 +47,6 @@ canvas[style] {
   }
 
   .metrics-container {
-    display: flex;
-    flex-direction: column;
-    flex: 4;
-
     .filter {
       padding: 0 15px;
     }

@@ -78,6 +78,18 @@ CREATE TYPE public.metric_name AS ENUM (
 
 
 --
+-- Name: project_relevance; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.project_relevance AS ENUM (
+    'commercial',
+    'internal',
+    'ignored',
+    'unassigned'
+);
+
+
+--
 -- Name: pull_request_state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -621,7 +633,8 @@ CREATE TABLE public.projects (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     language_id bigint,
-    is_private boolean
+    is_private boolean,
+    relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL
 );
 
 
@@ -1849,6 +1862,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200703141617'),
 ('20200713152004'),
 ('20200714160138'),
-('20200720155715');
+('20200720155715'),
+('20200730142418');
 
 
