@@ -40,7 +40,8 @@ export const handleChangeUser = () => {
     const current_base_url = window.location.origin;
     userSelect.onchange = function() {
       const optionSelected = userSelect.options.selectedIndex;
-      const resource = `users/${userSelect.options[optionSelected].value}/projects`;
+      const resource = `development_metrics/users/` +
+      `${userSelect.options[optionSelected].value}/projects`;
       window.location.href = `${current_base_url}/${resource}`
     }
   }

@@ -1,6 +1,6 @@
 <nav class="nav nav-style nav-txt-color p-2 nav-items-container col-md-12 d-flex justify-content-between">
   <div class="d-flex flex-row">
-    <%if current_page?(development_metrics_path)%>
+    <%if content_url(/development_metrics/)%>
       <%= link_to 'Development Metrics', development_metrics_path, class: 'nav-link active nav-txt-color selected mx-1'%>
     <%else%>
       <%= link_to 'Development Metrics', development_metrics_path, class: 'nav-link active nav-txt-color mx-1'%>
