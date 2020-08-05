@@ -12,7 +12,19 @@ module GithubApiMock
       )
   end
 
-  def stub_repository_views(project, repository_views_payload)
+  def stub_successful_repository_views(project, repository_views_payload)
+    stub_repository_views(project, repository_views_payload, 200)
+  end
+
+  def stub_failed_repository_views(project)
+    response_body = {
+      'message': 'Not Found',
+      'documentation_url': 'https://docs.github.com/rest/reference/repos#get-page-views'
+    }
+    stub_repository_views(project, response_body, 404)
+  end
+
+  def stub_repository_views(project, response_body, status_code)
     stub_env('GITHUB_ADMIN_USER', github_admin_user)
     stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
 
@@ -20,7 +32,7 @@ module GithubApiMock
 
     stub_request(:get, url)
       .with(basic_auth: [github_admin_user, github_admin_token], query: { per: 'week' })
-      .to_return(body: JSON.generate(repository_views_payload), status: 200)
+      .to_return(body: JSON.generate(response_body), status: status_code)
   end
 
   def not_found_body_from_github

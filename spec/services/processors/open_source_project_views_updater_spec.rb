@@ -6,7 +6,7 @@ RSpec.describe Processors::OpenSourceProjectViewsUpdater do
     let(:repository_views_payload) { create(:repository_views_payload) }
 
     before do
-      stub_repository_views(project, repository_views_payload)
+      stub_successful_repository_views(project, repository_views_payload)
     end
 
     it 'generates visits metrics for the given project' do
