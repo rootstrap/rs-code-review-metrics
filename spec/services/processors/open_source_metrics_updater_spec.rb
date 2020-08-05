@@ -8,7 +8,7 @@ RSpec.describe Processors::OpenSourceMetricsUpdater do
     let(:total_metrics_generated) { open_source_repository_views_payload['views'].count }
 
     before do
-      stub_repository_views(open_source_project.name, open_source_repository_views_payload)
+      stub_repository_views(open_source_project, open_source_repository_views_payload)
     end
 
     it 'generates visits metrics for all open source projects' do

@@ -5,3 +5,10 @@ select[name$=_name] {
   justify-content: center;
   flex-direction: column;
 }
+
+.body-empty-container{
+  height: 25vh;
+  span{
+    color: $light-grey;
+  }
+}

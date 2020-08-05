@@ -4,7 +4,7 @@ module CodeClimate
 
     def initialize(department:, from:, technologies: [])
       @department = department
-      @from = from
+      @from = from.to_i
       @technologies = technologies
     end
 
@@ -56,8 +56,8 @@ module CodeClimate
     end
 
     def metrics_in_time_period
-      if from
-        metrics_in_department.where('snapshot_time >= ?', from)
+      if from.positive?
+        metrics_in_department.where(snapshot_time: from.weeks.ago..Time.zone.now)
       else
         metrics_in_department
       end

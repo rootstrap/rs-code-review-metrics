@@ -1,7 +1,20 @@
-<nav class="nav nav-style nav-txt-color p-2 nav-items-container">
-  <span class="navbar-brand nav-txt-color">Engineering Metrics</span>
-  <%= link_to 'Development Metrics', development_metrics_path, class: 'nav-link active nav-txt-color'%>
-  <%= link_to 'Tech Blog', tech_blog_path, class: 'nav-link active nav-txt-color'%>
-  <%= link_to 'Open Source', open_source_path, class: 'nav-link active nav-txt-color'%>
-  <%= link_to 'Admin', admin_events_path, class: 'nav-link active nav-txt-color admin-button'%>
+<nav class="nav nav-style nav-txt-color p-2 nav-items-container col-md-12 d-flex justify-content-between">
+  <div class="d-flex flex-row">
+    <%if content_url(/development_metrics/)%>
+      <%= link_to 'Development Metrics', development_metrics_path, class: 'nav-link active nav-txt-color selected mx-1'%>
+    <%else%>
+      <%= link_to 'Development Metrics', development_metrics_path, class: 'nav-link active nav-txt-color mx-1'%>
+    <%end%>
+    <%if current_page?(tech_blog_path)%>
+      <%= link_to 'Tech Blog', tech_blog_path, class: 'nav-link active nav-txt-color selected mx-1'%>
+    <%else%>
+      <%= link_to 'Tech Blog', tech_blog_path, class: 'nav-link active nav-txt-color mx-1'%>
+    <%end%>
+    <%if current_page?(open_source_path)%>
+      <%= link_to 'Open Source', open_source_path, class: 'nav-link active nav-txt-color selected mx-1'%>
+    <%else%>
+      <%= link_to 'Open Source', open_source_path, class: 'nav-link active nav-txt-color mx-1'%>
+    <%end%>
+  </div>
+  <%= link_to 'Admin', admin_events_path, class: 'nav-link active nav-txt-color mx-1'%>
 </nav>

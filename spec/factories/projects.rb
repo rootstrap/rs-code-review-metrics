@@ -6,6 +6,7 @@
 #  description :string
 #  is_private  :boolean
 #  name        :string
+#  relevance   :enum             default("unassigned"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
@@ -26,6 +27,7 @@ FactoryBot.define do
 
     trait :open_source do
       language { Language.find_by(name: 'ruby') }
+      relevance { Project.relevances[:internal] }
       is_private { false }
     end
   end

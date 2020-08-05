@@ -2,10 +2,12 @@ require 'rails_helper'
 
 RSpec.describe GithubRepositoryClient do
   describe '#code_owners' do
+    let(:project) { create(:project, name: 'rs-code-metrics') }
+
     context 'when the project or the file is not found' do
       before { stub_get_code_owners_not_found }
       it 'returns an empty string' do
-        expect(described_class.new('rs-code-metrics').code_owners)
+        expect(described_class.new(project).code_owners)
           .to be_empty
       end
     end
@@ -13,7 +15,7 @@ RSpec.describe GithubRepositoryClient do
     context 'when the project or the file is found' do
       before { stub_get_code_owners_file_ok }
       it 'returns a string with the codeowners as mentions' do
-        expect(described_class.new('rs-code-metrics').code_owners)
+        expect(described_class.new(project).code_owners)
           .to include('@santiagovidal')
       end
     end
@@ -23,10 +25,10 @@ RSpec.describe GithubRepositoryClient do
     let(:project) { create(:project) }
     let(:repository_views_payload) { create(:repository_views_payload) }
 
-    before { stub_repository_views(project.name, repository_views_payload) }
+    before { stub_repository_views(project, repository_views_payload) }
 
     it 'returns the views hash of that project on Github' do
-      expect(described_class.new(project.name).repository_views).to eq repository_views_payload
+      expect(described_class.new(project).repository_views).to eq repository_views_payload
     end
   end
 end

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Engineering Metrics</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%= render 'shared/sidebar'%>
+        <div class='main-container col-md-10 offset-md-2'>
+          <div class="row">
+            <%= render 'layouts/navigation' %>
+          </div>
+          <div class="row">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
