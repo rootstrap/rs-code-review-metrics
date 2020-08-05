@@ -32,7 +32,7 @@ module Processors
     end
 
     def views_payload
-      GithubRepositoryClient.new(project.name).repository_views
+      GithubRepositoryClient.new(project).repository_views
     end
 
     def update_views_metric(timestamp, views)
