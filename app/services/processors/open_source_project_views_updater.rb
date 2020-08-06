@@ -11,6 +11,8 @@ module Processors
           project_views_payload['uniques']
         )
       end
+    rescue Faraday::Error => exception
+      ExceptionHunter.track(exception)
     end
 
     private

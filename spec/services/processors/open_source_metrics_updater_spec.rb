@@ -16,5 +16,22 @@ RSpec.describe Processors::OpenSourceMetricsUpdater do
         .to change(Metric.where(ownable_type: Project.to_s), :count)
         .by(total_metrics_generated)
     end
+
+    context 'when there is an error when updating one project' do
+      let!(:failing_project) { create(:project, :open_source) }
+      let!(:succeeding_project) { create(:project, :open_source) }
+
+      before do
+        stub_failed_repository_views(failing_project)
+        stub_successful_repository_views(succeeding_project, create(:repository_views_payload))
+      end
+
+      it 'the other projects still get updated successfully' do
+        described_class.call
+
+        expect(Metric.find_by(ownable: open_source_project)).not_to be_nil
+        expect(Metric.find_by(ownable: succeeding_project)).not_to be_nil
+      end
+    end
   end
 end
