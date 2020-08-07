@@ -54,6 +54,22 @@ describe Processors::BlogMetricsUpdater do
           .by total_months_since_first_blog_post_published
       end
     end
+
+    context 'when there is an error in a request to the Wordpress API' do
+      let(:failing_blog_post) { create(:blog_post) }
+      let(:succeeding_blog_post) { create(:blog_post) }
+
+      before do
+        stub_failed_blog_post_views_response(failing_blog_post.blog_id)
+        stub_successful_blog_post_views_response(succeeding_blog_post.blog_id)
+      end
+
+      it 'successfully updates the rest of the blog posts' do
+        updater.call
+
+        expect(Metric.find_by(ownable: succeeding_blog_post)).not_to be_nil
+      end
+    end
   end
 end
 

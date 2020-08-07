@@ -14,6 +14,8 @@ module Processors
           create_metric(year, month, views)
         end
       end
+    rescue Faraday::Error => exception
+      ExceptionHunter.track(exception)
     end
 
     private
