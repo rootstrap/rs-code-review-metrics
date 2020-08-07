@@ -1,4 +1,6 @@
 class WordpressService
+  BASE_API_URL = 'https://public-api.wordpress.com'.freeze
+
   def blog_posts(since: Time.zone.at(0), posts: [], next_page_token: nil)
     request_params = {
       status: BlogPost.statuses[:publish],
@@ -47,7 +49,7 @@ class WordpressService
       username: username,
       password: password
     }
-    response = Faraday.post('https://public-api.wordpress.com/oauth2/token', request_body)
+    response = Faraday.post("#{BASE_API_URL}/oauth2/token", request_body)
     response_body = JSON.parse(response.body)
     raise_invalid_token_error(response_body) if response.status == 400
 
@@ -55,7 +57,7 @@ class WordpressService
   end
 
   def connection
-    Faraday.new('https://public-api.wordpress.com/rest/v1.1/') do |conn|
+    Faraday.new("#{BASE_API_URL}/rest/v1.1/") do |conn|
       conn.authorization(:Bearer, access_token)
       conn.response(:raise_error)
     end
