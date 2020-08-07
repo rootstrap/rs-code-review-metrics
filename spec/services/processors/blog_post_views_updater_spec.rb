@@ -12,7 +12,7 @@ describe Processors::BlogPostViewsUpdater do
     end
 
     before do
-      stub_blog_post_views_response(blog_post.blog_id, blog_post_views_payload)
+      stub_successful_blog_post_views_response(blog_post.blog_id, blog_post_views_payload)
     end
 
     it 'creates views metrics for the blog post' do

@@ -28,7 +28,7 @@ describe Processors::BlogPostsPartialUpdater do
           request_params: { after: publish_date.utc.iso8601 },
           blog_post_payloads: partial_blog_post_payload
         )
-        stub_blog_post_response(new_blog_post_payload)
+        stub_successful_blog_post_response(new_blog_post_payload)
       end
 
       it 'does not update the stored blog post' do

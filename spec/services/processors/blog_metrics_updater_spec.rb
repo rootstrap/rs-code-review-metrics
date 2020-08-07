@@ -11,8 +11,8 @@ describe Processors::BlogMetricsUpdater do
     let(:blog_post_2_month_count) { months_count_for(blog_post_views_payload_2) }
 
     before do
-      stub_blog_post_views_response(blog_post_1.blog_id, blog_post_views_payload_1)
-      stub_blog_post_views_response(blog_post_2.blog_id, blog_post_views_payload_2)
+      stub_successful_blog_post_views_response(blog_post_1.blog_id, blog_post_views_payload_1)
+      stub_successful_blog_post_views_response(blog_post_2.blog_id, blog_post_views_payload_2)
     end
 
     subject(:updater) { Processors::BlogMetricsPartialUpdater }
