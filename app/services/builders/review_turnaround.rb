@@ -26,11 +26,7 @@ module Builders
     end
 
     def opened_review
-      @opened_review ||= if review.opened_on_weekend?
-                           review_opened_at.end_of_day
-                         else
-                           review_opened_at
-                         end
+      review.opened_on_weekend? ? review_opened_at.end_of_day : review_opened_at
     end
 
     def review_opened_at

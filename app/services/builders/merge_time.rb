@@ -18,11 +18,7 @@ module Builders
     end
 
     def merged_pr
-      @merged_pr = if @pull_request.merged_on_weekend?
-                     pull_request_merged_at.end_of_day
-                   else
-                     pull_request_merged_at
-                   end
+      @pull_request.merged_on_weekend? ? pull_request_merged_at.end_of_day : pull_request_merged_at
     end
 
     def pull_request_opened_at
