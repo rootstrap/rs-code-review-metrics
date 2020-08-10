@@ -13,7 +13,6 @@ module GithubClient
     def views
       response = connection.get("repositories/#{@project.github_id}/traffic/views") do |request|
         request.params['per'] = 'week'
-        request.headers['Accept'] = 'application/vnd.github.v3+json'
       end
       JSON.parse(response.body).with_indifferent_access
     end
