@@ -11,8 +11,8 @@ class EventsProcessor
         event_name = resolve_event_name(event.name)
         Builders::Project.call(payload['repository'])
         process_event(event, event_name)
-      rescue StandardError => e
-        error = error_msg(event, e)
+      rescue StandardError => exception
+        error = error_msg(event, exception)
         errors << error unless error.nil?
       end
       Rails.logger.error errors unless errors.empty?
