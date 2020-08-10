@@ -21,8 +21,7 @@ RSpec.describe Builders::ReviewTurnaround do
                reviewer: santib,
                project: project,
                pull_request: pr,
-               created_at: monday
-              )
+               created_at: monday)
       end
 
       let!(:review) do
@@ -31,11 +30,10 @@ RSpec.describe Builders::ReviewTurnaround do
                project: project,
                pull_request: pr,
                review_request: review_request,
-               opened_at: thursday
-              )
+               opened_at: thursday)
       end
 
-      let(:seventy_two_hours_as_seconds) { 259200 }
+      let(:seventy_two_hours_as_seconds) { 259_200 }
 
       it 'returns the correct value for the review in seconds' do
         expect(described_class.call(review_request).value).to eq(seventy_two_hours_as_seconds)
@@ -76,7 +74,7 @@ RSpec.describe Builders::ReviewTurnaround do
 
     context 'when the review request is on friday and review on sunday' do
       let(:friday) { (Time.zone.now.end_of_week - 2.days) - 6.hours + 1.second }
-      let(:sunday) { Time.zone.now.end_of_week - 6.hours + 1.second}
+      let(:sunday) { Time.zone.now.end_of_week - 6.hours + 1.second }
       let(:six_hours_as_seconds) { 215_99 }
 
       let(:review_request) do
@@ -129,7 +127,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday_next_week)
       end
 
-      let(:two_hundread_and_seventy_six_hours_seconds) { 993599 }
+      let(:two_hundread_and_seventy_six_hours_seconds) { 993_599 }
 
       it 'calculates the value substracting all the second of weekend days' do
         expect(described_class.call(review_request).value)

@@ -11,10 +11,14 @@ module Builders
     private
 
     def calculate_turnaround
-      seconds_interval = opened_review.to_i - @review_request.created_at.to_i
+      seconds_interval = opened_review.to_i - review_request_created_at.to_i
       seconds_interval - weekend_days_as_seconds(
-        @review_request.created_at.to_date..review.opened_at.to_date
+        review_request_created_at.to_date..review_opened_at.to_date
       )
+    end
+
+    def review_request_created_at
+      @review_request_created_at ||= @review_request.created_at
     end
 
     def review
@@ -23,10 +27,14 @@ module Builders
 
     def opened_review
       @opened_review ||= if review.opened_on_weekend?
-                           review.opened_at.end_of_day
+                           review_opened_at.end_of_day
                          else
-                           review.opened_at
+                           review_opened_at
                          end
+    end
+
+    def review_opened_at
+      @review_opened_at ||= review.opened_at
     end
   end
 end
