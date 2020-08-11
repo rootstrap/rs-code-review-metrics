@@ -6,30 +6,18 @@ module Builders
           Metric.names[:blog_post_count]
         end
 
-        def calculate_totals
-          {
-            name: 'Totals',
-            data: format_data(totals_data),
-            dataset: { hidden: false }
-          }
+        def entity_metrics(technology)
+          technology.blog_posts
         end
 
-        def totals_data
-          blog_post_count_to_date = BlogPost.where('published_at < ?', period_start).count
-
-          new_monthly_blog_posts.transform_values do |new_blog_post_count|
-            blog_post_count_to_date += new_blog_post_count
-          end
+        def totals_metrics
+          BlogPost.all
         end
 
-        def new_monthly_blog_posts
-          BlogPost
-            .group_by_month(:published_at, range: period_start..Time.zone.now)
+        def collect_data(blog_posts)
+          blog_posts
+            .group_by_period(grouping_period, :published_at, last: periods)
             .count
-        end
-
-        def period_start
-          @period_start ||= (periods - 1).months.ago.beginning_of_month
         end
       end
     end
