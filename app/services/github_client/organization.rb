@@ -4,8 +4,8 @@ module GithubClient
 
     def repositories(acc_repositories = [], page_number = 1)
       request_params = {
-        'page': page_number,
-        'per_page': MAX_REPOSITORIES_PER_PAGE
+        page: page_number,
+        per_page: MAX_REPOSITORIES_PER_PAGE
       }
 
       response = connection.get('orgs/rootstrap/repos') do |request|
