@@ -26,7 +26,7 @@ FactoryBot.define do
       }
     end
     pull_request { (build :pull_request_payload, repository: repository)['pull_request'] }
-    repository { (build :repository_payload)['repository'] }
+    repository { build(:repository_payload) }
 
     initialize_with { attributes.deep_stringify_keys }
 

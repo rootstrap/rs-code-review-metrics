@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Builders::Project do
   describe '.call' do
-    let(:repository_payload) { create(:repository_payload)['repository'] }
+    let(:repository_payload) { create(:repository_payload) }
 
     context 'when the project has not been created' do
       it 'creates only one' do
