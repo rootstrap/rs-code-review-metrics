@@ -60,10 +60,6 @@ module Events
 
     after_validation :build_merge_time, on: :update, if: :merged_at_changed?
 
-    def merged_on_weekend?
-      merged_at.saturday? || merged_at.sunday?
-    end
-
     private
 
     def build_merge_time

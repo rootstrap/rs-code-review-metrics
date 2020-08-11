@@ -1,5 +1,5 @@
 module Builders
-  class MergeTime < ::DistributionInterval
+  class MergeTime < BaseService
     def initialize(pull_request)
       @pull_request = pull_request
     end
@@ -11,14 +11,10 @@ module Builders
     private
 
     def calculate_merge_time
-      seconds_interval = merged_pr.to_i - pull_request_opened_at.to_i
-      seconds_interval - weekend_days_as_seconds(
-        pull_request_opened_at.to_date..pull_request_merged_at.to_date
+      weekend_seconds = WeekendSecondsInterval.call(
+        start_date: pull_request_opened_at, end_date: pull_request_merged_at
       )
-    end
-
-    def merged_pr
-      @pull_request.merged_on_weekend? ? pull_request_merged_at.end_of_day : pull_request_merged_at
+      (pull_request_merged_at.to_i - pull_request_opened_at.to_i) - weekend_seconds
     end
 
     def pull_request_opened_at

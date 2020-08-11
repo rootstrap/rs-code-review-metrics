@@ -49,10 +49,6 @@ module Events
 
     after_create :build_review_turnaround, :build_completed_review_turnaround
 
-    def opened_on_weekend?
-      opened_at.saturday? || opened_at.sunday?
-    end
-
     private
 
     def build_review_turnaround

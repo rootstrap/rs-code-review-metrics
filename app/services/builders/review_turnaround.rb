@@ -1,5 +1,5 @@
 module Builders
-  class ReviewTurnaround < ::DistributionInterval
+  class ReviewTurnaround < BaseService
     def initialize(review_request)
       @review_request = review_request
     end
@@ -11,26 +11,18 @@ module Builders
     private
 
     def calculate_turnaround
-      seconds_interval = opened_review.to_i - review_request_created_at.to_i
-      seconds_interval - weekend_days_as_seconds(
-        review_request_created_at.to_date..review_opened_at.to_date
+      weekend_seconds = WeekendSecondsInterval.call(
+        start_date: review_request_created_at, end_date: review_opened_at
       )
+      (review_opened_at.to_i - review_request_created_at.to_i) - weekend_seconds
     end
 
     def review_request_created_at
       @review_request_created_at ||= @review_request.created_at
     end
 
-    def review
-      @review ||= @review_request.reviews.first
-    end
-
-    def opened_review
-      review.opened_on_weekend? ? review_opened_at.end_of_day : review_opened_at
-    end
-
     def review_opened_at
-      @review_opened_at ||= review.opened_at
+      @review_opened_at ||= @review_request.reviews.first.opened_at
     end
   end
 end
