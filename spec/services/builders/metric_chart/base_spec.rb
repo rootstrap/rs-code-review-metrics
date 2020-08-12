@@ -41,15 +41,8 @@ describe Builders::MetricChart::Base do
 
     describe 'hidden results' do
       let(:technology) { create(:technology) }
-      let!(:metric) do
-        create(
-          :metric,
-          ownable: technology,
-          interval: Metric.intervals[:monthly],
-          name: Metric.names[:blog_post_count],
-          value_timestamp: Time.zone.now.end_of_month
-        )
-      end
+
+      before { create(:blog_post, published_at: Time.zone.now, technologies: [technology]) }
 
       it 'each technology dataset is hidden' do
         expect(subject.call.datasets).to all(satisfy do |dataset|
