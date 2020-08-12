@@ -9,7 +9,7 @@ FactoryBot.define do
         node_id: "#{Faker::Alphanumeric.alphanumeric}="
       }
     end
-    repository { (create :repository_payload)['repository'] }
+    repository { create(:repository_payload) }
 
     initialize_with { attributes.deep_stringify_keys }
   end

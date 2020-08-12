@@ -35,7 +35,7 @@ FactoryBot.define do
 
     factory :full_pull_request_payload do
       after(:build) do |pull_request_payload|
-        pull_request_payload['repository'] = (create :repository_payload)['repository']
+        pull_request_payload['repository'] = create(:repository_payload)
       end
     end
   end

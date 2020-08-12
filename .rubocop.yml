@@ -16,6 +16,10 @@ Documentation:
 Layout/ClassStructure:
   Enabled: true
 
+Layout/EmptyLinesAroundAccessModifier:
+  Exclude:
+    - spec/factories/payloads/repository.rb
+
 Layout/SpaceBeforeFirstArg:
   Exclude:
     - app/views/api/**/**/*

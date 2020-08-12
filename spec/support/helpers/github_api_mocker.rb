@@ -25,8 +25,7 @@ module GithubApiMock
   end
 
   def stub_repository_views(project, response_body, status_code)
-    stub_env('GITHUB_ADMIN_USER', github_admin_user)
-    stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
+    stub_auth_envs
 
     url = "https://api.github.com/repositories/#{project.github_id}/traffic/views"
 
@@ -42,6 +41,30 @@ module GithubApiMock
     }.to_json
   end
 
+  # The results_per_page attribute is meant just for testing purposes
+  # The API will be stubbed anyway with the amount used in GithubClient::Organization#repositories
+  def stub_organization_repositories(
+    repository_payloads,
+    results_per_page: GithubClient::Organization::MAX_REPOSITORIES_PER_PAGE
+  )
+    stub_auth_envs
+
+    url = 'https://api.github.com/orgs/rootstrap/repos'
+    groups_of_repositories = repository_payloads.in_groups_of(results_per_page, false)
+
+    groups_of_repositories.push([]).each.with_index do |repositories, index|
+      stub_request(:get, url)
+        .with(
+          basic_auth: [github_admin_user, github_admin_token],
+          query: {
+            page: index + 1,
+            per_page: GithubClient::Organization::MAX_REPOSITORIES_PER_PAGE
+          }
+        )
+        .to_return(body: JSON.generate(repositories), status: 200)
+    end
+  end
+
   private
 
   def base_content_file
@@ -54,5 +77,10 @@ module GithubApiMock
 
   def github_admin_token
     '1q2w3e4r5t'
+  end
+
+  def stub_auth_envs
+    stub_env('GITHUB_ADMIN_USER', github_admin_user)
+    stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
   end
 end
