@@ -43,6 +43,11 @@ code_climate_metrics_update:
   class: 'CodeClimateMetricsUpdaterJob'
   active_job: true
 
+projects_update:
+  cron: '30 5 * * 6'
+  class: 'ProjectsImporterJob'
+  active_job: true
+
 open_source_metrics_update:
   cron: '00 6 * * *'
   class: 'OpenSourceMetricsUpdaterJob'

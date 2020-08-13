@@ -462,7 +462,9 @@ CREATE TABLE public.exception_hunter_error_groups (
     error_class_name character varying NOT NULL,
     message character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    status integer DEFAULT 0,
+    tags text[] DEFAULT '{}'::text[]
 );
 
 
@@ -1418,6 +1420,13 @@ CREATE INDEX index_exception_hunter_error_groups_on_message ON public.exception_
 
 
 --
+-- Name: index_exception_hunter_error_groups_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_exception_hunter_error_groups_on_status ON public.exception_hunter_error_groups USING btree (status);
+
+
+--
 -- Name: index_exception_hunter_errors_on_error_group_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1863,6 +1872,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200713152004'),
 ('20200714160138'),
 ('20200720155715'),
-('20200730142418');
+('20200730142418'),
+('20200806131024');
 
 

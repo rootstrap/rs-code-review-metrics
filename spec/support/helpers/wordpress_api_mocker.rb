@@ -1,16 +1,37 @@
 module WordpressApiMocker
-  def stub_blog_post_views_response(
+  def stub_successful_blog_post_views_response(
     blog_post_id,
     blog_post_views_payload = create(:blog_post_views_payload)
   )
+    stub_blog_post_views_response(blog_post_id, blog_post_views_payload, 200)
+  end
+
+  def stub_failed_blog_post_views_response(blog_post_id)
+    stub_blog_post_views_response(blog_post_id, {}, 404)
+  end
+
+  def stub_blog_post_views_response(blog_post_id, response_body, status_code)
     stub_access_token_response
     stub_env('WORDPRESS_SITE_ID', blog_site_id)
 
-    url = 'https://public-api.wordpress.com/rest/v1.1/sites/' \
+    url = "#{WordpressService::BASE_API_URL}/rest/v1.1/sites/" \
           "#{blog_site_id}/stats/post/#{blog_post_id}"
     stub_request(:get, url)
       .with(headers: authorization_header)
-      .to_return(body: JSON.generate(blog_post_views_payload), status: 200)
+      .to_return(body: JSON.generate(response_body), status: status_code)
+  end
+
+  def stub_failed_blog_posts_response(request_params: {})
+    stub_access_token_response
+
+    request_params = {
+      status: BlogPost.statuses[:publish],
+      after: default_starting_time.iso8601
+    }.merge(request_params)
+
+    stub_request(:get, "#{WordpressService::BASE_API_URL}/rest/v1.1/me/posts")
+      .with(query: request_params.merge(page_handle: nil), headers: authorization_header)
+      .to_return(status: 404)
   end
 
   def stub_blog_posts_response(
@@ -54,21 +75,28 @@ module WordpressApiMocker
 
     blog_posts_response.merge!('meta': { 'next_page': next_page_token }) if next_page_token.present?
 
-    stub_request(:get, 'https://public-api.wordpress.com/rest/v1.1/me/posts')
+    stub_request(:get, "#{WordpressService::BASE_API_URL}/rest/v1.1/me/posts")
       .with(query: request_params.merge(page_handle: page_token), headers: authorization_header)
       .to_return(body: JSON.generate(blog_posts_response), status: 200)
   end
 
-  def stub_blog_post_response(blog_post_payload = create(:blog_post_payload))
+  def stub_successful_blog_post_response(blog_post_payload = create(:blog_post_payload))
+    stub_blog_post_response(blog_post_payload['ID'], blog_post_payload, 200)
+  end
+
+  def stub_failed_blog_post_response(blog_post_id)
+    stub_blog_post_response(blog_post_id, {}, 404)
+  end
+
+  def stub_blog_post_response(blog_post_id, response_body, status_code)
     stub_access_token_response
     stub_env('WORDPRESS_SITE_ID', blog_site_id)
 
-    blog_post_id = blog_post_payload['ID']
-    url = 'https://public-api.wordpress.com/rest/v1.1/sites/' \
+    url = "#{WordpressService::BASE_API_URL}/rest/v1.1/sites/" \
           "#{blog_site_id}/posts/#{blog_post_id}"
     stub_request(:get, url)
       .with(headers: authorization_header)
-      .to_return(body: JSON.generate(blog_post_payload), status: 200)
+      .to_return(body: JSON.generate(response_body), status: status_code)
   end
 
   def stub_access_token_response(
@@ -85,7 +113,7 @@ module WordpressApiMocker
       password: password
     }
 
-    stub_request(:post, 'https://public-api.wordpress.com/oauth2/token')
+    stub_request(:post, "#{WordpressService::BASE_API_URL}/oauth2/token")
       .with(body: request_params)
       .to_return(body: JSON.generate(response_body), status: response_status)
   end

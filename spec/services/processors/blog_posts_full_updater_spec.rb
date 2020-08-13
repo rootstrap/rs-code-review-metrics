@@ -25,8 +25,8 @@ describe Processors::BlogPostsFullUpdater do
       before do
         create(:technology, name: 'other')
         stub_blog_posts_response(blog_post_payloads: blog_post_payload)
-        stub_blog_post_response(stored_blog_post_payload)
-        stub_blog_post_response(new_blog_post_payload)
+        stub_successful_blog_post_response(stored_blog_post_payload)
+        stub_successful_blog_post_response(new_blog_post_payload)
       end
 
       it 'updates the stored blog post' do
