@@ -9,3 +9,6 @@
               suffix: " pull requests",
               metric: merge_time[:per_project_distribution] || merge_time[:per_department_distribution]
             } if merge_time && (merge_time[:per_project_distribution] || merge_time[:per_department_distribution]) %>
+<div class="distribution-report-button">
+  <button type="button" class="btn btn-secondary">See report</button>
+</div>
