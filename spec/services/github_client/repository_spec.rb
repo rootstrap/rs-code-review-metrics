@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe GithubRepositoryClient do
+RSpec.describe GithubClient::Repository do
   describe '#code_owners' do
     let(:project) { create(:project, name: 'rs-code-metrics') }
 
@@ -21,14 +21,24 @@ RSpec.describe GithubRepositoryClient do
     end
   end
 
-  describe '#repository_views' do
+  describe '#views' do
     let(:project) { create(:project) }
     let(:repository_views_payload) { create(:repository_views_payload) }
 
-    before { stub_repository_views(project, repository_views_payload) }
+    context 'when the request succeeds' do
+      before { stub_successful_repository_views(project, repository_views_payload) }
 
-    it 'returns the views hash of that project on Github' do
-      expect(described_class.new(project).repository_views).to eq repository_views_payload
+      it 'returns the views hash of that project on Github' do
+        expect(described_class.new(project).views).to eq repository_views_payload
+      end
+    end
+
+    context 'when the request fails' do
+      before { stub_failed_repository_views(project) }
+
+      it 'raises an exception' do
+        expect { described_class.new(project).views }.to raise_error Faraday::ClientError
+      end
     end
   end
 end

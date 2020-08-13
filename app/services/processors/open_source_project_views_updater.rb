@@ -11,6 +11,8 @@ module Processors
           project_views_payload['uniques']
         )
       end
+    rescue Faraday::Error => exception
+      ExceptionHunter.track(exception)
     end
 
     private
@@ -32,7 +34,7 @@ module Processors
     end
 
     def views_payload
-      GithubRepositoryClient.new(project).repository_views
+      GithubClient::Repository.new(project).views
     end
 
     def update_views_metric(timestamp, views)

@@ -16,6 +16,10 @@ Documentation:
 Layout/ClassStructure:
   Enabled: true
 
+Layout/EmptyLinesAroundAccessModifier:
+  Exclude:
+    - spec/factories/payloads/repository.rb
+
 Layout/SpaceBeforeFirstArg:
   Exclude:
     - app/views/api/**/**/*
@@ -76,6 +80,9 @@ Metrics/ParameterLists:
 
 Metrics/PerceivedComplexity:
   Max: 12
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: exception
 
 Rails:
   Enabled: true
