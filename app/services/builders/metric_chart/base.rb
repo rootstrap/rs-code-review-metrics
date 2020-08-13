@@ -14,7 +14,11 @@ module Builders
           )
         end
 
-        totals = calculate_totals
+        totals = generate_results_for(
+          entity_name: 'Totals',
+          metrics: totals_metrics,
+          hidden: false
+        )
 
         MetricsDatasetGroup.new(datasets, totals)
       end
@@ -23,12 +27,8 @@ module Builders
 
       attr_reader :periods
 
-      def calculate_totals
-        generate_results_for(
-          entity_name: 'Totals',
-          metrics: Metric.where(ownable_type: metric_totals_ownable_type.to_s),
-          hidden: false
-        )
+      def totals_metrics
+        Metric.where(ownable_type: metric_totals_ownable_type.to_s)
       end
 
       def generate_results_for(entity_name:, metrics:, hidden:)
