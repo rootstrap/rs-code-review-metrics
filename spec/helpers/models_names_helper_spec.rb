@@ -33,6 +33,16 @@ RSpec.describe ModelsNamesHelper, type: :helper do
     it 'returns the rs-site-django as third project in the collection' do
       expect(helper.all_projects_names.third).to eq(rs_site_django_project.name)
     end
+
+    context 'when one of the project names start with an uppercase' do
+      let!(:elon1_raspberry_project) do
+        create(:project, name: 'Elon1-raspberry', language: Language.find_by(name: 'python'))
+      end
+
+      it 'still places it in the correct position' do
+        expect(helper.all_projects_names.second).to eq(elon1_raspberry_project.name)
+      end
+    end
   end
 
   describe '.all_users_names' do
