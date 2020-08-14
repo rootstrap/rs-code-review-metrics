@@ -1,5 +1,7 @@
 ActiveAdmin.register Project do
   permit_params :language_id, :description, :name, :github_id, :relevance
+  preserve_default_filters!
+  filter :relevance, as: :select, collection: Project.relevances.values
   remove_filter :events
 
   index do
