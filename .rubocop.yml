@@ -52,7 +52,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 6
   Exclude:
-    - app/services/metrics/merge_time/time_interval_resolver.rb
+    - app/services/metrics/time_interval_resolver.rb
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
