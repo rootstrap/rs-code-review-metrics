@@ -10,7 +10,7 @@ module Builders
       def call
         mt = @langs.reject(&:blank?).empty? ? merge_times : merge_times_filtered_by_languages
         mt.each_with_object(hash_of_arrays) do |merge_time, hash|
-          interval = Metrics::MergeTime::TimeIntervalResolver.call(merge_time.value_as_hours)
+          interval = Metrics::TimeIntervalResolver.call(merge_time.value_as_hours)
           hash[interval] << merge_time.pull_request.html_url
         end
       end

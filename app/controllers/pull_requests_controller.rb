@@ -2,7 +2,7 @@ class PullRequestsController < ApplicationController
   layout 'sidebar_metrics'
 
   def index
-    @intervals_pull_requests = Builders::Distribution::PullRequests.call(
+    @pull_requests = Builders::Distribution::PullRequests.call(
       department_name: params[:department_name],
       from: metric_params[:period],
       langs: metric_params[:lang] || []

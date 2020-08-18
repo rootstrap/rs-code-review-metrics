@@ -18,7 +18,7 @@ module Builders
 
       def build_distribution_data(entities)
         entities_by_interval = entities.each_with_object(Hash.new(0)) do |entity, hash|
-          interval = Metrics::MergeTime::TimeIntervalResolver.call(entity.value_as_hours)
+          interval = Metrics::TimeIntervalResolver.call(entity.value_as_hours)
           hash[interval] += 1
         end
         entities_by_interval.sort_by { |key, _| key }

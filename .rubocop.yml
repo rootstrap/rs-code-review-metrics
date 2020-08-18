@@ -32,8 +32,6 @@ Metrics/AbcSize:
   # The ABC size is a calculated magnitude, so this number can be an Integer or
   # a Float.
   Max: 15
-  Exclude:
-    - app/services/builders/distribution/pull_requests.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -54,8 +52,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Max: 6
   Exclude:
-    - app/services/builders/chartkick/base.rb
-    - app/services/builders/distribution/pull_requests.rb
+    - app/services/metrics/merge_time/time_interval_resolver.rb
 
 Metrics/MethodLength:
   CountComments: false  # count full line comments?
