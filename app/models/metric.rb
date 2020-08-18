@@ -18,6 +18,8 @@
 #
 
 class Metric < ApplicationRecord
+  include EntityTimeRepresentation
+
   enum interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', all_times: 'all_times' }
   enum name: { review_turnaround: 'review_turnaround',
                blog_visits: 'blog_visits',

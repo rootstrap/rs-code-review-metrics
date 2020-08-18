@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   post '/github_event_handler', to: 'webhook#handle'
   resources :development_metrics, only: [] do
     collection do
+      resources :departments, only: [], param: :name do
+        resources :pull_requests, only: :index
+      end
       get 'projects'
       get 'departments'
       get 'users'

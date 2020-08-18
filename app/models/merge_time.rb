@@ -18,6 +18,8 @@
 #
 
 class MergeTime < ApplicationRecord
+  include EntityTimeRepresentation
+
   belongs_to :pull_request, class_name: 'Events::PullRequest'
 
   validates :value, presence: true
