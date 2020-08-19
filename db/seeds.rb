@@ -51,7 +51,6 @@ if Rails.env.development?
       end
     end
 
-
     Project.all.each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
