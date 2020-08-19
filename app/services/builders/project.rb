@@ -15,6 +15,7 @@ module Builders
         project.name = @repository_data['name']
         project.description = @repository_data['description']
         project.is_private = @repository_data['private']
+        project.relevance = ::Project.relevances[:ignored] if @repository_data['archived']
       end
     end
   end

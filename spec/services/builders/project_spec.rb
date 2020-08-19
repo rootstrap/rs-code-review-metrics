@@ -38,5 +38,29 @@ RSpec.describe Builders::Project do
         expect(described_class.call(repository_payload)).to eq project
       end
     end
+
+    describe 'archived property' do
+      context 'when the project is archived' do
+        let(:repository_payload) { create(:repository_payload, archived: true) }
+
+        it 'the project is assigned the "ignored" relevance' do
+          described_class.call(repository_payload)
+
+          project = Project.find_by(github_id: repository_payload['id'])
+          expect(project.relevance).to eq Project.relevances[:ignored]
+        end
+      end
+
+      context 'when the project is not archived' do
+        let(:repository_payload) { create(:repository_payload, archived: false) }
+
+        it 'the project is not assigned a relevance' do
+          described_class.call(repository_payload)
+
+          project = Project.find_by(github_id: repository_payload['id'])
+          expect(project.relevance).to eq Project.relevances[:unassigned]
+        end
+      end
+    end
   end
 end
