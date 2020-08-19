@@ -7,6 +7,6 @@ module FiltersHelper
   end
 
   def current_department
-    Department.find_by(name: params[:department_name])
+    Department.find_by!(name: params[:department_name])
   end
 end
