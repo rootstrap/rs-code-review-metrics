@@ -5,4 +5,8 @@ module FiltersHelper
       metric: { period: params&.dig(:metric, :period) }
     }
   end
+
+  def current_department
+    Department.find_by!(name: params[:department_name])
+  end
 end

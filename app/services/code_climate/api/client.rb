@@ -8,49 +8,34 @@ module CodeClimate
         'Authorization': "Token token=#{CODE_CLIMATE_API_TOKEN}"
       }.freeze
 
-      def repositories(org_id:)
-        ignoring_raised_errors do
-          response_json = get_json(RemoteQuery.new("orgs/#{org_id}/repos"))
-          response_json && response_json['data'].map do |repository_json|
-            Repository.new(repository_json)
-          end
-        end
-      end
+      def repository_by_slug(github_slug:)
+        json = get_json(repository_by_slug_remote_query(github_slug: github_slug))
+        # Despite of the name this endpoint returns a collection of repositories
+        repository_data = json['data'].first
 
-      def repository(repository_id: nil, github_slug: nil)
-        ignoring_raised_errors do
-          json = get_json(
-            repository_remote_query(
-              repository_id: repository_id, github_slug: github_slug
-            )
-          )
-          # Despite of the name this endpoint returns a collection of repositories
-          json && Repository.new(json['data'].first)
-        end
+        return if repository_data.blank?
+
+        Repository.new(repository_data)
       end
 
       def snapshot(repo_id:, snapshot_id:)
-        ignoring_raised_errors do
-          json = get_json(snapshot_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
-          json && Snapshot.new(json['data'], repo_id)
-        end
+        json = get_json(snapshot_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
+        Snapshot.new(json['data'], repo_id)
       end
 
       def snapshot_issues(repo_id:, snapshot_id:)
-        ignoring_raised_errors do
-          json = get_json(snapshot_issues_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
-          json && json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
-        end
+        json = get_json(snapshot_issues_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
+        json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
       end
 
       private
 
-      def repository_remote_query(repository_id:, github_slug:)
-        if github_slug
-          RemoteQuery.new('repos', github_slug: github_slug)
-        else
-          RemoteQuery.new("repos/#{repository_id}")
-        end
+      def repository_by_id_remote_query(repository_id:)
+        RemoteQuery.new("repos/#{repository_id}")
+      end
+
+      def repository_by_slug_remote_query(github_slug:)
+        RemoteQuery.new('repos', github_slug: github_slug)
       end
 
       def snapshot_remote_query(repo_id:, snapshot_id:)
@@ -61,24 +46,14 @@ module CodeClimate
         RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
       end
 
-      def ignoring_raised_errors
-        yield
-      rescue StandardError
-        nil
-      end
-
       def get_json(remote_query)
         body = get_body(remote_query)
-        body && JSON.parse(body)
-      end
-
-      def unsafe_get_json(remote_query)
-        JSON.parse(get_body(remote_query))
+        JSON.parse(body)
       end
 
       def get_body(remote_query)
         response = do_get(remote_query)
-        response.success? ? response.body : nil
+        response.body
       end
 
       def do_get(remote_query)
@@ -89,7 +64,9 @@ module CodeClimate
         Faraday.new(
           url: CODE_CLIMATE_API_URL,
           headers: CODE_CLIMATE_API_HEADERS
-        )
+        ) do |connection|
+          connection.response(:raise_error)
+        end
       end
     end
   end

@@ -7,9 +7,11 @@ module CodeClimate
     end
 
     def call
-      return unless update_metric? && code_climate_project_info
+      return unless update_metric? && code_climate_project_summary.present?
 
       update_metric
+    rescue Faraday::Error => exception
+      ExceptionHunter.track(exception)
     end
 
     private
@@ -18,16 +20,17 @@ module CodeClimate
       create_project_code_climate_metric unless project_code_climate_metric
 
       project_code_climate_metric.update!(
-        code_climate_rate: code_climate_project_info.rate,
-        invalid_issues_count: code_climate_project_info.invalid_issues_count,
-        open_issues_count: code_climate_project_info.open_issues_count,
-        wont_fix_issues_count: code_climate_project_info.wont_fix_issues_count,
-        snapshot_time: code_climate_project_info.snapshot_time
+        code_climate_rate: code_climate_project_summary.rate,
+        invalid_issues_count: code_climate_project_summary.invalid_issues_count,
+        open_issues_count: code_climate_project_summary.open_issues_count,
+        wont_fix_issues_count: code_climate_project_summary.wont_fix_issues_count,
+        snapshot_time: code_climate_project_summary.snapshot_time
       )
     end
 
-    def code_climate_project_info
-      @code_climate_project_info ||= CodeClimate::GetProjectInfo.call(github_slug: project_name)
+    def code_climate_project_summary
+      @code_climate_project_summary ||=
+        CodeClimate::GetProjectSummary.call(github_slug: project_name)
     end
 
     def today
@@ -45,7 +48,7 @@ module CodeClimate
     def create_project_code_climate_metric
       @project_code_climate_metric = CodeClimateProjectMetric.create!(
         project: @project,
-        snapshot_time: code_climate_project_info.snapshot_time
+        snapshot_time: code_climate_project_summary.snapshot_time
       )
     end
 

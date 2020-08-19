@@ -6,6 +6,7 @@
 #  body       :text
 #  closed_at  :datetime
 #  draft      :boolean          not null
+#  html_url   :string
 #  locked     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
@@ -44,6 +45,7 @@ module Events
     has_many :reviews, class_name: 'Events::Review', dependent: :destroy,
                        inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
+    has_one :merge_time, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id,

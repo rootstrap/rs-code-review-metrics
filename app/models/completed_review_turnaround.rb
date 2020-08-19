@@ -18,6 +18,8 @@
 #
 
 class CompletedReviewTurnaround < ApplicationRecord
+  include EntityTimeRepresentation
+
   belongs_to :review_request
 
   validates :value, presence: true
