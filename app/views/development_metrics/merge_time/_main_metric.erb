@@ -9,11 +9,3 @@
               suffix: " pull requests",
               metric: merge_time[:per_project_distribution] || merge_time[:per_department_distribution]
             } if merge_time && (merge_time[:per_project_distribution] || merge_time[:per_department_distribution]) %>
- <%if current_page?(departments_development_metrics_path)%>
-  <div class="distribution-report-button">
-    <%= link_to 'See report',
-                department_pull_requests_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
-                class: 'btn btn-secondary'
-    %>
-  </div>
-<%end%>
