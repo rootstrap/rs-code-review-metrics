@@ -87,16 +87,45 @@ if Rails.env.development?
 
     User.last(2).each { |user| CodeOwnerProject.create!(user: user, project: second_project) }
 
-    # Review turnaround and Second review turnaround
     santiagovidal = User.find_by(login: 'santiagovidal')
     santib = User.find_by(login: 'santib')
     hernan = User.find_by(login: 'hdamico')
+    horacio = User.find_by(login: 'horacio')
+    hvilloria = User.find_by(login: 'hvilloria')
+    sandro = User.find_by(login: 'sandro')
 
+    # Review turnaround and Second review turnaround
     vita_pr = FactoryBot.create(:pull_request, owner: santiagovidal, project: project)
     vita_rr_santib = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: santib)
     FactoryBot.create(:review, owner: santib, project: project, pull_request: vita_pr, review_request: vita_rr_santib)
 
     vita_rr_hernan = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: hernan)
     FactoryBot.create(:review, owner: hernan, project: project, pull_request: vita_pr, review_request: vita_rr_hernan)
+
+    # Merge Time
+    hvilloria_pr = FactoryBot.create(
+      :pull_request,
+      owner: hvilloria,
+      project: project,
+      opened_at: 5.hours.ago,
+      merged_at: Time.zone.now
+    )
+    Builders::MergeTime.call(hvilloria_pr)
+    sandro_pr = FactoryBot.create(
+      :pull_request,
+      owner: sandro,
+      project: project,
+      opened_at: Time.zone.now - 14.hours,
+      merged_at: Time.zone.now
+    )
+    Builders::MergeTime.call(sandro_pr)
+    horacio_pr = FactoryBot.create(
+      :pull_request,
+      owner: horacio,
+      project: project,
+      opened_at: Time.zone.now - 27.hours,
+      merged_at: Time.zone.now
+    )
+    Builders::MergeTime.call(horacio_pr)
   end
 end

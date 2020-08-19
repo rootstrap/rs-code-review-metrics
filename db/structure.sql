@@ -679,7 +679,8 @@ CREATE TABLE public.pull_requests (
     state public.pull_request_state,
     opened_at timestamp without time zone,
     project_id bigint,
-    owner_id bigint
+    owner_id bigint,
+    html_url character varying
 );
 
 
@@ -1873,6 +1874,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200714160138'),
 ('20200720155715'),
 ('20200730142418'),
-('20200806131024');
+('20200806131024'),
+('20200813162522');
 
 

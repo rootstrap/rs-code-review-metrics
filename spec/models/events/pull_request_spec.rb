@@ -6,6 +6,7 @@
 #  body       :text
 #  closed_at  :datetime
 #  draft      :boolean          not null
+#  html_url   :string
 #  locked     :boolean          not null
 #  merged_at  :datetime
 #  number     :integer          not null
