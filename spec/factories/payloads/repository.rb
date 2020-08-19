@@ -7,6 +7,7 @@ FactoryBot.define do
     name { Faker::App.name }
     description { '' }
     private { false }
+    archived { false }
 
     initialize_with { attributes.deep_stringify_keys }
   end

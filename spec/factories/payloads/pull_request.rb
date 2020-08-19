@@ -18,6 +18,7 @@ FactoryBot.define do
         number: Faker::Number.number(digits: 1),
         title: "Pull Request-#{Faker::Number.number(digits: 1)}",
         node_id: "#{Faker::Alphanumeric.alphanumeric}=",
+        html_url: 'https://github.com/Codertocat/Hello-World/pull/2',
         state: 'open',
         locked: 'false',
         draft: 'false',

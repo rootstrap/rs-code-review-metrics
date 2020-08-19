@@ -9,8 +9,6 @@ module CodeClimate
       end
 
       def summary
-        return unless issues
-
         ProjectSummary.new(rate: ratings.first,
                            issues: issues_collection,
                            snapshot_time: snapshot_time)
@@ -32,7 +30,7 @@ module CodeClimate
       end
 
       def issues
-        @issues || api_client.snapshot_issues(repo_id: repo_id, snapshot_id: snapshot_id)
+        @issues ||= api_client.snapshot_issues(repo_id: repo_id, snapshot_id: snapshot_id)
       end
 
       def issues_collection
