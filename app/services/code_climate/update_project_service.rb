@@ -7,6 +7,8 @@ module CodeClimate
     def call
       return unless update_metric? && code_climate_project_summary.present?
 
+      create_project_code_climate_metric if project_code_climate_metric.blank?
+
       update_metric
     rescue Faraday::Error => exception
       ExceptionHunter.track(exception)
@@ -17,14 +19,13 @@ module CodeClimate
     attr_reader :project
 
     def update_metric
-      create_project_code_climate_metric unless project_code_climate_metric
-
       project_code_climate_metric.update!(
         code_climate_rate: code_climate_project_summary.rate,
         invalid_issues_count: code_climate_project_summary.invalid_issues_count,
         open_issues_count: code_climate_project_summary.open_issues_count,
         wont_fix_issues_count: code_climate_project_summary.wont_fix_issues_count,
-        snapshot_time: code_climate_project_summary.snapshot_time
+        snapshot_time: code_climate_project_summary.snapshot_time,
+        cc_repository_id: code_climate_project_summary.repo_id
       )
     end
 

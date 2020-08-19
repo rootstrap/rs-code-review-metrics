@@ -76,6 +76,11 @@ describe CodeClimate::UpdateProjectService do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
     end
+
+    it 'sets the new CodeClimate repository id for the project' do
+      update_project_code_climate_info
+      expect(CodeClimateProjectMetric.first.cc_repository_id).to eq(repo_id)
+    end
   end
 
   context 'with a project registered in CodeClimate that is outdated' do
@@ -120,6 +125,11 @@ describe CodeClimate::UpdateProjectService do
     it 'sets the new CodeClimate open_issues_count for the project' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
+    end
+
+    it 'sets the new CodeClimate repository id for the project' do
+      update_project_code_climate_info
+      expect(CodeClimateProjectMetric.first.cc_repository_id).to eq(repo_id)
     end
   end
 

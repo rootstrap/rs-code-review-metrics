@@ -3,7 +3,7 @@ FactoryBot.define do
     skip_create
 
     transient do
-      id { Faker::Number.number(digits: 4) }
+      id { Faker::Alphanumeric.alphanumeric(number: 24) }
       name { Faker::Internet.slug(glue: '-') }
       latest_default_branch_snapshot_id { Faker::Number.number(digits: 4) }
     end
