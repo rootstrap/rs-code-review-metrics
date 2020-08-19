@@ -28,7 +28,7 @@ RSpec.describe Builders::Distribution::PullRequests do
         described_class.call(
           department_name: 'backend',
           from: 4,
-          langs: []
+          languages: []
         )
       end
 
@@ -54,7 +54,7 @@ RSpec.describe Builders::Distribution::PullRequests do
         described_class.call(
           department_name: 'backend',
           from: 4,
-          langs: ['ruby']
+          languages: ['ruby']
         )
       end
 
