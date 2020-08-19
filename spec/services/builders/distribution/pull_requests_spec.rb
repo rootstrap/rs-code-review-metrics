@@ -71,6 +71,10 @@ RSpec.describe Builders::Distribution::PullRequests do
       it 'returns data for 24-36 hours' do
         expect(subject).to have_key('24-36')
       end
+
+      it 'does not return any data for 12-24 hours' do
+        expect(subject).not_to have_key('12-24')
+      end
     end
   end
 end

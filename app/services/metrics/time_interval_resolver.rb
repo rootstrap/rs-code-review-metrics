@@ -10,7 +10,7 @@ module Metrics
     def call
       return '72+' if @value >= 72
 
-      HOURS_RANGE.each { |interval, hour| break interval.to_s if @value < hour }
+      HOURS_RANGE.find { |_interval, hour| @value < hour }.first.to_s
     end
   end
 end
