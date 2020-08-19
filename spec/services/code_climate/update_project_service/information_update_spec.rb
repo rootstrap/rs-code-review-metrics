@@ -4,9 +4,6 @@ describe CodeClimate::UpdateProjectService do
   subject { CodeClimate::UpdateProjectService }
 
   before do
-    on_request_repository(project_name: project.name,
-                          respond: { status: 200, body: code_climate_repository_json })
-
     on_request_snapshot(repo_id: repo_id,
                         snapshot_id: snapshot_id,
                         respond: { status: 200, body: code_climate_snapshot_json })
@@ -39,8 +36,8 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project not registered in CodeClimate' do
     before do
-      on_request_repository(project_name: project.name,
-                            respond: { status: 404 })
+      on_request_repository_by_slug(project_name: project.name,
+                                    respond: { status: 404 })
     end
 
     it 'does not create a CodeClimateProjectMetric record' do
@@ -49,6 +46,13 @@ describe CodeClimate::UpdateProjectService do
   end
 
   context 'with a project registered in CodeClimate that has not been updated before' do
+    before do
+      on_request_repository_by_slug(
+        project_name: project.name,
+        respond: { status: 200, body: code_climate_repository_json }
+      )
+    end
+
     it 'creates a CodeClimateProjectMetric record' do
       expect { update_project_code_climate_info }.to change { CodeClimateProjectMetric.count }.by(1)
     end
@@ -77,6 +81,11 @@ describe CodeClimate::UpdateProjectService do
   context 'with a project registered in CodeClimate that is outdated' do
     before do
       existing_code_climate_project_metric
+
+      on_request_repository_by_repo_id(
+        repo_id: existing_code_climate_project_metric.cc_repository_id,
+        respond: { status: 200, body: code_climate_repository_json }
+      )
     end
 
     let(:existing_code_climate_project_metric) do
@@ -117,6 +126,11 @@ describe CodeClimate::UpdateProjectService do
   context 'with a project registered in CodeClimate that is up to date' do
     before do
       existing_code_climate_project_metric
+
+      on_request_repository_by_repo_id(
+        repo_id: existing_code_climate_project_metric.cc_repository_id,
+        respond: { status: 200, body: code_climate_repository_json }
+      )
     end
 
     let(:existing_code_climate_project_metric) do

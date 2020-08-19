@@ -25,8 +25,8 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos' do
     context 'returns anything but 200' do
       before do
-        on_request_repository(project_name: project.name,
-                              respond: { status: 500 })
+        on_request_repository_by_slug(project_name: project.name,
+                                      respond: { status: 500 })
       end
 
       it 'does not update a CodeClimateProjectMetric record' do
@@ -43,8 +43,10 @@ describe CodeClimate::UpdateProjectService do
 
     context 'returns empty data' do
       before do
-        on_request_repository(project_name: project.name,
-                              respond: { status: 200, body: code_climate_repository_json })
+        on_request_repository_by_slug(
+          project_name: project.name,
+          respond: { status: 200, body: code_climate_repository_json }
+        )
       end
 
       let(:code_climate_repository_json) { build(:code_climate_repository_payload, data: []) }
@@ -59,8 +61,10 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos/:id/snapshots/' do
     context 'returns anything but 200' do
       before do
-        on_request_repository(project_name: project.name,
-                              respond: { status: 200, body: code_climate_repository_json })
+        on_request_repository_by_slug(
+          project_name: project.name,
+          respond: { status: 200, body: code_climate_repository_json }
+        )
 
         on_request_snapshot(repo_id: repo_id,
                             snapshot_id: snapshot_id,
@@ -83,8 +87,10 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos/:id/snapshots/issues' do
     context 'returns anything but 200' do
       before do
-        on_request_repository(project_name: project.name,
-                              respond: { status: 200, body: code_climate_repository_json })
+        on_request_repository_by_slug(
+          project_name: project.name,
+          respond: { status: 200, body: code_climate_repository_json }
+        )
 
         on_request_snapshot(repo_id: repo_id,
                             snapshot_id: snapshot_id,

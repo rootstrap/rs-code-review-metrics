@@ -1,7 +1,5 @@
 module CodeClimate
   class UpdateProjectService < BaseService
-    CODE_CLIMATE_API_ORG_NAME = 'rootstrap'.freeze
-
     def initialize(project)
       @project = project
     end
@@ -16,6 +14,8 @@ module CodeClimate
 
     private
 
+    attr_reader :project
+
     def update_metric
       create_project_code_climate_metric unless project_code_climate_metric
 
@@ -29,8 +29,7 @@ module CodeClimate
     end
 
     def code_climate_project_summary
-      @code_climate_project_summary ||=
-        CodeClimate::GetProjectSummary.call(github_slug: project_name)
+      @code_climate_project_summary ||= CodeClimate::GetProjectSummary.call(project: project)
     end
 
     def today
@@ -42,18 +41,14 @@ module CodeClimate
     end
 
     def project_code_climate_metric
-      @project_code_climate_metric ||= CodeClimateProjectMetric.find_by(project: @project)
+      @project_code_climate_metric ||= CodeClimateProjectMetric.find_by(project: project)
     end
 
     def create_project_code_climate_metric
       @project_code_climate_metric = CodeClimateProjectMetric.create!(
-        project: @project,
+        project: project,
         snapshot_time: code_climate_project_summary.snapshot_time
       )
-    end
-
-    def project_name
-      "#{CODE_CLIMATE_API_ORG_NAME}/#{@project.name}"
     end
   end
 end

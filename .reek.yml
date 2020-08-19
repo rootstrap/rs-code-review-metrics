@@ -13,7 +13,7 @@ detectors:
     exclude: []
   DataClump:
     enabled: true
-    exclude: []
+    exclude: ['CodeClimateApiMocker']
     max_copies: 2
     min_clump_size: 2
   DuplicateMethodCall:
