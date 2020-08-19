@@ -22,7 +22,7 @@
 #
 FactoryBot.define do
   factory :blog_post do
-    blog_id { Faker::Number.number(digits: 4) }
+    sequence(:blog_id)
     slug { 'ruby-is-awesome' }
     url { 'https://www.rotstrap.com/blog/ruby_is_awesome' }
     status { BlogPost.statuses[:publish] }
