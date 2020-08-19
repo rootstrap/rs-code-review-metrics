@@ -108,7 +108,7 @@ if Rails.env.development?
       :pull_request,
       owner: hvilloria,
       project: project,
-      opened_at: Time.zone.now - 5.hours,
+      opened_at: 5.hours.ago,
       merged_at: Time.zone.now
     )
     Builders::MergeTime.call(hvilloria_pr)
