@@ -1,9 +1,7 @@
 module CodeClimate
   module Api
     class Repository < Resource
-      def summary
-        default_branch_most_recent_snapshot&.summary
-      end
+      delegate :summary, to: :default_branch_most_recent_snapshot
 
       def repository_id
         @json['id']
