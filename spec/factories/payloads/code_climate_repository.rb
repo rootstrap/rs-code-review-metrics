@@ -8,6 +8,7 @@ FactoryBot.define do
       id { Faker::Alphanumeric.alphanumeric(number: 24) }
       name { Faker::Internet.slug(glue: '-') }
       latest_default_branch_snapshot_id { Faker::Number.number(digits: 4) }
+      latest_default_branch_test_report_id { Faker::Alphanumeric.alphanumeric(number: 24) }
       repository_payload do
         {
           'id' => id,
@@ -29,6 +30,12 @@ FactoryBot.define do
               'data' => {
                 'id' => latest_default_branch_snapshot_id,
                 'type' => 'snapshots'
+              }
+            },
+            'latest_default_branch_test_report' => {
+              'data' => {
+                'id' => latest_default_branch_test_report_id,
+                'type' => 'test_reports'
               }
             }
           }
