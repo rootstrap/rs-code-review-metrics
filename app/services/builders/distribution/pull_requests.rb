@@ -8,10 +8,13 @@ module Builders
       end
 
       def call
-        merge_time_records.each_with_object(hash_of_arrays) do |merge_time, hash|
+        merge_time_records.each_with_object(hash_of_arrays) { |merge_time, hash|
+          pull_request_url = merge_time.pull_request.html_url
+          next if pull_request_url.blank?
+
           interval = Metrics::TimeIntervalResolver.call(merge_time.value_as_hours)
-          hash[interval] << merge_time.pull_request.html_url
-        end
+          hash[interval] << pull_request_url
+        }.sort.to_h
       end
 
       private
