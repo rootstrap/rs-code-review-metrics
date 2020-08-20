@@ -7,8 +7,6 @@ module CodeClimate
     def call
       return unless update_metric? && code_climate_project_summary.present?
 
-      create_project_code_climate_metric if project_code_climate_metric.blank?
-
       update_metric
     rescue Faraday::Error => exception
       ExceptionHunter.track(exception)
@@ -38,18 +36,13 @@ module CodeClimate
     end
 
     def update_metric?
-      !project_code_climate_metric || project_code_climate_metric.updated_at < today
+      metric_last_updated_at = project_code_climate_metric.updated_at
+      metric_last_updated_at.blank? || metric_last_updated_at < today
     end
 
     def project_code_climate_metric
-      @project_code_climate_metric ||= CodeClimateProjectMetric.find_by(project: project)
-    end
-
-    def create_project_code_climate_metric
-      @project_code_climate_metric = CodeClimateProjectMetric.create!(
-        project: project,
-        snapshot_time: code_climate_project_summary.snapshot_time
-      )
+      @project_code_climate_metric ||=
+        CodeClimateProjectMetric.find_or_initialize_by(project: project)
     end
   end
 end
