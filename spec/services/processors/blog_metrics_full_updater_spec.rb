@@ -7,11 +7,5 @@ describe Processors::BlogMetricsFullUpdater do
 
       described_class.call
     end
-
-    it 'calls the BlogPostCountMetricsFullUpdater processor' do
-      expect(Processors::BlogPostCountMetricsFullUpdater).to receive(:call)
-
-      described_class.call
-    end
   end
 end
