@@ -15,6 +15,7 @@ module CodeClimate
         ProjectSummary.new(rate: metric.code_climate_rate,
                            issues: issues_collection(metric),
                            snapshot_time: metric.snapshot_time,
+                           test_coverage: metric.test_coverage.round,
                            name: metric.project.name)
       end
     end

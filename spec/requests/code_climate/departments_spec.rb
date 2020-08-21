@@ -1,10 +1,11 @@
 require 'rails_helper'
 
-describe 'CodeClimate deparment projects report page ', type: :request do
+describe 'CodeClimate department projects report page ', type: :request do
   describe '#index' do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { project.language.department }
     let(:project) { create :project, language: ruby_lang }
+    let(:test_coverage) { 97.832 }
 
     before do
       create :code_climate_project_metric,
@@ -13,6 +14,7 @@ describe 'CodeClimate deparment projects report page ', type: :request do
              wont_fix_issues_count: 2,
              open_issues_count: 3,
              code_climate_rate: 'A',
+             test_coverage: test_coverage,
              snapshot_time: Time.zone.now.ago(1.week)
 
       get "/development_metrics/code_climate/departments/#{department.name}",
@@ -43,6 +45,10 @@ describe 'CodeClimate deparment projects report page ', type: :request do
 
     it 'shows the first project invalid issues count' do
       expect(response.body).to include('3 open issues')
+    end
+
+    it 'shows the first project test coverage' do
+      expect(response.body).to include(test_coverage.round.to_s)
     end
   end
 end
