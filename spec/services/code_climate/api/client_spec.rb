@@ -21,7 +21,7 @@ describe CodeClimate::Api::Client do
         end
 
         it 'returns a Repository with the data' do
-          expect(subject.repository_by_slug(github_slug: github_slug).repository_id)
+          expect(subject.repository_by_slug(github_slug: github_slug).send(:repository_id))
             .to eq(code_climate_repository_json['data'].first['id'])
         end
       end
@@ -68,7 +68,7 @@ describe CodeClimate::Api::Client do
       end
 
       it 'returns a Repository with the data' do
-        expect(subject.repository_by_repo_id(repo_id: repo_id).repository_id)
+        expect(subject.repository_by_repo_id(repo_id: repo_id).send(:repository_id))
           .to eq(repo_id)
       end
     end

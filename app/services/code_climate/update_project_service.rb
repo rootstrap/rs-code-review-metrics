@@ -23,7 +23,8 @@ module CodeClimate
         open_issues_count: code_climate_project_summary.open_issues_count,
         wont_fix_issues_count: code_climate_project_summary.wont_fix_issues_count,
         snapshot_time: code_climate_project_summary.snapshot_time,
-        cc_repository_id: code_climate_project_summary.repo_id
+        cc_repository_id: code_climate_project_summary.repo_id,
+        test_coverage: code_climate_project_summary.test_coverage
       )
     end
 

@@ -32,6 +32,8 @@ Metrics/AbcSize:
   # The ABC size is a calculated magnitude, so this number can be an Integer or
   # a Float.
   Max: 15
+  Exclude:
+    - app/services/code_climate/update_project_service.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -75,6 +77,8 @@ Layout/LineLength:
 Metrics/ParameterLists:
   Max: 5
   CountKeywordArgs: true
+  Exclude:
+    - app/services/code_climate/project_summary.rb
 
 Metrics/PerceivedComplexity:
   Max: 12
