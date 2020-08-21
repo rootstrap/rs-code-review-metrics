@@ -20,7 +20,7 @@ module CodeClimate
 
       def repository_by_repo_id(repo_id:)
         json = get_json(repository_by_id_remote_query(repository_id: repo_id))
-        Repository.new(json['data'].first)
+        Repository.new(json['data'])
       end
 
       def snapshot(repo_id:, snapshot_id:)

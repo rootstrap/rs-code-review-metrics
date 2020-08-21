@@ -5,7 +5,7 @@ describe CodeClimate::GetProjectSummary do
     subject(:repository) { described_class.send(:new, project: project).send(:repository) }
 
     let(:project) { create(:project) }
-    let(:code_climate_repository_json) { create(:code_climate_repository_payload) }
+    let(:code_climate_repository_json) { create(:code_climate_repository_by_slug_payload) }
 
     context 'when the project does not have a code climate project metric' do
       before do

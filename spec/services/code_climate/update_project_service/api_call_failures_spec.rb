@@ -7,7 +7,7 @@ describe CodeClimate::UpdateProjectService do
   let(:snapshot_id) { code_climate_snapshot_json['data']['id'] }
 
   let(:code_climate_repository_json) do
-    build :code_climate_repository_payload,
+    build :code_climate_repository_by_slug_payload,
           latest_default_branch_snapshot_id: code_climate_snapshot_json['data']['id']
   end
   let(:code_climate_snapshot_json) do
@@ -49,7 +49,9 @@ describe CodeClimate::UpdateProjectService do
         )
       end
 
-      let(:code_climate_repository_json) { build(:code_climate_repository_payload, data: []) }
+      let(:code_climate_repository_json) do
+        build(:code_climate_repository_by_slug_payload, data: [])
+      end
 
       it 'does not update a CodeClimateProjectMetric record' do
         expect { update_project_code_climate_info }

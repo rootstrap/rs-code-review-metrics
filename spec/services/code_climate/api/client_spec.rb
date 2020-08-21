@@ -17,7 +17,7 @@ describe CodeClimate::Api::Client do
 
       context 'and has repository data' do
         let(:code_climate_repository_json) do
-          create(:code_climate_repository_payload, name: project.name)
+          create(:code_climate_repository_by_slug_payload, name: project.name)
         end
 
         it 'returns a Repository with the data' do
@@ -28,7 +28,7 @@ describe CodeClimate::Api::Client do
 
       context 'but has no repository data' do
         let(:code_climate_repository_json) do
-          create(:code_climate_repository_payload, data: [])
+          create(:code_climate_repository_by_slug_payload, data: [])
         end
 
         it 'returns nil' do
@@ -55,10 +55,9 @@ describe CodeClimate::Api::Client do
   describe '#repository_by_repo_id' do
     let(:project) { create(:project) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_payload, name: project.name)
+      create(:code_climate_repository_by_id_payload, name: project.name)
     end
-    let(:repo_json) { code_climate_repository_json['data'].first }
-    let(:repo_id) { repo_json['id'] }
+    let(:repo_id) { code_climate_repository_json['data']['id'] }
 
     context 'when the request succeeds' do
       before do
@@ -92,7 +91,7 @@ describe CodeClimate::Api::Client do
   describe '#snapshot' do
     let(:project) { create(:project) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: project.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }
@@ -138,7 +137,7 @@ describe CodeClimate::Api::Client do
   describe '#snapshot_issues' do
     let(:project) { create(:project) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: project.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }
