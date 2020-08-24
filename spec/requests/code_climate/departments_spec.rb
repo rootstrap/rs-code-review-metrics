@@ -50,5 +50,13 @@ describe 'CodeClimate department projects report page ', type: :request do
     it 'shows the first project test coverage' do
       expect(response.body).to include(test_coverage.round.to_s)
     end
+
+    context 'when the project does not have test coverage' do
+      let(:test_coverage) { nil }
+
+      it 'shows N/D instead' do
+        expect(response.body).to include('N/D')
+      end
+    end
   end
 end
