@@ -209,4 +209,28 @@ describe CodeClimate::UpdateProjectService do
       expect(CodeClimateProjectMetric.first.updated_at).to eq(today)
     end
   end
+
+  context 'with a project registered in CodeClimate that has no test reports' do
+    let(:repository_payload) do
+      build :code_climate_repository_payload,
+            latest_default_branch_snapshot_id: snapshot_id,
+            latest_default_branch_test_report_id: nil
+    end
+    let(:code_climate_repository_json) do
+      build :code_climate_repository_by_slug_payload,
+            repository_payload: repository_payload['data']
+    end
+
+    before do
+      on_request_repository_by_slug(
+        project_name: project.name,
+        respond: { status: 200, body: code_climate_repository_json }
+      )
+    end
+
+    it 'does not set test coverage for the project metric' do
+      update_project_code_climate_info
+      expect(CodeClimateProjectMetric.first.test_coverage).to be_nil
+    end
+  end
 end
