@@ -2,25 +2,27 @@ require 'rails_helper'
 
 RSpec.describe Builders::Distribution::PullRequests do
   describe '.call' do
+    before { travel_to Time.zone.parse('2020-08-20') }
+
     let(:ruby_project) { create(:project, language: Language.find_by(name: 'ruby')) }
     let(:node_project) { create(:project, language: Language.find_by(name: 'nodejs')) }
 
     let!(:first_ruby_pull_request) do
       create(:pull_request,
              project: ruby_project,
-             opened_at: Time.zone.now - 6.hours)
+             opened_at: 6.hours.ago)
     end
 
     let!(:node_pull_request) do
       create(:pull_request,
              project: node_project,
-             opened_at: Time.zone.now - 14.hours)
+             opened_at: 14.hours.ago)
     end
 
     let!(:second_ruby_pull_request) do
       create(:pull_request,
              project: ruby_project,
-             opened_at: Time.zone.now - 26.hours)
+             opened_at: 26.hours.ago)
     end
 
     context 'when distribution is not filtered by language' do
@@ -74,6 +76,34 @@ RSpec.describe Builders::Distribution::PullRequests do
 
       it 'does not return any data for 12-24 hours' do
         expect(subject).not_to have_key('12-24')
+      end
+    end
+
+    context 'when pull request has html_url attribute nil' do
+      let!(:third_ruby_pull_request_html_url_nil) do
+        create(:pull_request,
+               project: ruby_project,
+               html_url: nil,
+               opened_at: 40.hours.ago)
+      end
+
+      before do
+        first_ruby_pull_request.update!(merged_at: Time.zone.now)
+        node_pull_request.update!(merged_at: Time.zone.now)
+        second_ruby_pull_request.update!(merged_at: Time.zone.now)
+        third_ruby_pull_request_html_url_nil.update!(merged_at: Time.zone.now)
+      end
+
+      subject do
+        described_class.call(
+          department_name: 'backend',
+          from: 4,
+          languages: []
+        )
+      end
+
+      it 'does not add the pull request to the data' do
+        expect(subject).not_to have_key('36-48')
       end
     end
   end
