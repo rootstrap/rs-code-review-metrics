@@ -22,10 +22,23 @@ RSpec.describe Processors::ProjectsImporter do
     end
 
     context 'when the project has already been imported' do
-      before { create(:project, github_id: repository_payload['id']) }
+      let(:github_id) { repository_payload['id'] }
+
+      before { create(:project, github_id: github_id) }
 
       it 'does not create a new one' do
         expect { described_class.call }.not_to change(Project, :count)
+      end
+
+      context 'when there is information to update' do
+        let(:updated_name) { 'totally-new_name' }
+        let(:repository_payload) { create(:repository_payload, name: updated_name) }
+
+        it 'updates it' do
+          expect { described_class.call }
+            .to change { Project.find_by(github_id: github_id).name }
+            .to(updated_name)
+        end
       end
     end
   end
