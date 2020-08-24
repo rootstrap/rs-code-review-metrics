@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Builders::Distribution::PullRequests do
   describe '.call' do
+    before { travel_to Time.zone.parse('2020-08-20') }
+
     let(:ruby_project) { create(:project, language: Language.find_by(name: 'ruby')) }
     let(:node_project) { create(:project, language: Language.find_by(name: 'nodejs')) }
 

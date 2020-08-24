@@ -9,11 +9,8 @@ module Builders
 
       def call
         merge_time_records.each_with_object(hash_of_arrays) { |merge_time, hash|
-          pull_request_url = merge_time.pull_request.html_url
-          next if pull_request_url.blank?
-
           interval = Metrics::TimeIntervalResolver.call(merge_time.value_as_hours)
-          hash[interval] << pull_request_url
+          hash[interval] << merge_time.pull_request.html_url
         }.sort.to_h
       end
 
@@ -23,6 +20,7 @@ module Builders
         @merge_times ||= ::MergeTime.where(created_at: @from.weeks.ago..Time.zone.now)
                                     .joins(pull_request: { project: { language: :department } })
                                     .where(departments: { name: @department_name })
+                                    .where.not(pull_requests: { html_url: nil })
                                     .includes(:pull_request)
       end
 
