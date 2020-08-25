@@ -18,6 +18,11 @@ module CodeClimate
         Repository.new(repository_data)
       end
 
+      def repository_by_repo_id(repo_id:)
+        json = get_json(repository_by_id_remote_query(repository_id: repo_id))
+        Repository.new(json['data'])
+      end
+
       def snapshot(repo_id:, snapshot_id:)
         json = get_json(snapshot_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
         Snapshot.new(json['data'], repo_id)

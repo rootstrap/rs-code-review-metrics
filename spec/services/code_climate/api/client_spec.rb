@@ -4,12 +4,12 @@ describe CodeClimate::Api::Client do
   describe '#repository_by_slug' do
     let(:project) { create(:project) }
     let(:github_slug) do
-      "#{CodeClimate::UpdateProjectService::CODE_CLIMATE_API_ORG_NAME}/#{project.name}"
+      "#{CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME}/#{project.name}"
     end
 
     context 'when the request succeeds' do
       before do
-        on_request_repository(
+        on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
@@ -17,7 +17,7 @@ describe CodeClimate::Api::Client do
 
       context 'and has repository data' do
         let(:code_climate_repository_json) do
-          create(:code_climate_repository_payload, name: project.name)
+          create(:code_climate_repository_by_slug_payload, name: project.name)
         end
 
         it 'returns a Repository with the data' do
@@ -28,7 +28,7 @@ describe CodeClimate::Api::Client do
 
       context 'but has no repository data' do
         let(:code_climate_repository_json) do
-          create(:code_climate_repository_payload, data: [])
+          create(:code_climate_repository_by_slug_payload, data: [])
         end
 
         it 'returns nil' do
@@ -39,7 +39,7 @@ describe CodeClimate::Api::Client do
 
     context 'when the request fails' do
       before do
-        on_request_repository(
+        on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 404 }
         )
@@ -52,10 +52,46 @@ describe CodeClimate::Api::Client do
     end
   end
 
+  describe '#repository_by_repo_id' do
+    let(:project) { create(:project) }
+    let(:code_climate_repository_json) do
+      create(:code_climate_repository_by_id_payload, name: project.name)
+    end
+    let(:repo_id) { code_climate_repository_json['data']['id'] }
+
+    context 'when the request succeeds' do
+      before do
+        on_request_repository_by_repo_id(
+          repo_id: repo_id,
+          respond: { status: 200, body: code_climate_repository_json }
+        )
+      end
+
+      it 'returns a Repository with the data' do
+        expect(subject.repository_by_repo_id(repo_id: repo_id).repository_id)
+          .to eq(repo_id)
+      end
+    end
+
+    context 'when the request fails' do
+      before do
+        on_request_repository_by_repo_id(
+          repo_id: repo_id,
+          respond: { status: 404 }
+        )
+      end
+
+      it 'raises a Faraday error' do
+        expect { subject.repository_by_repo_id(repo_id: repo_id) }
+          .to raise_error Faraday::Error
+      end
+    end
+  end
+
   describe '#snapshot' do
     let(:project) { create(:project) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: project.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }
@@ -101,7 +137,7 @@ describe CodeClimate::Api::Client do
   describe '#snapshot_issues' do
     let(:project) { create(:project) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: project.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }

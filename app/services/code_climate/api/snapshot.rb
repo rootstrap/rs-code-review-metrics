@@ -11,7 +11,8 @@ module CodeClimate
       def summary
         ProjectSummary.new(rate: ratings.first,
                            issues: issues_collection,
-                           snapshot_time: snapshot_time)
+                           snapshot_time: snapshot_time,
+                           repository_id: repo_id)
       end
 
       private

@@ -45,6 +45,8 @@ class Project < ApplicationRecord
            through: :code_owner_projects,
            source: :user
 
+  has_one :code_climate_project_metric, dependent: :destroy
+
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
 
