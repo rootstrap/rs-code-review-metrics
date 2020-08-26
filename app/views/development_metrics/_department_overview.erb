@@ -1,0 +1,21 @@
+<div class="departments-summary col-md-12">
+  <div class="overview">
+    <div class="container p-3">
+      <div class="title">
+        <b>Overview</b>
+      </div>
+      <div class="info">
+        <% overview.each do |language, language_overview| %>
+          <div class="item-list">
+            <span>
+              <%= language_overview[:totals] %> <b><%= language.titleize %></b> <%= 'project'.pluralize(language_overview[:totals]) %>, of which:
+            </span>
+            <% language_overview[:per_relevance].each do |relevance, project_count| %>
+              <li><b><%= project_count %></b> <%= relevance %></li>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

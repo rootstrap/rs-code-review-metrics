@@ -1,17 +1,15 @@
 FactoryBot.define do
-  factory :code_climate_repository_payload, class: Hash do
+  factory :code_climate_repository_payload,
+          aliases: [:code_climate_repository_by_id_payload],
+          class: Hash do
     skip_create
 
     transient do
-      id { Faker::Number.number(digits: 4) }
+      id { Faker::Alphanumeric.alphanumeric(number: 24) }
       name { Faker::Internet.slug(glue: '-') }
       latest_default_branch_snapshot_id { Faker::Number.number(digits: 4) }
-    end
-
-    # Despite of the name this endpoint returns a collection of repositories:
-    #   https://developer.codeclimate.com/#get-repository
-    data do
-      [
+      latest_default_branch_test_report_id { Faker::Alphanumeric.alphanumeric(number: 24) }
+      repository_payload do
         {
           'id' => id,
           'type' => 'repos',
@@ -33,12 +31,28 @@ FactoryBot.define do
                 'id' => latest_default_branch_snapshot_id,
                 'type' => 'snapshots'
               }
+            },
+            'latest_default_branch_test_report' => {
+              'data' => {
+                'id' => latest_default_branch_test_report_id,
+                'type' => 'test_reports'
+              }
             }
           }
         }
-      ]
+      end
     end
 
+    data { repository_payload }
+
     initialize_with { attributes.deep_stringify_keys }
+
+    factory :code_climate_repository_by_slug_payload, class: Hash do
+      # Despite of the name this endpoint returns a collection of repositories:
+      #   https://developer.codeclimate.com/#get-repository
+      after(:build) do |payload|
+        payload['data'] = [payload['data']]
+      end
+    end
   end
 end

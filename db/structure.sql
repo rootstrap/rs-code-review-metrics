@@ -262,8 +262,7 @@ CREATE TABLE public.blog_posts (
     url character varying,
     status character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    technology_id bigint
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -299,7 +298,9 @@ CREATE TABLE public.code_climate_project_metrics (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     open_issues_count integer,
-    snapshot_time timestamp without time zone NOT NULL
+    snapshot_time timestamp without time zone NOT NULL,
+    cc_repository_id character varying,
+    test_coverage numeric
 );
 
 
@@ -1358,13 +1359,6 @@ CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_t
 
 
 --
--- Name: index_blog_posts_on_technology_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_blog_posts_on_technology_id ON public.blog_posts USING btree (technology_id);
-
-
---
 -- Name: index_code_climate_project_metrics_on_project_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1626,14 +1620,6 @@ ALTER TABLE ONLY public.completed_review_turnarounds
 
 
 --
--- Name: blog_posts fk_rails_24521f9a19; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.blog_posts
-    ADD CONSTRAINT fk_rails_24521f9a19 FOREIGN KEY (technology_id) REFERENCES public.technologies(id);
-
-
---
 -- Name: blog_post_technologies fk_rails_2b02d61b04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1873,8 +1859,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200713152004'),
 ('20200714160138'),
 ('20200720155715'),
+('20200723174621'),
 ('20200730142418'),
 ('20200806131024'),
-('20200813162522');
-
+('20200813162522'),
+('20200819142237'),
+('20200820180521');
 

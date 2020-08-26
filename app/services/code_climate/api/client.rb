@@ -18,6 +18,11 @@ module CodeClimate
         Repository.new(repository_data)
       end
 
+      def repository_by_repo_id(repo_id:)
+        json = get_json(repository_by_id_remote_query(repository_id: repo_id))
+        Repository.new(json['data'])
+      end
+
       def snapshot(repo_id:, snapshot_id:)
         json = get_json(snapshot_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
         Snapshot.new(json['data'], repo_id)
@@ -26,6 +31,11 @@ module CodeClimate
       def snapshot_issues(repo_id:, snapshot_id:)
         json = get_json(snapshot_issues_remote_query(repo_id: repo_id, snapshot_id: snapshot_id))
         json['data'].map { |issue_json| SnapshotIssue.new(issue_json) }
+      end
+
+      def test_report(repo_id:, test_report_id:)
+        json = get_json(test_report_remote_query(repo_id: repo_id, test_report_id: test_report_id))
+        TestReport.new(json['data'])
       end
 
       private
@@ -44,6 +54,10 @@ module CodeClimate
 
       def snapshot_issues_remote_query(repo_id:, snapshot_id:)
         RemoteQuery.new("repos/#{repo_id}/snapshots/#{snapshot_id}/issues")
+      end
+
+      def test_report_remote_query(repo_id:, test_report_id:)
+        RemoteQuery.new("repos/#{repo_id}/test_reports/#{test_report_id}")
       end
 
       def get_json(remote_query)

@@ -3,7 +3,6 @@ module Processors
     def call
       update_blog_post_visits_metrics
       update_technologies_visits_metrics
-      update_technologies_blog_post_count_metrics
     end
 
     private
@@ -16,10 +15,6 @@ module Processors
 
     def update_technologies_visits_metrics
       technology_views_updater.call
-    end
-
-    def update_technologies_blog_post_count_metrics
-      blog_post_count_updater.call
     end
   end
 end
