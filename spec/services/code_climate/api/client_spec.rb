@@ -21,7 +21,7 @@ describe CodeClimate::Api::Client do
         end
 
         it 'returns a Repository with the data' do
-          expect(subject.repository_by_slug(github_slug: github_slug).repository_id)
+          expect(subject.repository_by_slug(github_slug: github_slug).send(:repository_id))
             .to eq(code_climate_repository_json['data'].first['id'])
         end
       end
@@ -68,7 +68,7 @@ describe CodeClimate::Api::Client do
       end
 
       it 'returns a Repository with the data' do
-        expect(subject.repository_by_repo_id(repo_id: repo_id).repository_id)
+        expect(subject.repository_by_repo_id(repo_id: repo_id).send(:repository_id))
           .to eq(repo_id)
       end
     end
@@ -175,6 +175,53 @@ describe CodeClimate::Api::Client do
 
       it 'raises a Faraday error' do
         expect { subject.snapshot_issues(repo_id: repo_id, snapshot_id: snapshot_id) }
+          .to raise_error Faraday::Error
+      end
+    end
+  end
+
+  describe '#test_report' do
+    let(:project) { create(:project) }
+    let(:code_climate_repository_json) do
+      create(:code_climate_repository_by_slug_payload, name: project.name)
+    end
+    let(:repo_json) { code_climate_repository_json['data'].first }
+    let(:repo_id) { repo_json['id'] }
+    let(:test_report_id) do
+      repo_json['relationships']['latest_default_branch_test_report']['data']['id']
+    end
+
+    context 'when the request succeeds' do
+      let(:coverage) { 99.0 }
+      let(:code_climate_test_report_json) do
+        create(:code_climate_test_report_payload, id: test_report_id, coverage: coverage)
+      end
+
+      before do
+        on_request_test_report(
+          repo_id: repo_id,
+          test_report_id: test_report_id,
+          respond: { status: 200, body: code_climate_test_report_json }
+        )
+      end
+
+      it 'returns a test_report with the data' do
+        expect(subject.test_report(repo_id: repo_id, test_report_id: test_report_id).coverage)
+          .to eq(coverage)
+      end
+    end
+
+    context 'when the request fails' do
+      before do
+        on_request_test_report(
+          repo_id: repo_id,
+          test_report_id: test_report_id,
+          respond: { status: 404 }
+        )
+      end
+
+      it 'raises a Faraday error' do
+        expect { subject.test_report(repo_id: repo_id, test_report_id: test_report_id) }
           .to raise_error Faraday::Error
       end
     end
