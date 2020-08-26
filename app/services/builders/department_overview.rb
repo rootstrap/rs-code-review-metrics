@@ -7,11 +7,9 @@ module Builders
     end
 
     def call
-      department_overview = language_names.each_with_object({}) do |language, overview|
+      language_names.each_with_object({}) { |language, overview|
         overview[language] = language_overview(language)
-      end
-
-      department_overview.with_indifferent_access
+      }.with_indifferent_access
     end
 
     private
@@ -37,8 +35,8 @@ module Builders
     end
 
     def relevances_overview(language)
-      project_relevances.each_with_object({}) do |relevance, overview|
-        overview[relevance] = projects_by_language_and_relevance[[language, relevance]] || 0
+      project_relevances.index_with do |relevance|
+        projects_by_language_and_relevance[[language, relevance]] || 0
       end
     end
 
