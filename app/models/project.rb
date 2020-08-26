@@ -64,6 +64,10 @@ class Project < ApplicationRecord
     where(relevance: relevances[:internal])
   }
 
+  scope :relevant, lambda {
+    where(relevance: [relevances[:commercial], relevances[:internal]])
+  }
+
   private
 
   def set_default_language

@@ -95,4 +95,15 @@ RSpec.describe Project, type: :model do
       expect(Project.internal).to contain_exactly(internal_project)
     end
   end
+
+  describe 'relevant' do
+    let!(:commercial_project) { create(:project, relevance: Project.relevances[:commercial]) }
+    let!(:internal_project) { create(:project, relevance: Project.relevances[:internal]) }
+    let!(:ignored_project) { create(:project, relevance: Project.relevances[:ignored]) }
+    let!(:unassigned_project) { create(:project, relevance: Project.relevances[:unassigned]) }
+
+    it 'returns both commecial and internal projects' do
+      expect(Project.relevant).to contain_exactly(commercial_project, internal_project)
+    end
+  end
 end
