@@ -10,6 +10,13 @@ module GithubClient
       find_in_locations
     end
 
+    def pull_requests
+      response = connection.get("repos/#{@project.full_name}/pulls") do |request|
+        request['state'] = 'all'
+      end
+      JSON.parse(response.body, symbolize_names: true)
+    end
+
     def views
       response = connection.get("repositories/#{@project.github_id}/traffic/views") do |request|
         request.params['per'] = 'week'
