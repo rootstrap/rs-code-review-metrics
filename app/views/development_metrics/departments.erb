@@ -14,6 +14,11 @@
             <% end %>
           </div>
         </div>
+        <% if @overview %>
+          <div class="row">
+            <%= render 'development_metrics/department_overview', overview: @overview %>
+          </div>
+        <% end %>
         <div class="row">
           <%= render 'development_metrics/code_climate/code_climate_department_summary',
           department: @department, code_climate: @code_climate %>

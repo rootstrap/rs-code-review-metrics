@@ -1,0 +1,34 @@
+.departments-summary {
+  .container {
+    background-color: gainsboro;
+    margin-bottom: 1em;
+  }
+
+  .title {
+    padding: 0.5em 4em;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: row;
+    padding: 0 4em;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .overview {
+    .info {
+      justify-content: space-evenly;
+    }
+  }
+
+  .code-climate {
+    .info {
+      justify-content: space-between;
+    }
+  }
+}
