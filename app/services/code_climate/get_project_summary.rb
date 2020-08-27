@@ -1,6 +1,6 @@
 module CodeClimate
   class GetProjectSummary < BaseService
-    CODE_CLIMATE_API_ORG_NAME = 'rootstrap'.freeze
+    CODE_CLIMATE_API_ORG_NAME = ENV['CODE_CLIMATE_API_ORG_NAME']
 
     def initialize(project:)
       @project = project
