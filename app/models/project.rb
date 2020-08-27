@@ -68,6 +68,18 @@ class Project < ApplicationRecord
     where(relevance: [relevances[:commercial], relevances[:internal]])
   }
 
+  scope :with_activity_after, lambda { |date|
+    with_a_pr_merged_after(date).or(with_a_pr_opened_after(date))
+  }
+
+  scope :with_a_pr_opened_after, lambda { |date|
+    joins(:pull_requests).where('pull_requests.opened_at > ?', date)
+  }
+
+  scope :with_a_pr_merged_after, lambda { |date|
+    joins(:pull_requests).where('pull_requests.merged_at > ?', date)
+  }
+
   private
 
   def set_default_language
