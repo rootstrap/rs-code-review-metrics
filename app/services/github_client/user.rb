@@ -8,7 +8,8 @@ module GithubClient
       response = connection.get("/users/#{@username}/repos") do |request|
         request.params['type'] = 'member'
       end
-      JSON.parse(response.body, symbolize_names: true)
+      response_body = response.body
+      response_body.empty? ? [] : JSON.parse(response_body, symbolize_names: true)
     end
   end
 end

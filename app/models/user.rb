@@ -47,6 +47,10 @@ class User < ApplicationRecord
   has_many :projects_as_code_owner,
            through: :code_owner_projects,
            source: :project
+  has_many :external_pull_requests,
+           dependent: :destroy,
+           foreign_key: :owner_id,
+           inverse_of: :owner
   validates :github_id,
             :login,
             :node_id,

@@ -18,9 +18,10 @@
 
 FactoryBot.define do
   factory :external_project do
-    description { "MyString" }
-    name { "MyString" }
-    github_id { 1 }
-    language { nil }
+    description { Faker::FunnyName.name }
+    name { Faker::App.name.gsub(' ', '') }
+    full_name { "github/#{name}" }
+    github_id { Faker::Number.number(digits: 10) }
+    language { Language.unassigned }
   end
 end

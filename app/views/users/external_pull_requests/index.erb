@@ -1,0 +1,25 @@
+<% content_for :open_source_sidebar do %>
+  <div class="btn-group btn-entity-group">
+    <div class='custom-list d-flex flex-row align-items-center'>
+      <div class='circle'></div>
+      <%= link_to external_pull_requests_path do %>
+        <span class='font-size-1'>External Contributions</span>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%= render 'users/external_pull_requests/nav-filter'%>
+
+<div class="col-md-12 p-5">
+  <% @external_pull_requests.each do |k,v| %>
+    <h6><%= k %> (<%= v.size%>):</h6>
+    <ul>
+      <% v.each do |pull_request| %>
+        <li>
+          <%= link_to nil, pull_request.html_url, target: '_blank' %>
+          </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

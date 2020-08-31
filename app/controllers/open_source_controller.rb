@@ -1,4 +1,6 @@
 class OpenSourceController < ApplicationController
+  layout 'sidebar_metrics'
+
   def index
     @visits_per_language = visits_per_language
     @projects_per_language = projects_per_language

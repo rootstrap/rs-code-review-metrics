@@ -25,10 +25,9 @@
 
 FactoryBot.define do
   factory :external_pull_request do
-    body { "MyText" }
-    html_url { "MyString" }
-    title { "MyText" }
-    github_id { "" }
-    external_project { nil }
+    html_url { 'https://github.com/Codertocat/Hello-World/pull/2' }
+    title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
+    github_id { Faker::Number.number(digits: 10) }
+    association :external_project
   end
 end

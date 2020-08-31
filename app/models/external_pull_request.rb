@@ -25,5 +25,6 @@
 
 class ExternalPullRequest < ApplicationRecord
   belongs_to :external_project
-  belongs_to :owner, class_name: 'User', foreign_key: :owner_id
+  belongs_to :owner, class_name: 'User', foreign_key: :owner_id,
+                     inverse_of: :external_pull_requests
 end

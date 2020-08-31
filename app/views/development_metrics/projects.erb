@@ -1,3 +1,26 @@
+<%= content_for :projects_dropdown do %>
+  <div class="list-project">
+    <select name="project_name" class="project-selection" form='nav-filter-form'>
+      <% if params[:project_name].blank? %>
+        <option selected value disabled>Choose a project</option>
+      <% else %>
+        <option value disabled>Choose a project</option>
+      <% end %>
+      <% all_projects_names.each do |name|%>
+        <%if params[:project_name] == name %>
+          <option selected value=<%= name %>> <%= name%> </option>
+        <% else %>
+          <option value=<%= name%>> <%= name%></option> %>
+        <% end %>
+      <% end %>
+    </select>
+  </div>
+<% end %>
+
+<%= content_for :development_metrics_sidebar do %>
+  <%= render 'development_metrics/sidebar'%>
+<% end %>
+
 <div class="metrics-container container col-md-12">
   <%= render 'shared/project/nav-filter' do |f|%>
     <div class="row">
@@ -29,11 +52,11 @@
         <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
       </div>
     </div>
-  <%else%>
+  <% else %>
     <div class="row">
       <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
         <span>Please select a project to see its metrics</span>
       </div>
     </div>
-  <%end%>
+  <% end %>
 </div>

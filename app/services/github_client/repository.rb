@@ -14,7 +14,8 @@ module GithubClient
       response = connection.get("repos/#{@project.full_name}/pulls") do |request|
         request['state'] = 'all'
       end
-      JSON.parse(response.body, symbolize_names: true)
+      response_body = response.body
+      response_body.empty? ? [] : JSON.parse(response_body, symbolize_names: true)
     end
 
     def views
