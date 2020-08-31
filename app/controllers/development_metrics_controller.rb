@@ -16,6 +16,7 @@ class DevelopmentMetricsController < ApplicationController
 
     build_metrics(department.id, Department.name)
     @code_climate = code_climate_department_summary
+    @overview = department_overview
   end
 
   def users; end
@@ -51,5 +52,9 @@ class DevelopmentMetricsController < ApplicationController
       from: metric_params[:period],
       technologies: []
     )
+  end
+
+  def department_overview
+    Builders::DepartmentOverview.call(department, from: metric_params[:period].to_i.weeks.ago)
   end
 end

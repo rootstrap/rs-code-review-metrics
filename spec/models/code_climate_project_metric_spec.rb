@@ -7,9 +7,11 @@
 #  invalid_issues_count  :integer
 #  open_issues_count     :integer
 #  snapshot_time         :datetime         not null
+#  test_coverage         :decimal(, )
 #  wont_fix_issues_count :integer
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  cc_repository_id      :string
 #  project_id            :bigint           not null
 #
 # Indexes

@@ -45,6 +45,8 @@ class Project < ApplicationRecord
            through: :code_owner_projects,
            source: :user
 
+  has_one :code_climate_project_metric, dependent: :destroy
+
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
 
@@ -60,6 +62,22 @@ class Project < ApplicationRecord
 
   scope :internal, lambda {
     where(relevance: relevances[:internal])
+  }
+
+  scope :relevant, lambda {
+    where(relevance: [relevances[:commercial], relevances[:internal]])
+  }
+
+  scope :with_activity_after, lambda { |date|
+    with_a_pr_merged_after(date).or(with_a_pr_opened_after(date))
+  }
+
+  scope :with_a_pr_opened_after, lambda { |date|
+    joins(:pull_requests).where('pull_requests.opened_at > ?', date)
+  }
+
+  scope :with_a_pr_merged_after, lambda { |date|
+    joins(:pull_requests).where('pull_requests.merged_at > ?', date)
   }
 
   private
