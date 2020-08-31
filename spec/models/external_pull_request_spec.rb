@@ -26,5 +26,6 @@
 require 'rails_helper'
 
 RSpec.describe ExternalPullRequest, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it { is_expected.to belong_to(:external_project) }
+  it { is_expected.to belong_to(:owner) }
 end
