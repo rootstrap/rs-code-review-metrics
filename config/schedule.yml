@@ -52,3 +52,8 @@ open_source_metrics_update:
   cron: '00 6 * * *'
   class: 'OpenSourceMetricsUpdaterJob'
   active_job: true
+
+external_contributions_processor:
+  cron: '00 5 * * 1-5'
+  class: 'ProcessExternalContributionsJob'
+  active_job: true
