@@ -732,6 +732,38 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: pull_request_sizes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pull_request_sizes (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    value integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pull_request_sizes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pull_request_sizes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pull_request_sizes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pull_request_sizes_id_seq OWNED BY public.pull_request_sizes.id;
+
+
+--
 -- Name: pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1139,6 +1171,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: pull_request_sizes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes ALTER COLUMN id SET DEFAULT nextval('public.pull_request_sizes_id_seq'::regclass);
+
+
+--
 -- Name: pull_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1336,6 +1375,14 @@ ALTER TABLE ONLY public.metrics
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pull_request_sizes pull_request_sizes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes
+    ADD CONSTRAINT pull_request_sizes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1579,6 +1626,13 @@ CREATE INDEX index_projects_on_language_id ON public.projects USING btree (langu
 
 
 --
+-- Name: index_pull_request_sizes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_sizes_on_pull_request_id ON public.pull_request_sizes USING btree (pull_request_id);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1787,6 +1841,14 @@ ALTER TABLE ONLY public.reviews
 
 ALTER TABLE ONLY public.review_comments
     ADD CONSTRAINT fk_rails_4a92157916 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: pull_request_sizes fk_rails_4bb5aaec06; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes
+    ADD CONSTRAINT fk_rails_4bb5aaec06 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
 
 
 --
@@ -2004,6 +2066,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200819142237'),
 ('20200820180521'),
 ('20200824202901'),
-('20200825151321');
+('20200825151321'),
+('20200901185355');
 
 
