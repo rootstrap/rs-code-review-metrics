@@ -6,7 +6,7 @@ RSpec.describe GithubClient::PullRequest do
     let(:pull_request) { create(:pull_request, project: project) }
     let(:pull_request_file_payload) { create(:pull_request_file_payload) }
 
-    subject(:client) { described_class.new(project, pull_request) }
+    subject(:client) { described_class.new(pull_request) }
 
     before do
       stub_pull_request_files(project, pull_request, [pull_request_file_payload])

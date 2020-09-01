@@ -2,8 +2,8 @@ module GithubClient
   class PullRequest < GithubClient::Repository
     MAX_FILES_PER_PAGE = 100
 
-    def initialize(project, pull_request)
-      super project
+    def initialize(pull_request)
+      super pull_request.project
 
       @pull_request = pull_request
     end
