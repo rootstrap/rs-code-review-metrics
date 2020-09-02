@@ -12,10 +12,10 @@
 <%= render 'users/external_pull_requests/nav-filter'%>
 
 <div class="col-md-12 p-5">
-  <% @external_pull_requests.each do |k,v| %>
-    <h6><%= k %> (<%= v.size%>):</h6>
+  <% @external_pull_requests.each do |key, value| %>
+    <h6><%= key %> (<%= value.size%>):</h6>
     <ul>
-      <% v.each do |pull_request| %>
+      <% value.each do |pull_request| %>
         <li>
           <%= link_to nil, pull_request.html_url, target: '_blank' %>
           </li>

@@ -27,8 +27,18 @@ RSpec.describe Builders::ExternalProject do
         description: 'this is a uby repo'
       }
     end
+
+    subject { described_class.call(repository_data) }
+
     it 'builds a new one' do
-      expect(described_class.call(repository_data).new_record?).to be true
+      expect(subject.new_record?).to be true
+    end
+
+    it 'initializes all attributes correctly' do
+      expect(subject.github_id).to    eq(repository_data[:id])
+      expect(subject.name).to         eq(repository_data[:name])
+      expect(subject.full_name).to    eq(repository_data[:full_name])
+      expect(subject.description).to  eq(repository_data[:description])
     end
   end
 end

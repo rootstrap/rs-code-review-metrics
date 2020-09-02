@@ -29,5 +29,6 @@ FactoryBot.define do
     title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
     github_id { Faker::Number.number(digits: 10) }
     association :external_project
+    owner { association :user }
   end
 end
