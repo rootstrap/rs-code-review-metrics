@@ -9,11 +9,11 @@ module Builders
         pull_request_data = @payload['pull_request']
         ::Events::PullRequest
           .find_or_create_by!(github_id: pull_request_data['id']) do |pull_request|
-          assign_attrs(pull_request, pull_request_data)
-
           ATTR_PAYLOAD_MAP.each do |key, value|
             pull_request.public_send("#{key}=", pull_request_data.fetch(value))
           end
+
+          assign_attrs(pull_request, pull_request_data)
         end
       end
 
@@ -21,6 +21,7 @@ module Builders
         pull_request.owner = find_or_create_user(pull_request_data['user'])
         pull_request.project = Builders::Project.call(@payload['repository'])
         find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
+        pull_request.pull_request_size = Builders::PullRequestSize.call(pull_request)
       end
     end
   end

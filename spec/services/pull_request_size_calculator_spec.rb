@@ -11,9 +11,7 @@ RSpec.describe PullRequestSizeCalculator do
     let(:pr_file_payloads) { [pr_file_1, pr_file_2] }
     let(:total_additions) { pr_file_1['additions'] + pr_file_2['additions'] }
 
-    before do
-      stub_pull_request_files(project, pull_request, pr_file_payloads)
-    end
+    before { stub_pull_request_files_with_pr(pull_request, pr_file_payloads) }
 
     it 'returns the total sum of the additions of each file of the PR' do
       expect(pull_request_size).to eq(total_additions)

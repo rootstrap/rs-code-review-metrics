@@ -8,9 +8,7 @@ RSpec.describe GithubClient::PullRequest do
 
     subject(:client) { described_class.new(pull_request) }
 
-    before do
-      stub_pull_request_files(project, pull_request, [pull_request_file_payload])
-    end
+    before { stub_pull_request_files_with_pr(pull_request, [pull_request_file_payload]) }
 
     it 'returns the pull request changes files' do
       expect(client.files).to contain_exactly(pull_request_file_payload)
@@ -23,8 +21,7 @@ RSpec.describe GithubClient::PullRequest do
       end
 
       before do
-        stub_pull_request_files(
-          project,
+        stub_pull_request_files_with_pr(
           pull_request,
           pull_request_files_payloads,
           results_per_page: 1

@@ -73,23 +73,24 @@ module GithubApiMock
     )
   end
 
-  # The results_per_page attribute is meant just for testing purposes
-  # The API will be stubbed anyway with the amount used in GithubClient::PullRequest#files
-  def stub_pull_request_files(
-    project,
-    pull_request,
-    file_payloads,
+  def stub_pull_request_files_with_payload(
+    pull_request_payload,
+    file_payloads = [create(:pull_request_file_payload)],
     results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
   )
-    url = 'https://api.github.com/repositories/' \
-          "#{project.github_id}/pulls/#{pull_request.number}/files"
+    project_id = pull_request_payload.dig('repository', 'id')
+    pr_number = pull_request_payload.dig('pull_request', 'number')
+    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+  end
 
-    stub_paginated_items(
-      file_payloads,
-      url,
-      results_per_page,
-      GithubClient::PullRequest::MAX_FILES_PER_PAGE
-    )
+  def stub_pull_request_files_with_pr(
+    pull_request,
+    file_payloads = [create(:pull_request_file_payload)],
+    results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
+  )
+    project_id = pull_request.project.github_id
+    pr_number = pull_request.number
+    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
   end
 
   private
@@ -109,6 +110,19 @@ module GithubApiMock
   def stub_auth_envs
     stub_env('GITHUB_ADMIN_USER', github_admin_user)
     stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
+  end
+
+  # The results_per_page attribute is meant just for testing purposes
+  # The API will be stubbed anyway with the amount used in GithubClient::PullRequest#files
+  def stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+    url = "https://api.github.com/repositories/#{project_id}/pulls/#{pr_number}/files"
+
+    stub_paginated_items(
+      file_payloads,
+      url,
+      results_per_page,
+      GithubClient::PullRequest::MAX_FILES_PER_PAGE
+    )
   end
 
   def stub_paginated_items(item_payloads, url, results_per_page, max_results_per_page)
