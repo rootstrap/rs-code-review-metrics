@@ -47,14 +47,16 @@ RSpec.describe ExternalContributionsProcessorJob do
         stub_get_pull_requests(repositories_payloads.second['id'])
       end
 
+      let(:external_github_ids) { ExternalProject.pluck(:github_id) }
+
       it 'does not create any external project' do
         expect { described_class.perform_now }.not_to change { ExternalProject.count }
       end
 
-      it 'does not saves any project withouth pull requests' do
+      it 'does not saves any external project without pull requests' do
         described_class.perform_now
-        expect(ExternalProject.pluck(:github_id)).not_to include(repositories_payloads.second['id'])
-        expect(ExternalProject.pluck(:github_id)).not_to include(repositories_payloads.first['id'])
+        expect(external_github_ids).not_to include(repositories_payloads.second['id'])
+        expect(external_github_ids).not_to include(repositories_payloads.first['id'])
       end
     end
   end
