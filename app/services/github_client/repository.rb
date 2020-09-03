@@ -11,7 +11,7 @@ module GithubClient
     end
 
     def pull_requests
-      response = connection.get("repos/#{@project.full_name}/pulls") do |request|
+      response = connection.get("repositories/#{@project.github_id}/pulls") do |request|
         request['state'] = 'all'
       end
       response_body = response.body

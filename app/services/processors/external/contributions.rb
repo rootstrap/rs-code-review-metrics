@@ -5,8 +5,7 @@ module Processors
         usernames.each do |username|
           repositories_data = Processors::External::Repositories.call(username)
           repositories_data.each do |repository_data|
-            project = Builders::ExternalProject.call(repository_data)
-            Processors::External::PullRequests.call(project, username)
+            Processors::External::PullRequests.call(repository_data, username)
           end
         end
       end

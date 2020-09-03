@@ -12,18 +12,18 @@ module GithubApiMock
       )
   end
 
-  def stub_get_repos_from_user(username, empty_payload = false)
+  def stub_get_repos_from_user(username, payload = {})
     stub_request(:get, "https://api.github.com/users/#{username}/repos?type=member")
       .to_return(
-        body: empty_payload ? [] : file_fixture('github_repos_payload.json').read,
+        body: JSON.generate(payload),
         status: 200
       )
   end
 
-  def stub_get_pull_requests(external_project, empty_payload = false)
-    stub_request(:get, "https://api.github.com/repos/#{external_project.full_name}/pulls")
+  def stub_get_pull_requests(github_id, payload = {})
+    stub_request(:get, "https://api.github.com/repositories/#{github_id}/pulls")
       .to_return(
-        body: empty_payload ? [] : file_fixture('github_pulls_payload.json').read,
+        body: JSON.generate(payload),
         status: 200
       )
   end

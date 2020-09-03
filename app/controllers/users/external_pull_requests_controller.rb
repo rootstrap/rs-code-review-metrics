@@ -11,7 +11,7 @@ module Users
     private
 
     def from
-      params[:from].to_i || 4
+      params[:from].to_i
     end
   end
 end

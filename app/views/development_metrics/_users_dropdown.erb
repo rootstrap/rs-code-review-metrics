@@ -1,0 +1,10 @@
+<%= content_for :users_dropdown do %>
+  <%= select_tag 'user_name',
+    options_for_select(
+      all_users_names,
+      selected: chosen_user,
+      disabled: 0
+    ),
+    class: 'user-selection'
+  %>
+<% end %>

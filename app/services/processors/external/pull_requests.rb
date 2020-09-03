@@ -1,8 +1,8 @@
 module Processors
   module External
     class PullRequests < BaseService
-      def initialize(project, username)
-        @project = project
+      def initialize(repository_data, username)
+        @repository_data = repository_data
         @username = username
       end
 
@@ -12,16 +12,19 @@ module Processors
         end
         return if rs_member_pull_requests.empty?
 
-        @project.save!
         rs_member_pull_requests.each do |pull_request|
-          Builders::ExternalPullRequest.call(pull_request, @project)
+          Builders::ExternalPullRequest.call(pull_request, project)
         end
       end
 
       private
 
       def pull_requests_data
-        @pull_requests_data ||= GithubClient::Repository.new(@project).pull_requests
+        @pull_requests_data ||= GithubClient::Repository.new(project).pull_requests
+      end
+
+      def project
+        @project ||= Builders::ExternalProject.call(@repository_data)
       end
     end
   end

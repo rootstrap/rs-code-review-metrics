@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'sidekiq/testing'
 
 RSpec.describe ExternalContributionsProcessorJob do
   it 'executes external contributions processor' do
