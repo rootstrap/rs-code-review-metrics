@@ -19,7 +19,6 @@ module Builders
 
     def built_or_saved_project
       return @external_project if @external_project.persisted?
-
       @external_project.tap(&:save!)
     end
   end
