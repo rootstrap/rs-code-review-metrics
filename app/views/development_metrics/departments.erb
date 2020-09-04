@@ -26,7 +26,7 @@
           <%= render 'development_metrics/code_climate/code_climate_department_summary',
           department: @department, code_climate: @code_climate %>
         </div>
-        <% if @review_turnaround && @merge_time %>
+        <% if @review_turnaround && @merge_time && @pull_request_size %>
           <div class="row">
             <div class="metrics">
               <div class="graph">
@@ -49,6 +49,13 @@
                               class: 'btn btn-secondary'
                   %>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="metrics">
+              <div class="graph">
+                <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
               </div>
             </div>
           </div>
