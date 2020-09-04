@@ -63,22 +63,34 @@ module GithubApiMock
     repository_payloads,
     results_per_page: GithubClient::Organization::MAX_REPOSITORIES_PER_PAGE
   )
-    stub_auth_envs
-
     url = 'https://api.github.com/orgs/rootstrap/repos'
-    groups_of_repositories = repository_payloads.in_groups_of(results_per_page, false)
 
-    groups_of_repositories.push([]).each.with_index do |repositories, index|
-      stub_request(:get, url)
-        .with(
-          basic_auth: [github_admin_user, github_admin_token],
-          query: {
-            page: index + 1,
-            per_page: GithubClient::Organization::MAX_REPOSITORIES_PER_PAGE
-          }
-        )
-        .to_return(body: JSON.generate(repositories), status: 200)
-    end
+    stub_paginated_items(
+      repository_payloads,
+      url,
+      results_per_page,
+      GithubClient::Organization::MAX_REPOSITORIES_PER_PAGE
+    )
+  end
+
+  def stub_pull_request_files_with_payload(
+    pull_request_payload,
+    file_payloads = [create(:pull_request_file_payload)],
+    results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
+  )
+    project_id = pull_request_payload.dig('repository', 'id')
+    pr_number = pull_request_payload.dig('pull_request', 'number')
+    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+  end
+
+  def stub_pull_request_files_with_pr(
+    pull_request,
+    file_payloads = [create(:pull_request_file_payload)],
+    results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
+  )
+    project_id = pull_request.project.github_id
+    pr_number = pull_request.number
+    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
   end
 
   private
@@ -98,5 +110,36 @@ module GithubApiMock
   def stub_auth_envs
     stub_env('GITHUB_ADMIN_USER', github_admin_user)
     stub_env('GITHUB_ADMIN_TOKEN', github_admin_token)
+  end
+
+  # The results_per_page attribute is meant just for testing purposes
+  # The API will be stubbed anyway with the amount used in GithubClient::PullRequest#files
+  def stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+    url = "https://api.github.com/repositories/#{project_id}/pulls/#{pr_number}/files"
+
+    stub_paginated_items(
+      file_payloads,
+      url,
+      results_per_page,
+      GithubClient::PullRequest::MAX_FILES_PER_PAGE
+    )
+  end
+
+  def stub_paginated_items(item_payloads, url, results_per_page, max_results_per_page)
+    stub_auth_envs
+
+    groups_of_items = item_payloads.in_groups_of(results_per_page, false)
+
+    groups_of_items.push([]).each.with_index do |items, index|
+      stub_request(:get, url)
+        .with(
+          basic_auth: [github_admin_user, github_admin_token],
+          query: {
+            page: index + 1,
+            per_page: max_results_per_page
+          }
+        )
+        .to_return(body: JSON.generate(items), status: 200)
+    end
   end
 end

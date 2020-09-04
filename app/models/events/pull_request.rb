@@ -46,6 +46,7 @@ module Events
                        inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
     has_one :merge_time, dependent: :destroy
+    has_one :pull_request_size, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id,
