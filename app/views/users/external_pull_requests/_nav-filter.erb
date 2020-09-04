@@ -1,0 +1,20 @@
+<div class="col-md-10 offset-1">
+  <%= simple_form_for '', url: external_pull_requests_path,
+    method: 'GET', html: {
+      class: 'nav-filter p-3 shadow-box',
+      id: 'nav-filter-form' } do |f|%>
+        <h4 class="text-center">Contributions to external projects</h4>
+        <div class="row justify-content-start align-items-end mt-3 ml-3">
+          <span>Show data for the last</span>
+          <%= f.input :from,
+            wrapper_html: { class: 'd-flex flex-column mb-0' },
+            input_html: { class: 'period-input-external-pr', value: chosen_contribution_period },
+            required: false,
+            as: :numeric,
+            label: false
+          %>
+          <span>weeks</span>
+          <%= f.button :submit, 'Go', class: 'btn-secondary ml-2', id: 'submitButton' %>
+        </div>
+  <% end %>
+</div>

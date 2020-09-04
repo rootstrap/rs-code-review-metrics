@@ -8,14 +8,14 @@ describe 'Open Source', type: :request do
 
     describe 'projects count' do
       it 'renders the project count per language' do
-        get open_source_url
+        get open_source_index_url
 
         expect(response.body)
           .to include("<b>#{project_count}</b> #{language.name.titleize} project")
       end
 
       it 'renders the project count totals' do
-        get open_source_url
+        get open_source_index_url
 
         expect(response.body)
           .to include("<b>#{project_count}</b> open source project")
@@ -25,7 +25,7 @@ describe 'Open Source', type: :request do
         let(:project_count) { 14 }
 
         it 'pluralizes the word "project"' do
-          get open_source_url
+          get open_source_index_url
 
           expect(response.body)
             .to include("<b>#{project_count}</b> #{language.name.titleize} projects")

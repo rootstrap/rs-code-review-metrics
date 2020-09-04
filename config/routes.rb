@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       resources :departments, only: [], param: :name do
         resources :pull_requests, only: :index
       end
+      resources :users, only: [] do
+        resources :projects, only: :index, controller: 'users/projects'
+      end
       get 'projects'
       get 'departments'
       get 'users'
@@ -23,8 +26,16 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :open_source, only: :index do
+    collection do
+      resources :users, only: [] do
+        collection do
+          resources :external_pull_requests, only: :index,
+                                             controller: 'users/external_pull_requests'
+        end
+      end
+    end
+  end
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
-  get 'development_metrics/users/:id/projects', to: 'users/projects#index'
-  get 'open_source', to: 'open_source#index'
 end

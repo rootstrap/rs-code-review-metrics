@@ -9,4 +9,8 @@ module FiltersHelper
   def current_department
     Department.find_by!(name: params[:department_name])
   end
+
+  def chosen_contribution_period
+    params[:from] || 4
+  end
 end
