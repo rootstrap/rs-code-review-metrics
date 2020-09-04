@@ -10,7 +10,6 @@ module Processors
         rs_member_pull_requests = pull_requests_data.select do |pull_request_data|
           pull_request_data[:user][:login] == @username
         end
-        return if rs_member_pull_requests.empty?
 
         rs_member_pull_requests.each do |pull_request|
           Builders::ExternalPullRequest.call(pull_request, project)

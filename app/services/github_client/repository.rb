@@ -15,7 +15,7 @@ module GithubClient
         request['state'] = 'all'
       end
       response_body = response.body
-      response_body.empty? ? [] : JSON.parse(response_body, symbolize_names: true)
+      JSON.parse(response_body, symbolize_names: true) unless response_body.empty?
     end
 
     def views
