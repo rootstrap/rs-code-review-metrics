@@ -12,7 +12,7 @@ module GithubApiMock
       )
   end
 
-  def stub_get_repos_from_user(username, payload = {})
+  def stub_get_repos_from_user(username, payload = [])
     stub_request(:get, "https://api.github.com/users/#{username}/repos?type=member")
       .to_return(
         body: JSON.generate(payload),
@@ -20,7 +20,7 @@ module GithubApiMock
       )
   end
 
-  def stub_get_pull_requests(github_id, payload = {})
+  def stub_get_pull_requests(github_id, payload = [])
     stub_request(:get, "https://api.github.com/repositories/#{github_id}/pulls")
       .to_return(
         body: JSON.generate(payload),

@@ -6,7 +6,7 @@ module Processors
       end
 
       def call
-        RootstrapMemberRepositoriesDiscriminator.call(repositories)
+        CompanyMemberRepositoriesDiscriminator.call(repositories)
       end
 
       private

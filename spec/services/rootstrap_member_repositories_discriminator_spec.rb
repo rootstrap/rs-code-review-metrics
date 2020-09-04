@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RootstrapMemberRepositoriesDiscriminator do
+RSpec.describe CompanyMemberRepositoriesDiscriminator do
   let(:rootstrap_member) { create(:user, login: 'santib') }
 
   let(:rootstrap_member_repository) do
