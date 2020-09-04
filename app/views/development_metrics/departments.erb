@@ -27,36 +27,33 @@
           department: @department, code_climate: @code_climate %>
         </div>
         <% if @review_turnaround && @merge_time && @pull_request_size %>
-          <div class="row">
-            <div class="metrics">
-              <div class="graph">
-                <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
-              </div>
-              <div class="graph details">
-                <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
+          <div class="metrics shadow-box">
+            <h4 class="p-3">Time to second review</h4>
+            <div class="graph">
+              <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
+            </div>
+            <div class="graph details">
+              <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
+            </div>
+          </div>
+          <div class="metrics shadow-box">
+            <h4 class="p-3">Time to merge</h4>
+            <div class="graph">
+              <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+            </div>
+            <div class="graph details">
+              <div class="distribution-report-button mr-5 mb-2">
+                <%= link_to 'See report',
+                            department_pull_requests_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
+                            class: 'btn btn-secondary'
+                %>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="metrics">
-              <div class="graph">
-                <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
-              </div>
-              <div class="graph details">
-                <div class="distribution-report-button mr-5 mb-2">
-                  <%= link_to 'See report',
-                              department_pull_requests_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
-                              class: 'btn btn-secondary'
-                  %>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="metrics">
-              <div class="graph">
-                <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
-              </div>
+          <div class="metrics shadow-box">
+            <h4 class="p-3">PR Size</h4>
+            <div class="graph">
+              <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
             </div>
           </div>
         <% else %>

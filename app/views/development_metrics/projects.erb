@@ -15,7 +15,8 @@
 
   <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
   <% if @review_turnaround && @merge_time %>
-    <div class="metrics">
+    <div class="metrics shadow-box">
+      <h4 class="p-3">Time to second review</h4>
       <div class="graph">
         <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
       </div>
@@ -24,7 +25,8 @@
       </div>
     </div>
 
-    <div class="metrics">
+    <div class="metrics shadow-box">
+      <h4 class="p-3">Time to merge</h4>
       <div class="graph">
         <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
       </div>
