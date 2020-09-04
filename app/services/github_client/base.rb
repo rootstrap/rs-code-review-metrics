@@ -10,7 +10,7 @@ module GithubClient
       end
     end
 
-    def get_all_paginated_items(url, max_per_page, accumulated_items = [], page_number = 1)
+    def get_all_paginated_items(url, max_per_page, accumulated_items: [], page_number: 1)
       request_params = {
         page: page_number,
         per_page: max_per_page
@@ -23,7 +23,12 @@ module GithubClient
 
       return accumulated_items if new_items.empty?
 
-      get_all_paginated_items(url, max_per_page, accumulated_items + new_items, page_number + 1)
+      get_all_paginated_items(
+        url,
+        max_per_page,
+        accumulated_items: accumulated_items + new_items,
+        page_number: page_number + 1
+      )
     end
   end
 end
