@@ -10,21 +10,61 @@ module Builders
       private
 
       def retrieve_records
-        return review_turnarounds if @query[:name].equal?(:review_turnaround)
-
-        merge_times
+        metric.retrieve_records(
+          department_id: @entity_id,
+          timestamp_interval: @query[:value_timestamp]
+        )
       end
 
-      def review_turnarounds
-        ::CompletedReviewTurnaround.joins(review_request: { project: { language: :department } })
-                                   .where(departments: { id: @entity_id })
-                                   .where(created_at: @query[:value_timestamp])
+      def metric_name
+        @query[:name]
       end
 
-      def merge_times
-        ::MergeTime.joins(pull_request: { project: { language: :department } })
-                   .where(departments: { id: @entity_id })
-                   .where(created_at: @query[:value_timestamp])
+      def metric
+        @metric ||= self.class.const_get(metric_name.to_s.camelize).new
+      end
+
+      def resolve_interval(entity)
+        metric.resolve_interval(entity)
+      end
+
+      class MergeTime
+        def retrieve_records(department_id:, timestamp_interval:)
+          ::MergeTime
+            .joins(pull_request: { project: { language: :department } })
+            .where(departments: { id: department_id })
+            .where(created_at: timestamp_interval)
+        end
+
+        def resolve_interval(entity)
+          Metrics::IntervalResolver::Time.call(entity.value_as_hours)
+        end
+      end
+
+      class ReviewTurnaround
+        def retrieve_records(department_id:, timestamp_interval:)
+          ::CompletedReviewTurnaround
+            .joins(review_request: { project: { language: :department } })
+            .where(departments: { id: department_id })
+            .where(created_at: timestamp_interval)
+        end
+
+        def resolve_interval(entity)
+          Metrics::IntervalResolver::Time.call(entity.value_as_hours)
+        end
+      end
+
+      class PullRequestSize
+        def retrieve_records(department_id:, timestamp_interval:)
+          ::PullRequestSize
+            .joins(pull_request: { project: { language: :department } })
+            .where(departments: { id: department_id })
+            .where(created_at: timestamp_interval)
+        end
+
+        def resolve_interval(entity)
+          Metrics::IntervalResolver::PRSize.call(entity.value)
+        end
       end
     end
   end
