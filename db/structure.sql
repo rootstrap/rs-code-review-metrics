@@ -738,7 +738,7 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 CREATE TABLE public.pull_request_sizes (
     id bigint NOT NULL,
     pull_request_id bigint NOT NULL,
-    value integer,
+    value integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
