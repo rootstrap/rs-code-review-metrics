@@ -11,7 +11,7 @@ module Metrics
     private
 
     def matching_interval
-      ranges.find { |_interval, hour| @value < hour }&.first&.to_s
+      ranges.find { |_interval, upper_limit| @value < upper_limit }&.first&.to_s
     end
 
     def upper_interval
