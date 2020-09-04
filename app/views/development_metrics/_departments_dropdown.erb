@@ -6,7 +6,7 @@
       <% else %>
         <option value disabled>Choose a department</option>
       <% end %>
-      <% all_departments_names.each do |name|%>
+      <% all_departments_names.each do |name| %>
         <% if params[:department_name] == name %>
           <option selected value=<%= name %>> <%= name%> </option>
         <% else %>
