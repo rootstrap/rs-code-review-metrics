@@ -18,6 +18,10 @@ module Builders
                    .where(projects: { id: @entity_id })
                    .where(created_at: @query[:value_timestamp])
       end
+
+      def resolve_interval(entity)
+        Metrics::IntervalResolver::Time.call(entity.value_as_hours)
+      end
     end
   end
 end

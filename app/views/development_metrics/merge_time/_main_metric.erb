@@ -1,6 +1,6 @@
 <%= render partial: 'shared/line-chart',
             locals: {
-              metric_name: 'Merge Time',
+              metric_name: 'Average',
               metric: merge_time[:per_project] || merge_time[:per_department]
             } if merge_time && (merge_time[:per_project] || merge_time[:per_department]) %>
 <%= render partial: 'shared/column-chart',
