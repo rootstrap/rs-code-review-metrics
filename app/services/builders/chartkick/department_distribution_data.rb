@@ -10,10 +10,10 @@ module Builders
       private
 
       def retrieve_records
-        metric.retrieve_records(
-          department_id: @entity_id,
-          timestamp_interval: @query[:value_timestamp]
-        )
+        metric
+          .records_with_departments
+          .where(departments: { id: @entity_id })
+          .where(created_at: @query[:value_timestamp])
       end
 
       def metric_name
@@ -29,11 +29,8 @@ module Builders
       end
 
       class MergeTime
-        def retrieve_records(department_id:, timestamp_interval:)
-          ::MergeTime
-            .joins(pull_request: { project: { language: :department } })
-            .where(departments: { id: department_id })
-            .where(created_at: timestamp_interval)
+        def records_with_departments
+          ::MergeTime.joins(pull_request: { project: { language: :department } })
         end
 
         def resolve_interval(entity)
@@ -42,11 +39,8 @@ module Builders
       end
 
       class ReviewTurnaround
-        def retrieve_records(department_id:, timestamp_interval:)
-          ::CompletedReviewTurnaround
-            .joins(review_request: { project: { language: :department } })
-            .where(departments: { id: department_id })
-            .where(created_at: timestamp_interval)
+        def records_with_departments
+          ::CompletedReviewTurnaround.joins(review_request: { project: { language: :department } })
         end
 
         def resolve_interval(entity)
@@ -55,11 +49,8 @@ module Builders
       end
 
       class PullRequestSize
-        def retrieve_records(department_id:, timestamp_interval:)
-          ::PullRequestSize
-            .joins(pull_request: { project: { language: :department } })
-            .where(departments: { id: department_id })
-            .where(created_at: timestamp_interval)
+        def records_with_departments
+          ::PullRequestSize.joins(pull_request: { project: { language: :department } })
         end
 
         def resolve_interval(entity)
