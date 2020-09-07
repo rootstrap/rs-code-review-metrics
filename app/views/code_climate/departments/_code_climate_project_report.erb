@@ -10,15 +10,6 @@
     <span class="h6 text-success"><%= code_climate[:code_climate_rate] %></span>
   </td>
   <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:invalid_issues_count] %> invalid issues</span>
-  </td>
-  <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:wont_fix_issues_count] %> won't fix issues</span>
-  </td>
-  <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:open_issues_count] %> open issues</span>
-  </td>
-  <td>
     <span class="code-climate-summary">
       <% if code_climate[:test_coverage].present? %>
         <span class="text-success"><%= code_climate[:test_coverage] %> %</span>
@@ -26,5 +17,14 @@
         <span class="text-muted">N/D</span>
       <% end %>
     </span>
+  </td>
+  <td>
+    <span class="code-climate-summary text-danger"><%= code_climate[:invalid_issues_count] %> invalid issues</span>
+  </td>
+  <td>
+    <span class="code-climate-summary text-danger"><%= code_climate[:wont_fix_issues_count] %> won't fix issues</span>
+  </td>
+  <td>
+    <span class="code-climate-summary text-danger"><%= code_climate[:open_issues_count] %> open issues</span>
   </td>
 </tr>
