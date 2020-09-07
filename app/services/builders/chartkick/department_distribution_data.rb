@@ -54,7 +54,7 @@ module Builders
         end
 
         def resolve_interval(entity)
-          Metrics::IntervalResolver::PRSize.call(entity.value)
+          Metrics::IntervalResolver::PrSize.call(entity.value)
         end
       end
     end
