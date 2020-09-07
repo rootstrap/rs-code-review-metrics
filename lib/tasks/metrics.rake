@@ -9,9 +9,4 @@ namespace :metrics do
   task process: :environment do
     ProcessReviewTurnaroundMetricsJob.perform_now
   end
-
-  desc 'Removes all blog_post_count metrics'
-  task remove_blog_post_count: :environment do
-    Processors::BlogPostCountMetricsRemover.call
-  end
 end

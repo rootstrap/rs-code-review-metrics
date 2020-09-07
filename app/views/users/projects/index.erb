@@ -1,3 +1,5 @@
+<%=  render 'development_metrics/development_metrics_sidebar' %>
+
 <div class="metrics-container col-md-12">
   <h2 class='user-name'><%= @user.login%></h2>
   <hr>
@@ -11,14 +13,14 @@
               class: 'link-none-style-black'
           %>
         </li>
-      <%end%>
+      <% end %>
     </ul>
-  <%else%>
+  <% else %>
     <p>
       <br>
       <strong>
         <em class='ml-3'>This user is not participating in any project as code owner</em>.
       </strong>
     </p>
-  <%end%>
+  <% end %>
 </div>

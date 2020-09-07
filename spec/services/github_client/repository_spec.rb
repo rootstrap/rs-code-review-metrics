@@ -41,4 +41,31 @@ RSpec.describe GithubClient::Repository do
       end
     end
   end
+
+  describe '#pull_requests' do
+    let(:project) { build(:external_project) }
+    subject { described_class.new(project) }
+
+    context 'when repo does not have any pull request' do
+      before do
+        stub_get_pull_requests(project.github_id)
+      end
+
+      it 'returns an empty array' do
+        expect(subject.pull_requests).to be_empty
+      end
+    end
+
+    context 'when repo has pull request' do
+      let!(:pull_requests_payload) do
+        create(:gitub_api_client_pull_requests_payload)
+      end
+
+      before { stub_get_pull_requests(project.github_id, pull_requests_payload) }
+
+      it 'returns an empty array' do
+        expect(subject.pull_requests).not_to be_empty
+      end
+    end
+  end
 end

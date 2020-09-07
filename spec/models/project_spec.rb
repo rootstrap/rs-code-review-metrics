@@ -36,7 +36,7 @@ RSpec.describe Project, type: :model do
     it { is_expected.to have_many(:events) }
   end
 
-  describe 'open_source' do
+  describe '#open_source' do
     let(:language) { Language.find_by(name: 'ruby') }
     let!(:private_project) do
       create(
@@ -76,7 +76,7 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe 'with_language' do
+  describe '#with_language' do
     let(:language) { Language.find_by(name: 'ruby') }
     let!(:project_with_language) { create(:project, language: language) }
     let!(:project_without_language) { create(:project, language: Language.unassigned) }
@@ -86,7 +86,7 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe 'internal' do
+  describe '#internal' do
     let!(:commercial_project) { create(:project, relevance: Project.relevances[:commercial]) }
     let!(:internal_project) { create(:project, relevance: Project.relevances[:internal]) }
     let!(:unassigned_project) { create(:project, relevance: Project.relevances[:unassigned]) }
@@ -96,7 +96,7 @@ RSpec.describe Project, type: :model do
     end
   end
 
-  describe 'relevant' do
+  describe '#relevant' do
     let!(:commercial_project) { create(:project, relevance: Project.relevances[:commercial]) }
     let!(:internal_project) { create(:project, relevance: Project.relevances[:internal]) }
     let!(:ignored_project) { create(:project, relevance: Project.relevances[:ignored]) }
@@ -104,6 +104,37 @@ RSpec.describe Project, type: :model do
 
     it 'returns both commecial and internal projects' do
       expect(Project.relevant).to contain_exactly(commercial_project, internal_project)
+    end
+  end
+
+  describe '#with_activity_after' do
+    let(:date) { 4.weeks.ago }
+    let!(:updated_project) { create(:project) }
+    let!(:not_updated_project) { create(:project) }
+
+    context 'when a project has a pull request opened after the given date' do
+      let!(:pull_request) do
+        create(:pull_request, project: updated_project, opened_at: 2.weeks.ago)
+      end
+
+      it 'returns only that project' do
+        expect(Project.with_activity_after(date)).to contain_exactly(updated_project)
+      end
+    end
+
+    context 'when a project has a pull request merged after the given date' do
+      let!(:pull_request) do
+        create(
+          :pull_request,
+          project: updated_project,
+          opened_at: 6.weeks.ago,
+          merged_at: 2.weeks.ago
+        )
+      end
+
+      it 'returns only that project' do
+        expect(Project.with_activity_after(date)).to contain_exactly(updated_project)
+      end
     end
   end
 end

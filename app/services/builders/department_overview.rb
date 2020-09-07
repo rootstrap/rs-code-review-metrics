@@ -2,8 +2,9 @@ module Builders
   class DepartmentOverview < BaseService
     include ModelsNamesHelper
 
-    def initialize(department)
+    def initialize(department, from:)
       @department = department
+      @from = from
     end
 
     def call
@@ -14,14 +15,14 @@ module Builders
 
     private
 
-    attr_reader :department
+    attr_reader :department, :from
 
     def projects_by_language_and_relevance
       @projects_by_language_and_relevance ||=
         department
         .languages
         .joins(:projects)
-        .merge(::Project.relevant)
+        .merge(::Project.relevant.with_activity_after(from))
         .group('languages.name', 'projects.relevance')
         .count
     end

@@ -10,6 +10,8 @@ RSpec.describe GithubService do
       let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:review_request) { create :review_request }
 
+      before { stub_pull_request_files_with_payload(payload) }
+
       it 'creates a pull request' do
         expect { subject }.to change(Events::PullRequest, :count).by(1)
       end

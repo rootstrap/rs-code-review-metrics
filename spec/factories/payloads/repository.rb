@@ -8,7 +8,12 @@ FactoryBot.define do
     description { '' }
     private { false }
     archived { false }
-
+    html_url { 'https://github.com/Codertocat/Hello-World/pull/2' }
+    owner do
+      {
+        login: Faker::Name.name
+      }
+    end
     initialize_with { attributes.deep_stringify_keys }
   end
 end
