@@ -48,7 +48,9 @@ export const handleChangeUser = () => {
 }
 
 export const initializeSelect2 = () => {
-  $('.project-selection, .department-selection, .user-selection').select2({
-    theme: 'bootstrap4',
-  })
+  if (!elementSelector('select2')) {
+    $('.project-selection, .department-selection, .user-selection').select2({
+      theme: 'bootstrap4',
+    })
+  }
 }
