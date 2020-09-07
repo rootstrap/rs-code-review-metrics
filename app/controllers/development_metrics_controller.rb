@@ -55,6 +55,6 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def department_overview
-    Builders::DepartmentOverview.call(department)
+    Builders::DepartmentOverview.call(department, from: metric_params[:period].to_i.weeks.ago)
   end
 end

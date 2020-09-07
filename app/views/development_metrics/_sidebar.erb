@@ -1,0 +1,27 @@
+<div class="btn-group btn-entity-group">
+  <div class='custom-list d-flex flex-row align-items-center'>
+    <div class='circle'></div>
+    <%= link_to departments_development_metrics_path do %>
+      <span class='font-size-1'>Department metrics</span>
+    <% end %>
+  </div>
+  <%= yield(:departments_dropdown) %>
+</div>
+<div class="btn-group btn-entity-group">
+  <div class='custom-list d-flex flex-row align-items-center'>
+    <div class='circle'></div>
+    <%= link_to projects_development_metrics_path do %>
+      <span class='font-size-1'>Project metrics</span>
+    <% end %>
+  </div>
+  <%= yield(:projects_dropdown) %>
+</div>
+<div class="btn-group btn-entity-group">
+  <div class='custom-list d-flex flex-row align-items-center'>
+    <div class='circle'></div>
+    <%= link_to users_development_metrics_path do %>
+      <span class='font-size-1'>Users</span>
+    <% end %>
+  </div>
+  <%= yield(:users_dropdown) %>
+</div>

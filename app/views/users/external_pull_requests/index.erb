@@ -1,0 +1,15 @@
+<%= render 'open_source/sidebar' %>
+<%= render 'users/external_pull_requests/nav-filter'%>
+
+<div class="col-md-12 p-5">
+  <% @external_pull_requests.each do |key, value| %>
+    <h6><%= key %> (<%= value.size%>):</h6>
+    <ul>
+      <% value.each do |pull_request| %>
+        <li>
+          <%= link_to nil, pull_request.html_url, target: '_blank' %>
+          </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

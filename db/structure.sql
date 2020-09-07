@@ -527,6 +527,77 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 
 --
+-- Name: external_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_projects (
+    id bigint NOT NULL,
+    description character varying,
+    name character varying,
+    full_name character varying NOT NULL,
+    github_id bigint NOT NULL,
+    language_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: external_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_projects_id_seq OWNED BY public.external_projects.id;
+
+
+--
+-- Name: external_pull_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_pull_requests (
+    id bigint NOT NULL,
+    body text,
+    html_url character varying NOT NULL,
+    title text,
+    github_id bigint,
+    owner_id bigint,
+    external_project_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: external_pull_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_pull_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_pull_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_pull_requests_id_seq OWNED BY public.external_pull_requests.id;
+
+
+--
 -- Name: languages; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -658,6 +729,38 @@ CREATE SEQUENCE public.projects_id_seq
 --
 
 ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
+
+
+--
+-- Name: pull_request_sizes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pull_request_sizes (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    value integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pull_request_sizes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pull_request_sizes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pull_request_sizes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pull_request_sizes_id_seq OWNED BY public.pull_request_sizes.id;
 
 
 --
@@ -1026,6 +1129,20 @@ ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: external_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_projects ALTER COLUMN id SET DEFAULT nextval('public.external_projects_id_seq'::regclass);
+
+
+--
+-- Name: external_pull_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_pull_requests ALTER COLUMN id SET DEFAULT nextval('public.external_pull_requests_id_seq'::regclass);
+
+
+--
 -- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1051,6 +1168,13 @@ ALTER TABLE ONLY public.metrics ALTER COLUMN id SET DEFAULT nextval('public.metr
 --
 
 ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
+
+
+--
+-- Name: pull_request_sizes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes ALTER COLUMN id SET DEFAULT nextval('public.pull_request_sizes_id_seq'::regclass);
 
 
 --
@@ -1206,6 +1330,22 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 
 --
+-- Name: external_projects external_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_projects
+    ADD CONSTRAINT external_projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: external_pull_requests external_pull_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_pull_requests
+    ADD CONSTRAINT external_pull_requests_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: languages languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1235,6 +1375,14 @@ ALTER TABLE ONLY public.metrics
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pull_request_sizes pull_request_sizes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes
+    ADD CONSTRAINT pull_request_sizes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1429,6 +1577,27 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 
 
 --
+-- Name: index_external_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_projects_on_language_id ON public.external_projects USING btree (language_id);
+
+
+--
+-- Name: index_external_pull_requests_on_external_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_pull_requests_on_external_project_id ON public.external_pull_requests USING btree (external_project_id);
+
+
+--
+-- Name: index_external_pull_requests_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_pull_requests_on_owner_id ON public.external_pull_requests USING btree (owner_id);
+
+
+--
 -- Name: index_languages_on_department_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1454,6 +1623,13 @@ CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USIN
 --
 
 CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
+
+
+--
+-- Name: index_pull_request_sizes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_sizes_on_pull_request_id ON public.pull_request_sizes USING btree (pull_request_id);
 
 
 --
@@ -1628,6 +1804,14 @@ ALTER TABLE ONLY public.blog_post_technologies
 
 
 --
+-- Name: external_pull_requests fk_rails_2c98f94e16; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_pull_requests
+    ADD CONSTRAINT fk_rails_2c98f94e16 FOREIGN KEY (external_project_id) REFERENCES public.external_projects(id);
+
+
+--
 -- Name: review_turnarounds fk_rails_33c3053604; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1657,6 +1841,14 @@ ALTER TABLE ONLY public.reviews
 
 ALTER TABLE ONLY public.review_comments
     ADD CONSTRAINT fk_rails_4a92157916 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: pull_request_sizes fk_rails_4bb5aaec06; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_sizes
+    ADD CONSTRAINT fk_rails_4bb5aaec06 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
 
 
 --
@@ -1721,6 +1913,14 @@ ALTER TABLE ONLY public.review_requests
 
 ALTER TABLE ONLY public.reviews
     ADD CONSTRAINT fk_rails_bcf65590e4 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: external_pull_requests fk_rails_c13d1ac6a7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_pull_requests
+    ADD CONSTRAINT fk_rails_c13d1ac6a7 FOREIGN KEY (owner_id) REFERENCES public.users(id);
 
 
 --
@@ -1864,5 +2064,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200806131024'),
 ('20200813162522'),
 ('20200819142237'),
-('20200820180521');
+('20200820180521'),
+('20200824202901'),
+('20200825151321'),
+('20200901185355');
+
 
