@@ -14,7 +14,7 @@
   <% end %>
 
   <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
-  <% if @review_turnaround && @merge_time %>
+  <% if @project %>
     <div class="metrics shadow-box">
       <h4 class="p-3">Time to second review</h4>
       <div class="graph">

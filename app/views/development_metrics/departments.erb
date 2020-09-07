@@ -26,7 +26,7 @@
           <%= render 'development_metrics/code_climate/code_climate_department_summary',
           department: @department, code_climate: @code_climate %>
         </div>
-        <% if @review_turnaround && @merge_time && @pull_request_size %>
+        <% if @department %>
           <div class="metrics shadow-box">
             <h4 class="p-3">Time to second review</h4>
             <div class="graph">
