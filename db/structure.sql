@@ -809,6 +809,40 @@ ALTER SEQUENCE public.pull_requests_id_seq OWNED BY public.pull_requests.id;
 
 
 --
+-- Name: pushes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pushes (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    pull_request_id bigint,
+    sender_id bigint NOT NULL,
+    ref character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pushes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pushes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pushes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pushes_id_seq OWNED BY public.pushes.id;
+
+
+--
 -- Name: review_comments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1186,6 +1220,13 @@ ALTER TABLE ONLY public.pull_requests ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: pushes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pushes ALTER COLUMN id SET DEFAULT nextval('public.pushes_id_seq'::regclass);
+
+
+--
 -- Name: review_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1392,6 +1433,14 @@ ALTER TABLE ONLY public.pull_request_sizes
 
 ALTER TABLE ONLY public.pull_requests
     ADD CONSTRAINT pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pushes pushes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pushes
+    ADD CONSTRAINT pushes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1662,6 +1711,27 @@ CREATE INDEX index_pull_requests_on_state ON public.pull_requests USING btree (s
 
 
 --
+-- Name: index_pushes_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pushes_on_project_id ON public.pushes USING btree (project_id);
+
+
+--
+-- Name: index_pushes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pushes_on_pull_request_id ON public.pushes USING btree (pull_request_id);
+
+
+--
+-- Name: index_pushes_on_sender_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pushes_on_sender_id ON public.pushes USING btree (sender_id);
+
+
+--
 -- Name: index_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1797,6 +1867,14 @@ ALTER TABLE ONLY public.completed_review_turnarounds
 
 
 --
+-- Name: pushes fk_rails_2981d8bb5a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pushes
+    ADD CONSTRAINT fk_rails_2981d8bb5a FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+
+
+--
 -- Name: blog_post_technologies fk_rails_2b02d61b04; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1818,6 +1896,14 @@ ALTER TABLE ONLY public.external_pull_requests
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT fk_rails_33c3053604 FOREIGN KEY (review_request_id) REFERENCES public.review_requests(id);
+
+
+--
+-- Name: pushes fk_rails_3f633d82fd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pushes
+    ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -1906,6 +1992,14 @@ ALTER TABLE ONLY public.code_owner_projects
 
 ALTER TABLE ONLY public.review_requests
     ADD CONSTRAINT fk_rails_9ece0f7518 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: pushes fk_rails_bc14f07184; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pushes
+    ADD CONSTRAINT fk_rails_bc14f07184 FOREIGN KEY (sender_id) REFERENCES public.users(id);
 
 
 --
@@ -2069,6 +2163,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200824202901'),
 ('20200825151321'),
 ('20200901185355'),
-('20200908121903');
+('20200908121903'),
+('20200908173642');
 
 
