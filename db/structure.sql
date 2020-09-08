@@ -784,7 +784,8 @@ CREATE TABLE public.pull_requests (
     opened_at timestamp without time zone,
     project_id bigint,
     owner_id bigint,
-    html_url character varying
+    html_url character varying,
+    branch character varying
 );
 
 
@@ -2067,6 +2068,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200820180521'),
 ('20200824202901'),
 ('20200825151321'),
-('20200901185355');
+('20200901185355'),
+('20200908121903');
 
 
