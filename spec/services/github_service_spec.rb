@@ -5,7 +5,9 @@ RSpec.describe GithubService do
 
   describe 'events' do
     context 'pull request' do
-      let!(:payload) { (create :full_pull_request_payload) }
+      let!(:payload) { (create :full_pull_request_payload, action: action, merged: merged) }
+      let(:action) { 'open' }
+      let(:merged) { false }
       let!(:event) { 'pull_request' }
       let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
       let(:review_request) { create :review_request }
@@ -16,24 +18,45 @@ RSpec.describe GithubService do
         expect { subject }.to change(Events::PullRequest, :count).by(1)
       end
 
-      it 'sets state to open' do
-        change_action_to('open')
-        pull_request.closed!
-        expect { subject }.to change { pull_request.reload.open? }.from(false).to(true)
+      context 'when the action is open' do
+        let(:action) { 'open' }
+
+        before { pull_request.closed! }
+
+        it 'sets state to open' do
+          expect { subject }.to change { pull_request.reload.open? }.from(false).to(true)
+        end
       end
 
-      it 'sets state closed' do
-        change_action_to('closed')
-        expect {
-          subject
-        }.to change { pull_request.reload.closed? }.from(false).to(true)
-      end
+      context 'when the action is closed' do
+        let(:action) { 'closed' }
 
-      it 'sets state merged' do
-        change_action_to('closed')
-        payload['pull_request']['merged'] = true
+        it 'sets state closed' do
+          expect {
+            subject
+          }.to change { pull_request.reload.closed? }.from(false).to(true)
+        end
 
-        expect { subject }.to change { pull_request.reload.merged_at }.from(nil).to(Time)
+        context 'and the pull request is merged' do
+          let(:merged) { true }
+
+          it 'sets state merged' do
+            expect { subject }.to change { pull_request.reload.merged_at }.from(nil).to(Time)
+          end
+        end
+
+        context 'and the pull request is not merged' do
+          let(:merged) { false }
+
+          before { create(:pull_request_size, pull_request: pull_request) }
+
+          it 'deletes the pull request size metric from the pull request' do
+            expect { subject }
+              .to change { pull_request.reload.pull_request_size }
+              .from(PullRequestSize)
+              .to(nil)
+          end
+        end
       end
 
       describe '#review_request_removed' do

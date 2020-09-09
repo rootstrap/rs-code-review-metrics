@@ -6,6 +6,7 @@ FactoryBot.define do
       created_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
       updated_at { Faker::Date.between(from: created_at, to: Time.zone.now) }
       branch { Faker::Company.bs.gsub(' ', '_').underscore }
+      merged { false }
     end
 
     action do
@@ -23,6 +24,7 @@ FactoryBot.define do
         state: 'open',
         locked: 'false',
         draft: 'false',
+        merged: merged,
         user: (attributes_for :user, id: generate(:user_id)).as_json,
         created_at: created_at.to_time.iso8601,
         updated_at: updated_at.to_time.iso8601,
