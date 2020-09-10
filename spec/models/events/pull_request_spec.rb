@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  body       :text
+#  branch     :string
 #  closed_at  :datetime
 #  draft      :boolean          not null
 #  html_url   :string

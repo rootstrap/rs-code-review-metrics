@@ -26,6 +26,7 @@ RSpec.describe Builders::Events::PullRequest do
         expect(built_pull_request.draft).to eq(boolean_of(pull_request_payload['draft']))
         expect(built_pull_request.html_url).to eq(pull_request_payload['html_url'])
         expect(built_pull_request.opened_at).to eq(pull_request_payload['created_at'])
+        expect(built_pull_request.branch).to eq(pull_request_payload['head']['ref'])
       end
 
       it 'creates or assigns the correct references to it' do

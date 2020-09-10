@@ -193,6 +193,32 @@ RSpec.describe GithubService do
       end
     end
 
+    context 'push' do
+      let(:payload) { create(:push_payload, branch: branch) }
+      let(:event) { 'push' }
+      let(:branch) { 'newest_cool_feature' }
+
+      it 'creates a push' do
+        expect { subject }.to change(Events::Push, :count).by(1)
+      end
+
+      context 'when it has a matching pull request' do
+        let!(:pull_request) { create(:pull_request, project: project, branch: branch) }
+        let(:project) { create(:project, github_id: repository_payload['id']) }
+        let(:repository_payload) { payload['repository'] }
+        let(:pull_request_file_payload) { create(:pull_request_file_payload) }
+        let(:additions) { pull_request_file_payload['additions'] }
+
+        before { stub_pull_request_files_with_pr(pull_request, [pull_request_file_payload]) }
+
+        it 'creates or updates the pull request size metric' do
+          subject
+
+          expect(pull_request.pull_request_size.value).to eq(additions)
+        end
+      end
+    end
+
     context 'type not included in Event::TYPES' do
       let(:payload) { create :check_run_payload }
       let(:event) { 'check_run' }
