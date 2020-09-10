@@ -9,6 +9,8 @@ module Builders
         pr_size.value = calculate_size
         pr_size.save!
       end
+    rescue Faraday::Error => exception
+      ExceptionHunter.track(exception)
     end
 
     private
