@@ -9,7 +9,7 @@ module Builders
 
       def call
         merge_time_records.each_with_object(hash_of_arrays) { |merge_time, hash|
-          interval = Metrics::TimeIntervalResolver.call(merge_time.value_as_hours)
+          interval = Metrics::IntervalResolver::Time.call(merge_time.value_as_hours)
           hash[interval] << merge_time.pull_request.html_url
         }.sort.to_h
       end

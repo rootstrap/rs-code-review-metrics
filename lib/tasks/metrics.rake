@@ -9,4 +9,9 @@ namespace :metrics do
   task process: :environment do
     ProcessReviewTurnaroundMetricsJob.perform_now
   end
+
+  desc 'Updates all PR Size metrics'
+  task update_pr_size: :environment do
+    PullRequestSizeUpdaterJob.perform_now
+  end
 end

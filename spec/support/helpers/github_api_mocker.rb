@@ -93,6 +93,29 @@ module GithubApiMock
     stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
   end
 
+  def stub_failed_pull_request_files(pull_request)
+    project_id = pull_request.project.github_id
+    pr_number = pull_request.number
+    url = "https://api.github.com/repositories/#{project_id}/pulls/#{pr_number}/files"
+
+    response_body = {
+      'message': 'Not Found',
+      'documentation_url': 'https://docs.github.com/rest/reference/pulls#list-pull-requests-files'
+    }
+
+    stub_auth_envs
+
+    stub_request(:get, url)
+      .with(
+        basic_auth: [github_admin_user, github_admin_token],
+        query: {
+          page: 1,
+          per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
+        }
+      )
+      .to_return(body: JSON.generate(response_body), status: 404)
+  end
+
   private
 
   def base_content_file

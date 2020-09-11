@@ -10,21 +10,22 @@ module Builders
       private
 
       def retrieve_records
-        return review_turnarounds if @query[:name].equal?(:review_turnaround)
-
-        merge_times
+        metric
+          .records_with_departments
+          .where(departments: { id: @entity_id })
+          .where(created_at: @query[:value_timestamp])
       end
 
-      def review_turnarounds
-        ::CompletedReviewTurnaround.joins(review_request: { project: { language: :department } })
-                                   .where(departments: { id: @entity_id })
-                                   .where(created_at: @query[:value_timestamp])
+      def metric_name
+        @query[:name]
       end
 
-      def merge_times
-        ::MergeTime.joins(pull_request: { project: { language: :department } })
-                   .where(departments: { id: @entity_id })
-                   .where(created_at: @query[:value_timestamp])
+      def metric
+        @metric ||= DepartmentDistributionDataMetrics.const_get(metric_name.to_s.camelize).new
+      end
+
+      def resolve_interval(entity)
+        metric.resolve_interval(entity)
       end
     end
   end

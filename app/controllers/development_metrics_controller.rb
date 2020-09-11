@@ -28,6 +28,7 @@ class DevelopmentMetricsController < ApplicationController
                                                      .call(entity_id, metric_params[:period])
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
+    @pull_request_size = metrics[:pull_request_size]
   end
 
   def project

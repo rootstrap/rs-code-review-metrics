@@ -13,6 +13,10 @@ class ActionHandler < BaseService
   private
 
   def handle_action
-    send(@payload['action'])
+    send(action)
+  end
+
+  def action
+    @payload['action'] || :created
   end
 end

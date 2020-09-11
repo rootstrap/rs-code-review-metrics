@@ -12,6 +12,7 @@ module Builders
           ATTR_PAYLOAD_MAP.each do |key, value|
             pull_request.public_send("#{key}=", pull_request_data.fetch(value))
           end
+          pull_request.branch = pull_request_data.dig('head', 'ref')
 
           assign_attrs(pull_request, pull_request_data)
         end

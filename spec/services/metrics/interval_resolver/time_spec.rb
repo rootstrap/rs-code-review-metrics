@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Metrics::TimeIntervalResolver do
+RSpec.describe Metrics::IntervalResolver::Time do
   describe '.call' do
     context 'when the value is less than 12 hours' do
       let(:value_as_hours) { 10 }

@@ -51,6 +51,10 @@ class User < ApplicationRecord
            dependent: :destroy,
            foreign_key: :owner_id,
            inverse_of: :owner
+  has_many :pushes,
+           class_name: 'Events::Push',
+           dependent: :destroy,
+           inverse_of: :sender
   validates :github_id,
             :login,
             :node_id,
