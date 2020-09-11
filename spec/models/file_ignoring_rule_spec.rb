@@ -30,4 +30,23 @@ RSpec.describe FileIgnoringRule, type: :model do
       expect(subject).not_to be_valid
     end
   end
+
+  describe '#matches?' do
+    let(:pattern) { 'spec/' }
+    let(:rule) { create(:file_ignoring_rule, regex: pattern) }
+
+    subject { rule.matches?(filename) }
+
+    context 'when the filename matches the regex' do
+      let(:filename) { 'spec/models/file_ignoring_rule_spec.rb' }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when the filename does not match the regex' do
+      let(:filename) { 'app/models/file_ignoring_rule.rb' }
+
+      it { is_expected.to be false }
+    end
+  end
 end

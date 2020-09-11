@@ -21,4 +21,8 @@ class FileIgnoringRule < ApplicationRecord
   belongs_to :language
 
   validates :regex, presence: true
+
+  def matches?(filename)
+    filename.match?(regex)
+  end
 end

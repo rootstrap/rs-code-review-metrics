@@ -20,6 +20,7 @@ class Language < ApplicationRecord
   has_many :projects, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
   has_many :projects_metrics, through: :projects, source: :metrics
+  has_many :file_ignoring_rules, dependent: :destroy
 
   def self.unassigned
     find_by(name: 'unassigned')
