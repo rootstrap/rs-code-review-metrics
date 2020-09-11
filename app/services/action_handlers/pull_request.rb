@@ -20,7 +20,12 @@ module ActionHandlers
     end
 
     def closed
-      merged if @payload['pull_request']['merged'] == true
+      if @payload['pull_request']['merged']
+        merged
+      else
+        @entity.pull_request_size&.destroy!
+      end
+
       @entity.closed!
       @entity.update!(closed_at: Time.current)
     end
