@@ -1,15 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe Builders::Chartkick::DepartmentDistributionDataMetrics::MergeTime do
-  describe '#records_with_departments' do
-    let(:department) { Department.first }
-    let(:project) { create(:project, language: department.languages.first) }
-    let(:pull_request) { create(:pull_request, project: project) }
+  describe '#retrieve_records' do
+    let(:time_range) { Time.zone.today.beginning_of_week..Time.zone.today.end_of_week }
+    let(:old_timestamp) { time_range.first.yesterday }
+    let(:backend_department) { Department.find_by(name: 'backend') }
+    let(:frontend_department) { Department.find_by(name: 'frontend') }
 
-    before { create(:merge_time, pull_request: pull_request) }
+    let(:backend_project) { create(:project, language: backend_department.languages.first) }
+    let(:frontend_project) { create(:project, language: frontend_department.languages.first) }
 
-    it 'returns MergeTime entities joined with Department' do
-      expect(subject.records_with_departments.pluck(:department_id)).to be_present
+    let(:frontend_pr) do
+      create(:pull_request, project: frontend_project, merged_at: Time.zone.now)
+    end
+    let(:last_week_backend_pr) do
+      create(:pull_request, project: backend_project, merged_at: old_timestamp)
+    end
+    let(:this_week_backend_pr) do
+      create(:pull_request, project: backend_project, merged_at: Time.zone.now)
+    end
+
+    let!(:frontend_pr_merge_time) do
+      create(:merge_time, pull_request: frontend_pr)
+    end
+    let!(:last_week_backend_pr_merge_time) do
+      create(:merge_time, pull_request: last_week_backend_pr)
+    end
+    let!(:this_week_backend_pr_merge_time) do
+      create(:merge_time, pull_request: this_week_backend_pr)
+    end
+
+    subject(:records_retrieved) do
+      described_class.new.retrieve_records(
+        entity_id: backend_department.id,
+        time_range: time_range
+      )
+    end
+
+    it 'returns only records with the requested department and in the requested time range' do
+      expect(records_retrieved).to contain_exactly(this_week_backend_pr_merge_time)
     end
   end
 

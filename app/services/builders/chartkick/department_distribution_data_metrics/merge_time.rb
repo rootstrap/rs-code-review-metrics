@@ -2,8 +2,11 @@ module Builders
   module Chartkick
     module DepartmentDistributionDataMetrics
       class MergeTime
-        def records_with_departments
-          ::MergeTime.joins(pull_request: { project: { language: :department } })
+        def retrieve_records(entity_id:, time_range:)
+          ::MergeTime
+            .joins(pull_request: { project: { language: :department } })
+            .where(departments: { id: entity_id })
+            .where(pull_requests: { merged_at: time_range })
         end
 
         def resolve_interval(entity)

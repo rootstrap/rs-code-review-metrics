@@ -16,7 +16,7 @@ module Builders
       def merge_times
         ::MergeTime.joins(pull_request: :project)
                    .where(projects: { id: @entity_id })
-                   .where(created_at: @query[:value_timestamp])
+                   .where(pull_requests: { merged_at: @query[:value_timestamp] })
       end
 
       def resolve_interval(entity)
