@@ -10,10 +10,7 @@ module Builders
       private
 
       def retrieve_records
-        metric
-          .records_with_departments
-          .where(departments: { id: @entity_id })
-          .where(created_at: @query[:value_timestamp])
+        metric.retrieve_records(entity_id: @entity_id, time_range: @query[:value_timestamp])
       end
 
       def metric_name

@@ -74,13 +74,25 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
         before do
           sizes_values.each do |size_value|
-            pull_request = create(:pull_request, project: project)
+            pull_request = create(:pull_request, project: project, opened_at: Time.zone.now)
             create(:pull_request_size, value: size_value, pull_request: pull_request)
           end
         end
 
         it 'counts and classifies each pr size in the correct intervals and returns the data' do
           expect(subject.first[:data]).to eq(expected_data)
+        end
+
+        context 'when some pull requests have been created outside of the requested period' do
+          before do
+            old_timestamp = range.first.yesterday
+            pull_request = create(:pull_request, project: project, opened_at: old_timestamp)
+            create(:pull_request_size, value: 3, pull_request: pull_request)
+          end
+
+          it 'does not count them' do
+            expect(subject.first[:data]).to eq(expected_data)
+          end
         end
       end
     end
