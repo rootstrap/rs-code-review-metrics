@@ -2,8 +2,11 @@ module Builders
   module Chartkick
     module DepartmentDistributionDataMetrics
       class PullRequestSize
-        def records_with_departments
-          ::PullRequestSize.joins(pull_request: { project: { language: :department } })
+        def retrieve_records(entity_id:, time_range:)
+          ::PullRequestSize
+            .joins(pull_request: { project: { language: :department } })
+            .where(departments: { id: entity_id })
+            .where(pull_requests: { opened_at: time_range })
         end
 
         def resolve_interval(entity)

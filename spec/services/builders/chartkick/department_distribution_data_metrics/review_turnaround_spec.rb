@@ -1,15 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe Builders::Chartkick::DepartmentDistributionDataMetrics::ReviewTurnaround do
-  describe '#records_with_departments' do
-    let(:department) { Department.first }
-    let(:project) { create(:project, language: department.languages.first) }
-    let(:review_request) { create(:review_request, project: project) }
+  describe '#retrieve_records' do
+    let(:time_range) { Time.zone.today.beginning_of_week..Time.zone.today.end_of_week }
+    let(:old_timestamp) { time_range.first.yesterday }
+    let(:backend_department) { Department.find_by(name: 'backend') }
+    let(:frontend_department) { Department.find_by(name: 'frontend') }
 
-    before { create(:completed_review_turnaround, review_request: review_request) }
+    let(:backend_project) { create(:project, language: backend_department.languages.first) }
+    let(:frontend_project) { create(:project, language: frontend_department.languages.first) }
 
-    it 'returns CompletedReviewTurnaround entities joined with Department' do
-      expect(subject.records_with_departments.pluck(:department_id)).to be_present
+    let(:frontend_rr) do
+      create(:review_request, project: frontend_project)
+    end
+    let(:last_week_backend_rr) do
+      create(:review_request, project: backend_project)
+    end
+    let(:this_week_backend_rr) do
+      create(:review_request, project: backend_project)
+    end
+
+    let!(:frontend_review_turnaround) do
+      create(:completed_review_turnaround, review_request: frontend_rr)
+    end
+    let!(:last_week_backend_review_turnaround) do
+      create(
+        :completed_review_turnaround,
+        review_request: last_week_backend_rr,
+        created_at: old_timestamp
+      )
+    end
+    let!(:this_week_backend_review_turnaround) do
+      create(:completed_review_turnaround, review_request: this_week_backend_rr)
+    end
+
+    subject(:records_retrieved) do
+      described_class.new.retrieve_records(
+        entity_id: backend_department.id,
+        time_range: time_range
+      )
+    end
+
+    it 'returns only records with the requested department and in the requested timeframe' do
+      expect(records_retrieved).to contain_exactly(this_week_backend_review_turnaround)
     end
   end
 
