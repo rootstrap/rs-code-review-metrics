@@ -60,6 +60,8 @@ RSpec.describe GithubService do
       end
 
       describe 'when the action is review_request_removed' do
+        let(:action) { 'review_request_removed' }
+
         describe 'with an exiting review_request' do
           let!(:reviewer) do
             create :user, github_id: payload['requested_reviewer']['id']
@@ -75,7 +77,6 @@ RSpec.describe GithubService do
           end
 
           it 'sets state to removed' do
-            change_action_to('review_request_removed')
             subject
             expect(ReviewRequest.where(state: 'removed').count).to eq(1)
           end
@@ -84,7 +85,6 @@ RSpec.describe GithubService do
         describe 'with a missing review_request because the requested reviewer is a team' do
           before do
             payload['requested_team'] = payload.delete('requested_reviewer')
-            change_action_to('review_request_removed')
           end
 
           it 'raises an error' do
