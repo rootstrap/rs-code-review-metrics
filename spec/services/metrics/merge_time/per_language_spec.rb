@@ -8,37 +8,38 @@ RSpec.describe Metrics::MergeTime::PerLanguage do
     let(:react_lang) { Language.find_by(name: 'react') }
     let!(:first_project)  { create(:project, language: ruby_lang)  }
     let!(:second_project) { create(:project, language: react_lang) }
+    let(:beginning_of_day) { Time.zone.today.beginning_of_day }
 
     context 'when there are two merged pull request with different languages' do
       let!(:first_project_pull_request) do
         create(:pull_request,
                project: first_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       let!(:second_project_pull_request) do
         create(:pull_request,
                project: second_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       before do
-        first_project_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 1.hour)
-        second_project_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 2.hours)
+        first_project_pull_request.update!(merged_at: beginning_of_day + 1.hour)
+        second_project_pull_request.update!(merged_at: beginning_of_day + 2.hours)
       end
 
       it 'creates two metrics' do
         expect { described_class.call }.to change { Metric.count }.by(2)
       end
 
-      it 'saves one hour as value for merge time metric in backend language' do
+      it 'saves one hour as value for merge time metric in ruby language' do
         described_class.call
-        expect(Metric.first.value.seconds).to eq(1.hour)
+        expect(ruby_lang.metrics.first.value.seconds).to eq(1.hour)
       end
 
-      it 'saves two hours as value for merge time metric in frontend language' do
+      it 'saves two hours as value for merge time metric in react language' do
         described_class.call
-        expect(Metric.second.value.seconds).to eq(2.hours)
+        expect(react_lang.metrics.first.value.seconds).to eq(2.hours)
       end
     end
 
@@ -46,46 +47,46 @@ RSpec.describe Metrics::MergeTime::PerLanguage do
       let!(:first_pull_first_project) do
         create(:pull_request,
                project: first_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       let!(:second_pull_first_project) do
         create(:pull_request,
                project: first_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       let!(:first_pull_second_project) do
         create(:pull_request,
                project: second_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       let!(:second_pull_second_project) do
         create(:pull_request,
                project: second_project,
-               opened_at: Time.zone.today.beginning_of_day)
+               opened_at: beginning_of_day)
       end
 
       before do
-        first_pull_first_project.update!(merged_at: Time.zone.today.beginning_of_day + 30.minutes)
-        second_pull_first_project.update!(merged_at: Time.zone.today.beginning_of_day + 50.minutes)
-        first_pull_second_project.update!(merged_at: Time.zone.today.beginning_of_day + 10.minutes)
-        second_pull_second_project.update!(merged_at: Time.zone.today.beginning_of_day + 2.hours)
+        first_pull_first_project.update!(merged_at: beginning_of_day + 30.minutes)
+        second_pull_first_project.update!(merged_at: beginning_of_day + 50.minutes)
+        first_pull_second_project.update!(merged_at: beginning_of_day + 10.minutes)
+        second_pull_second_project.update!(merged_at: beginning_of_day + 2.hours)
       end
 
       it 'creates two metrics' do
         expect { described_class.call }.to change { Metric.count }.by(2)
       end
 
-      it 'saves forty minutes as average for merge time backend department' do
+      it 'saves forty minutes as average for merge time ruby department' do
         described_class.call
-        expect(Metric.first.value.seconds).to eq(40.minutes)
+        expect(ruby_lang.metrics.first.value.seconds).to eq(40.minutes)
       end
 
-      it 'saves sixty five minutes as average for merge time backend department' do
+      it 'saves sixty five minutes as average for merge time react department' do
         described_class.call
-        expect(Metric.second.value.seconds).to eq(65.minutes)
+        expect(react_lang.metrics.first.value.seconds).to eq(65.minutes)
       end
     end
   end

@@ -12,7 +12,7 @@ module Metrics
 
       def project_metrics_per_language
         Language.joins(projects: { pull_requests: :merge_time })
-                .where(merge_times: { created_at: merge_time_interval })
+                .where(pull_requests: { merged_at: merge_time_interval })
                 .group(:id)
                 .pluck(:id, Arel.sql('AVG(merge_times.value)'))
       end

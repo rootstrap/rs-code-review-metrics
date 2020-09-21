@@ -3,11 +3,7 @@ require 'rails_helper'
 RSpec.describe Metrics::MergeTime::PerUserProject do
   describe '.call' do
     let(:user_project) { create(:users_project) }
-    let(:pull_request) do
-      create(:pull_request, state: :open,
-                            project_id: user_project.project_id,
-                            owner_id: user_project.user_id)
-    end
+    let(:beginning_of_day) { Time.zone.today.beginning_of_day }
 
     before { travel_to(Time.zone.today.end_of_day) }
 
@@ -18,15 +14,15 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
     end
 
     context 'when the user has pull requests in one project' do
-      context 'and the merge ocurred in a 30 minutes interval' do
+      context 'and the merge occurred in a 30 minutes interval' do
         let!(:pull_request) do
           create(:pull_request,
-                 opened_at: Time.zone.today.beginning_of_day,
+                 opened_at: beginning_of_day,
                  project_id: user_project.project_id,
                  owner_id: user_project.user_id)
         end
 
-        before { pull_request.update(merged_at: Time.zone.today.beginning_of_day + 30.minutes) }
+        before { pull_request.update(merged_at: beginning_of_day + 30.minutes) }
 
         it 'generates a metric with value expressed as decimal equal to 30 minutes' do
           described_class.call
@@ -42,29 +38,29 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
         context 'and a user made more than one pull request' do
           let!(:pull_request) do
             create(:pull_request,
-                   opened_at: Time.zone.today.beginning_of_day,
+                   opened_at: beginning_of_day,
                    project_id: user_project.project_id,
                    owner_id: user_project.user_id)
           end
 
           let!(:second_pull_request) do
             create(:pull_request,
-                   opened_at: Time.zone.today.beginning_of_day,
+                   opened_at: beginning_of_day,
                    project_id: user_project.project_id,
                    owner_id: user_project.user_id)
           end
 
           let!(:third_pull_request) do
             create(:pull_request,
-                   opened_at: Time.zone.today.beginning_of_day,
+                   opened_at: beginning_of_day,
                    project_id: user_project.project_id,
                    owner_id: user_project.user_id)
           end
 
           before do
-            pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 30.minutes)
-            second_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 45.minutes)
-            third_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 2.hours)
+            pull_request.update!(merged_at: beginning_of_day + 30.minutes)
+            second_pull_request.update!(merged_at: beginning_of_day + 45.minutes)
+            third_pull_request.update!(merged_at: beginning_of_day + 2.hours)
           end
 
           it 'creates just one metric' do
@@ -79,54 +75,17 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
       end
     end
 
-    context 'when a user has merged pull requests in more than one project' do
-      let(:same_user_for_second_project) { create(:users_project, user_id: user_project.user_id) }
-
+    context 'when the user has a pull request in another project' do
       let!(:pull_request) do
         create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
+               opened_at: beginning_of_day,
                project_id: user_project.project_id,
                owner_id: user_project.user_id)
       end
 
       let!(:second_pull_request) do
         create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
-               project_id: same_user_for_second_project.project_id,
-               owner_id: user_project.user_id)
-      end
-
-      before do
-        pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 30.minutes)
-        second_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 2.hours)
-      end
-
-      it 'it generates the metric for the first project' do
-        described_class.call
-        expect(Metric.first.value.seconds).to eq(30.minutes)
-      end
-
-      it 'it generates the metric for the second project' do
-        described_class.call
-        expect(Metric.second.value.seconds).to eq(2.hours)
-      end
-
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.from(0).to(2)
-      end
-    end
-
-    context 'when has a pull request in another project' do
-      let!(:pull_request) do
-        create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
-               project_id: user_project.project_id,
-               owner_id: user_project.user_id)
-      end
-
-      let!(:second_pull_request) do
-        create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
+               opened_at: beginning_of_day,
                project_id: user_project.project_id,
                owner_id: user_project.user_id)
       end
@@ -137,15 +96,15 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
 
       let!(:third_pull_request) do
         create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
+               opened_at: beginning_of_day,
                project_id: second_user_project.project_id,
                owner_id: user_project.user_id)
       end
 
       before do
-        pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 20.minutes)
-        second_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 30.minutes)
-        third_pull_request.update!(merged_at: Time.zone.today.beginning_of_day + 20.minutes)
+        pull_request.update!(merged_at: beginning_of_day + 20.minutes)
+        second_pull_request.update!(merged_at: beginning_of_day + 30.minutes)
+        third_pull_request.update!(merged_at: beginning_of_day + 20.minutes)
       end
 
       it 'generates two metrics' do
@@ -154,12 +113,12 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
 
       it 'generates a metric with 25 minutes as value' do
         described_class.call
-        expect(Metric.first.value.seconds).to eq(25.minutes)
+        expect(user_project.metrics.first.value.seconds).to eq(25.minutes)
       end
 
       it 'generates a second metric with 20 minutes as value' do
         described_class.call
-        expect(Metric.second.value.seconds).to eq(20.minutes)
+        expect(second_user_project.metrics.first.value.seconds).to eq(20.minutes)
       end
     end
 
@@ -170,14 +129,14 @@ RSpec.describe Metrics::MergeTime::PerUserProject do
 
       let!(:review_with_invalid_user_project) do
         create(:pull_request,
-               opened_at: Time.zone.today.beginning_of_day,
+               opened_at: beginning_of_day,
                project_id: second_user_project.project_id,
                owner_id: user_project.user_id)
       end
 
       before do
         review_with_invalid_user_project
-          .update(merged_at: Time.zone.today.beginning_of_day + 20.minutes)
+          .update(merged_at: beginning_of_day + 20.minutes)
       end
 
       it 'creates one metric and then rollbacks the transaction' do
