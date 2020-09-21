@@ -59,13 +59,9 @@ RSpec.describe GithubService do
         end
       end
 
-      describe '#review_request_removed' do
-        let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      describe 'when the action is review_request_removed' do
         let!(:reviewer) do
           create :user, github_id: payload['requested_reviewer']['id']
-        end
-        let!(:second_reviewer) do
-          create :user
         end
         let!(:owner) do
           create :user, github_id: payload['pull_request']['user']['id']
@@ -74,13 +70,6 @@ RSpec.describe GithubService do
           create :review_request,
                  owner: owner,
                  reviewer: reviewer,
-                 pull_request: pull_request
-        end
-
-        before do
-          create :review_request,
-                 owner: owner,
-                 reviewer: second_reviewer,
                  pull_request: pull_request
         end
 
