@@ -60,23 +60,39 @@ RSpec.describe GithubService do
       end
 
       describe 'when the action is review_request_removed' do
-        let!(:reviewer) do
-          create :user, github_id: payload['requested_reviewer']['id']
-        end
-        let!(:owner) do
-          create :user, github_id: payload['pull_request']['user']['id']
-        end
-        let!(:review_request) do
-          create :review_request,
-                 owner: owner,
-                 reviewer: reviewer,
-                 pull_request: pull_request
+        describe 'with an exiting review_request' do
+          let!(:reviewer) do
+            create :user, github_id: payload['requested_reviewer']['id']
+          end
+          let!(:owner) do
+            create :user, github_id: payload['pull_request']['user']['id']
+          end
+          let!(:review_request) do
+            create :review_request,
+                   owner: owner,
+                   reviewer: reviewer,
+                   pull_request: pull_request
+          end
+
+          it 'sets state to removed' do
+            change_action_to('review_request_removed')
+            subject
+            expect(ReviewRequest.where(state: 'removed').count).to eq(1)
+          end
         end
 
-        it 'sets state to removed' do
-          change_action_to('review_request_removed')
-          subject
-          expect(ReviewRequest.where(state: 'removed').count).to eq(1)
+        describe 'with a missing review_request because the requested reviewer is a team' do
+          before do
+            payload['requested_team'] = payload.delete('requested_reviewer')
+            change_action_to('review_request_removed')
+          end
+
+          it 'raises an error' do
+            expect {
+              subject
+            }.to raise_error(PullRequests::RequestTeamAsReviewerError,
+                             'Teams review requests are not supported.')
+          end
         end
       end
 
