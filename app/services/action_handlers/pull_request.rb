@@ -31,7 +31,7 @@ module ActionHandlers
     end
 
     def review_request_removed
-      validate_requested_team!
+      validate_requested_team
 
       removed_reviewer = find_or_create_user(@payload['requested_reviewer'])
       @entity.review_requests.find_by(reviewer: removed_reviewer, state: 'active')
@@ -39,12 +39,12 @@ module ActionHandlers
     end
 
     def review_requested
-      validate_requested_team!
+      validate_requested_team
 
       Builders::ReviewRequest.call(@entity, @payload)
     end
 
-    def validate_requested_team!
+    def validate_requested_team
       raise PullRequests::RequestTeamAsReviewerError if @payload['requested_team']
     end
   end
