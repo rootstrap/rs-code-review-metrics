@@ -20,8 +20,10 @@ module Builders
 
     def create_pull_request_size
       ::PullRequestSize.create!(pull_request: pull_request, value: pull_request_size_value)
-    rescue ::ActiveRecord::RecordInvalid
-      nil
+    rescue ::ActiveRecord::RecordInvalid => exception
+      if exception.message != 'Validation failed: Pull request has already been taken'
+        raise exception
+      end
     end
 
     def update_pull_request_size
@@ -32,10 +34,10 @@ module Builders
     end
 
     def pull_request_size_value
-      @pull_request_size_value ||= calculate_size
+      @pull_request_size_value ||= calculate_pull_request_size
     end
 
-    def calculate_size
+    def calculate_pull_request_size
       PullRequestSizeCalculator.call(pull_request)
     end
   end
