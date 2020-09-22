@@ -47,13 +47,15 @@ describe CodeClimate::UpdateProjectService do
 
   context 'with a project not registered in CodeClimate' do
     before do
-      on_request_repository_by_slug(project_name: project.name,
-                                    respond: { status: 404 })
+      on_request_repository_by_slug(
+        project_name: project.name,
+        respond: { status: 200, body: code_climate_repository_json }
+      )
     end
 
     let(:code_climate_repository_json) do
       build :code_climate_repository_by_slug_payload,
-            repository_payload: repository_payload['data']
+            repository_payload: nil
     end
 
     it 'does not create a CodeClimateProjectMetric record' do
@@ -210,12 +212,7 @@ describe CodeClimate::UpdateProjectService do
     end
   end
 
-  context 'with a project registered in CodeClimate that has no test reports' do
-    let(:repository_payload) do
-      build :code_climate_repository_payload,
-            latest_default_branch_snapshot_id: snapshot_id,
-            latest_default_branch_test_report_id: nil
-    end
+  describe 'a project having incomplete info on Code Climate' do
     let(:code_climate_repository_json) do
       build :code_climate_repository_by_slug_payload,
             repository_payload: repository_payload['data']
@@ -228,9 +225,48 @@ describe CodeClimate::UpdateProjectService do
       )
     end
 
-    it 'does not set test coverage for the project metric' do
-      update_project_code_climate_info
-      expect(CodeClimateProjectMetric.first.test_coverage).to be_nil
+    context 'when missing test reports' do
+      let(:repository_payload) do
+        build :code_climate_repository_payload,
+              latest_default_branch_snapshot_id: snapshot_id,
+              latest_default_branch_test_report_id: nil
+      end
+
+      it 'does not set test coverage for the project metric' do
+        update_project_code_climate_info
+        expect(CodeClimateProjectMetric.first.test_coverage).to be_nil
+      end
+    end
+
+    context 'when missing snapshots' do
+      let(:repository_payload) do
+        build :code_climate_repository_payload,
+              latest_default_branch_snapshot_id: nil,
+              latest_default_branch_test_report_id: test_report_id
+      end
+
+      it 'does not set any snapshot info for the project metric' do
+        update_project_code_climate_info
+
+        project_metric = CodeClimateProjectMetric.first
+        expect(project_metric.code_climate_rate).to be_nil
+        expect(project_metric.invalid_issues_count).to be_nil
+        expect(project_metric.open_issues_count).to be_nil
+        expect(project_metric.wont_fix_issues_count).to be_nil
+        expect(project_metric.snapshot_time).to be_nil
+      end
+    end
+
+    context 'when missing ratings' do
+      let(:code_climate_snapshot_json) do
+        build :code_climate_snapshot_payload,
+              ratings: []
+      end
+
+      it 'does not set rate for the project metric' do
+        update_project_code_climate_info
+        expect(CodeClimateProjectMetric.first.code_climate_rate).to be_nil
+      end
     end
   end
 end
