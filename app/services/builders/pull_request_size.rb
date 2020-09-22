@@ -25,7 +25,7 @@ module Builders
     end
 
     def update_pull_request_size
-      ::PullRequestSize.find_by(pull_request: pull_request).tap do |pull_request_size|
+      ::PullRequestSize.find_by!(pull_request: pull_request).tap do |pull_request_size|
         pull_request_size.value = pull_request_size_value
         pull_request_size.save!
       end
