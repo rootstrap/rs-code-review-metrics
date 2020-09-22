@@ -51,7 +51,7 @@ FactoryBot.define do
       # Despite of the name this endpoint returns a collection of repositories:
       #   https://developer.codeclimate.com/#get-repository
       after(:build) do |payload|
-        payload['data'] = [payload['data']]
+        payload['data'] = [payload['data']].compact
       end
     end
   end

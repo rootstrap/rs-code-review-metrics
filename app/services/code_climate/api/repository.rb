@@ -4,8 +4,7 @@ module CodeClimate
       delegate :ratings, :issues_collection, :snapshot_time,
                to: :default_branch_most_recent_snapshot
       delegate :coverage,
-               to: :default_branch_most_recent_test_report,
-               allow_nil: true
+               to: :default_branch_most_recent_test_report
 
       def summary
         ProjectSummary.new(
@@ -25,14 +24,20 @@ module CodeClimate
 
       def default_branch_most_recent_snapshot
         @default_branch_most_recent_snapshot ||=
-          api_client.snapshot(repo_id: repository_id, snapshot_id: snapshot_id)
+          if snapshot_id.blank?
+            MissingResource.new
+          else
+            api_client.snapshot(repo_id: repository_id, snapshot_id: snapshot_id)
+          end
       end
 
       def default_branch_most_recent_test_report
-        return if test_report_id.blank?
-
         @default_branch_most_recent_test_report ||=
-          api_client.test_report(repo_id: repository_id, test_report_id: test_report_id)
+          if test_report_id.blank?
+            MissingResource.new
+          else
+            api_client.test_report(repo_id: repository_id, test_report_id: test_report_id)
+          end
       end
 
       def snapshot_id
