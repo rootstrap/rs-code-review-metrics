@@ -5,9 +5,9 @@ module Builders
     end
 
     def call
-      ::PullRequestSize.find_or_initialize_by(pull_request: pull_request).tap do |pr_size|
-        pr_size.value = calculate_size
-        pr_size.save!
+      ::PullRequestSize.find_or_initialize_by(pull_request: pull_request).tap do |pull_request_size|
+        pull_request_size.value = calculate_size
+        pull_request_size.save!
       end
     rescue Faraday::Error => exception
       ExceptionHunter.track(exception)
