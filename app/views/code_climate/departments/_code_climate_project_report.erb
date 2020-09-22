@@ -7,24 +7,28 @@
     <% end %>
   </td>
   <td>
-    <span class="h6 text-success"><%= code_climate[:code_climate_rate] %></span>
+    <div class="h6 text-success">
+      <%= render 'code_climate_metric', metric: code_climate[:code_climate_rate], suffix: '' %>
+    </div>
   </td>
   <td>
-    <span class="code-climate-summary">
-      <% if code_climate[:test_coverage].present? %>
-        <span class="text-success"><%= code_climate[:test_coverage] %> %</span>
-      <% else %>
-        <span class="text-muted">N/D</span>
-      <% end %>
-    </span>
+    <div class="text-success">
+      <%= render 'code_climate_metric', metric: code_climate[:test_coverage], suffix: '%' %>
+    </div>
   </td>
   <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:invalid_issues_count] %> invalid issues</span>
+    <div class="text-danger">
+      <%= render 'code_climate_metric', metric: code_climate[:invalid_issues_count], suffix: 'invalid issues' %>
+    </div>
   </td>
   <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:wont_fix_issues_count] %> won't fix issues</span>
+    <div class="text-danger">
+      <%= render 'code_climate_metric', metric: code_climate[:wont_fix_issues_count], suffix: "won't fix issues" %>
+    </div>
   </td>
   <td>
-    <span class="code-climate-summary text-danger"><%= code_climate[:open_issues_count] %> open issues</span>
+    <div class="text-danger">
+      <%= render 'code_climate_metric', metric: code_climate[:open_issues_count], suffix: 'open issues' %>
+    </div>
   </td>
 </tr>
