@@ -31,7 +31,7 @@ RSpec.describe Metrics::MergeTime::PerDepartment do
       end
 
       it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.from(0).to(2)
+        expect { described_class.call }.to change { Metric.count }.by(2)
       end
 
       it 'saves one hour as value for merge time metric in backend department' do
