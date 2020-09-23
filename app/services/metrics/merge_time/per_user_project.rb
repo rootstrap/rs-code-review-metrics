@@ -5,17 +5,11 @@ module Metrics
 
       def process
         ActiveRecord::Base.transaction do
-          merge_times_in_batches do |project_id, owner_id, merge_time_value|
+          filtered_merge_times.each do |project_id, owner_id, merge_time_value|
             entity = find_user_project(owner_id, project_id)
             create_or_update_metric(entity.id, UsersProject.name,
                                     merge_time_interval, merge_time_value, :merge_time)
           end
-        end
-      end
-
-      def merge_times_in_batches
-        filtered_merge_times.each do |project_id, owner_id, merge_time_value|
-          yield(project_id, owner_id, merge_time_value)
         end
       end
 
