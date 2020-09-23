@@ -4,30 +4,21 @@ module Metrics
       private
 
       def process
-        filtered_projects.each do |project|
-          turnaround = calculate_turnaround(project)
-          create_or_update_metric(project.id, Project.name, metric_interval,
-                                  turnaround, :merge_time)
+        metrics_per_project.each do |project_id, merge_times_value|
+          create_or_update_metric(project_id, Project.name, merge_time_interval,
+                                  merge_times_value, :merge_time)
         end
       end
 
-      def filtered_projects
-        Project.includes(:pull_requests).where(pull_requests: { merged_at: metric_interval })
+      def metrics_per_project
+        Project.joins(pull_requests: :merge_time)
+               .where(pull_requests: { merged_at: merge_time_interval })
+               .group(:id)
+               .pluck(:id, Arel.sql('AVG(merge_times.value)'))
       end
 
-      def pull_requests_count
-        @pull_requests_count ||= Project.joins(:pull_requests).group(:id).count('pull_requests.id')
-      end
-
-      def calculate_turnaround(project)
-        total = project.pull_requests.inject(0) do |sum, pr|
-          sum + (pr.merged_at.to_i - pr.opened_at.to_i)
-        end
-        total / pull_requests_count.fetch(project.id)
-      end
-
-      def metric_interval
-        @metric_interval ||= @interval || Time.zone.today.all_day
+      def merge_time_interval
+        @merge_time_interval ||= @interval || Time.zone.today.all_day
       end
     end
   end

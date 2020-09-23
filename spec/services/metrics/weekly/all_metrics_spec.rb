@@ -5,7 +5,7 @@ RSpec.describe Metrics::Weekly::AllMetrics do
     let(:user_project) { create(:users_project) }
 
     before do
-      travel_to Time.zone.parse('2020-05-07')
+      travel_to Time.zone.parse('2020-05-07').end_of_day
     end
 
     let!(:current_time) { Time.zone.now }
@@ -16,6 +16,7 @@ RSpec.describe Metrics::Weekly::AllMetrics do
           create(:metric,
                  interval: :daily,
                  name: :blog_visits,
+                 value: 3600,
                  ownable: user_project,
                  value_timestamp: current_time)
         end
@@ -24,12 +25,14 @@ RSpec.describe Metrics::Weekly::AllMetrics do
           create(:metric,
                  interval: :weekly,
                  name: :review_turnaround,
+                 value: 1800,
                  ownable: user_project,
                  value_timestamp: current_time - 1.day)
 
           create(:metric,
                  interval: :daily,
                  name: :review_turnaround,
+                 value: 1800,
                  ownable: user_project,
                  value_timestamp: current_time)
         end
@@ -112,6 +115,63 @@ RSpec.describe Metrics::Weekly::AllMetrics do
 
         it 'updates the metric that should have been created on monday of that week' do
           expect(Metric.last.value).to eq(60)
+        end
+      end
+    end
+
+    context 'when calculating the average for the past and current metrics in current week ' do
+      let(:backend_department) { Department.find_by(name: 'backend') }
+      let(:frontend_department) { Department.find_by(name: 'frontend') }
+      let(:correct_average_value) { (1800 + 2700 + 3600) / 3 }
+
+      context 'for departments' do
+        before do
+          create(:metric, interval: :daily,
+                          name: :merge_time,
+                          value: 1800,
+                          ownable: frontend_department,
+                          value_timestamp: current_time)
+          create(:metric, interval: :daily,
+                          name: :merge_time,
+                          value: 1800,
+                          ownable: backend_department,
+                          value_timestamp: current_time)
+          create(:metric, interval: :daily,
+                          name: :merge_time,
+                          value: 2700,
+                          ownable: backend_department,
+                          value_timestamp: current_time - 2.days)
+          create(:metric, interval: :daily,
+                          name: :merge_time,
+                          value: 3600,
+                          ownable: backend_department,
+                          value_timestamp: current_time - 3.days)
+        end
+
+        let(:backend_weekly_metrics_count) do
+          Metric.where(interval: :weekly, ownable_id: 1).count
+        end
+        let(:frontend_weekly_metrics_count) do
+          Metric.where(interval: :weekly, ownable_id: 2).count
+        end
+
+        it 'generates two news metricss' do
+          expect { described_class.call }.to change { Metric.count }.from(4).to(6)
+        end
+
+        it 'generates only one weekly metric for backend department' do
+          described_class.call
+          expect(backend_weekly_metrics_count).to eq(1)
+        end
+
+        it 'generates only one weekly metric for frontend department' do
+          described_class.call
+          expect(frontend_weekly_metrics_count).to eq(1)
+        end
+
+        it 'generates a new metric with the correct value' do
+          described_class.call
+          expect(Metric.last.value.seconds).to eq(correct_average_value)
         end
       end
     end
