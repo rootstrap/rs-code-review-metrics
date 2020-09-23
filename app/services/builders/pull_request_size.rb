@@ -20,10 +20,14 @@ module Builders
 
     def create_pull_request_size
       ::PullRequestSize.create!(pull_request: pull_request, value: pull_request_size_value)
+    rescue ::ActiveRecord::RecordNotUnique
+      nil
     rescue ::ActiveRecord::RecordInvalid => exception
       if exception.message != 'Validation failed: Pull request has already been taken'
         raise exception
       end
+
+      nil
     end
 
     def update_pull_request_size
