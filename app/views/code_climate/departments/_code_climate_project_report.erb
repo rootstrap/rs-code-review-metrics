@@ -7,28 +7,28 @@
     <% end %>
   </td>
   <td>
-    <div class="h6 text-success">
-      <%= render 'code_climate_metric', metric: code_climate[:code_climate_rate], suffix: '' %>
-    </div>
+    <span class="h6 text-success">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:code_climate_rate], suffix: '' %>
+    </span>
   </td>
   <td>
-    <div class="text-success">
-      <%= render 'code_climate_metric', metric: code_climate[:test_coverage], suffix: '%' %>
-    </div>
+    <span class="text-success">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:test_coverage], suffix: '%' %>
+    </span>
   </td>
   <td>
-    <div class="text-danger">
-      <%= render 'code_climate_metric', metric: code_climate[:invalid_issues_count], suffix: 'invalid issues' %>
-    </div>
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:invalid_issues_count], suffix: 'invalid issues' %>
+    </span>
   </td>
   <td>
-    <div class="text-danger">
-      <%= render 'code_climate_metric', metric: code_climate[:wont_fix_issues_count], suffix: "won't fix issues" %>
-    </div>
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:wont_fix_issues_count], suffix: "won't fix issues" %>
+    </span>
   </td>
   <td>
-    <div class="text-danger">
-      <%= render 'code_climate_metric', metric: code_climate[:open_issues_count], suffix: 'open issues' %>
-    </div>
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:open_issues_count], suffix: 'open issues' %>
+    </span>
   </td>
 </tr>
