@@ -12,9 +12,9 @@ module CodeClimate
       return ProjectsSummary.new unless metrics?
 
       ProjectsSummary.new(
-        invalid_issues_count_average: invalid_issues_count_average,
-        wont_fix_issues_count_average: wont_fix_issues_count_average,
-        open_issues_count_average: open_issues_count_average,
+        invalid_issues_count_average: invalid_issues_count_average.round(2),
+        wont_fix_issues_count_average: wont_fix_issues_count_average.round(2),
+        open_issues_count_average: open_issues_count_average.round(2),
         ratings: ratings
       )
     end
@@ -26,20 +26,21 @@ module CodeClimate
     end
 
     def invalid_issues_count_average
-      code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size
+      code_climate_metrics.average(:invalid_issues_count)
     end
 
     def wont_fix_issues_count_average
-      code_climate_metrics.map(&:wont_fix_issues_count).sum / code_climate_metrics.size
+      code_climate_metrics.average(:wont_fix_issues_count)
     end
 
     def open_issues_count_average
-      code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size
+      code_climate_metrics.average(:open_issues_count)
     end
 
     def ratings
-      code_climate_metrics.each_with_object(Hash.new(0)) do |code_climate_metrics, ratings|
-        ratings[code_climate_metrics.code_climate_rate] += 1
+      code_climate_ratings = code_climate_metrics.pluck(:code_climate_rate).compact
+      code_climate_ratings.each_with_object(Hash.new(0)) do |code_climate_rate, ratings|
+        ratings[code_climate_rate] += 1
       end
     end
 

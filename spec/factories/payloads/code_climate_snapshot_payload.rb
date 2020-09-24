@@ -5,6 +5,7 @@ FactoryBot.define do
     transient do
       id { Faker::Number.number(digits: 4) }
       rate { 'C' }
+      ratings { [{ 'letter': rate }] }
     end
 
     data do
@@ -15,11 +16,7 @@ FactoryBot.define do
           'committed_at': '2017-07-14T20:00:26.765Z',
           'created_at': '2017-07-14T20:03:14.042Z',
           'lines_of_code': 456,
-          'ratings' => [
-            {
-              'letter' => rate
-            }
-          ]
+          'ratings' => ratings
         }
       }
     end
