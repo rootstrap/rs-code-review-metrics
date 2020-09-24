@@ -1,7 +1,7 @@
 module ActionHandlers
   class PullRequest < ActionHandler
     ACTIONS = %w[open review_requested closed \
-                 review_request_removed].freeze
+                 review_request_removed edited].freeze
     private_constant :ACTIONS
 
     private
@@ -28,6 +28,10 @@ module ActionHandlers
 
       @entity.closed!
       @entity.update!(closed_at: Time.current)
+    end
+
+    def edited
+      Builders::PullRequestSize.call(@entity) if @payload['changes']['base'].present?
     end
 
     def review_request_removed

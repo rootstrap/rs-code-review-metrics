@@ -9,7 +9,13 @@ RSpec.describe GithubService do
       let(:action) { 'open' }
       let(:merged) { false }
       let!(:event) { 'pull_request' }
-      let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      let(:project) { create(:project, github_id: payload['repository']['id']) }
+      let(:pull_request) do
+        create :pull_request,
+               project: project,
+               github_id: payload['pull_request']['id'],
+               number: payload['pull_request']['number']
+      end
       let(:review_request) { create :review_request }
 
       before { stub_pull_request_files_with_payload(payload) }
@@ -112,6 +118,26 @@ RSpec.describe GithubService do
             subject
           }.to raise_error(PullRequests::RequestTeamAsReviewerError,
                            'Teams review requests are not supported.')
+        end
+      end
+
+      context 'when the action is edited' do
+        let!(:pull_request_size) { create(:pull_request_size, pull_request: pull_request) }
+
+        context 'and the base branch changed' do
+          let(:payload) { (create :full_pull_request_payload, :edited_base) }
+
+          it 'updates the pull request size value' do
+            expect { subject }.to change { pull_request_size.reload.value }
+          end
+        end
+
+        context 'and the base branch did not change' do
+          let(:payload) { (create :full_pull_request_payload, :edited) }
+
+          it 'does not update the pull request size value' do
+            expect { subject }.not_to change { pull_request_size.reload.value }
+          end
         end
       end
     end
