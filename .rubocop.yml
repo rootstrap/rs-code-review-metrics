@@ -31,7 +31,7 @@ Lint/AmbiguousBlockAssociation:
 Metrics/AbcSize:
   # The ABC size is a calculated magnitude, so this number can be an Integer or
   # a Float.
-  Max: 15
+  Max: 17
   Exclude:
     - app/services/code_climate/update_project_service.rb
 

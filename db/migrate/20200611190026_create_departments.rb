@@ -1,9 +1,6 @@
 class CreateDepartments < ActiveRecord::Migration[6.0]
   def up
-    create_table :departments do |t|
-
-      t.timestamps
-    end
+    create_table :departments, &:timestamps
 
     execute <<-SQL
       CREATE TYPE department_name AS ENUM ('mobile', 'frontend', 'backend');

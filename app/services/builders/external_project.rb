@@ -6,9 +6,10 @@ module Builders
 
     def call
       ::ExternalProject.find_or_initialize_by(github_id: @repository_data[:id]) do |project|
-        project.name = @repository_data[:name]
-        project.full_name = @repository_data[:full_name]
-        project.description = @repository_data[:description]
+        name = @repository_data[:name]
+
+        project.name = name.split('/').second
+        project.full_name = name
       end
     end
   end

@@ -19,12 +19,13 @@ RSpec.describe Builders::ExternalProject do
   end
 
   context 'when there is no external project' do
+    let(:repo_name) { 'ruby_repo' }
+    let(:full_name) { "github/#{repo_name}" }
+
     let(:repository_data) do
       {
         id: 247_546_341,
-        name: 'ruby_repo',
-        full_name: 'github/ruby_repo',
-        description: 'this is a uby repo'
+        name: full_name
       }
     end
 
@@ -36,9 +37,8 @@ RSpec.describe Builders::ExternalProject do
 
     it 'initializes all attributes correctly' do
       expect(subject.github_id).to    eq(repository_data[:id])
-      expect(subject.name).to         eq(repository_data[:name])
-      expect(subject.full_name).to    eq(repository_data[:full_name])
-      expect(subject.description).to  eq(repository_data[:description])
+      expect(subject.name).to         eq(repo_name)
+      expect(subject.full_name).to    eq(full_name)
     end
   end
 end
