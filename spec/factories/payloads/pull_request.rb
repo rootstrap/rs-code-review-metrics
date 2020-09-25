@@ -40,6 +40,34 @@ FactoryBot.define do
     end
     initialize_with { attributes.deep_stringify_keys }
 
+    trait :edited do
+      transient do
+        changed { 'title' }
+        from { 'Old PR Title' }
+      end
+
+      action { 'edited' }
+      changes do
+        {
+          changed => {
+            from: from
+          }
+        }
+      end
+    end
+
+    trait :edited_base do
+      action { 'edited' }
+      changes do
+        {
+          base: {
+            ref: { from: 'old_branch_name' },
+            sha: { from: Faker::Crypto.sha1 }
+          }
+        }
+      end
+    end
+
     factory :full_pull_request_payload do
       after(:build) do |pull_request_payload|
         pull_request_payload['repository'] = create(:repository_payload)

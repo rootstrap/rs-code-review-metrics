@@ -9,7 +9,13 @@ RSpec.describe GithubService do
       let(:action) { 'open' }
       let(:merged) { false }
       let!(:event) { 'pull_request' }
-      let(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
+      let(:project) { create(:project, github_id: payload['repository']['id']) }
+      let(:pull_request) do
+        create :pull_request,
+               project: project,
+               github_id: payload['pull_request']['id'],
+               number: payload['pull_request']['number']
+      end
       let(:review_request) { create :review_request }
 
       before { stub_pull_request_files_with_payload(payload) }
@@ -59,35 +65,40 @@ RSpec.describe GithubService do
         end
       end
 
-      describe '#review_request_removed' do
-        let!(:pull_request) { create :pull_request, github_id: payload['pull_request']['id'] }
-        let!(:reviewer) do
-          create :user, github_id: payload['requested_reviewer']['id']
-        end
-        let!(:second_reviewer) do
-          create :user
-        end
-        let!(:owner) do
-          create :user, github_id: payload['pull_request']['user']['id']
-        end
-        let!(:review_request) do
-          create :review_request,
-                 owner: owner,
-                 reviewer: reviewer,
-                 pull_request: pull_request
+      describe 'when the action is review_request_removed' do
+        let(:action) { 'review_request_removed' }
+
+        describe 'with an exiting review_request' do
+          let!(:reviewer) do
+            create :user, github_id: payload['requested_reviewer']['id']
+          end
+          let!(:owner) do
+            create :user, github_id: payload['pull_request']['user']['id']
+          end
+          let!(:review_request) do
+            create :review_request,
+                   owner: owner,
+                   reviewer: reviewer,
+                   pull_request: pull_request
+          end
+
+          it 'sets state to removed' do
+            subject
+            expect(ReviewRequest.where(state: 'removed').count).to eq(1)
+          end
         end
 
-        before do
-          create :review_request,
-                 owner: owner,
-                 reviewer: second_reviewer,
-                 pull_request: pull_request
-        end
+        describe 'with a missing review_request because the requested reviewer is a team' do
+          before do
+            payload['requested_team'] = payload.delete('requested_reviewer')
+          end
 
-        it 'sets state to removed' do
-          change_action_to('review_request_removed')
-          subject
-          expect(ReviewRequest.where(state: 'removed').count).to eq(1)
+          it 'raises an error' do
+            expect {
+              subject
+            }.to raise_error(PullRequests::RequestTeamAsReviewerError,
+                             'Teams review requests are not supported.')
+          end
         end
       end
 
@@ -107,6 +118,26 @@ RSpec.describe GithubService do
             subject
           }.to raise_error(PullRequests::RequestTeamAsReviewerError,
                            'Teams review requests are not supported.')
+        end
+      end
+
+      context 'when the action is edited' do
+        let!(:pull_request_size) { create(:pull_request_size, pull_request: pull_request) }
+
+        context 'and the base branch changed' do
+          let(:payload) { (create :full_pull_request_payload, :edited_base) }
+
+          it 'updates the pull request size value' do
+            expect { subject }.to change { pull_request_size.reload.value }
+          end
+        end
+
+        context 'and the base branch did not change' do
+          let(:payload) { (create :full_pull_request_payload, :edited) }
+
+          it 'does not update the pull request size value' do
+            expect { subject }.not_to change { pull_request_size.reload.value }
+          end
         end
       end
     end

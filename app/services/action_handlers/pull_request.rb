@@ -1,7 +1,7 @@
 module ActionHandlers
   class PullRequest < ActionHandler
     ACTIONS = %w[open review_requested closed \
-                 review_request_removed].freeze
+                 review_request_removed edited].freeze
     private_constant :ACTIONS
 
     private
@@ -30,16 +30,26 @@ module ActionHandlers
       @entity.update!(closed_at: Time.current)
     end
 
+    def edited
+      Builders::PullRequestSize.call(@entity) if @payload['changes']['base'].present?
+    end
+
     def review_request_removed
+      validate_requested_team
+
       removed_reviewer = find_or_create_user(@payload['requested_reviewer'])
       @entity.review_requests.find_by(reviewer: removed_reviewer, state: 'active')
                              &.removed!
     end
 
     def review_requested
-      raise PullRequests::RequestTeamAsReviewerError if @payload['requested_team']
+      validate_requested_team
 
       Builders::ReviewRequest.call(@entity, @payload)
+    end
+
+    def validate_requested_team
+      raise PullRequests::RequestTeamAsReviewerError if @payload['requested_team']
     end
   end
 end

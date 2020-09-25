@@ -298,7 +298,7 @@ CREATE TABLE public.code_climate_project_metrics (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     open_issues_count integer,
-    snapshot_time timestamp without time zone NOT NULL,
+    snapshot_time timestamp without time zone,
     cc_repository_id character varying,
     test_coverage numeric
 );
@@ -2227,6 +2227,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200901185355'),
 ('20200908121903'),
 ('20200908173642'),
-('20200911143301');
+('20200911143301'),
+('20200922131539');
 
 

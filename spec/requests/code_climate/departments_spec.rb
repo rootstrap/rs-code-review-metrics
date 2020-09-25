@@ -40,7 +40,7 @@ describe 'CodeClimate department projects report page ', type: :request do
     end
 
     it 'shows the first project invalid issues count' do
-      expect(response.body).to include("2 won't fix issues")
+      expect(response.body).to include('2 won&#39;t fix issues')
     end
 
     it 'shows the first project invalid issues count' do
