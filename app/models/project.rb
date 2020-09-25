@@ -80,6 +80,14 @@ class Project < ApplicationRecord
     joins(:pull_requests).where('pull_requests.merged_at > ?', date)
   }
 
+  def full_name
+    "#{organization_name}/#{name}"
+  end
+
+  def organization_name
+    ENV['GITHUB_ORGANIZATION']
+  end
+
   private
 
   def set_default_language

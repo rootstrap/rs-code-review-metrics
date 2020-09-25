@@ -28,6 +28,17 @@ module GithubApiMock
       )
   end
 
+  def stub_get_pull_request(pull_request, pull_request_payload)
+    repo_full_name = pull_request.project.full_name
+    pr_number = pull_request.number
+
+    stub_request(:get, "https://api.github.com/repos/#{repo_full_name}/pulls/#{pr_number}")
+      .to_return(
+        body: JSON.generate(pull_request_payload),
+        status: 200
+      )
+  end
+
   def stub_successful_repository_views(project, repository_views_payload)
     stub_repository_views(project, repository_views_payload, 200)
   end

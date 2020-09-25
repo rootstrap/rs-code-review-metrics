@@ -137,4 +137,14 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
+  describe '#full_name' do
+    let(:org_name) { 'superiorg' }
+
+    before { stub_env('GITHUB_ORGANIZATION', org_name) }
+
+    it 'returns the full name of the project' do
+      expect(subject.full_name).to eq("#{org_name}/#{subject.name}")
+    end
+  end
 end
