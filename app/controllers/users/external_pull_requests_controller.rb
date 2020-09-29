@@ -4,7 +4,7 @@ module Users
 
     def index
       @external_pull_requests = ExternalPullRequest
-                                .where(created_at: from.weeks.ago..Time.zone.now)
+                                .where(opened_at: from.weeks.ago..Time.zone.now)
                                 .group_by { |pull_request| pull_request.owner.login }
     end
 

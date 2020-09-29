@@ -73,6 +73,7 @@ RSpec.describe Builders::ExternalPullRequest do
       expect(subject.html_url).to eq(pull_request_data[:html_url])
       expect(subject.body).to eq(pull_request_data[:body])
       expect(subject.title).to eq(pull_request_data[:title])
+      expect(subject.opened_at).to eq(pull_request_data[:created_at])
       expect(subject.owner.login).to eq(pull_request_data[:user][:login])
     end
   end

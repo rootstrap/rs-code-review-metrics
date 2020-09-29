@@ -12,7 +12,8 @@ FactoryBot.define do
           url: Faker::Internet.url,
           html_url: Faker::Internet.url,
           title: "Pull Request-#{Faker::Number.number(digits: 1)}",
-          body: Faker::Lorem.paragraph
+          body: Faker::Lorem.paragraph,
+          created_at: (1..24).to_a.sample.hours.ago
         }
       }
     end
