@@ -47,8 +47,7 @@ CREATE TYPE public.lang AS ENUM (
     'android',
     'others',
     'unassigned',
-    'vuejs',
-    'react_native'
+    'vuejs'
 );
 
 
@@ -572,7 +571,8 @@ CREATE TABLE public.external_pull_requests (
     owner_id bigint,
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    opened_at timestamp without time zone
 );
 
 
@@ -2226,6 +2226,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200908121903'),
 ('20200908173642'),
 ('20200911143301'),
-('20200922131539');
+('20200922131539'),
+('20200929205630');
 
 

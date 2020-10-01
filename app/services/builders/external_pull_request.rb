@@ -13,6 +13,7 @@ module Builders
         pull_request.html_url = pull_request_payload[:html_url]
         pull_request.body = pull_request_payload[:body]
         pull_request.title = pull_request_payload[:title]
+        pull_request.opened_at = pull_request_payload[:created_at]
         pull_request.owner_id = User.find_by!(
           login: @pull_request_event_data.dig(:actor, :login)
         ).id
