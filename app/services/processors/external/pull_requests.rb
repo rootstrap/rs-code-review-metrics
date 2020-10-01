@@ -1,29 +1,26 @@
 module Processors
   module External
     class PullRequests < BaseService
-      def initialize(repository_data, username)
-        @repository_data = repository_data
+      def initialize(username)
         @username = username
       end
 
       def call
-        rs_member_pull_requests = pull_requests_data.select do |pull_request_data|
-          pull_request_data[:user][:login] == @username
-        end
+        external_pull_requests_events = CompanyMemberEventsDiscriminator.call(events)
 
-        rs_member_pull_requests.each do |pull_request|
-          Builders::ExternalPullRequest.call(pull_request, project)
+        external_pull_requests_events.each do |pull_request_event|
+          Builders::ExternalPullRequest.call(pull_request_event, project(pull_request_event))
         end
       end
 
       private
 
-      def pull_requests_data
-        @pull_requests_data ||= GithubClient::Repository.new(project).pull_requests
+      def events
+        @events ||= GithubClient::User.new(@username).pull_request_events
       end
 
-      def project
-        @project ||= Builders::ExternalProject.call(@repository_data)
+      def project(pull_request_event)
+        Builders::ExternalProject.call(pull_request_event[:repo])
       end
     end
   end

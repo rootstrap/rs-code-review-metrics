@@ -66,9 +66,9 @@ if Rails.env.development?
       end
     end
 
-    second_project= Project.create!(github_id: rand(1000),
-                                    name: 'forecast',
-                                    language: Language.find_by(name: 'ruby'))
+    second_project = Project.create!(github_id: rand(1000),
+                                     name: 'forecast',
+                                     language: Language.find_by(name: 'ruby'))
 
     %w[juan pedro].each do |name|
       FactoryBot.create(:user, login: name)
