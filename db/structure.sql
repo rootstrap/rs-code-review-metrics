@@ -295,7 +295,7 @@ CREATE TABLE public.code_climate_project_metrics (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     open_issues_count integer,
-    snapshot_time timestamp without time zone NOT NULL,
+    snapshot_time timestamp without time zone,
     cc_repository_id character varying,
     test_coverage numeric
 );
@@ -593,6 +593,38 @@ CREATE SEQUENCE public.external_pull_requests_id_seq
 --
 
 ALTER SEQUENCE public.external_pull_requests_id_seq OWNED BY public.external_pull_requests.id;
+
+
+--
+-- Name: file_ignoring_rules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.file_ignoring_rules (
+    id bigint NOT NULL,
+    language_id bigint NOT NULL,
+    regex character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: file_ignoring_rules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.file_ignoring_rules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: file_ignoring_rules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.file_ignoring_rules_id_seq OWNED BY public.file_ignoring_rules.id;
 
 
 --
@@ -1176,6 +1208,13 @@ ALTER TABLE ONLY public.external_pull_requests ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: file_ignoring_rules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_ignoring_rules ALTER COLUMN id SET DEFAULT nextval('public.file_ignoring_rules_id_seq'::regclass);
+
+
+--
 -- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1383,6 +1422,14 @@ ALTER TABLE ONLY public.external_projects
 
 ALTER TABLE ONLY public.external_pull_requests
     ADD CONSTRAINT external_pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: file_ignoring_rules file_ignoring_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_ignoring_rules
+    ADD CONSTRAINT file_ignoring_rules_pkey PRIMARY KEY (id);
 
 
 --
@@ -1643,6 +1690,13 @@ CREATE INDEX index_external_pull_requests_on_external_project_id ON public.exter
 --
 
 CREATE INDEX index_external_pull_requests_on_owner_id ON public.external_pull_requests USING btree (owner_id);
+
+
+--
+-- Name: index_file_ignoring_rules_on_language_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_file_ignoring_rules_on_language_id ON public.file_ignoring_rules USING btree (language_id);
 
 
 --
@@ -2009,6 +2063,14 @@ ALTER TABLE ONLY public.reviews
 
 
 --
+-- Name: file_ignoring_rules fk_rails_c0f919d112; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.file_ignoring_rules
+    ADD CONSTRAINT fk_rails_c0f919d112 FOREIGN KEY (language_id) REFERENCES public.languages(id);
+
+
+--
 -- Name: external_pull_requests fk_rails_c13d1ac6a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2163,6 +2225,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200901185355'),
 ('20200908121903'),
 ('20200908173642'),
+('20200911143301'),
+('20200922131539'),
 ('20200929205630');
 
 
