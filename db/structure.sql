@@ -47,6 +47,7 @@ CREATE TYPE public.lang AS ENUM (
     'android',
     'others',
     'unassigned',
+    'vuejs',
     'react_native'
 );
 

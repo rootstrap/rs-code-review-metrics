@@ -31,8 +31,8 @@ RSpec.describe Builders::ExternalProject do
 
     subject { described_class.call(repository_data) }
 
-    it 'builds a new one' do
-      expect(subject.new_record?).to be true
+    it 'creates a new one' do
+      expect(subject.class).to eq(ExternalProject)
     end
 
     it 'initializes all attributes correctly' do

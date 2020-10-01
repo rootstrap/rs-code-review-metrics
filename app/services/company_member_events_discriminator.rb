@@ -10,6 +10,6 @@ class CompanyMemberEventsDiscriminator < BaseService
   private
 
   def company_members
-    User.pluck(:login) << ENV.fetch('GITHUB_ORGANIZATION', 'rootstrap')
+    User.pluck(:login) << ENV.fetch('GITHUB_ORGANIZATION')
   end
 end

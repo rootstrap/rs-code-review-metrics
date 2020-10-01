@@ -1,5 +1,7 @@
 module GithubClient
   class User < GithubClient::Base
+    PAGE_SIZE = 30
+
     def initialize(username)
       @username = username
     end
@@ -11,16 +13,16 @@ module GithubClient
         end
         results = JSON.parse(response.body, symbolize_names: true)
 
-        if results.empty? || older_than_a_day(results.last[:created_at]) || results.size < 30
+        if results.empty? || older_than(results.last[:created_at]) || results.size < PAGE_SIZE
           break results
         end
       end
 
-      events.flatten.select { |pr| pr[:type] == 'PullRequestEvent' }
+      events.flatten.select { |event| event[:type] == 'PullRequestEvent' }
     end
 
-    def older_than_a_day(created_at)
-      DateTime.parse(created_at) < 24.hours.ago
+    def older_than(created_at)
+      DateTime.parse(created_at) < ENV.fetch('SCHEDULE_EXTERNAL_PULL_REQUESTS', 1).to_i.days.ago
     end
   end
 end
