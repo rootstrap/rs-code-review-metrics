@@ -3,10 +3,7 @@ module Processors
     class Contributions < BaseService
       def call
         usernames.each do |username|
-          repositories_data = Processors::External::Repositories.call(username)
-          repositories_data.each do |repository_data|
-            Processors::External::PullRequests.call(repository_data, username)
-          end
+          Processors::External::PullRequests.call(username)
         end
       end
 

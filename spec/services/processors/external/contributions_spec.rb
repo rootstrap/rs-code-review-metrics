@@ -3,17 +3,12 @@ require 'rails_helper'
 RSpec.describe Processors::External::Contributions do
   let!(:user) { create(:user, login: 'hvilloria') }
   context 'when there are repos for the given username' do
-    let!(:repositories_payload) do
-      create(:github_api_client_repositories_payload)
-    end
-
-    let!(:pull_requests_payload) do
-      create(:gitub_api_client_pull_requests_payload, user: { login: user.login })
+    let!(:pull_requests_events_payload) do
+      create(:gitub_api_client_pull_requests_events_payload, actor: { login: user.login })
     end
 
     before do
-      stub_get_repos_from_user(user.login, repositories_payload)
-      stub_get_pull_requests(repositories_payload.first['id'], pull_requests_payload)
+      stub_get_pull_requests_events(user.login, pull_requests_events_payload)
     end
 
     it 'saves the repository' do
@@ -27,7 +22,7 @@ RSpec.describe Processors::External::Contributions do
 
   context 'when there are no repos for the given username' do
     before do
-      stub_get_repos_from_user(user.login)
+      stub_get_pull_requests_events(user.login)
     end
 
     it 'does not save any project' do

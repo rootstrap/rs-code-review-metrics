@@ -12,16 +12,16 @@ module GithubApiMock
       )
   end
 
-  def stub_get_repos_from_user(username, payload = [])
-    stub_request(:get, "https://api.github.com/users/#{username}/repos?type=member")
+  def stub_get_pull_requests(github_id, payload = [])
+    stub_request(:get, "https://api.github.com/repositories/#{github_id}/pulls")
       .to_return(
         body: JSON.generate(payload),
         status: 200
       )
   end
 
-  def stub_get_pull_requests(github_id, payload = [])
-    stub_request(:get, "https://api.github.com/repositories/#{github_id}/pulls")
+  def stub_get_pull_requests_events(username, payload = [])
+    stub_request(:get, "https://api.github.com/users/#{username}/events/public?page=1")
       .to_return(
         body: JSON.generate(payload),
         status: 200

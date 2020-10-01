@@ -17,7 +17,7 @@
 #
 
 class ExternalProject < ApplicationRecord
-  belongs_to :language
+  belongs_to :language, optional: true
 
   validates :github_id, :full_name, presence: true
   validates :github_id, uniqueness: true
