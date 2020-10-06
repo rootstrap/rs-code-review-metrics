@@ -19,7 +19,7 @@ RSpec.describe CompanyMemberEventsDiscriminator do
     let(:events) { [event_repo_organization, event_repo_user, event_repo_external] }
 
     before do
-      ENV['GITHUB_ORGANIZATION'] = 'mycompany'
+      stub_env('GITHUB_ORGANIZATION', 'mycompany')
     end
 
     it 'removes the projects from the organization' do
