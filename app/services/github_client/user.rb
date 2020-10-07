@@ -9,13 +9,15 @@ module GithubClient
     def pull_request_events
       events = (1..10).map do |page|
         response = connection.get("/users/#{@username}/events/public") do |request|
-          request.params['page'] = page
+          request.params['page'] = 1
         end
         results = JSON.parse(response.body, symbolize_names: true)
 
         if results.empty? || older_than(results.last[:created_at]) || results.size < PAGE_SIZE
           break results
         end
+
+        results
       end
 
       events.flatten.select { |event| event[:type] == 'PullRequestEvent' }
