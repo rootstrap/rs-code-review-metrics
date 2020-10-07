@@ -14,8 +14,9 @@ RSpec.describe Builders::DepartmentOverview do
     let(:outdated_date) { date.yesterday }
     let(:in_effect_date) { date.tomorrow }
 
-    let(:department) { ruby.department }
     let(:date) { 4.weeks.ago }
+
+    let(:department) { ruby.department }
 
     before do
       # counted projects
@@ -60,11 +61,28 @@ RSpec.describe Builders::DepartmentOverview do
         expect(overview[:python][:totals]).to eq 2
         expect(overview[:nodejs][:totals]).to eq 0
       end
+
+      context 'when a project has multiple pull requests in recent date' do
+        before do
+          create_project(language: ruby,
+                         relevance: internal,
+                         last_activity_at: in_effect_date,
+                         number_of_prs: 2)
+        end
+
+        it 'does not repeat projects while counting' do
+          overview = described_class.call(department, from: date)
+
+          expect(overview[:ruby][:totals]).to eq 3
+        end
+      end
     end
   end
 
-  def create_project(language:, relevance:, last_activity_at:)
+  def create_project(language:, relevance:, last_activity_at:, number_of_prs: 1)
     project = create(:project, language: language, relevance: relevance)
-    create(:pull_request, project: project, opened_at: last_activity_at)
+    (1..number_of_prs).each do
+      create(:pull_request, project: project, opened_at: last_activity_at)
+    end
   end
 end
