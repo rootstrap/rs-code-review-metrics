@@ -9,7 +9,7 @@ module GithubClient
     def pull_request_events
       events = (1..10).map do |page|
         response = connection.get("/users/#{@username}/events/public") do |request|
-          request.params['page'] = 1
+          request.params['page'] = page
         end
         results = JSON.parse(response.body, symbolize_names: true)
 
