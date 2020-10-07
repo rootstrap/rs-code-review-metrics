@@ -16,6 +16,8 @@ module GithubClient
         if results.empty? || older_than(results.last[:created_at]) || results.size < PAGE_SIZE
           break results
         end
+
+        results
       end
 
       events.flatten.select { |event| event[:type] == 'PullRequestEvent' }

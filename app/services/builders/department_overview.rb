@@ -19,12 +19,12 @@ module Builders
 
     def projects_by_language_and_relevance
       @projects_by_language_and_relevance ||=
-        department
-        .languages
-        .joins(:projects)
-        .merge(::Project.relevant.with_activity_after(from))
-        .group('languages.name', 'projects.relevance')
-        .count
+        ::Project.joins(:language)
+                 .relevant.with_activity_after(from)
+                 .where(language: department.languages)
+                 .distinct
+                 .group('languages.name', 'projects.relevance')
+                 .count
     end
 
     def language_overview(language)
