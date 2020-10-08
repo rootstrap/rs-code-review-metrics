@@ -3,7 +3,7 @@ module Processors
     class Contributions < BaseService
       def call
         usernames.each do |username|
-          Processors::External::PullRequests.call(username)
+          ExternalPullRequestsProcessorJob.perform_later(username)
         end
       end
 
