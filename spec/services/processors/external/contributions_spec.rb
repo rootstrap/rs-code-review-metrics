@@ -1,36 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe Processors::External::Contributions do
-  let!(:user) { create(:user, login: 'hvilloria') }
-  context 'when there are repos for the given username' do
-    let!(:pull_requests_events_payload) do
-      create(:gitub_api_client_pull_requests_events_payload, actor: { login: user.login })
-    end
+  let!(:users) { create_list(:user, 3) }
 
-    before do
-      stub_get_pull_requests_events(user.login, pull_requests_events_payload)
-    end
-
-    it 'saves the repository' do
-      expect { described_class.call }.to change { ExternalProject.count }.by(1)
-    end
-
-    it 'saves the pull request for that user' do
-      expect { described_class.call }.to change { ExternalPullRequest.count }.by(1)
-    end
+  before do
+    @job_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :test
   end
 
-  context 'when there are no repos for the given username' do
-    before do
-      stub_get_pull_requests_events(user.login)
+  after do
+    ActiveJob::Base.queue_adapter = @job_adapter
+  end
+
+  describe '#call' do
+    it 'enqueues as many jobs as the number of users' do
+      described_class.call
+
+      expect(ExternalPullRequestsProcessorJob).to have_been_enqueued.exactly(3)
     end
 
-    it 'does not save any project' do
-      expect { described_class.call }.not_to change { ExternalPullRequest.count }
-    end
+    it 'enqueues a job per username' do
+      described_class.call
+      usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
 
-    it 'does not save any pull request' do
-      expect { described_class.call }.not_to change { ExternalPullRequest.count }
+      expect(usernames_enqueued).to include(*users.pluck(:login))
     end
   end
 end
