@@ -12,8 +12,10 @@ RSpec.describe ExternalContributionsProcessorJob do
 
     context 'with pull requests made for the first project' do
       let!(:pull_requests_events_payload) do
-        create(:gitub_api_client_pull_requests_events_payload, actor: { login: user.login })
+        [create(:github_api_client_pull_request_event_payload, username: user.login)]
       end
+      let(:pull_request_payload) { pull_requests_events_payload.first['payload']['pull_request'] }
+      let(:repo_id) { pull_request_payload['base']['repo']['id'] }
 
       before do
         stub_get_pull_requests_events(user.login, pull_requests_events_payload)
@@ -21,8 +23,7 @@ RSpec.describe ExternalContributionsProcessorJob do
 
       it 'saves just the project with pull request associated' do
         described_class.perform_now
-        expect(ExternalProject.last.github_id)
-          .to eq(pull_requests_events_payload.first['repo']['id'])
+        expect(ExternalProject.last.github_id).to eq(repo_id)
       end
 
       it 'creates a external project record' do

@@ -4,7 +4,7 @@ RSpec.describe Processors::External::PullRequests do
   let(:user) { create(:user, login: 'hvilloria') }
 
   let!(:pull_requests_events_payload) do
-    create(:gitub_api_client_pull_requests_events_payload, actor: { login: user.login })
+    [create(:github_api_client_pull_request_event_payload, username: user.login)]
   end
 
   before do
