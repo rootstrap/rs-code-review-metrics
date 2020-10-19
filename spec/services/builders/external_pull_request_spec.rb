@@ -1,70 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe Builders::ExternalPullRequest do
-  let(:project) { create(:external_project) }
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
+
   context 'when there is already a pull request' do
-    let!(:pull_request) { create(:external_pull_request, state: 'open') }
+    let!(:pull_request) { create(:external_pull_request, state: 'open', owner: user) }
 
-    let(:pull_request_event_data) do
-      {
-        payload: {
-          pull_request: {
-            id: pull_request.github_id,
-            html_url: pull_request.html_url,
-            body: pull_request.body,
-            title: pull_request.title,
-            user: { login: user.login },
-            state: 'merged'
-          }
-        },
-
-        actor: {
-          login: user.login
-        }
-      }
+    let(:pull_request_data) do
+      create(
+        :github_api_client_pull_request_payload,
+        pull_request: pull_request,
+        merged: true
+      ).deep_symbolize_keys
     end
 
-    let(:pull_request_data) { pull_request_event_data.dig(:payload, :pull_request) }
-
     it 'returns that pull request' do
-      expect(described_class.call(pull_request_event_data, project).id)
+      expect(described_class.call(pull_request_data).id)
         .to eq(pull_request.id)
     end
 
     it 'does not create a new external pull request' do
-      expect { described_class.call(pull_request_event_data, project) }
+      expect { described_class.call(pull_request_data) }
         .not_to change { ExternalPullRequest.count }
     end
 
     it 'updates pull requests state to merged' do
-      expect { described_class.call(pull_request_event_data, project) }
+      expect { described_class.call(pull_request_data) }
         .to change { pull_request.reload.state }.from('open').to('merged')
     end
   end
 
   context 'when there is no pull request created with a given id' do
-    let(:pull_request_event_data) do
-      {
-        payload: {
-          pull_request: {
-            id: 132_158_840,
-            html_url: 'https://github.com/Codertocat/Hello-World/pull/2',
-            body: 'open source pull request',
-            title: 'open source pull request title',
-            user: { login: user.login }
-          }
-        },
-
-        actor: {
-          login: user.login
-        }
-      }
+    let(:pull_request_data) do
+      create(
+        :github_api_client_pull_request_payload,
+        username: user.login
+      ).deep_symbolize_keys
     end
 
-    let(:pull_request_data) { pull_request_event_data.dig(:payload, :pull_request) }
-
-    subject { described_class.call(pull_request_event_data, project) }
+    subject { described_class.call(pull_request_data) }
 
     it 'returns a new external pull request created' do
       expect(subject.github_id).to eq(pull_request_data[:id])
