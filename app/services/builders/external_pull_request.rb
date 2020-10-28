@@ -9,12 +9,7 @@ module Builders
                      .find_or_initialize_by(
                        github_id: pull_request_data[:id]
                      ) do |ext_pull_request|
-        ext_pull_request.html_url = pull_request_data[:html_url]
-        ext_pull_request.body = pull_request_data[:body]
-        ext_pull_request.title = pull_request_data[:title]
-        ext_pull_request.opened_at = pull_request_data[:created_at]
-        ext_pull_request.owner = owner
-        ext_pull_request.external_project = external_project
+        assign_attributes(ext_pull_request)
       end
       pull_request.state = assign_state
       pull_request.save!
@@ -24,6 +19,16 @@ module Builders
     private
 
     attr_reader :pull_request_data
+
+    def assign_attributes(pull_request)
+      pull_request.html_url = pull_request_data[:html_url]
+      pull_request.body = pull_request_data[:body]
+      pull_request.title = pull_request_data[:title]
+      pull_request.opened_at = pull_request_data[:created_at]
+      pull_request.number = pull_request_data[:number]
+      pull_request.owner = owner
+      pull_request.external_project = external_project
+    end
 
     def assign_state
       return 'merged' if pull_request_data[:merged]
@@ -36,7 +41,29 @@ module Builders
     end
 
     def owner
-      User.find_by!(login: pull_request_data.dig(:user, :login))
+      find_or_create_user(pull_request_data[:user].with_indifferent_access)
+    end
+
+    class FromUrlParams < BaseService
+      def initialize(project_full_name, pull_request_number)
+        @project_full_name = project_full_name
+        @pull_request_number = pull_request_number
+      end
+
+      def call
+        Builders::ExternalPullRequest.call(pull_request_data)
+      end
+
+      private
+
+      def pull_request_data
+        GithubClient::PullRequest.new(pull_request).get
+      end
+
+      def pull_request
+        project = ::ExternalProject.new(full_name: @project_full_name)
+        ::ExternalPullRequest.new(number: @pull_request_number, external_project: project)
+      end
     end
   end
 end
