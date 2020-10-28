@@ -15,7 +15,9 @@ FactoryBot.define do
     title { pull_request&.title || "Pull Request-#{Faker::Number.number(digits: 1)}" }
     user do
       {
-        login: pull_request&.owner&.login || username
+        id: generate(:user_id),
+        login: pull_request&.owner&.login || username,
+        node_id: "#{Faker::Alphanumeric.alphanumeric}="
       }
     end
     body { pull_request&.body || Faker::Lorem.paragraph }
