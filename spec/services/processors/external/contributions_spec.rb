@@ -27,8 +27,6 @@ RSpec.describe Processors::External::Contributions do
     end
 
     context 'when some users are not company members' do
-      let!(:hvilloria) { create(:user, login: 'hvilloria') }
-      let!(:sandrodamilano) { create(:user, login: 'sandrodamilano') }
       let!(:snick555) { create(:user, login: 'snick555', company_member: false) }
 
       it 'does not enqueue any job for non company users' do
@@ -42,7 +40,7 @@ RSpec.describe Processors::External::Contributions do
         described_class.call
         usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
 
-        expect(usernames_enqueued.size).to eq(5)
+        expect(usernames_enqueued.size).to eq(3)
       end
     end
   end
