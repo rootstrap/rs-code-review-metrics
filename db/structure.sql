@@ -1078,7 +1078,8 @@ CREATE TABLE public.users (
     node_id character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    github_id bigint NOT NULL
+    github_id bigint NOT NULL,
+    company_member boolean DEFAULT true
 );
 
 
@@ -2243,6 +2244,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200911143301'),
 ('20200922131539'),
 ('20200929205630'),
+('20201029141417'),
 ('20201102203739');
-
-
