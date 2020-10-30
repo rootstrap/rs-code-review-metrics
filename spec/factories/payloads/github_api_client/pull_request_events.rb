@@ -9,11 +9,13 @@ FactoryBot.define do
     payload do
       {
         pull_request: {
+          id: id,
           url: Faker::Internet.url,
           html_url: Faker::Internet.url,
           title: "Pull Request-#{Faker::Number.number(digits: 1)}",
           body: Faker::Lorem.paragraph,
-          created_at: (1..24).to_a.sample.hours.ago
+          created_at: (1..24).to_a.sample.hours.ago,
+          state: 'merged'
         }
       }
     end

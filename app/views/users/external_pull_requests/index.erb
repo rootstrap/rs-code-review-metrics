@@ -7,7 +7,7 @@
     <ul>
       <% value.each do |pull_request| %>
         <li>
-          <%= link_to nil, pull_request.html_url, target: '_blank' %>
+          <%= link_to nil, pull_request.html_url, target: '_blank' %> [<%= pull_request.state %>]
           </li>
       <% end %>
     </ul>
