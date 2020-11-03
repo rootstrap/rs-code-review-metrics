@@ -4,7 +4,7 @@ RSpec.describe Builders::ExternalPullRequest do
   let(:project) { create(:external_project) }
   let(:user) { create(:user) }
   context 'when there is already a pull request' do
-    let!(:pull_request) { create(:external_pull_request) }
+    let!(:pull_request) { create(:external_pull_request, state: 'open') }
 
     let(:pull_request_event_data) do
       {
@@ -14,7 +14,8 @@ RSpec.describe Builders::ExternalPullRequest do
             html_url: pull_request.html_url,
             body: pull_request.body,
             title: pull_request.title,
-            user: { login: user.login }
+            user: { login: user.login },
+            state: 'merged'
           }
         },
 
@@ -34,6 +35,11 @@ RSpec.describe Builders::ExternalPullRequest do
     it 'does not create a new external pull request' do
       expect { described_class.call(pull_request_event_data, project) }
         .not_to change { ExternalPullRequest.count }
+    end
+
+    it 'updates pull requests state to merged' do
+      expect { described_class.call(pull_request_event_data, project) }
+        .to change { pull_request.reload.state }.from('open').to('merged')
     end
   end
 
