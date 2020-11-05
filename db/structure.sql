@@ -57,7 +57,9 @@ CREATE TYPE public.lang AS ENUM (
     'ios',
     'android',
     'others',
-    'unassigned'
+    'unassigned',
+    'vuejs',
+    'react_native'
 );
 
 
@@ -2244,5 +2246,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200929205630'),
 ('20201029141417'),
 ('20201102203739');
-
-
