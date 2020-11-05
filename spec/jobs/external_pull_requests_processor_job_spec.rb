@@ -11,7 +11,7 @@ RSpec.describe ExternalPullRequestsProcessorJob do
 
   context 'when there are repos for the given username' do
     let!(:pull_requests_events_payload) do
-      create(:gitub_api_client_pull_requests_events_payload, actor: { login: user.login })
+      [create(:github_api_client_pull_request_event_payload, username: user.login)]
     end
 
     before do

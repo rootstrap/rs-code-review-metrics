@@ -58,7 +58,7 @@ RSpec.describe GithubClient::Repository do
 
     context 'when repo has pull request' do
       let!(:pull_requests_payload) do
-        create(:gitub_api_client_pull_requests_payload)
+        [create(:github_api_client_pull_request_payload)]
       end
 
       before { stub_get_pull_requests(project.github_id, pull_requests_payload) }

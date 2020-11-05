@@ -9,7 +9,7 @@ module Processors
         external_pull_requests_events = CompanyMemberEventsDiscriminator.call(events)
 
         external_pull_requests_events.each do |pull_request_event|
-          Builders::ExternalPullRequest.call(pull_request_event, project(pull_request_event))
+          Builders::ExternalPullRequest.call(pull_request_event.dig(:payload, :pull_request))
         end
       end
 
@@ -17,10 +17,6 @@ module Processors
 
       def events
         @events ||= GithubClient::User.new(@username).pull_request_events
-      end
-
-      def project(pull_request_event)
-        Builders::ExternalProject.call(pull_request_event[:repo])
       end
     end
   end

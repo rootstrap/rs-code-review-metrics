@@ -8,12 +8,19 @@ FactoryBot.define do
     description { '' }
     private { false }
     archived { false }
-    html_url { 'https://github.com/Codertocat/Hello-World/pull/2' }
+    html_url { 'https://github.com/Codertocat/Hello-World' }
     owner do
       {
-        login: Faker::Name.name
+        login: Faker::Name.name.gsub(' ', '')
       }
     end
+
     initialize_with { attributes.deep_stringify_keys }
+
+    after(:build) do |repository_payload|
+      owner = repository_payload['owner']['login']
+      repository_name = repository_payload['name']
+      repository_payload['full_name'] = "#{owner}/#{repository_name}"
+    end
   end
 end

@@ -5,7 +5,9 @@
 #  id                  :bigint           not null, primary key
 #  body                :text
 #  html_url            :string           not null
+#  number              :integer
 #  opened_at           :datetime
+#  state               :enum
 #  title               :text
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null

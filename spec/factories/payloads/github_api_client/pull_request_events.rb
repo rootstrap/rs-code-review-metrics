@@ -1,6 +1,11 @@
 FactoryBot.define do
-  factory :gitub_api_client_pull_requests_events_payload, class: Hash do
+  factory :github_api_client_pull_request_event_payload, class: Hash do
     skip_create
+
+    transient do
+      pull_request { nil }
+      username { Faker::Internet.username }
+    end
 
     sequence(:id)
     type { 'PullRequestEvent' }
@@ -8,15 +13,12 @@ FactoryBot.define do
 
     payload do
       {
-        pull_request: {
-          id: id,
-          url: Faker::Internet.url,
-          html_url: Faker::Internet.url,
-          title: "Pull Request-#{Faker::Number.number(digits: 1)}",
-          body: Faker::Lorem.paragraph,
-          created_at: (1..24).to_a.sample.hours.ago,
-          state: 'merged'
-        }
+        pull_request: build(
+          :github_api_client_pull_request_payload,
+          pull_request: pull_request,
+          username: username,
+          merged: true
+        )
       }
     end
 
@@ -29,10 +31,10 @@ FactoryBot.define do
 
     actor do
       {
-        login: Faker::Internet.username
+        login: username
       }
     end
 
-    initialize_with { [attributes.deep_stringify_keys] }
+    initialize_with { attributes.deep_stringify_keys }
   end
 end

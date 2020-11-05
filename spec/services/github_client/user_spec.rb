@@ -7,7 +7,7 @@ RSpec.describe GithubClient::User do
 
     context 'when there are events for the given user' do
       let!(:pull_request_events_payload) do
-        create(:gitub_api_client_pull_requests_events_payload)
+        [create(:github_api_client_pull_request_event_payload)]
       end
 
       before { stub_get_pull_requests_events(username, pull_request_events_payload) }
