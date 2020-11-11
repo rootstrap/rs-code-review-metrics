@@ -28,19 +28,5 @@ RSpec.describe Processors::BlogPostsUpdater do
         end
       end
     end
-
-    context 'when the request to get a blog post full payload fails' do
-      before { stub_failed_blog_post_response(blog_post_payload['ID']) }
-
-      it 'creates the blog post anyway' do
-        expect { subject }.to change(BlogPost, :count).by(1)
-      end
-
-      it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
-
-        subject
-      end
-    end
   end
 end
