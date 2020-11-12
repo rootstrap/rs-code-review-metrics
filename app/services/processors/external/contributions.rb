@@ -10,7 +10,7 @@ module Processors
       private
 
       def usernames
-        @usernames ||= User.pluck(:login)
+        @usernames ||= User.company_member.pluck(:login)
       end
     end
   end

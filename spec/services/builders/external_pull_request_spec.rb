@@ -1,86 +1,103 @@
 require 'rails_helper'
 
 RSpec.describe Builders::ExternalPullRequest do
-  let(:project) { create(:external_project) }
-  let(:user) { create(:user) }
-  context 'when there is already a pull request' do
-    let!(:pull_request) { create(:external_pull_request, state: 'open') }
+  describe '.call' do
+    context 'when there is already a pull request' do
+      let!(:pull_request) { create(:external_pull_request, state: 'open') }
 
-    let(:pull_request_event_data) do
-      {
-        payload: {
-          pull_request: {
-            id: pull_request.github_id,
-            html_url: pull_request.html_url,
-            body: pull_request.body,
-            title: pull_request.title,
-            user: { login: user.login },
-            state: 'merged'
-          }
-        },
+      let(:pull_request_data) do
+        create(
+          :github_api_client_pull_request_payload,
+          pull_request: pull_request,
+          merged: true
+        ).deep_symbolize_keys
+      end
 
-        actor: {
-          login: user.login
-        }
-      }
+      it 'returns that pull request' do
+        expect(described_class.call(pull_request_data).id)
+          .to eq(pull_request.id)
+      end
+
+      it 'does not create a new external pull request' do
+        expect { described_class.call(pull_request_data) }
+          .not_to change { ExternalPullRequest.count }
+      end
+
+      it 'updates pull requests state to merged' do
+        expect { described_class.call(pull_request_data) }
+          .to change { pull_request.reload.state }.from('open').to('merged')
+      end
     end
 
-    let(:pull_request_data) { pull_request_event_data.dig(:payload, :pull_request) }
+    context 'when there is no pull request created with a given id' do
+      let(:pull_request_data) do
+        create(
+          :github_api_client_pull_request_payload
+        ).deep_symbolize_keys
+      end
 
-    it 'returns that pull request' do
-      expect(described_class.call(pull_request_event_data, project).id)
-        .to eq(pull_request.id)
-    end
+      subject { described_class.call(pull_request_data) }
 
-    it 'does not create a new external pull request' do
-      expect { described_class.call(pull_request_event_data, project) }
-        .not_to change { ExternalPullRequest.count }
-    end
+      it 'returns a new external pull request created' do
+        expect(subject.github_id).to eq(pull_request_data[:id])
+      end
 
-    it 'updates pull requests state to merged' do
-      expect { described_class.call(pull_request_event_data, project) }
-        .to change { pull_request.reload.state }.from('open').to('merged')
+      it 'creates a new record' do
+        expect { subject }.to change { ExternalPullRequest.count }.by(1)
+      end
+
+      it 'creates all attributes correctly' do
+        expect(subject.github_id).to eq(pull_request_data[:id])
+        expect(subject.html_url).to eq(pull_request_data[:html_url])
+        expect(subject.body).to eq(pull_request_data[:body])
+        expect(subject.title).to eq(pull_request_data[:title])
+        expect(subject.opened_at).to eq(pull_request_data[:created_at])
+        expect(subject.number).to eq(pull_request_data[:number])
+        expect(subject.owner.login).to eq(pull_request_data[:user][:login])
+      end
+
+      describe 'pull request owner' do
+        context 'when the owner has not been created' do
+          it 'creates it' do
+            expect { subject }.to change { User.count }.by(1)
+          end
+        end
+      end
     end
   end
 
-  context 'when there is no pull request created with a given id' do
-    let(:pull_request_event_data) do
-      {
-        payload: {
-          pull_request: {
-            id: 132_158_840,
-            html_url: 'https://github.com/Codertocat/Hello-World/pull/2',
-            body: 'open source pull request',
-            title: 'open source pull request title',
-            user: { login: user.login }
-          }
-        },
+  describe Builders::ExternalPullRequest::FromUrlParams do
+    describe '.call' do
+      let(:project_owner) { 'rootstrap' }
+      let(:project_name) { 'rs-code-review-metrics' }
+      let(:project_full_name) { "#{project_owner}/#{project_name}" }
+      let(:pull_request_number) { 111 }
+      let(:project) { ExternalProject.new(full_name: project_full_name) }
+      let(:pull_request) do
+        ExternalPullRequest.new(number: pull_request_number, external_project: project)
+      end
+      let(:repository_payload) do
+        build(:repository_payload, name: project_name, owner: { login: project_owner })
+      end
+      let(:pull_request_payload) do
+        build(
+          :github_api_client_pull_request_payload,
+          number: pull_request_number,
+          base_repo: repository_payload
+        )
+      end
 
-        actor: {
-          login: user.login
-        }
-      }
-    end
+      before { stub_get_pull_request(pull_request, pull_request_payload) }
 
-    let(:pull_request_data) { pull_request_event_data.dig(:payload, :pull_request) }
+      subject(:built_pull_request) { described_class.call(project_full_name, pull_request_number) }
 
-    subject { described_class.call(pull_request_event_data, project) }
+      it 'creates a new ExternalPullRequest' do
+        expect { subject }.to change { ExternalPullRequest.count }.by(1)
+      end
 
-    it 'returns a new external pull request created' do
-      expect(subject.github_id).to eq(pull_request_data[:id])
-    end
-
-    it 'creates a new record' do
-      expect { subject }.to change { ExternalPullRequest.count }.by(1)
-    end
-
-    it 'creates all attributes correctly' do
-      expect(subject.github_id).to eq(pull_request_data[:id])
-      expect(subject.html_url).to eq(pull_request_data[:html_url])
-      expect(subject.body).to eq(pull_request_data[:body])
-      expect(subject.title).to eq(pull_request_data[:title])
-      expect(subject.opened_at).to eq(pull_request_data[:created_at])
-      expect(subject.owner.login).to eq(pull_request_data[:user][:login])
+      it 'returns the built ExternalPullRequest' do
+        expect(built_pull_request.number).to eq pull_request_number
+      end
     end
   end
 end
