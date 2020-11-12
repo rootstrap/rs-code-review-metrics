@@ -7,7 +7,9 @@ module Processors
         blog_post.slug = blog_post_payload[:slug]
         blog_post.status = blog_post_payload[:status]
         blog_post.url = blog_post_payload[:URL]
-        blog_post.technologies = technologies_for(blog_post)
+        if blog_post.technologies.empty?
+          blog_post.technologies = technologies_for(blog_post_payload)
+        end
 
         blog_post.save!
       end
@@ -23,12 +25,8 @@ module Processors
       @categorizer ||= BlogPostCategorizer.new
     end
 
-    def technologies_for(blog_post)
-      blog_post_payload = wordpress_service.blog_post(blog_post.blog_id)
+    def technologies_for(blog_post_payload)
       categorizer.technologies_for(blog_post_payload)
-    rescue Faraday::Error => exception
-      ExceptionHunter.track(exception)
-      blog_post.technologies
     end
   end
 end
