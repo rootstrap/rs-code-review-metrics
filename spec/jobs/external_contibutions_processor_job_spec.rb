@@ -18,6 +18,14 @@ RSpec.describe ExternalContributionsProcessorJob do
       let(:repo_id) { pull_request_payload['base']['repo']['id'] }
 
       before do
+        stub_request(:get, %r{\Ahttps://api.github.com/repos/.*/pulls/.*\z})
+          .to_return(
+            body: JSON.generate(pull_request_payload),
+            status: 200
+          )
+      end
+
+      before do
         stub_get_pull_requests_events(user.login, pull_requests_events_payload)
       end
 
