@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Builders::Distribution::PullRequests do
+RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
   describe '.call' do
     before { travel_to Time.zone.parse('2020-08-20') }
 
