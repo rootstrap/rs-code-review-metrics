@@ -13,7 +13,8 @@ Rails.application.routes.draw do
   resources :development_metrics, only: [] do
     collection do
       resources :departments, only: [], param: :name do
-        resources :pull_requests, only: :index
+        resources :time_to_merge_prs, only: :index, module: :pull_requests
+        resources :time_to_second_review_prs, only: :index, module: :pull_requests
       end
       resources :users, only: [] do
         resources :projects, only: :index, controller: 'users/projects'
