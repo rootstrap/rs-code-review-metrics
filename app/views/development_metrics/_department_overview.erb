@@ -15,6 +15,12 @@
             <% end %>
           </div>
         <% end %>
+        <div>
+          <%= link_to 'See report',
+                      department_projects_by_relevance_index_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
+                      class: 'btn btn-secondary'
+          %>
+        </div>
       </div>
     </div>
   </div>
