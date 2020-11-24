@@ -10,7 +10,7 @@ module Builders
         pr_size.save!
       end
     rescue Faraday::Error => exception
-      ExceptionHunter.track(exception)
+      track_request_error(exception)
     end
 
     private

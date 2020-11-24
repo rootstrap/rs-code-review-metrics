@@ -9,7 +9,7 @@ module CodeClimate
 
       update_metric
     rescue Faraday::Error => exception
-      ExceptionHunter.track(exception)
+      track_request_error(exception)
     end
 
     private

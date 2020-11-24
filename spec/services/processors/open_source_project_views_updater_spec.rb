@@ -66,7 +66,7 @@ RSpec.describe Processors::OpenSourceProjectViewsUpdater do
         before { stub_failed_repository_views(project) }
 
         it 'notifies the error to exception hunter' do
-          expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
+          expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
 
           described_class.call(project)
         end

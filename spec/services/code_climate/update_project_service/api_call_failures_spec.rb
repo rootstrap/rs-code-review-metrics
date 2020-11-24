@@ -40,7 +40,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
+        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
 
         update_project_code_climate_info
       end
@@ -84,7 +84,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
+        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
 
         update_project_code_climate_info
       end
@@ -114,7 +114,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
+        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
 
         update_project_code_climate_info
       end
@@ -148,7 +148,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error))
+        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
 
         update_project_code_climate_info
       end
