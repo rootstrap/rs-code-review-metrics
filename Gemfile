@@ -54,7 +54,7 @@ gem 'honeybadger', '~> 4.0'
 
 gem 'exception_hunter', '~> 0.4.1'
 
-gem 'faraday', '~> 1.0', '>= 1.0.1'
+gem 'faraday', '~> 1.1', '>= 1.1.0'
 gem 'rack-mini-profiler', '~> 2.0'
 
 gem 'groupdate', '~> 5.0'
