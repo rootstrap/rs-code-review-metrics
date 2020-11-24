@@ -1,0 +1,57 @@
+<%=  render 'development_metrics/development_metrics_sidebar' %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-10 offset-1">
+      <%= simple_form_for :metric, url: department_projects_by_relevance_index_path, method: 'GET', html: {
+                                                        class: 'nav-filter p-3 shadow-box', id: 'nav-filter-form' } do |f|%>
+            <h4 class="text-center"><%= params[:department_name].capitalize %> Overview</h4>
+            <div class="row justify-content-center mt-3 mb-3">
+              <%= f.input :period,
+                label: 'Last Updated (Weeks)',
+                wrapper_html: { class: 'period-selection d-flex flex-column mb-0 col-md-4' },
+                input_html: { class: 'margin-left input-height', value: chosen_period },
+                required: false,
+                as: :numeric
+              %>
+            </div>
+            <div class="row">
+              <div class="col-md-12 d-flex justify-content-center">
+                <%= f.button :submit, 'Submit', class: 'btn-secondary ml-1', id: 'submitButton' %>
+              </div>
+            </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-10 offset-1 mt-5">
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+          <tbody>
+            <% @projects.each do |technology,projects_by_relevance| %>
+              <thead class="thead-dark"><th colspan="4">Technology: <%= technology.capitalize %></th></thead>
+              <thead class="thead-light">
+                <th>Relevance</th>
+                <th>Name</th>
+                <th>Is Private</th>
+                <th></th>
+              </thead>
+              <% projects_by_relevance.each do |relevance,projects| %>
+                <% projects.each do |project| %>
+                  <tr>
+                    <td class="align-middle"><%= relevance %></td>
+                    <td class="align-middle"><%= project[:name] %></td>
+                    <td class="align-middle"><%= project[:is_private] %></td>
+                    <td class="align-middle text-center">
+                      <a class="btn btn-primary" href="<%= projects_development_metrics_path({project_name: project[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See details</a>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

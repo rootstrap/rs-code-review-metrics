@@ -27,6 +27,11 @@ Rails.application.routes.draw do
       end
     end
   end
+  resources :departments, only: [], param: :name do
+    namespace :projects do
+      resources :by_relevance, only: :index, param: :department_name
+    end
+  end
   resources :open_source, only: :index do
     collection do
       resources :users, only: [] do
