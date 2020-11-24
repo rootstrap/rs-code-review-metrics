@@ -4,6 +4,7 @@ module CodeClimate
 
     def show
       @code_climate = code_climate_department_summary
+      @projects_without_cc = projects_without_cc
     end
 
     private
@@ -13,6 +14,14 @@ module CodeClimate
         department: department,
         from: department_params[:period],
         technologies: department_params[:lang]
+      )
+    end
+
+    def projects_without_cc
+      CodeClimate::ProjectsWithoutCC.call(
+        department: department,
+        from: department_params[:period],
+        languages: department_params[:lang]
       )
     end
 
