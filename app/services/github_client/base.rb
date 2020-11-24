@@ -30,5 +30,27 @@ module GithubClient
         page_number: page_number + 1
       )
     end
+
+    def get_all_members(url, max_per_page, accumulated_users: [], page_number: 1)
+      request_params = {
+        page: page_number,
+        per_page: max_per_page
+      }
+
+      response = connection.get(url) do |request|
+        request.params = request_params
+      end
+
+      new_users = JSON.parse(response.body).map { |user| user['login'] }
+
+      return accumulated_users if new_users.empty?
+
+      get_all_members(
+        url,
+        max_per_page,
+        accumulated_users: accumulated_users + new_users,
+        page_number: page_number + 1
+      )
+    end
   end
 end

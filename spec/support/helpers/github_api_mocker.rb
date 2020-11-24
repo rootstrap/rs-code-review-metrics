@@ -84,6 +84,20 @@ module GithubApiMock
     )
   end
 
+  def stub_organization_members(
+    repository_members,
+    results_per_page: GithubClient::Organization::MAX_USERS_PER_PAGE
+  )
+    url = 'https://api.github.com/orgs/rootstrap/members'
+
+    stub_paginated_items(
+      repository_members,
+      url,
+      results_per_page,
+      GithubClient::Organization::MAX_USERS_PER_PAGE
+    )
+  end
+
   def stub_pull_request_files_with_payload(
     pull_request_payload,
     file_payloads = [create(:pull_request_file_payload)],

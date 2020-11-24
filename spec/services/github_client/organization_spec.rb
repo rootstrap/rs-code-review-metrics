@@ -25,4 +25,29 @@ RSpec.describe GithubClient::Organization do
       end
     end
   end
+
+  describe '#members' do
+    let(:members_payload) { create(:members_payload) }
+
+    before do
+      stub_organization_members([members_payload])
+    end
+
+    it 'returns rootstrap members' do
+      expect(subject.members).to contain_exactly(members_payload['login'])
+    end
+
+    context 'when there is more than one page of results' do
+      let(:members_payload_2) { create(:members_payload) }
+      let(:members_payloads) { [members_payload, members_payload_2] }
+
+      before do
+        stub_organization_members(members_payloads, results_per_page: 1)
+      end
+
+      it 'returns the members from all pages' do
+        expect(subject.members).to match_array(members_payloads.map { |user| user['login'] })
+      end
+    end
+  end
 end

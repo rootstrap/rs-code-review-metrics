@@ -1,8 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe 'Pull Requests' do
-  let(:ruby_project) { create(:project, language: Language.find_by(name: 'ruby')) }
-  let(:node_project) { create(:project, language: Language.find_by(name: 'nodejs')) }
+RSpec.describe 'Time To Merge PRs' do
+  let(:ruby_project)  { create(:project, language: Language.find_by(name: 'ruby')) }
+  let(:node_project)  { create(:project, language: Language.find_by(name: 'nodejs')) }
+  let(:subject) do
+    get department_time_to_merge_prs_path(department_name: 'backend'), params: params
+  end
 
   let!(:first_ruby_pull_request) do
     create(:pull_request,
@@ -42,7 +45,7 @@ RSpec.describe 'Pull Requests' do
     end
 
     before do
-      get '/development_metrics/departments/backend/pull_requests', params: params
+      subject
     end
 
     it 'renders pull requests index view' do
@@ -71,7 +74,7 @@ RSpec.describe 'Pull Requests' do
     end
 
     before do
-      get '/development_metrics/departments/backend/pull_requests', params: params
+      subject
     end
 
     let(:all_pull_requests_url) { Events::PullRequest.pluck(:html_url) }
