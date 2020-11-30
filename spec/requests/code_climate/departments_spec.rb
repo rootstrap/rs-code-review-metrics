@@ -5,6 +5,7 @@ describe 'CodeClimate department projects report page ', type: :request do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { project.language.department }
     let(:project) { create :project, language: ruby_lang }
+    let!(:project_with_no_cc) { create :project, language: ruby_lang }
     let(:test_coverage) { 97.832 }
 
     before do
@@ -27,7 +28,7 @@ describe 'CodeClimate department projects report page ', type: :request do
 
     it 'shows the title' do
       expect(response.body).to include(
-        "CodeClimate report for #{department.name} projects Department"
+        "CodeClimate report for #{department.name.capitalize} department projects"
       )
     end
 
@@ -56,6 +57,18 @@ describe 'CodeClimate department projects report page ', type: :request do
 
       it 'shows N/D instead' do
         expect(response.body).to include('N/D')
+      end
+    end
+
+    context 'when there are projects without CC data' do
+      it 'shows the title of a new table' do
+        expect(response.body).to include(
+          'Projects without available CodeClimate data for selected time range'
+        )
+      end
+
+      it 'shows name project' do
+        expect(response.body).to include(project_with_no_cc.name)
       end
     end
   end

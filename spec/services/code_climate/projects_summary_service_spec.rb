@@ -4,8 +4,11 @@ describe CodeClimate::ProjectsSummaryService do
   describe '.call' do
     let(:department) { Department.mobile.take }
     let(:language) { create(:language, name: 'react_native', department_id: department.id) }
-    let(:first_project) { create(:project, language_id: language.id) }
-    let(:second_project) { create(:project, language_id: language.id) }
+    let(:first_project) { create(:project, language_id: language.id, relevance: 'commercial') }
+    let(:second_project) { create(:project, language_id: language.id, relevance: 'commercial') }
+    let!(:project_without_cc) do
+      create(:project, language_id: language.id, relevance: 'commercial')
+    end
     let(:technologies) { ['react_native'] }
     let!(:first_code_climate_project) do
       create(:code_climate_project_metric, project_id: first_project.id)
@@ -54,6 +57,10 @@ describe CodeClimate::ProjectsSummaryService do
 
     it 'returns the correct ratings' do
       expect(subject.ratings).to eq(ratings)
+    end
+
+    it 'returns projects without code climate count' do
+      expect(subject.projects_without_cc_count).to eq(1)
     end
 
     context 'when there is a code climate metric without the snapshot info' do

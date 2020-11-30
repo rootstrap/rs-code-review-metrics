@@ -12,7 +12,7 @@ module Processors
         )
       end
     rescue Faraday::Error => exception
-      ExceptionHunter.track(exception)
+      track_request_error(exception)
     end
 
     private
