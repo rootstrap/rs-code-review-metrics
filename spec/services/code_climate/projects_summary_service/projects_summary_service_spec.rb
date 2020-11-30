@@ -8,8 +8,10 @@ describe CodeClimate::ProjectsSummaryService do
   let(:department) { project_1.language.department }
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
   let(:python_lang) { Language.find_by(name: 'python') }
-  let(:project_1) { create :project, language: ruby_lang }
-  let(:project_2) { create :project, language: python_lang }
+  let(:project_1) { create :project, language: ruby_lang, relevance: 'commercial' }
+  let(:project_2) { create :project, language: python_lang, relevance: 'commercial' }
+  let!(:pull_request_1) { create :pull_request, project: project_1, opened_at: 2.weeks.ago }
+  let!(:pull_request_2) { create :pull_request, project: project_2, opened_at: 2.weeks.ago }
 
   let!(:projects) do
     create :code_climate_project_metric,
