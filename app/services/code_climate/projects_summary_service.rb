@@ -15,7 +15,8 @@ module CodeClimate
         invalid_issues_count_average: invalid_issues_count_average.round(2),
         wont_fix_issues_count_average: wont_fix_issues_count_average.round(2),
         open_issues_count_average: open_issues_count_average.round(2),
-        ratings: ratings
+        ratings: ratings,
+        projects_without_cc_count: projects_without_cc_count
       )
     end
 
@@ -38,10 +39,23 @@ module CodeClimate
     end
 
     def ratings
-      code_climate_ratings = code_climate_metrics.pluck(:code_climate_rate).compact
-      code_climate_ratings.each_with_object(Hash.new(0)) do |code_climate_rate, ratings|
-        ratings[code_climate_rate] += 1
+      code_climate_ratings.each_with_object(Hash.new(0)) do |code_climate_metric, ratings|
+        letter = code_climate_metric[1]
+        ratings[letter] += 1 if letter.present?
       end
+    end
+
+    def code_climate_ratings
+      @code_climate_ratings ||= sort_ratings_by_date(
+        code_climate_metrics.pluck(:id,
+                                   :code_climate_rate,
+                                   'code_climate_project_metrics.created_at')
+      )
+    end
+
+    def sort_ratings_by_date(cc_metrics)
+      cc_metrics.sort_by { |id_rate_date| [id_rate_date[0], id_rate_date[2]] }
+                .each_with_object({}) { |id_rate, hsh| hsh[id_rate[0]] = id_rate[1] }
     end
 
     def code_climate_metrics
@@ -58,16 +72,37 @@ module CodeClimate
 
     def metrics_in_time_period
       if from.positive?
-        metrics_in_department.where(snapshot_time: from.weeks.ago..Time.zone.now)
+        metrics_in_department.with_activity_after(from.weeks.ago)
       else
         metrics_in_department
       end
     end
 
     def metrics_in_department
-      CodeClimateProjectMetric
-        .joins(project: { language: :department })
-        .where(departments: { id: department.id })
+      Project.joins(:code_climate_project_metric, :language)
+             .where(language: department.languages)
+             .distinct
+             .relevant
+    end
+
+    def projects_without_cc_count
+      (ids_without_rate - ids_with_rate).count
+    end
+
+    def ids_without_rate
+      projects_without_cc = Project.without_cc_or_cc_rate
+                                   .joins(:language)
+                                   .where(language: department.languages)
+                                   .distinct
+                                   .relevant
+      if from.positive?
+        projects_without_cc = projects_without_cc.with_activity_after(from.weeks.ago)
+      end
+      projects_without_cc.pluck(:id)
+    end
+
+    def ids_with_rate
+      code_climate_ratings.map { |id_rate| id_rate[0] if id_rate[1].present? }.compact
     end
   end
 end

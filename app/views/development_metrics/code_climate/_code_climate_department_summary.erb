@@ -19,6 +19,9 @@
                 <span class="text-primary"><b><%= letter %></b></span>
               </div>
             <% end -%>
+            <div>
+              <%= code_climate.projects_without_cc_count %> <%= 'project'.pluralize(code_climate.projects_without_cc_count) %> without CodeClimate
+            </div>
           </div>
           <div class="item-list">
             <span>Average of <b><%= code_climate.invalid_issues_count_average %> invalid</b> issues</span>

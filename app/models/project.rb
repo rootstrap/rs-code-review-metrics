@@ -93,6 +93,19 @@ class Project < ApplicationRecord
     joins(:language).where(languages: { name: languages })
   }
 
+  scope :without_cc, lambda {
+    left_joins(:code_climate_project_metric).where(code_climate_project_metrics: { id: nil })
+  }
+
+  scope :without_cc_rate, lambda {
+    left_joins(:code_climate_project_metric)
+      .where(code_climate_project_metrics: { code_climate_rate: nil })
+  }
+
+  scope :without_cc_or_cc_rate, lambda {
+    without_cc.or(without_cc_rate)
+  }
+
   def full_name
     "#{organization_name}/#{name}"
   end
