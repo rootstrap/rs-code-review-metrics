@@ -9,8 +9,6 @@ module CodeClimate
     end
 
     def call
-      return ProjectsSummary.new unless code_climate_metrics.any?
-
       code_climate_metrics.map do |metric|
         ProjectSummary.new(rate: metric.code_climate_rate,
                            issues: issues_collection(metric),
@@ -54,6 +52,7 @@ module CodeClimate
       CodeClimateProjectMetric
         .joins(project: { language: :department })
         .where(departments: { id: department.id })
+        .order('LOWER(projects.name)')
     end
   end
 end

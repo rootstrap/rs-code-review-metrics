@@ -18,7 +18,8 @@
     <div class="col-md-12">
       <%= render 'code_climate_department_report',
                  department: @department,
-                 projects_details: @code_climate if @code_climate.present?
+                 projects_details: @code_climate,
+                 projects_without_cc: @projects_without_cc
       %>
     </div>
   </div>

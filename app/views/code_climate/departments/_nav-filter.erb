@@ -2,7 +2,7 @@
   method: 'GET', html: {
     class: 'nav-filter p-3 shadow-box',
     id: 'nav-filter-form' } do |f|%>
-      <h4 class="text-center">CodeClimate report for <%= department.name %> projects Department</h4>
+      <h4 class="text-center">CodeClimate report for <%= department.name.capitalize %> department projects</h4>
       <div class="row justify-content-center mt-3">
         <%= f.input :period,
           label: 'Last Updated (Weeks)',
@@ -16,7 +16,8 @@
           wrapper_html: { class: 'col-md-4' },
           input_html: { class: 'input-height', multiple: true},
           required: false,
-          collection: all_languages_names(department)
+          collection: all_languages_names(department),
+          selected: all_languages_names(department)
         %>
       </div>
       <div class="row">
