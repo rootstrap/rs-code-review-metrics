@@ -2,13 +2,14 @@
 #
 # Table name: users
 #
-#  id             :bigint           not null, primary key
-#  company_member :boolean          default(TRUE)
-#  login          :string           not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  github_id      :bigint           not null
-#  node_id        :string           not null
+#  id                   :bigint           not null, primary key
+#  company_member_since :date
+#  company_member_until :date
+#  login                :string           not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  github_id            :bigint           not null
+#  node_id              :string           not null
 #
 # Indexes
 #
@@ -66,5 +67,10 @@ class User < ApplicationRecord
     login
   end
 
-  scope :company_member, -> { where(company_member: true) }
+  scope :company_member, -> { where.not(company_member_since: nil) }
+
+  scope :members_since, lambda { |date|
+    company_member.where(company_member_until: nil)
+                  .or(where(company_member_until: date..Time.current))
+  }
 end

@@ -1,8 +1,13 @@
 module Processors
   class OrgUsersUpdater < BaseService
     def call
-      User.where(login: current_members).find_each { |user| user.update(company_member: true) }
-      User.where.not(login: current_members).find_each { |user| user.update(company_member: false) }
+      current_time = Time.current
+      User.where(login: current_members, company_member_since: nil)
+          .update_all(company_member_since: current_time)
+
+      User.where.not(login: current_members)
+          .where.not(company_member_since: nil)
+          .update_all(company_member_until: current_time)
     end
 
     private

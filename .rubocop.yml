@@ -115,3 +115,7 @@ Style/ReturnNil:
 
 Style/BlockComments:
   Enabled: false
+
+SkipsModelValidations:
+  Exclude:
+    - app/services/processors/org_users_updater.rb
