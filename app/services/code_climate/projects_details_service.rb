@@ -42,7 +42,9 @@ module CodeClimate
 
     def metrics_in_time_period
       if from.positive?
-        metrics_in_department.where(snapshot_time: from.weeks.ago..Time.zone.now)
+        metrics_in_department.merge(Project.with_activity_after(from.weeks.ago))
+                             .group('code_climate_project_metrics.id')
+                             .group('projects.id')
       else
         metrics_in_department
       end
@@ -50,6 +52,7 @@ module CodeClimate
 
     def metrics_in_department
       CodeClimateProjectMetric
+        .with_rates
         .joins(project: { language: :department })
         .where(departments: { id: department.id })
         .order('LOWER(projects.name)')

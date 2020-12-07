@@ -84,11 +84,6 @@ class Project < ApplicationRecord
     joins(language: :department).where(departments: { id: department.id })
   }
 
-  scope :by_metrics_time, lambda { |from|
-    joins(:code_climate_project_metric)
-      .where(code_climate_project_metrics: { snapshot_time: from.weeks.ago..Time.zone.now })
-  }
-
   scope :by_language, lambda { |languages|
     joins(:language).where(languages: { name: languages })
   }

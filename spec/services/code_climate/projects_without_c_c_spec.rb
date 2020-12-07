@@ -1,6 +1,19 @@
 require 'rails_helper'
 
 describe CodeClimate::ProjectsWithoutCC do
+  shared_examples 'returns project' do
+    it 'returns project' do
+      projects = subject
+      expect(projects.first).to eq project
+    end
+  end
+
+  shared_examples 'does not return project' do
+    it 'does not return the project' do
+      projects = subject
+      expect(projects.count).to be_zero
+    end
+  end
   describe '.call' do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { Department.find_by(name: 'backend') }
@@ -11,19 +24,30 @@ describe CodeClimate::ProjectsWithoutCC do
                                           languages: ruby_lang.name)
     end
 
-    context 'when there is a project without any cc data' do
-      let!(:project_with_no_cc) { create :project, language: ruby_lang }
+    context 'when the project does not have any cc data associated' do
+      let!(:project) { create :project, :with_activity, :internal, language: ruby_lang }
 
-      it 'returns project with no-cc data' do
-        projects = subject
-        expect(projects.first).to eq project_with_no_cc
-      end
+      it_behaves_like 'returns project'
     end
 
-    context 'when there is a project with outdated cc data for the given time range' do
-      let(:project) { create :project, language: ruby_lang }
-      let(:period) { 2 }
+    context 'when the project does not have cc rate' do
+      let(:project) { create :project, :with_activity, :internal, language: ruby_lang }
 
+      before do
+        create :code_climate_project_metric,
+               project: project,
+               invalid_issues_count: 1,
+               wont_fix_issues_count: 2,
+               open_issues_count: 3,
+               code_climate_rate: nil,
+               test_coverage: 97.832,
+               snapshot_time: Time.zone.now.ago(10.weeks)
+      end
+
+      it_behaves_like 'returns project'
+    end
+
+    context 'when there is a project with cc data' do
       before do
         create :code_climate_project_metric,
                project: project,
@@ -35,9 +59,22 @@ describe CodeClimate::ProjectsWithoutCC do
                snapshot_time: Time.zone.now.ago(10.weeks)
       end
 
-      it 'returns project' do
-        projects = subject
-        expect(projects.first).to eq project
+      context 'and the project activity is older than requested period' do
+        let(:project) do
+          create :project, :with_activity,
+                 :internal,
+                 last_activity_in_weeks: 10,
+                 language: ruby_lang
+        end
+        let(:period) { 4 }
+
+        it_behaves_like 'does not return project'
+      end
+
+      context 'and the project is not relevant' do
+        let(:project) { create :project, :with_activity, language: ruby_lang }
+
+        it_behaves_like 'does not return project'
       end
     end
   end

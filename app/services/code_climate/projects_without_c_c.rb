@@ -9,28 +9,26 @@ module CodeClimate
     end
 
     def call
-      projects_in_given_languages(projects_in_department)
-        .where.not(id: projects_with_cc_ids)
-        .order('LOWER(projects.name)')
+      projects_in_given_languages
+        .without_cc_or_cc_rate
+        .distinct
+        .relevant
+        .order('projects.name')
     end
 
     private
 
-    def projects_with_cc_ids
-      projects_in_given_languages(projects_in_time_period).distinct.pluck(:id)
-    end
-
-    def projects_in_given_languages(scope)
+    def projects_in_given_languages
       if languages.present?
-        scope.by_language(languages)
+        projects_in_time_period.by_language(languages)
       else
-        scope
+        projects_in_time_period
       end
     end
 
     def projects_in_time_period
       if from.positive?
-        projects_in_department.by_metrics_time(from)
+        projects_in_department.with_activity_after(from.weeks.ago)
       else
         projects_in_department
       end
