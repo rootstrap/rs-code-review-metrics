@@ -36,7 +36,7 @@ module Builders
 
         def entities_by_metric
           {
-            review_turnaround: %w[project users_project],
+            review_turnaround: %w[project users_project project_distribution],
             merge_time: %w[project users_project project_distribution]
           }
         end
