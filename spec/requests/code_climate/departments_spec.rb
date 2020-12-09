@@ -4,8 +4,8 @@ describe 'CodeClimate department projects report page ', type: :request do
   describe '#index' do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { project.language.department }
-    let(:project) { create :project, language: ruby_lang }
-    let!(:project_with_no_cc) { create :project, language: ruby_lang }
+    let(:project) { create :project, :with_activity, language: ruby_lang }
+    let!(:project_with_no_cc) { create :project, :with_activity, :internal, language: ruby_lang }
     let(:test_coverage) { 97.832 }
 
     before do

@@ -25,4 +25,8 @@
 
 class CodeClimateProjectMetric < ApplicationRecord
   belongs_to :project
+
+  scope :with_rates, lambda {
+    where.not(code_climate_rate: nil)
+  }
 end
