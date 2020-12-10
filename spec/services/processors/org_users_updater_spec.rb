@@ -8,20 +8,20 @@ describe Processors::OrgUsersUpdater do
   end
 
   context 'when a non-org user becomes an org member' do
-    let(:user) { create(:user, login: members_payload['login'], company_member: false) }
+    let!(:user) { create(:user, login: members_payload['login']) }
 
-    it('sets company_member boolean as true') do
-      expect { update_all_org_users }.to change { user.reload.company_member }.from(false).to(true)
+    it('sets company_member_since date') do
+      update_all_org_users
+      expect(user.reload.company_member_since).not_to be(nil)
     end
   end
 
   context 'when an org user becomes an non-org member' do
-    let(:non_org_user) { create(:user) }
+    let!(:non_org_user) { create(:user, company_member_since: Time.current) }
 
-    it('sets company_member boolean as false for that user') do
-      expect { update_all_org_users }.to change {
-        non_org_user.reload.company_member
-      }.from(true).to(false)
+    it('sets company_member_until date') do
+      update_all_org_users
+      expect(non_org_user.reload.company_member_until).not_to be(nil)
     end
   end
 end
