@@ -58,7 +58,7 @@ external_contributions_processor:
   class: 'ExternalContributionsProcessorJob'
   active_job: true
 
-external_contributions_processor:
-  cron: '0 0 * * 0'
+organization_members_updater:
+  cron: '00 5 * * 1-5'
   class: 'OrgUsersUpdaterJob'
   active_job: true
