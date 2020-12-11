@@ -1,0 +1,10 @@
+<% if @merge_time_success_rate.present? %>
+  <p>
+    Out of <%= @merge_time_success_rate[:total] %> reviews,
+    <%= @merge_time_success_rate[:successful] %> were completed in the first
+    <%= @merge_time_success_rate[:metric_detail][:value] %> hours.
+    <a href='<%= admin_settings_path(q: { key_eq: @merge_time_success_rate[:metric_detail][:name] }) %>'>
+      Change this setting here.
+    </a>
+  </p>
+<% end %>

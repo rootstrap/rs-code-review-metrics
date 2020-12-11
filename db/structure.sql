@@ -142,17 +142,6 @@ CREATE TYPE public.review_state AS ENUM (
 );
 
 
---
--- Name: state; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.state AS ENUM (
-    'open',
-    'closed',
-    'merged'
-);
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -1049,6 +1038,37 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.settings (
+    id bigint NOT NULL,
+    key character varying NOT NULL,
+    value character varying,
+    description character varying DEFAULT ''::character varying
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
+
+
+--
 -- Name: technologies; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1321,6 +1341,13 @@ ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.revi
 
 
 --
+-- Name: settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
+
+
+--
 -- Name: technologies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1555,6 +1582,14 @@ ALTER TABLE ONLY public.reviews
 
 ALTER TABLE ONLY public.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -2260,5 +2295,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200929205630'),
 ('20201029141417'),
 ('20201102203739'),
+('20201130132325'),
+('20201130132521'),
+('20201130135001'),
 ('20201201184505'),
-('20201201193101');
+('20201201193101'),
+('20201211133046');
+
+
