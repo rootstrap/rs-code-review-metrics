@@ -10,17 +10,19 @@ module Builders
       private
 
       def retrieve_records
-        merge_times
+        metric.retrieve_records(entity_id: @entity_id, time_range: @query[:value_timestamp])
       end
 
-      def merge_times
-        ::MergeTime.joins(pull_request: :project)
-                   .where(projects: { id: @entity_id })
-                   .where(pull_requests: { merged_at: @query[:value_timestamp] })
+      def metric_name
+        @query[:name]
+      end
+
+      def metric
+        @metric ||= ProjectDistributionDataMetrics.const_get(metric_name.to_s.camelize).new
       end
 
       def resolve_interval(entity)
-        Metrics::IntervalResolver::Time.call(entity.value_as_hours)
+        metric.resolve_interval(entity)
       end
     end
   end

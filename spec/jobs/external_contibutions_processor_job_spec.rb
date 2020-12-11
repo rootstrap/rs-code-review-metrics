@@ -8,7 +8,7 @@ RSpec.describe ExternalContributionsProcessorJob do
   end
 
   context 'for a rootstrap member working on external repositories' do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, company_member_since: 1.day.ago) }
 
     context 'with pull requests made for the first project' do
       let!(:pull_requests_events_payload) do

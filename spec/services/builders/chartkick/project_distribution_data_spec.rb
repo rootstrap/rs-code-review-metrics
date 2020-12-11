@@ -13,14 +13,24 @@ RSpec.describe Builders::Chartkick::ProjectDistributionData do
       let(:values_in_seconds) { [108_00, 900_00, 144_000, 198_000, 226_800, 270_000] }
 
       let(:query) do
-        { value_timestamp: range }
+        { value_timestamp: range, name: metric_name }
       end
 
       subject do
         described_class.call(entity_id, query)
       end
 
-      it_behaves_like 'merge time data distribution'
+      context 'when name is merge time' do
+        let(:metric_name) { :merge_time }
+
+        it_behaves_like 'merge time data distribution'
+      end
+
+      context 'when name is review turnaround' do
+        let(:metric_name) { :review_turnaround }
+
+        it_behaves_like 'review turnaround data distribution'
+      end
     end
   end
 end

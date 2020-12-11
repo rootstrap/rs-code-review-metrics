@@ -4,7 +4,7 @@ RSpec.describe Builders::Chartkick::DevelopmentMetrics do
   describe Builders::Chartkick::DevelopmentMetrics::Project do
     let(:project) { create(:project) }
     let(:period) { 4 }
-    let(:review_turnaround_entities) { %i[per_project per_users_project] }
+    let(:review_turnaround_entities) { %i[per_project per_users_project per_project_distribution] }
     let(:merge_time_entities) { %i[per_project per_users_project per_project_distribution] }
 
     describe '.call' do

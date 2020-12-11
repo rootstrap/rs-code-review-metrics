@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Processors::External::Contributions do
-  let!(:users) { create_list(:user, 3) }
+  let!(:actual_member) { create(:user, company_member_since: 1.day.ago) }
+  let!(:actual_member_2) { create(:user, company_member_since: 1.day.ago) }
+  let!(:not_member) { create(:user) }
 
   before do
     @job_adapter = ActiveJob::Base.queue_adapter
@@ -13,35 +15,24 @@ RSpec.describe Processors::External::Contributions do
   end
 
   describe '#call' do
-    it 'enqueues as many jobs as the number of users' do
+    it 'enqueues as many jobs as the number of member users' do
       described_class.call
 
-      expect(ExternalPullRequestsProcessorJob).to have_been_enqueued.exactly(3)
+      expect(ExternalPullRequestsProcessorJob).to have_been_enqueued.exactly(2)
     end
 
-    it 'enqueues a job per username' do
+    it 'enqueues a job per member username' do
       described_class.call
       usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
 
-      expect(usernames_enqueued).to include(*users.pluck(:login))
+      expect(usernames_enqueued).to include(actual_member.login, actual_member_2.login)
     end
 
-    context 'when some users are not company members' do
-      let!(:snick555) { create(:user, login: 'snick555', company_member: false) }
+    it 'does not enqueue any job for non company users' do
+      described_class.call
+      usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
 
-      it 'does not enqueue any job for non company users' do
-        described_class.call
-        usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
-
-        expect(usernames_enqueued).not_to include(snick555.login)
-      end
-
-      it 'enqueues a job for every company member' do
-        described_class.call
-        usernames_enqueued = enqueued_jobs.flat_map { |job| job['arguments'] }
-
-        expect(usernames_enqueued.size).to eq(3)
-      end
+      expect(usernames_enqueued).not_to include(not_member.login)
     end
   end
 end
