@@ -1,0 +1,10 @@
+<% if review_turnaround_success_rate.present? %>
+  <p>
+    Out of <%= review_turnaround_success_rate[:total] %> reviews,
+    <%= review_turnaround_success_rate[:successful] %> were completed in the first
+    <%= review_turnaround_success_rate[:metric_detail][:value] %> hours.
+    <a href='<%= admin_settings_path(q: { key_eq: review_turnaround_success_rate[:metric_detail][:name] }) %>'>
+      Change this setting here.
+    </a>
+  </p>
+<% end %>
