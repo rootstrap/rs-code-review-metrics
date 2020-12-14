@@ -4,13 +4,16 @@ module Builders
       def call
         department_name = ::Department.find(@entity_id).name
 
-        [{ name: department_name, data: build_distribution_data(retrieve_records) }]
+        [{ name: department_name,
+           data: build_distribution_data(records),
+           success_rate: build_success_rate(records) }]
       end
 
       private
 
-      def retrieve_records
-        metric.retrieve_records(entity_id: @entity_id, time_range: @query[:value_timestamp])
+      def records
+        @records ||= metric.retrieve_records(entity_id: @entity_id,
+                                             time_range: @query[:value_timestamp])
       end
 
       def metric_name
