@@ -15,6 +15,7 @@ class DevelopmentMetricsController < ApplicationController
     return if metric_params.blank?
 
     build_metrics(department.id, Department.name)
+    build_success_rates
     @code_climate = code_climate_department_summary
     @overview = department_overview
   end
@@ -22,6 +23,12 @@ class DevelopmentMetricsController < ApplicationController
   def users; end
 
   private
+
+  def build_success_rates
+    @merge_time_success_rate = @merge_time[:per_department_distribution].first[:success_rate]
+    @review_turnaround_success_rate = @review_turnaround[:per_department_distribution]
+                                      .first[:success_rate]
+  end
 
   def build_metrics(entity_id, entity_name)
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
