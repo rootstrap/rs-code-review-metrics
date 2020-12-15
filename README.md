@@ -19,6 +19,13 @@ This project comes with:
 1. `rspec` and make sure all tests pass
 1. `rails s`
 
+## Settings
+
+### Success Rates Department Settings
+
+- In order to change Department Success Rates time limit setting, create a new `Setting` with key prefix `success_rate`, followed by the department name and the metric name.
+- Example: `Setting.create!(key: 'success_rate_backend_merge_time', value: '12')`
+
 ## Code quality
 
 With `rake code_analysis` you can run the code analysis tool, you can omit rules with:
