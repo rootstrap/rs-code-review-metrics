@@ -17,6 +17,16 @@ ActiveAdmin.register ExternalPullRequest do
     actions
   end
 
+  filter :external_project, collection: ExternalProject.order('LOWER(name)')
+  filter :owner, collection: User.order('LOWER(login)')
+  filter :state, as: :select, collection: ExternalPullRequest.states.values
+  filter :github_id, label: 'GITHUB ID'
+  filter :number
+  filter :title
+  filter :html_url
+  filter :created_at
+  filter :updated_at
+
   form do |f|
     f.inputs do
       f.input :html_url, as: :string, label: 'Github URL', required: true

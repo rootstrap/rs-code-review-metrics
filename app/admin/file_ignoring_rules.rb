@@ -11,6 +11,11 @@ ActiveAdmin.register FileIgnoringRule do
     actions
   end
 
+  filter :regex
+  filter :language, as: :select, collection: Language.order('LOWER(name)')
+  filter :created_at
+  filter :updated_at
+
   form do |f|
     f.inputs do
       f.input :language, prompt: 'all'

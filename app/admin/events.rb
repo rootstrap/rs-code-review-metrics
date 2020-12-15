@@ -7,4 +7,10 @@ ActiveAdmin.register Event do
     end
     column(:handleable_id, &:handleable)
   end
+
+  filter :name
+  filter :project, collection: Project.order('LOWER(name)')
+  filter :handleable_type
+  filter :created_at
+  filter :updated_at
 end

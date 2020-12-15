@@ -12,4 +12,10 @@ ActiveAdmin.register ReviewRequest do
       link_to(r.reviewer.login, admin_user_path(r.reviewer))
     end
   end
+
+  filter :owner, collection: User.order('LOWER(login)')
+  filter :reviewer, collection: User.order('LOWER(login)')
+  filter :project, collection: Project.order('LOWER(name)')
+  filter :created_at
+  filter :updated_at
 end
