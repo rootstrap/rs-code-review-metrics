@@ -549,7 +549,8 @@ CREATE TABLE public.external_projects (
     github_id bigint NOT NULL,
     language_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    enabled boolean DEFAULT true
 );
 
 
@@ -2307,6 +2308,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201130135001'),
 ('20201201184505'),
 ('20201201193101'),
-('20201211133046');
-
-
+('20201211133046'),
+('20201214192048');

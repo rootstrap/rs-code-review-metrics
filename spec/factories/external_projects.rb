@@ -4,6 +4,7 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
+#  enabled     :boolean          default(TRUE)
 #  full_name   :string           not null
 #  name        :string
 #  created_at  :datetime         not null

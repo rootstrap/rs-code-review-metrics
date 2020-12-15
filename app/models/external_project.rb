@@ -4,6 +4,7 @@
 #
 #  id          :bigint           not null, primary key
 #  description :string
+#  enabled     :boolean          default(TRUE)
 #  full_name   :string           not null
 #  name        :string
 #  created_at  :datetime         not null
@@ -23,6 +24,8 @@ class ExternalProject < ApplicationRecord
   validates :github_id, uniqueness: true
 
   before_validation :set_default_language, on: :create
+
+  scope :enabled, -> { where(enabled: true) }
 
   private
 
