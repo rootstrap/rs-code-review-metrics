@@ -28,4 +28,8 @@ RSpec.shared_examples 'success rate' do
   it 'returns total of items' do
     expect(subject.first[:success_rate][:total]).to be_present
   end
+
+  it 'returns metric settings' do
+    expect(subject.first[:success_rate][:metric_detail]).to be_present
+  end
 end

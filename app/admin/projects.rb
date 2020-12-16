@@ -1,8 +1,5 @@
 ActiveAdmin.register Project do
   permit_params :language_id, :description, :name, :github_id, :relevance
-  preserve_default_filters!
-  filter :relevance, as: :select, collection: Project.relevances.values
-  remove_filter :events
 
   index do
     selectable_column
@@ -16,6 +13,16 @@ ActiveAdmin.register Project do
     column :relevance
     actions
   end
+
+  filter :name
+  filter :is_private
+  filter :github_id, label: 'GITHUB ID'
+  filter :relevance, as: :select, collection: Project.relevances.values
+  filter :language, as: :select, collection: Language.order('LOWER(name)')
+  filter :users, collection: User.order('LOWER(login)')
+  filter :code_owners, collection: User.order('LOWER(login)')
+  filter :created_at
+  filter :updated_at
 
   form do |f|
     f.inputs do

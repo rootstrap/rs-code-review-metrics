@@ -27,17 +27,16 @@
           department: @department, code_climate: @code_climate %>
         </div>
         <% if @department %>
-          <div class="metrics shadow-box">
+          <div class="container metrics shadow-box">
             <h4 class="p-3">
               Time to second review
               <% if @review_turnaround_success_rate.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  <%= @review_turnaround_success_rate[:rate] %>% success rate |
-                  <%= @review_turnaround_success_rate[:successful] %> /
-                  <%= @review_turnaround_success_rate[:total] %> reviews
+                  <%= @review_turnaround_success_rate[:rate] %>% success rate
                 </span>
               <% end %>
             </h4>
+            <%= render 'development_metrics/review_turnaround/success_rate_detail', review_turnaround_success_rate: @review_turnaround_success_rate %>
             <div class="distribution-report-button mr-5 mb-2">
               <%= link_to 'See report',
                           department_time_to_second_review_prs_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
@@ -51,17 +50,16 @@
               <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
             </div>
           </div>
-          <div class="metrics shadow-box">
+          <div class="container metrics shadow-box">
             <h4 class="p-3">
               Time to merge
               <% if @merge_time_success_rate.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  <%= @merge_time_success_rate[:rate] %>% success rate |
-                  <%= @merge_time_success_rate[:successful] %> /
-                  <%= @merge_time_success_rate[:total] %> pull requests
+                  <%= @merge_time_success_rate[:rate] %>% success rate
                 </span>
               <% end %>
             </h4>
+            <%= render 'development_metrics/merge_time/success_rate_detail', merge_time_success_rate: @merge_time_success_rate %>
             <div class="distribution-report-button mr-5 mb-2">
               <%= link_to 'See report',
                           department_time_to_merge_prs_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
@@ -72,7 +70,7 @@
               <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
             </div>
           </div>
-          <div class="metrics shadow-box">
+          <div class="container metrics shadow-box">
             <h4 class="p-3">PR Size</h4>
             <div class="graph">
               <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
