@@ -42,11 +42,7 @@ module Builders
         end
 
         def metric_setting
-          @metric_setting ||= setting&.value&.to_i || 24
-        end
-
-        def setting
-          @setting ||= Setting.success_rate(department_name, metric_name).first
+          @metric_setting ||= SettingsService.success_rate(department_name, metric_name)
         end
 
         def metric_key

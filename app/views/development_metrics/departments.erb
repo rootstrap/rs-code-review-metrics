@@ -1,5 +1,5 @@
 <%= render 'development_metrics/departments_dropdown' %>
-<%= render 'development_metrics/development_metrics_sidebar' %>
+<%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
 
 <div class="container-fluid">
   <div class="row">
@@ -46,9 +46,11 @@
             <div class="graph">
               <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
             </div>
-            <div class="graph details">
-              <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
-            </div>
+            <% if @enabled_department_per_tech_graph %>
+              <div class="graph details">
+                <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
+              </div>
+            <% end %>
           </div>
           <div class="container metrics shadow-box">
             <h4 class="p-3">

@@ -1,6 +1,7 @@
 module PullRequests
   class TimeToSecondReviewPrsController < ApplicationController
     layout 'sidebar_metrics'
+    include LoadSettings
 
     def index
       @pull_requests = Builders::Distribution::PullRequests::TimeToSecondReview.call(
