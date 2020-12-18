@@ -1,5 +1,6 @@
 class DevelopmentMetricsController < ApplicationController
   layout 'sidebar_metrics'
+  include LoadSettings
 
   def index; end
 
