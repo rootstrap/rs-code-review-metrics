@@ -2,16 +2,23 @@ module Builders
   module Chartkick
     class UsersProjectData < Builders::Chartkick::Base
       def call
-        retrieve_users_project.map do |user_project|
-          metrics = user_project.metrics.where(@query)
-          { name: user_project.user_name, data: build_data(metrics) }
+        metrics.group_by(&:ownable_id).map do |user_project_metrics|
+          user_project = UsersProject.find(user_project_metrics.first)
+          { name: user_project.user_name, data: build_data(user_project_metrics.second) }
         end
       end
 
       private
 
-      def retrieve_users_project
-        UsersProject.where(project_id: @entity_id)
+      def metrics
+        metrics = Metrics
+                  .const_get(@query[:name].to_s.camelize)::PerUserProject
+                  .call(@query[:value_timestamp])
+        metrics.select { |metric| users_projects_ids.include?(metric.ownable_id) }
+      end
+
+      def users_projects_ids
+        UsersProject.where(project_id: @entity_id).pluck(:id)
       end
     end
   end

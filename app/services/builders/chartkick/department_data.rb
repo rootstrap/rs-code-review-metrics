@@ -4,7 +4,9 @@ module Builders
       def call
         department = ::Department.find(@entity_id)
 
-        metrics = department.metrics.where(@query)
+        metrics = Metrics
+                  .const_get(@query[:name].to_s.camelize)::PerDepartment
+                  .call(@query[:value_timestamp])
         [{ name: department.name, data: build_data(metrics) }]
       end
     end

@@ -4,21 +4,30 @@ module Metrics
       private
 
       def process
-        project_metrics_per_language.each do |language_id, merge_times_value|
-          create_or_update_metric(language_id, Language.name, merge_time_interval,
-                                  merge_times_value, :merge_time)
+        metrics = []
+        week_intervals = split_in_weeks(metric_interval)
+        week_intervals.map do |week|
+          interval = build_interval(week)
+          project_metrics_per_language(interval).each do |language_id, metric_value|
+            metrics << Metric.new(language_id,
+                                  Language.name,
+                                  interval.first,
+                                  :merge_time,
+                                  metric_value)
+          end
         end
+        metrics
       end
 
-      def project_metrics_per_language
+      def project_metrics_per_language(interval)
         Language.joins(projects: { pull_requests: :merge_time })
-                .where(pull_requests: { merged_at: merge_time_interval })
+                .where(pull_requests: { merged_at: interval })
                 .group(:id)
                 .pluck(:id, Arel.sql('AVG(merge_times.value)'))
       end
 
-      def merge_time_interval
-        @merge_time_interval ||= @interval || Time.zone.today.all_day
+      def metric_interval
+        @metric_interval ||= @interval || Time.zone.today.all_day
       end
     end
   end

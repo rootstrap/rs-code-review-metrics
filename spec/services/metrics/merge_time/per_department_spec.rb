@@ -2,94 +2,29 @@ require 'rails_helper'
 
 RSpec.describe Metrics::MergeTime::PerDepartment do
   describe '.call' do
-    before { travel_to(Time.zone.today.end_of_day) }
+    let(:ruby_lang)         { Language.find_by(name: 'ruby')  }
+    let(:react_lang)        { Language.find_by(name: 'react') }
+    let!(:first_project)    { create(:project, language: ruby_lang)  }
+    let!(:second_project)   { create(:project, language: react_lang) }
+    let(:projects)          { [first_project, second_project] }
+    let(:beginning_of_day)  { Time.zone.today.beginning_of_day }
+    let(:entity_type)       { 'Department' }
+    let(:metric_name)       { :merge_time }
+    let(:subject)           { described_class.call }
 
-    let(:backend_department) { ruby_lang.department }
-    let(:frontend_department) { react_lang.department }
-    let(:ruby_lang)  { Language.find_by(name: 'ruby')  }
-    let(:react_lang) { Language.find_by(name: 'react') }
-    let!(:first_project)  { create(:project, language: ruby_lang)  }
-    let!(:second_project) { create(:project, language: react_lang) }
-    let(:beginning_of_day) { Time.zone.today.beginning_of_day }
-
-    context 'when there are two merged pull request from different departments' do
-      let!(:first_project_pull_request) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_project_pull_request) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
+    context 'when there is available data' do
       before do
-        first_project_pull_request.update!(merged_at: beginning_of_day + 1.hour)
-        second_project_pull_request.update!(merged_at: beginning_of_day + 2.hours)
+        projects.each do |project|
+          pr1 = create(:pull_request, project: project, merged_at: beginning_of_day + 1.hour)
+          pr2 = create(:pull_request, project: project, merged_at: beginning_of_day + 3.hours)
+          create(:merge_time, pull_request: pr1, value: 1.hour.seconds)
+          create(:merge_time, pull_request: pr2, value: 3.hours.seconds)
+        end
       end
 
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.by(2)
-      end
-
-      it 'saves one hour as value for merge time metric in backend department' do
-        described_class.call
-        expect(backend_department.metrics.first.value.seconds).to eq(1.hour)
-      end
-
-      it 'saves two hours as value for merge time metric in frontend department' do
-        described_class.call
-        expect(frontend_department.metrics.first.value.seconds).to eq(2.hours)
-      end
+      it_behaves_like 'available metrics data'
     end
 
-    context 'when there are two project metrics per department' do
-      let!(:first_pull_first_project) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_pull_first_project) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:first_pull_second_project) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_pull_second_project) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
-      before do
-        first_pull_first_project.update!(merged_at: beginning_of_day + 30.minutes)
-        second_pull_first_project.update!(merged_at: beginning_of_day + 50.minutes)
-        first_pull_second_project.update!(merged_at: beginning_of_day + 10.minutes)
-        second_pull_second_project.update!(merged_at: beginning_of_day + 2.hours)
-      end
-
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.by(2)
-      end
-
-      it 'saves forty minutes as average for merge time backend department' do
-        described_class.call
-        expect(backend_department.metrics.first.value.seconds).to eq(40.minutes)
-      end
-
-      it 'saves sixty five minutes as average for merge time frontend department' do
-        described_class.call
-        expect(frontend_department.metrics.first.value.seconds).to eq(65.minutes)
-      end
-    end
+    it_behaves_like 'unavailable metrics data'
   end
 end

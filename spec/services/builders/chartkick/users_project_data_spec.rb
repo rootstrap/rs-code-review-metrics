@@ -10,19 +10,20 @@ RSpec.describe Builders::Chartkick::UsersProjectData do
       let(:entity_id) { Project.last.id }
 
       let(:query) do
-        { interval: :weekly, value_timestamp: range }
+        { name: 'ReviewTurnaround', interval: :weekly, value_timestamp: range }
       end
 
-      let(:user_project) { create(:users_project) }
+      let(:review_request) { create(:review_request) }
+      let!(:completed_review_turnaround) do
+        create(:completed_review_turnaround, review_request: review_request)
+      end
+      let!(:users_project) do
+        create(:users_project, project_id: review_request.project_id,
+                               user_id: review_request.owner_id)
+      end
 
       subject do
         described_class.call(entity_id, query)
-      end
-
-      before do
-        create(:weekly_metric,
-               ownable: user_project,
-               value_timestamp: Time.zone.today.beginning_of_week)
       end
 
       it 'returns an array' do
