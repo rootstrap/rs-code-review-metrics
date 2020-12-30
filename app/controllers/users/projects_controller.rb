@@ -1,6 +1,7 @@
 module Users
   class ProjectsController < ApplicationController
     layout 'sidebar_metrics'
+    include LoadSettings
 
     def index
       @projects = user.projects_as_code_owner

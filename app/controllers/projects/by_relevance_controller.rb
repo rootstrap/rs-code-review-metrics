@@ -1,6 +1,7 @@
 module Projects
   class ByRelevanceController < ApplicationController
     layout 'sidebar_metrics'
+    include LoadSettings
 
     def index
       @projects = Builders::Departments::Projects::ByRelevance.call(

@@ -25,6 +25,15 @@ This project comes with:
 
 - In order to change Department Success Rates time limit setting, create a new `Setting` with key prefix `success_rate`, followed by the department name and the metric name.
 - Example: `Setting.create!(key: 'success_rate_backend_merge_time', value: '12')`
+Possible values: 12 | 24 (default) | 36 | 48 | 60 | 72
+
+### Enabled Features Settings
+Possible values: true | false (default)
+
+- `enabled_users_section` enables Users section at Development Metrics sidebar.
+- `enabled_department_per_tech_graph` enables Department per technology detail graph.
+- `enabled_project_codeowners_section` enables Project codeowners section.
+- `enabled_project_per_user_graph` enables Project per-user detail graphs.
 
 ## Code quality
 
