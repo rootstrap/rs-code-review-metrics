@@ -6,7 +6,7 @@ module Builders
 
         metrics = Metrics
                   .const_get(@query[:name].to_s.camelize)::PerProject
-                  .call(@query[:value_timestamp])
+                  .call(project.id, @query[:value_timestamp])
         [{ name: project.name, data: build_data(metrics) }]
       end
     end

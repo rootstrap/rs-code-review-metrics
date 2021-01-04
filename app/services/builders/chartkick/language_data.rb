@@ -11,10 +11,9 @@ module Builders
       private
 
       def metrics
-        metrics = Metrics
-                  .const_get(@query[:name].to_s.camelize)::PerDepartment
-                  .call(@query[:value_timestamp])
-        metrics.select { |metric| department_languages_ids.include?(metric.ownable_id) }
+        Metrics
+          .const_get(@query[:name].to_s.camelize)::PerDepartment
+          .call(department_languages_ids, @query[:value_timestamp])
       end
 
       def department_languages_ids

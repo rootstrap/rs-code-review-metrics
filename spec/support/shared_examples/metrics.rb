@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.shared_examples 'available metrics data' do
-  it 'returns two metrics' do
+  it 'returns metrics' do
     metrics = subject
-    expect(metrics.count).to eq 2
+    expect(metrics.count).to eq metrics_number
   end
 
   it 'returns metric ownable id' do
@@ -13,24 +13,10 @@ RSpec.shared_examples 'available metrics data' do
     end
   end
 
-  it 'returns metric ownable type' do
-    metrics = subject
-    metrics.each do |metric|
-      expect(metric.ownable_type).to eq entity_type
-    end
-  end
-
   it 'returns metric value timestamp' do
     metrics = subject
     metrics.each do |metric|
       expect(metric.value_timestamp).to be_present
-    end
-  end
-
-  it 'returns metric name' do
-    metrics = subject
-    metrics.each do |metric|
-      expect(metric.name).to eq metric_name
     end
   end
 

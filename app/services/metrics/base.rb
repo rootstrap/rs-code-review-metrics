@@ -1,16 +1,26 @@
 module Metrics
   class Base < BaseService
-    Metric = Struct.new(:ownable_id, :ownable_type, :value_timestamp, :name, :value)
+    Metric = Struct.new(:ownable_id, :value_timestamp, :value)
 
-    def find_user_project(user_id, project_id)
-      user = User.find(user_id)
-      user.users_projects.detect { |user_project| user_project.project_id == project_id }
+    def initialize(entity_id, interval = nil)
+      @entity_id = entity_id
+      @interval = interval
     end
 
-    def split_in_weeks(metric_interval)
+    def call
+      process
+    end
+
+    private
+
+    def week_intervals
       from = metric_interval.first.to_date
       to = metric_interval.last.to_date
       (from..to).group_by(&:cweek)
+    end
+
+    def metric_interval
+      @metric_interval ||= @interval || Time.zone.today.all_day
     end
 
     def build_interval(week)
@@ -21,6 +31,10 @@ module Metrics
       return first.beginning_of_day..first.end_of_day if first == last
 
       first..last
+    end
+
+    def find_user_project(user_id, project_id)
+      ::UsersProject.find_by(user_id: user_id, project_id: project_id)
     end
   end
 end

@@ -11,14 +11,13 @@ module Builders
       private
 
       def metrics
-        metrics = Metrics
-                  .const_get(@query[:name].to_s.camelize)::PerUserProject
-                  .call(@query[:value_timestamp])
-        metrics.select { |metric| users_projects_ids.include?(metric.ownable_id) }
+        Metrics
+          .const_get(@query[:name].to_s.camelize)::PerUserProject
+          .call(users_ids, @query[:value_timestamp])
       end
 
-      def users_projects_ids
-        UsersProject.where(project_id: @entity_id).pluck(:id)
+      def users_ids
+        UsersProject.where(project_id: @entity_id).pluck(:user_id)
       end
     end
   end
