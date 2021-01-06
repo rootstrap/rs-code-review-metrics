@@ -1,31 +1,37 @@
-<div class="row">
-  <div class="col-md-2">
-    <span class="h6">CodeClimate</span>
+<div class="summary col-md-12">
+  <div class="code-climate">
+    <div class="container p-3">
+      <div class="title">
+        <b>CodeClimate summary</b>
+      </div>
+
+      <% if code_climate -%>
+        <div class="info">
+          <div class="item-list">
+            <div>
+              Rate:
+              <span class="text-primary">
+                <b>
+                  <%= render 'shared/code_climate_metric', metric: code_climate.code_climate_rate, suffix: '' %>
+                </b>
+              </span>
+            </div>
+          </div>
+          <div class="item-list">
+            <%= render 'shared/code_climate_summary', metric: code_climate.invalid_issues_count, suffix: 'invalid' %>
+          </div>
+          <div class="item-list">
+          <%= render 'shared/code_climate_summary', metric: code_climate.wont_fix_issues_count, suffix: "won't fix" %>
+          </div>
+          <div class="item-list">
+            <%= render 'shared/code_climate_summary', metric: code_climate.open_issues_count, suffix: 'open' %>
+          </div>
+        </div>
+      <% else -%>
+        <div class="col-md-12 text-center mt-2">
+          <span class="text-danger">No information available</span>
+        </div>
+      <% end -%>
+    </div>
   </div>
-  <% if code_climate -%>
-    <div class="col-md-1">
-      <span class="h6 text-success">
-        <%= render 'shared/code_climate_metric', metric: code_climate.code_climate_rate, suffix: '' %>
-      </span>
-    </div>
-    <div class="col-md-3">
-      <span class="text-danger">
-        <%= render 'shared/code_climate_metric', metric: code_climate.invalid_issues_count, suffix: 'invalid issues' %>
-      </span>
-    </div>
-    <div class="col-md-3">
-      <span class="text-danger">
-        <%= render 'shared/code_climate_metric', metric: code_climate.wont_fix_issues_count, suffix: "won't fix issues" %>
-      </span>
-    </div>
-    <div class="col-md-3">
-      <span class="text-danger">
-        <%= render 'shared/code_climate_metric', metric: code_climate.open_issues_count, suffix: 'open issues' %>
-      </span>
-    </div>
-  <% else -%>
-    <div class="col-md-8">
-      <span class="code-climate-summary text-danger">No information available</span>
-    </div>
-  <% end -%>
 </div>
