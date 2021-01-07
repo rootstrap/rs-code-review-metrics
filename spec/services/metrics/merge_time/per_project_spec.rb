@@ -12,13 +12,26 @@ RSpec.describe Metrics::MergeTime::PerProject do
 
     context 'when there is available data' do
       before do
-        pr1 = create(:pull_request, project: project, merged_at: beginning_of_day + 1.hour)
-        pr2 = create(:pull_request, project: project, merged_at: beginning_of_day + 3.hours)
-        create(:merge_time, pull_request: pr1, value: 1.hour.seconds)
-        create(:merge_time, pull_request: pr2, value: 3.hours.seconds)
+        pull_request1 = create(:pull_request, project: project,
+                                              merged_at: beginning_of_day + 1.hour)
+        pull_request2 = create(:pull_request, project: project,
+                                              merged_at: beginning_of_day + 3.hours)
+        create(:merge_time, pull_request: pull_request1, value: 1.hour.seconds)
+        create(:merge_time, pull_request: pull_request2, value: 3.hours.seconds)
       end
 
       it_behaves_like 'available metrics data'
+
+      context 'when interval is set' do
+        let(:subject) { described_class.call(project.id, interval) }
+
+        before do
+          pull_request = create(:pull_request, project: project, merged_at: 5.weeks.ago)
+          create(:merge_time, pull_request: pull_request, value: 1.hour.seconds)
+        end
+
+        it_behaves_like 'metric value unchanged'
+      end
     end
 
     it_behaves_like 'unavailable metrics data'

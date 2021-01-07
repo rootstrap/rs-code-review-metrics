@@ -28,6 +28,19 @@ RSpec.shared_examples 'available metrics data' do
   end
 end
 
+RSpec.shared_examples 'metric value unchanged' do
+  let(:interval) do
+    4.weeks.ago.beginning_of_week..Time.zone.now.end_of_week
+  end
+
+  it 'does not change metric value' do
+    metrics = subject
+    metrics.each do |metric|
+      expect(metric.value.seconds).to eq 2.hours
+    end
+  end
+end
+
 RSpec.shared_examples 'unavailable metrics data' do
   context 'when no data is available' do
     it 'returns no metrics' do
