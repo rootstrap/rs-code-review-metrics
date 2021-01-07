@@ -1,6 +1,7 @@
 module PullRequests
   class TimeToMergePrsController < ApplicationController
     layout 'sidebar_metrics'
+    include LoadSettings
 
     def index
       @pull_requests = Builders::Distribution::PullRequests::TimeToMerge.call(
