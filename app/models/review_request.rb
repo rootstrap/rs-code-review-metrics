@@ -41,6 +41,8 @@ class ReviewRequest < ApplicationRecord
   belongs_to :project
   has_many :reviews, class_name: 'Events::Review',
                      dependent: :destroy
+  has_many :completed_review_turnarounds,
+           dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
 end
