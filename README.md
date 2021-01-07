@@ -19,6 +19,9 @@ This project comes with:
 1. `rspec` and make sure all tests pass
 1. `rails s`
 
+## Tasks
+- `rake code_climate:link` is run only to update projects' Code Climate repository ids.
+
 ## Settings
 
 ### Success Rates Department Settings
