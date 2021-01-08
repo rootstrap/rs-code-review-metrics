@@ -23,7 +23,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
           project_name: project.name,
           metric: {
             metric_name: 'review_turnaround',
-            period: 'daily'
+            period: 'weekly'
           }
         }
       end
@@ -35,8 +35,8 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
       end
 
       it 'returns status ok' do
-        allow(Metrics::Group::Daily).to receive(:call).and_return(true)
-        allow(Metrics::Group::Daily).to receive(:call).and_return(true)
+        allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
+        allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
         get :index, params: params
 
         assert_response :success

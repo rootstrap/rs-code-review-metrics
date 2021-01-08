@@ -36,6 +36,9 @@ class Project < ApplicationRecord
            class_name: 'Events::Review',
            dependent: :destroy,
            inverse_of: :project
+  has_many :review_requests,
+           dependent: :destroy,
+           inverse_of: :project
   has_many :users_projects, dependent: :destroy
   has_many :users, through: :users_projects
   has_many :metrics, as: :ownable, dependent: :destroy

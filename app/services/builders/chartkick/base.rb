@@ -11,9 +11,13 @@ module Builders
       def build_data(metrics)
         metrics.inject({}) do |hash, metric|
           hash.merge!(
-            metric.value_timestamp.strftime('%Y-%m-%d').to_s => metric.value_as_hours
+            metric.value_timestamp.strftime('%Y-%m-%d').to_s => value_as_hours(metric.value)
           )
         end
+      end
+
+      def value_as_hours(value)
+        (value.to_f / 1.hour.seconds).round(2)
       end
 
       def build_distribution_data(entities)

@@ -1,29 +1,25 @@
 module Metrics
   module ReviewTurnaround
-    class PerDepartment < Metrics::BaseDevelopmentMetrics
+    class PerDepartment < Metrics::Base
       private
 
       def process
-        project_metrics_per_department.each do |department_id, amount, metrics_value|
-          turnaround = calculate_average(metrics_value, amount)
-          create_or_update_metric(department_id, Department.name, metric_interval,
-                                  turnaround, :review_turnaround)
+        week_intervals.flat_map do |week|
+          interval = build_interval(week)
+          query(interval).map do |department_id, metric_value|
+            Metric.new(department_id, interval.first, metric_value)
+          end
         end
       end
 
-      def project_metrics_per_department
-        Department.joins(languages: { projects: :metrics })
-                  .where(metrics: { name: :review_turnaround, created_at: metric_interval })
+      def query(interval)
+        Department.joins(languages: {
+                           projects: { review_requests: :completed_review_turnarounds }
+                         })
+                  .where(completed_review_turnarounds: { created_at: interval })
+                  .where(id: @entity_id)
                   .group(:id)
-                  .pluck(:id, Arel.sql('COUNT(*), SUM(metrics.value)'))
-      end
-
-      def calculate_average(metrics_value, amount)
-        metrics_value / amount
-      end
-
-      def metric_interval
-        @metric_interval ||= @interval || Time.zone.today.all_day
+                  .pluck(:id, Arel.sql('AVG(completed_review_turnarounds.value)'))
       end
     end
   end

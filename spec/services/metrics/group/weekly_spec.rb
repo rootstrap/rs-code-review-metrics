@@ -2,50 +2,64 @@ require 'rails_helper'
 
 RSpec.describe Metrics::Group::Weekly do
   describe '.call' do
-    let(:project) { create(:project, name: 'rs-code-review-metrics') }
-
-    let(:first_user) { create(:user) }
-    let(:second_user) { create(:user) }
-
-    let(:first_user_project) do
-      create(:users_project, user_id: first_user.id, project_id: project.id)
-    end
-
-    let(:second_user_project) do
-      create(:users_project, user_id: second_user.id, project_id: project.id)
-    end
-
-    let(:beginning_of_this_week) do
-      Time.zone.today.beginning_of_week
-    end
-
-    context 'with a given project' do
-      let(:user_of_another_project) { create(:users_project) }
-      let(:range) { ((Time.zone.today - 4.weeks).beginning_of_week)..Time.zone.today.end_of_week }
-
-      before do
-        create(:weekly_metric,
-               ownable: first_user_project,
-               value_timestamp: beginning_of_this_week)
-        create(:weekly_metric,
-               ownable: first_user_project,
-               value_timestamp: beginning_of_this_week - 1.week)
-        create(:weekly_metric,
-               ownable: first_user_project,
-               value_timestamp: beginning_of_this_week - 2.weeks)
-
-        create(:weekly_metric,
-               ownable: second_user_project,
-               value_timestamp: beginning_of_this_week)
-        create(:weekly_metric,
-               ownable: second_user_project,
-               value_timestamp: beginning_of_this_week - 1.week)
-        create(:weekly_metric,
-               ownable: second_user_project,
-               value_timestamp: beginning_of_this_week - 2.weeks)
+    context 'when querying metrics per department' do
+      let(:department) { Department.find_by(name: 'backend') }
+      let(:subject) do
+        described_class.call(entity_name: 'department', entity_id: department.id,
+                             metric_name: 'review_turnaround')
       end
 
-      it_behaves_like 'query metric'
+      it 'calls service' do
+        expect(Builders::Chartkick::DepartmentData)
+          .to receive(:call)
+          .with(department.id, any_args)
+        subject
+      end
+    end
+
+    context 'when querying metrics per language' do
+      let(:lang) { Language.find_by(name: 'ruby') }
+      let(:subject) do
+        described_class.call(entity_name: 'language', entity_id: lang.id,
+                             metric_name: 'review_turnaround')
+      end
+
+      it 'calls service' do
+        expect(Builders::Chartkick::LanguageData)
+          .to receive(:call)
+          .with(lang.id, any_args)
+        subject
+      end
+    end
+
+    context 'when querying metrics per project' do
+      let(:project) { create(:project) }
+      let(:subject) do
+        described_class.call(entity_name: 'project', entity_id: project.id,
+                             metric_name: 'review_turnaround')
+      end
+
+      it 'calls service' do
+        expect(Builders::Chartkick::ProjectData)
+          .to receive(:call)
+          .with(project.id, any_args)
+        subject
+      end
+    end
+
+    context 'when querying metrics per user project' do
+      let(:users_project) { create(:users_project) }
+      let(:subject) do
+        described_class.call(entity_name: 'users_project', entity_id: users_project.id,
+                             metric_name: 'review_turnaround')
+      end
+
+      it 'calls service' do
+        expect(Builders::Chartkick::UsersProjectData)
+          .to receive(:call)
+          .with(users_project.id, any_args)
+        subject
+      end
     end
   end
 end

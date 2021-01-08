@@ -7,15 +7,15 @@
       <div class="col-md-5 period-input">
         <%= render 'shared/interval-filter', form: f %>
       </div>
-      <div class="col-md-7">
-        <%= render 'development_metrics/code_climate/code_climate_project_summary', code_climate: @code_climate %>
-      </div>
     </div>
   <% end %>
 
   <% if @enabled_project_codeowners_section %>
     <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
   <% end %>
+  <div class="row">
+    <%= render 'development_metrics/code_climate/code_climate_project_summary', code_climate: @code_climate %>
+  </div>
   <% if @project %>
     <div class="metrics shadow-box">
       <h4 class="p-3">Time to second review</h4>
