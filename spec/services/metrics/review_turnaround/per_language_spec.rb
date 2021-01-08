@@ -15,14 +15,28 @@ RSpec.describe Metrics::ReviewTurnaround::PerLanguage do
     context 'when there are two project metrics with different languages' do
       before do
         projects.each do |project|
-          rr1 = create(:review_request, project: project)
-          rr2 = create(:review_request, project: project)
-          create(:completed_review_turnaround, review_request: rr1, value: 1.hour)
-          create(:completed_review_turnaround, review_request: rr2, value: 3.hours)
+          review_request1 = create(:review_request, project: project)
+          review_request2 = create(:review_request, project: project)
+          create(:completed_review_turnaround, review_request: review_request1, value: 1.hour)
+          create(:completed_review_turnaround, review_request: review_request2, value: 3.hours)
         end
       end
 
       it_behaves_like 'available metrics data'
+
+      context 'when interval is set' do
+        let(:subject) { described_class.call([ruby_lang.id, python_lang.id], interval) }
+
+        before do
+          projects.each do |project|
+            review_request = create(:review_request, project: project)
+            create(:completed_review_turnaround, review_request: review_request,
+                                                 value: 1.hour, created_at: 5.weeks.ago)
+          end
+        end
+
+        it_behaves_like 'metric value unchanged'
+      end
     end
 
     it_behaves_like 'unavailable metrics data'
