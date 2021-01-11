@@ -23,7 +23,7 @@ module CodeClimate
     end
 
     def ids_differ?
-      external_cc_repository_id.present? && local_cc_repository_id != external_cc_repository_id
+      local_cc_repository_id != external_cc_repository_id
     end
 
     def local_cc_repository_id
@@ -31,7 +31,7 @@ module CodeClimate
     end
 
     def external_cc_repository_id
-      @external_cc_repository_id ||= respository_by_slug.json['id']
+      @external_cc_repository_id ||= respository_by_slug&.json&.dig('id')
     end
 
     def respository_by_slug
