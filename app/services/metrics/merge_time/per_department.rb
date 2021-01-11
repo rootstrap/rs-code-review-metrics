@@ -1,24 +1,23 @@
 module Metrics
   module MergeTime
-    class PerDepartment < Metrics::BaseDevelopmentMetrics
+    class PerDepartment < Metrics::Base
       private
 
       def process
-        project_metrics_per_department.each do |department_id, merge_times_value|
-          create_or_update_metric(department_id, Department.name, merge_time_interval,
-                                  merge_times_value, :merge_time)
+        week_intervals.flat_map do |week|
+          interval = build_interval(week)
+          query(interval).map do |department_id, metric_value|
+            Metric.new(department_id, interval.first, metric_value)
+          end
         end
       end
 
-      def project_metrics_per_department
+      def query(interval)
         Department.joins(languages: { projects: { pull_requests: :merge_time } })
-                  .where(pull_requests: { merged_at: merge_time_interval })
+                  .where(pull_requests: { merged_at: interval })
+                  .where(id: @entity_id)
                   .group(:id)
                   .pluck(:id, Arel.sql('AVG(merge_times.value)'))
-      end
-
-      def merge_time_interval
-        @merge_time_interval ||= @interval || Time.zone.today.all_day
       end
     end
   end

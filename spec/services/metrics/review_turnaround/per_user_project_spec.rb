@@ -2,244 +2,39 @@ require 'rails_helper'
 
 RSpec.describe Metrics::ReviewTurnaround::PerUserProject do
   describe '.call' do
-    let(:user_project) { create(:users_project) }
-    let(:pull_request) { create(:pull_request, state: :open, project_id: user_project.project_id) }
-    let(:review_request) do
-      create(:review_request, pull_request: pull_request, reviewer_id: user_project.user_id)
-    end
-    let(:current_time) { Time.zone.now }
+    let(:ruby_lang)         { Language.find_by(name: 'ruby') }
+    let!(:project)          { create(:project, language: ruby_lang) }
+    let(:beginning_of_day)  { Time.zone.today.beginning_of_day }
+    let(:entity_type)       { 'UsersProject' }
+    let(:metric_name)       { :review_turnaround }
+    let(:metrics_number)    { 1 }
+    let(:user)              { create(:user) }
+    let(:subject)           { described_class.call(user.id) }
 
-    before { travel_to(Time.zone.today.beginning_of_day) }
-
-    context 'when processing a collection containing no review request events' do
-      it 'does not create a metric' do
-        expect { described_class.call }.not_to change { Metric.count }
-      end
-    end
-
-    context 'Generating metrics values' do
-      context 'when a review comment ocurred in a 30 minutes interval' do
-        let!(:review) do
-          create(:review,
-                 pull_request: pull_request,
-                 opened_at: 30.minutes.from_now(current_time),
-                 project: user_project.project,
-                 owner: review_request.reviewer)
-        end
-
-        it 'generates a metric with value expressed as decimal equal to 30 minutes' do
-          described_class.call
-          expect(Metric.last.value.seconds).to eq(30.minutes)
-        end
-
-        it 'generates only that metric' do
-          expect { described_class.call }.to change { Metric.count }.from(0).to(1)
-        end
+    context 'when there is available data' do
+      before do
+        review_request1 = create(:review_request, project: project, owner: user)
+        review_request2 = create(:review_request, project: project, owner: user)
+        create(:completed_review_turnaround, review_request: review_request1, value: 1.hour)
+        create(:completed_review_turnaround, review_request: review_request2, value: 3.hours)
+        create(:users_project, project: project, user: user)
       end
 
-      context 'when calculating the turnaround value' do
-        context 'and a user made more than one review in a pull request' do
-          let!(:review) do
-            create(:review,
-                   pull_request: pull_request,
-                   opened_at: current_time,
-                   project: user_project.project,
-                   owner: review_request.reviewer)
-          end
+      it_behaves_like 'available metrics data'
 
-          let!(:second_review) do
-            create(:review,
-                   pull_request: pull_request,
-                   opened_at: 2.hours.from_now(current_time),
-                   project: user_project.project,
-                   owner: review_request.reviewer)
-          end
+      context 'when interval is set' do
+        let(:subject) { described_class.call(user.id, interval) }
 
-          let!(:third_review) do
-            create(:review,
-                   pull_request: pull_request,
-                   opened_at: 4.hours.from_now(current_time),
-                   project: user_project.project,
-                   owner: review_request.reviewer)
-          end
-
-          it 'creates just one metric' do
-            expect { described_class.call }.to change { Metric.count }.from(0).to(1)
-          end
-
-          it 'creates one metric with the first review' do
-            described_class.call
-            expect(Metric.first.value.seconds).to eq(0.minutes)
-          end
+        before do
+          review_request = create(:review_request, project: project, owner: user)
+          create(:completed_review_turnaround, review_request: review_request,
+                                               value: 1.hour, created_at: 5.weeks.ago)
         end
+
+        it_behaves_like 'metric value unchanged'
       end
     end
 
-    context 'with a PR that has no reviews' do
-      it 'does not generate a metric' do
-        expect { described_class }.not_to change { Metric.count }
-      end
-    end
-
-    context 'when a user has reviews in more than one project' do
-      let(:same_user_for_second_project) { create(:users_project, user_id: user_project.user_id) }
-
-      let!(:review) do
-        create(:review,
-               pull_request: pull_request,
-               opened_at: 20.minutes.from_now(current_time),
-               project: user_project.project,
-               owner: review_request.reviewer)
-      end
-
-      let(:second_project_pull_request) do
-        create(:pull_request, state: :open, project_id: same_user_for_second_project.project_id)
-      end
-
-      let(:second_project_review_request) do
-        create(
-          :review_request,
-          pull_request: pull_request,
-          reviewer_id: same_user_for_second_project.user_id
-        )
-      end
-
-      let(:second_user_project) do
-        create(:users_project, user: second_project_review_request.reviewer)
-      end
-
-      let!(:second_project_review) do
-        create(:review,
-               pull_request: second_project_pull_request,
-               opened_at: 45.minutes.from_now(current_time),
-               project: second_user_project.project,
-               owner: second_project_review_request.reviewer)
-      end
-
-      before { described_class.call }
-
-      it 'it generates the metric for the first project' do
-        expect(Metric.first.value.seconds).to eq(20.minutes)
-      end
-
-      it 'it generates the metric for the second project' do
-        expect(Metric.second.value.seconds).to eq(45.minutes)
-      end
-    end
-
-    context 'when user has reviews in multiple pull requests' do
-      let!(:review) do
-        create(:review,
-               pull_request: pull_request,
-               project_id: user_project.project_id,
-               opened_at: 25.minutes.from_now(current_time),
-               owner: review_request.reviewer)
-      end
-
-      let(:second_pull_request) do
-        create(:pull_request, state: :open, project_id: user_project.project_id)
-      end
-
-      let!(:second_review) do
-        create(:review,
-               pull_request: second_pull_request,
-               project: user_project.project,
-               opened_at: 15.minutes.from_now(current_time),
-               owner: review_request.reviewer)
-      end
-
-      it 'generates one metric' do
-        expect { described_class.call }.to change { Metric.count }.from(0).to(1)
-      end
-
-      describe 'and has a review in another project' do
-        let(:second_user_project) do
-          create(:users_project, user: review_request.reviewer)
-        end
-
-        let(:third_pull_request) do
-          create(:pull_request, state: :open, project: second_user_project.project)
-        end
-
-        let!(:third_review) do
-          create(:review,
-                 pull_request: third_pull_request,
-                 project: second_user_project.project,
-                 opened_at: 35.minutes.from_now(current_time),
-                 owner: review_request.reviewer)
-        end
-
-        it 'generates two metrics' do
-          expect { described_class.call }.to change { Metric.count }.from(0).to(2)
-        end
-
-        it 'calculates average' do
-          described_class.call
-          metric = Metric.find_by!(ownable: user_project)
-          expect(metric.value).to eq(20.minutes)
-        end
-      end
-    end
-
-    context 'when transaction fails' do
-      let!(:review) do
-        create(:review,
-               pull_request: pull_request,
-               project_id: user_project.project_id,
-               opened_at: 25.minutes.from_now(current_time),
-               owner: review_request.reviewer)
-      end
-
-      let!(:project) { create :project }
-      let!(:second_project) { create :project }
-
-      let(:second_pull_request) do
-        create(:pull_request, state: :open, project_id: user_project.project_id)
-      end
-
-      let!(:review_with_invalid_user_project) do
-        create(:review,
-               pull_request: second_pull_request,
-               project_id: second_project.id,
-               opened_at: 25.minutes.from_now(current_time),
-               owner: review_request.reviewer)
-      end
-
-      it 'creates one metric and then rollbacks the transaction' do
-        suppress(NoMethodError) do
-          described_class.call
-        end
-
-        expect(Metric.count).to eq(0)
-      end
-    end
-
-    context 'when there are reviews from different user in the same pr' do
-      let!(:review) do
-        create(:review,
-               pull_request: pull_request,
-               project_id: user_project.project_id,
-               opened_at: 25.minutes.from_now(current_time),
-               owner: review_request.reviewer)
-      end
-      let!(:second_user_project) do
-        create(:users_project, user: create(:user), project_id: user_project.project_id)
-      end
-      let!(:second_review_request) do
-        create(:review_request, pull_request: pull_request,
-                                reviewer_id: second_user_project.user_id)
-      end
-      let!(:second_review) do
-        create(:review,
-               pull_request: pull_request,
-               project_id: user_project.project_id,
-               opened_at: 25.minutes.from_now(current_time),
-               owner: second_review_request.reviewer)
-      end
-
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.from(0).to(2)
-      end
-    end
+    it_behaves_like 'unavailable metrics data'
   end
 end

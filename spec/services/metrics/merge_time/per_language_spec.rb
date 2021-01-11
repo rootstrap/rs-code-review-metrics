@@ -2,92 +2,45 @@ require 'rails_helper'
 
 RSpec.describe Metrics::MergeTime::PerLanguage do
   describe '.call' do
-    before { travel_to(Time.zone.today.end_of_day) }
+    let(:ruby_lang)         { Language.find_by(name: 'ruby') }
+    let(:python_lang)       { Language.find_by(name: 'python') }
+    let!(:first_project)    { create(:project, language: ruby_lang) }
+    let!(:second_project)   { create(:project, language: python_lang) }
+    let(:projects)          { [first_project, second_project] }
+    let(:beginning_of_day)  { Time.zone.today.beginning_of_day }
+    let(:entity_type)       { 'Language' }
+    let(:metric_name)       { :merge_time }
+    let(:metrics_number)    { 2 }
+    let(:subject)           { described_class.call([ruby_lang.id, python_lang.id]) }
 
-    let(:ruby_lang)  { Language.find_by(name: 'ruby')  }
-    let(:react_lang) { Language.find_by(name: 'react') }
-    let!(:first_project)  { create(:project, language: ruby_lang)  }
-    let!(:second_project) { create(:project, language: react_lang) }
-    let(:beginning_of_day) { Time.zone.today.beginning_of_day }
-
-    context 'when there are two merged pull request with different languages' do
-      let!(:first_project_pull_request) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_project_pull_request) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
+    context 'when there is available data' do
       before do
-        first_project_pull_request.update!(merged_at: beginning_of_day + 1.hour)
-        second_project_pull_request.update!(merged_at: beginning_of_day + 2.hours)
+        projects.each do |project|
+          pull_request1 = create(:pull_request, project: project,
+                                                merged_at: beginning_of_day + 1.hour)
+          pull_request2 = create(:pull_request, project: project,
+                                                merged_at: beginning_of_day + 3.hours)
+          create(:merge_time, pull_request: pull_request1, value: 1.hour.seconds)
+          create(:merge_time, pull_request: pull_request2, value: 3.hours.seconds)
+        end
       end
 
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.by(2)
-      end
+      it_behaves_like 'available metrics data'
 
-      it 'saves one hour as value for merge time metric in ruby language' do
-        described_class.call
-        expect(ruby_lang.metrics.first.value.seconds).to eq(1.hour)
-      end
+      context 'when interval is set' do
+        let(:subject) { described_class.call([ruby_lang.id, python_lang.id], interval) }
 
-      it 'saves two hours as value for merge time metric in react language' do
-        described_class.call
-        expect(react_lang.metrics.first.value.seconds).to eq(2.hours)
+        before do
+          projects.each do |project|
+            pull_request = create(:pull_request, project: project, merged_at: 5.weeks.ago)
+            create(:merge_time, pull_request: pull_request, value: 1.hour.seconds)
+          end
+        end
+
+        it_behaves_like 'metric value unchanged'
       end
     end
 
-    context 'when there are two project metrics per language' do
-      let!(:first_pull_first_project) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_pull_first_project) do
-        create(:pull_request,
-               project: first_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:first_pull_second_project) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
-      let!(:second_pull_second_project) do
-        create(:pull_request,
-               project: second_project,
-               opened_at: beginning_of_day)
-      end
-
-      before do
-        first_pull_first_project.update!(merged_at: beginning_of_day + 30.minutes)
-        second_pull_first_project.update!(merged_at: beginning_of_day + 50.minutes)
-        first_pull_second_project.update!(merged_at: beginning_of_day + 10.minutes)
-        second_pull_second_project.update!(merged_at: beginning_of_day + 2.hours)
-      end
-
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.by(2)
-      end
-
-      it 'saves forty minutes as average for merge time ruby department' do
-        described_class.call
-        expect(ruby_lang.metrics.first.value.seconds).to eq(40.minutes)
-      end
-
-      it 'saves sixty five minutes as average for merge time react department' do
-        described_class.call
-        expect(react_lang.metrics.first.value.seconds).to eq(65.minutes)
-      end
-    end
+    it_behaves_like 'unavailable metrics data'
   end
 end

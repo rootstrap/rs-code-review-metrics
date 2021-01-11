@@ -2,45 +2,37 @@ require 'rails_helper'
 
 RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
   describe '.call' do
-    before { travel_to(Time.zone.today.beginning_of_day) }
+    let(:department)      { Department.find_by(name: 'backend') }
+    let(:ruby_lang)       { Language.find_by(name: 'ruby') }
+    let!(:project)        { create(:project, language: ruby_lang) }
+    let(:entity_type)     { 'Department' }
+    let(:metric_name)     { :review_turnaround }
+    let(:metrics_number)  { 1 }
+    let(:subject)         { described_class.call(department.id) }
 
-    let(:ruby_lang)  { Language.find_by(name: 'ruby')  }
-    let(:react_lang) { Language.find_by(name: 'react') }
-    let!(:first_project)  { create(:project, language: ruby_lang)  }
-    let!(:second_project) { create(:project, language: react_lang) }
-
-    context 'when there are two project metrics from different departments' do
+    context 'when there is available data' do
       before do
-        create(:metric, value: 30.minutes, ownable: first_project)
-        create(:metric, value: 25.minutes, ownable: second_project)
+        review_request1 = create(:review_request, project: project)
+        review_request2 = create(:review_request, project: project)
+        create(:completed_review_turnaround, review_request: review_request1, value: 1.hour)
+        create(:completed_review_turnaround, review_request: review_request2, value: 3.hours)
       end
 
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.from(2).to(4)
-      end
+      it_behaves_like 'available metrics data'
 
-      it 'should has value of 30 minutes' do
-        described_class.call
-        expect(Metric.third.value.seconds).to eq(30.minutes)
+      context 'when interval is set' do
+        let(:subject) { described_class.call(department.id, interval) }
+
+        before do
+          review_request = create(:review_request, project: project)
+          create(:completed_review_turnaround, review_request: review_request,
+                                               value: 1.hour, created_at: 5.weeks.ago)
+        end
+
+        it_behaves_like 'metric value unchanged'
       end
     end
 
-    context 'when there are two project metrics per department' do
-      before do
-        create(:metric, value: 15.minutes, ownable: first_project)
-        create(:metric, value: 25.minutes, ownable: first_project)
-        create(:metric, value: 45.minutes, ownable: second_project)
-        create(:metric, value: 15.minutes, ownable: second_project)
-      end
-
-      it 'creates two metrics' do
-        expect { described_class.call }.to change { Metric.count }.from(4).to(6)
-      end
-
-      it 'should has value of 20 minutes' do
-        described_class.call
-        expect(Metric.fifth.value.seconds).to eq(20.minutes)
-      end
-    end
+    it_behaves_like 'unavailable metrics data'
   end
 end
