@@ -550,7 +550,7 @@ CREATE TABLE public.external_projects (
     language_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    enabled boolean DEFAULT true
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -587,9 +587,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -832,7 +832,8 @@ CREATE TABLE public.pull_requests (
     project_id bigint,
     owner_id bigint,
     html_url character varying,
-    branch character varying
+    branch character varying,
+    size integer
 );
 
 
@@ -2303,10 +2304,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200929205630'),
 ('20201029141417'),
 ('20201102203739'),
-('20201130132325'),
-('20201130132521'),
-('20201130135001'),
 ('20201201184505'),
 ('20201201193101'),
 ('20201211133046'),
-('20201214192048');
+('20201214192048'),
+('20210115132729');
+
+
