@@ -12,6 +12,7 @@
 #  merged_at  :datetime
 #  number     :integer          not null
 #  opened_at  :datetime
+#  size       :integer
 #  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
