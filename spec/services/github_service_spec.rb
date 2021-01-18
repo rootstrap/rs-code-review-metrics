@@ -10,11 +10,13 @@ RSpec.describe GithubService do
       let(:merged) { false }
       let!(:event) { 'pull_request' }
       let(:project) { create(:project, github_id: payload['repository']['id']) }
+      let(:pr_size) { 10 }
       let(:pull_request) do
         create :pull_request,
                project: project,
                github_id: payload['pull_request']['id'],
-               number: payload['pull_request']['number']
+               number: payload['pull_request']['number'],
+               size: pr_size
       end
       let(:review_request) { create :review_request }
 
@@ -54,13 +56,8 @@ RSpec.describe GithubService do
         context 'and the pull request is not merged' do
           let(:merged) { false }
 
-          before { create(:pull_request_size, pull_request: pull_request) }
-
-          it 'deletes the pull request size metric from the pull request' do
-            expect { subject }
-              .to change { pull_request.reload.pull_request_size }
-              .from(PullRequestSize)
-              .to(nil)
+          it 'blanks the size value from the pull request' do
+            expect { subject }.to change { pull_request.reload.size }.from(pr_size).to(nil)
           end
         end
       end
@@ -122,13 +119,11 @@ RSpec.describe GithubService do
       end
 
       context 'when the action is edited' do
-        let!(:pull_request_size) { create(:pull_request_size, pull_request: pull_request) }
-
         context 'and the base branch changed' do
           let(:payload) { (create :full_pull_request_payload, :edited_base) }
 
           it 'updates the pull request size value' do
-            expect { subject }.to change { pull_request_size.reload.value }
+            expect { subject }.to change { pull_request.reload.size }
           end
         end
 
@@ -136,7 +131,7 @@ RSpec.describe GithubService do
           let(:payload) { (create :full_pull_request_payload, :edited) }
 
           it 'does not update the pull request size value' do
-            expect { subject }.not_to change { pull_request_size.reload.value }
+            expect { subject }.not_to change { pull_request.reload.size }
           end
         end
       end
@@ -267,8 +262,7 @@ RSpec.describe GithubService do
 
         it 'creates or updates the pull request size metric' do
           subject
-
-          expect(pull_request.pull_request_size.value).to eq(additions)
+          expect(pull_request.reload.size).to eq(additions)
         end
       end
     end

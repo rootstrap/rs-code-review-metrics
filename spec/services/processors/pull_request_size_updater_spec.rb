@@ -8,10 +8,10 @@ RSpec.describe Processors::PullRequestSizeUpdater do
 
     before { stub_pull_request_files_with_pr(pull_request, [pull_request_file_payload]) }
 
-    it 'creates or updates the pull request size metric of all pull requests' do
+    it 'updates the pull request size value of all pull requests' do
       described_class.call
 
-      expect(pull_request.pull_request_size.value).to eq(pr_size_value)
+      expect(pull_request.reload.size).to eq(pr_size_value)
     end
 
     context 'when a pull request file request fails' do
@@ -24,7 +24,8 @@ RSpec.describe Processors::PullRequestSizeUpdater do
       end
 
       it 'finishes processing all other pull requests' do
-        expect { described_class.call }.to change { PullRequestSize.count }.by(2)
+        expect { described_class.call }.to change { pull_request.reload.size }
+          .and change { successful_pull_request.reload.size }
       end
     end
   end

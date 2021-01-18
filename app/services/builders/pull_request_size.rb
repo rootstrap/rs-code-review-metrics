@@ -5,10 +5,8 @@ module Builders
     end
 
     def call
-      ::PullRequestSize.find_or_initialize_by(pull_request: pull_request).tap do |pr_size|
-        pr_size.value = calculate_size
-        pr_size.save!
-      end
+      value = PullRequestSizeCalculator.call(pull_request)
+      pull_request.update!(size: value)
     rescue Faraday::Error => exception
       track_request_error(exception)
     end
@@ -16,9 +14,5 @@ module Builders
     private
 
     attr_reader :pull_request
-
-    def calculate_size
-      PullRequestSizeCalculator.call(pull_request)
-    end
   end
 end

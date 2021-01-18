@@ -23,7 +23,7 @@ module ActionHandlers
       if @payload['pull_request']['merged']
         merged
       else
-        @entity.pull_request_size&.destroy!
+        @entity.update!(size: nil)
       end
 
       @entity.closed!
