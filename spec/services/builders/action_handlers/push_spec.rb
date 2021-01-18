@@ -14,10 +14,10 @@ RSpec.describe ActionHandlers::Push do
 
       before { stub_pull_request_files_with_pr(pull_request, [pull_request_file_payload]) }
 
-      it 'creates or updates its pull request size metric' do
+      it 'updates its pull request size value' do
         handle_action
 
-        expect(push.pull_request.pull_request_size.value).to eq(additions)
+        expect(push.pull_request.size).to eq(additions)
       end
     end
 

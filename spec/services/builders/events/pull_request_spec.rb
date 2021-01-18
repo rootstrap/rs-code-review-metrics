@@ -27,6 +27,7 @@ RSpec.describe Builders::Events::PullRequest do
         expect(built_pull_request.html_url).to eq(pull_request_payload['html_url'])
         expect(built_pull_request.opened_at).to eq(pull_request_payload['created_at'])
         expect(built_pull_request.branch).to eq(pull_request_payload['head']['ref'])
+        expect(built_pull_request.size).to be_present
       end
 
       it 'creates or assigns the correct references to it' do
@@ -34,7 +35,6 @@ RSpec.describe Builders::Events::PullRequest do
         expect(built_pull_request.project.github_id).to eq(repository_payload['id'])
         expect(built_pull_request.owner.github_id).to eq(user_payload['id'])
         expect(built_pull_request.owner.projects).to include(built_pull_request.project)
-        expect(built_pull_request.pull_request_size).to be_present
       end
     end
 
