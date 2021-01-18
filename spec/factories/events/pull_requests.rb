@@ -12,6 +12,7 @@
 #  merged_at  :datetime
 #  number     :integer          not null
 #  opened_at  :datetime
+#  size       :integer
 #  state      :enum
 #  title      :text             not null
 #  created_at :datetime         not null
@@ -42,6 +43,7 @@ FactoryBot.define do
     number { Faker::Number.number(digits: 1) }
     title { "Pull Request-#{Faker::Number.number(digits: 1)}" }
     node_id { "#{Faker::Alphanumeric.alphanumeric}=" }
+    size { Faker::Number.within(range: 0..10_000) }
     state { 'open' }
     html_url { 'https://github.com/Codertocat/Hello-World/pull/2' }
     opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }

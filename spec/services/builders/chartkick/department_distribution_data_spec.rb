@@ -49,8 +49,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
 
         before do
           sizes_values.each do |size_value|
-            pull_request = create(:pull_request, project: project, opened_at: Time.zone.now)
-            create(:pull_request_size, value: size_value, pull_request: pull_request)
+            create(:pull_request, project: project, opened_at: Time.zone.now, size: size_value)
           end
         end
 
@@ -61,8 +60,7 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionData do
         context 'when some pull requests have been created outside of the requested period' do
           before do
             old_timestamp = range.first.yesterday
-            pull_request = create(:pull_request, project: project, opened_at: old_timestamp)
-            create(:pull_request_size, value: 3, pull_request: pull_request)
+            create(:pull_request, project: project, opened_at: old_timestamp, size: 3)
           end
 
           it 'does not count them' do
