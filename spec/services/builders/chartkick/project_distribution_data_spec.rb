@@ -31,6 +31,12 @@ RSpec.describe Builders::Chartkick::ProjectDistributionData do
 
         it_behaves_like 'review turnaround data distribution'
       end
+
+      context 'when name is pull request size' do
+        let(:metric_name) { :pull_request_size }
+
+        it_behaves_like 'pull request size data distribution'
+      end
     end
   end
 end
