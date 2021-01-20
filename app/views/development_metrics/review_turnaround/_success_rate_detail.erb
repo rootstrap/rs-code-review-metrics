@@ -1,5 +1,5 @@
 <% if review_turnaround_success_rate.present? %>
-  <p>
+  <p class='alert alert-secondary'>
     Out of <%= review_turnaround_success_rate[:total] %> reviews,
     <%= review_turnaround_success_rate[:successful] %> were completed in the first
     <%= review_turnaround_success_rate[:metric_detail][:value] %> hours.

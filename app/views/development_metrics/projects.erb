@@ -40,6 +40,13 @@
         </div>
       <% end %>
     </div>
+
+    <div class="metrics shadow-box">
+      <h4 class="p-3">PR Size</h4>
+      <div class="graph">
+        <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+      </div>
+    </div>
   <% else %>
     <div class="row">
       <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
