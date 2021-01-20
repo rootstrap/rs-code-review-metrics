@@ -22,7 +22,7 @@ module Builders
         pull_request.owner = find_or_create_user(pull_request_data['user'])
         pull_request.project = Builders::Project.call(@payload['repository'])
         find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
-        pull_request.pull_request_size = Builders::PullRequestSize.call(pull_request)
+        pull_request.size = PullRequestSizeCalculator.call(pull_request)
       end
     end
   end
