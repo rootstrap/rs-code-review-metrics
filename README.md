@@ -22,6 +22,18 @@ This project comes with:
 ## Tasks
 - `rake code_climate:link` is run only to update projects' Code Climate repository ids.
 
+## Scheduled tasks
+- `blog_posts_partial_update` runs at 04:00 every Wednesday.
+- `blog_posts_full_update` runs at 02:00 on day-of-month 1.
+- `blog_metrics_partial_update` runs at 04:30.
+- `blog_metrics_full_update` runs at 03:00 on day-of-month 1.
+- `code_owners_list` runs at 23:00 on every day-of-week from Monday through Friday.
+- `code_climate_metrics_update` runs at minute 0.
+- `open_source_metrics_update` runs at 06:00.
+- `external_contributions_processor` runs at 05:00 on every day-of-week from Monday through Friday.
+- `organization_members_updater` runs at 05:00 on every day-of-week from Monday through Friday.
+- `send_open_source_notification` runs at 10:00 every Friday.
+
 ## Settings
 
 ### Success Rates Department Settings
