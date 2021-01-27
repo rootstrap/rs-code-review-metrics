@@ -380,6 +380,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
+    slack-notifier (2.3.2)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -477,6 +478,7 @@ DEPENDENCIES
   sidekiq-cron (~> 1.1)
   simple_form (~> 5.0, >= 5.0.2)
   simplecov
+  slack-notifier (~> 2.3, >= 2.3.2)
   spring
   spring-watcher-listen (~> 2.0.0)
   stub_env (~> 1.0)

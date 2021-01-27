@@ -47,3 +47,8 @@ organization_members_updater:
   cron: '00 5 * * 1-5'
   class: 'OrgUsersUpdaterJob'
   active_job: true
+
+send_open_source_notification:
+  cron: '00 10 * * 5'
+  class: 'OpenSourceSlackJob'
+  active_job: true
