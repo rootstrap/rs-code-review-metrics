@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   authenticate :admin_user do
     ExceptionHunter.routes(self)
   end
-  ActiveAdmin.routes(self)
+  ActiveAdmin.routes(self)  rescue ActiveAdmin::DatabaseHitDuringLoad
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'
   resources :development_metrics, only: [] do
