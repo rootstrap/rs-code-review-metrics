@@ -1,11 +1,6 @@
-blog_posts_partial_update:
-  cron: '00 4 * * 3'
-  class: 'BlogPostsPartialUpdaterJob'
-  active_job: true
-
-blog_posts_full_update:
-  cron: '00 2 1 * *'
-  class: 'BlogPostsFullUpdaterJob'
+blog_metrics_full_update:
+  cron: '00 3 1 * *'
+  class: 'BlogMetricsFullUpdaterJob'
   active_job: true
 
 blog_metrics_partial_update:
@@ -13,14 +8,14 @@ blog_metrics_partial_update:
   class: 'BlogMetricsPartialUpdaterJob'
   active_job: true
 
-blog_metrics_full_update:
-  cron: '00 3 1 * *'
-  class: 'BlogMetricsFullUpdaterJob'
+blog_posts_full_update:
+  cron: '00 2 1 * *'
+  class: 'BlogPostsFullUpdaterJob'
   active_job: true
 
-code_owners_list:
-  cron: '00 23 * * 1-5'
-  class: 'CodeOwnersListJob'
+blog_posts_partial_update:
+  cron: '00 4 * * 3'
+  class: 'BlogPostsPartialUpdaterJob'
   active_job: true
 
 code_climate_metrics_update:
@@ -28,14 +23,9 @@ code_climate_metrics_update:
   class: 'CodeClimateMetricsUpdaterJob'
   active_job: true
 
-projects_update:
-  cron: '30 5 * * 6'
-  class: 'ProjectsImporterJob'
-  active_job: true
-
-open_source_metrics_update:
-  cron: '00 6 * * *'
-  class: 'OpenSourceMetricsUpdaterJob'
+code_owners_list:
+  cron: '00 23 * * 1-5'
+  class: 'CodeOwnersListJob'
   active_job: true
 
 external_contributions_processor:
@@ -43,9 +33,24 @@ external_contributions_processor:
   class: 'ExternalContributionsProcessorJob'
   active_job: true
 
+jira_defect_metrics_updater:
+  cron: '00 6 * * 1-5'
+  class: 'JiraDefectMetricsUpdaterJob'
+  active_job: true
+
+open_source_metrics_update:
+  cron: '00 6 * * *'
+  class: 'OpenSourceMetricsUpdaterJob'
+  active_job: true
+
 organization_members_updater:
   cron: '00 5 * * 1-5'
   class: 'OrgUsersUpdaterJob'
+  active_job: true
+
+projects_update:
+  cron: '30 5 * * 6'
+  class: 'ProjectsImporterJob'
   active_job: true
 
 send_open_source_notification:
