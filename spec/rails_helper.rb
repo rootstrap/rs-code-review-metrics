@@ -85,6 +85,7 @@ RSpec.configure do |config|
 
   config.include WordpressApiMocker
   config.include GithubApiMock
+  config.include JiraApiMock
   config.include CodeClimateApiMocker
   config.include SlackApiMocker
 end
