@@ -34,6 +34,7 @@ RSpec.describe Project, type: :model do
 
     it { is_expected.to validate_uniqueness_of(:github_id) }
     it { is_expected.to have_many(:events) }
+    it { is_expected.to have_one(:jira_project) }
   end
 
   describe '#open_source' do
