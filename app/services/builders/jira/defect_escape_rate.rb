@@ -1,10 +1,9 @@
 module Builders
   module Jira
     class DefectEscapeRate < BaseService
-      def initialize(jira_project_name:, from:, to:)
+      def initialize(jira_project_name:, from:)
         @jira_project_name = jira_project_name
-        @from = from
-        @to = to
+        @from = from.to_i
       end
 
       def call
@@ -19,7 +18,7 @@ module Builders
       private
 
       def bugs_for_range
-        @bugs_for_range ||= JiraIssue.where(informed_at: from..to).bugs.for_project(jira_project_name)
+        @bugs_for_range ||= JiraIssue.where(informed_at: from.weeks.ago..to).bugs.for_project(jira_project_name)
       end
 
       def hash_of_arrays
