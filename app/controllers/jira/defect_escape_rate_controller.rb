@@ -6,8 +6,7 @@ module Jira
     def index
       @bugs ||= Builders::Jira::DefectEscapeRate.call(
         jira_project_name: defect_escape_rate_params[:project_name],
-        from: defect_escape_rate_params[:from].to_s,
-        to: defect_escape_rate_params[:to].to_s
+        from: defect_escape_rate_params[:period]
       )
       @total_bugs = @bugs.values.flatten.count
       @user_environments_bugs = @bugs['production'].count + @bugs['staging'].count
@@ -19,7 +18,7 @@ module Jira
     private
 
     def defect_escape_rate_params
-      params.permit(:project_name, :from, :to)
+      params.permit(:project_name, :period)
     end
   end
 end
