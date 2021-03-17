@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe JiraClient::Repository do
-  subject { described_class.new.bugs }
+  let(:project_key) { 'TES' }
+  let(:jira_project) { create(:jira_project, jira_project_key: project_key) }
+
+  subject { described_class.new(jira_project).bugs }
 
   describe 'bugs' do
-    before { stub_get_bugs_ok(payload) }
+    before { stub_get_bugs_ok(payload, project_key) }
 
     let(:payload) { { issues: bugs } }
     let(:bugs) { [] }
@@ -21,10 +24,6 @@ RSpec.describe JiraClient::Repository do
           {
             "key": "TES-4",
             "fields": {
-              "project": {
-                "key": "TES",
-                "name": "TestingAPI",
-              },
               "customfield_10000": {
                 "value": "Production",
               },
@@ -40,7 +39,7 @@ RSpec.describe JiraClient::Repository do
     end
 
     context 'when the request fails for unauthorized user' do
-      before { stub_failed_authentication }
+      before { stub_failed_authentication(project_key) }
 
       it 'notifies the error to exception hunter' do
         expect(ExceptionHunter).to receive(:track).with(Faraday::ForbiddenError)
