@@ -6,6 +6,7 @@
 #  environment     :enum
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null
+#  key             :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  jira_project_id :bigint           not null
@@ -21,12 +22,15 @@
 
 class JiraIssue < ApplicationRecord
   enum issue_types: { bug: 'bug', task: 'task', epic: 'epic', story: 'story' }
-  enum environments: { no_env: 'none', na: 'n/a', local: 'local', development: 'development', qa: 'qa', staging: 'staging', production: 'production' }
+  enum environments: { no_env: 'none', n_a: 'n_a', local: 'local', development: 'development', qa: 'qa', staging: 'staging', production: 'production' }
 
   belongs_to :jira_project
 
   validates :informed_at, presence: true
   validates :issue_type, presence: true
   validates :issue_type, inclusion: { in: issue_types.keys }
-  validates :issue_type, inclusion: { in: issue_types.keys }
+  validates :environment, inclusion: { in: environments.keys }
+
+  scope :bugs, -> { where(issue_type: 'bug') }
+  scope :for_project, ->(project_name) { joins(:jira_project).where(jira_projects: { project_name: project_name }) }
 end
