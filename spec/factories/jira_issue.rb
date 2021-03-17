@@ -6,6 +6,9 @@
 #  environment     :enum
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null
+#  key             :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #  jira_project_id :bigint           not null
 #
 # Indexes
@@ -19,10 +22,31 @@
 
 FactoryBot.define do
   factory :jira_issue do
-    informed_at { Faker::Date.between(from: 2.days.ago, to: Date.today) }
+
+    informed_at { Faker::Date.between(from: 1.month.ago, to: Date.today) }
     sequence(:issue_type) { |n| %w[bug task story epic][n % 4] }
-    sequence(:environment) { |n| %w[no_env n/a local development qa staging production][n % 7] }
+    sequence(:environment) { |n| %w[no_env n_a local development qa staging production][n % 7] }
 
     association :jira_project
+
+    trait :bug do
+      issue_type { 'bug' }
+    end
+
+    trait :production do
+      environment { 'production' }
+    end
+
+    trait :qa do
+      environment { 'qa' }
+    end
+
+    trait :staging do
+      environment { 'staging' }
+    end
+
+    after(:build) do |jira_issue|
+      jira_issue.key { "#{jira_issue.jira_project.jira_project_key}-#{Faker::Number.digits(3)}" }
+    end
   end
 end

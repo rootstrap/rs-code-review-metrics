@@ -682,7 +682,8 @@ CREATE TABLE public.jira_issues (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     issue_type public.issue_type NOT NULL,
-    environment public.environment
+    environment public.environment,
+    key character varying
 );
 
 
@@ -2403,6 +2404,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210115132729'),
 ('20210118145940'),
 ('20210315154031'),
-('20210316150725');
+('20210316150725'),
+('20210317024356');
 
 

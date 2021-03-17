@@ -4,15 +4,18 @@
 #
 #  id               :bigint           not null, primary key
 #  jira_project_key :string           not null
-#  projects_id      :bigint           not null
+#  project_name     :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  project_id       :bigint
 #
 # Indexes
 #
-#  index_jira_projects_on_projects_id  (projects_id)
+#  index_jira_projects_on_project_id  (project_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (projects_id => projects.id)
+#  fk_rails_...  (project_id => projects.id)
 #
 
 FactoryBot.define do
