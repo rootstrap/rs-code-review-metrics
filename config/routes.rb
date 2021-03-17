@@ -37,11 +37,15 @@ Rails.application.routes.draw do
       resources :users, only: [] do
         collection do
           resources :external_pull_requests, only: :index,
-                                             controller: 'users/external_pull_requests'
+                    controller: 'users/external_pull_requests'
         end
       end
     end
   end
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
+  namespace :jira do
+    resources :defect_escape_rate, only: :index
+  end
 end
+
