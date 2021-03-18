@@ -39,8 +39,7 @@ CREATE TYPE public.department_name AS ENUM (
 --
 
 CREATE TYPE public.environment AS ENUM (
-    'none',
-    'n/a',
+    'not_assigned',
     'local',
     'development',
     'qa',
@@ -111,7 +110,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'blog_visits',
     'merge_time',
     'blog_post_count',
-    'open_source_visits'
+    'open_source_visits',
+    'defect_escape_rate'
 );
 
 
@@ -2405,6 +2405,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210118145940'),
 ('20210315154031'),
 ('20210316150725'),
-('20210317024356');
+('20210317024356'),
+('20210318034939');
 
 
