@@ -37,6 +37,7 @@ class DevelopmentMetricsController < ApplicationController
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
+    @defect_escape_rate = metrics[:defect_escape_rate]
   end
 
   def project

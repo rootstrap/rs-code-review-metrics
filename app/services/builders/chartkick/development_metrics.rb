@@ -38,7 +38,8 @@ module Builders
           {
             review_turnaround: %w[project users_project project_distribution],
             merge_time: %w[project users_project project_distribution],
-            pull_request_size: %w[project_distribution]
+            pull_request_size: %w[project_distribution],
+            defect_escape_rate: %w[defect_escape_rate defect_escape_values]
           }
         end
       end
