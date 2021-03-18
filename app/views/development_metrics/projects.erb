@@ -47,6 +47,13 @@
         <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
       </div>
     </div>
+
+    <div class="metrics shadow-box">
+      <h4 class="p-3">Defect Escape Rate</h4>
+      <div class="graph">
+        <%= render 'development_metrics/defect_escape_rate/main_metric', defect_escape_rate: @defect_escape_rate %>
+      </div>
+    </div>
   <% else %>
     <div class="row">
       <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">

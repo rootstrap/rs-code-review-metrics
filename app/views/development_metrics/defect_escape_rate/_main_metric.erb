@@ -1,0 +1,9 @@
+<%= render partial: 'development_metrics/defect_escape_rate/line-chart',
+           locals: {
+             metric_name: '',
+             metric: defect_escape_rate[:per_defect_escape_rate]
+           } if defect_escape_rate && defect_escape_rate[:per_defect_escape_rate] %>
+<%= render partial: 'development_metrics/defect_escape_rate/values_details',
+           locals: {
+             metric: defect_escape_rate[:per_defect_escape_values].first[:data],
+           } if defect_escape_rate && defect_escape_rate[:per_defect_escape_values] %>

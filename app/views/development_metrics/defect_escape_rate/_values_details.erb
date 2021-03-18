@@ -1,0 +1,33 @@
+<div class="summary col-md-4">
+  <div class="container p-4">
+    <h3>Summary</h3>
+    <hr>
+    <% if metric -%>
+      <div class="item-list">
+        <div>
+          <h5>Overall Defect Escape Rate:</h5>
+          <span class="text-primary">
+                <h2>
+                  <%= metric[:rate] %> %
+                </h2>
+              </span>
+        </div>
+      </div>
+      <hr>
+      <div>
+        <h5>Bugs by environment:</h5>
+        <% metric[:values].each do |metric| %>
+          <div class="item-list">
+            <%= metric.first.to_s.capitalize %>:
+              <%= metric.second.to_s %>
+          </div>
+          <div></div>
+        <% end %>
+      </div>
+    <% else -%>
+      <div class="col-md-12 text-center mt-2">
+        <span class="text-danger">No information available</span>
+      </div>
+    <% end -%>
+  </div>
+</div>
