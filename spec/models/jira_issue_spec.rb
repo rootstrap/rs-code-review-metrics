@@ -36,4 +36,13 @@ RSpec.describe JiraIssue, type: :model do
     it { is_expected.to validate_inclusion_of(:issue_type).in_array(JiraIssue::issue_types.keys) }
     it { is_expected.to validate_inclusion_of(:environment).in_array(JiraIssue::environments.keys) }
   end
+
+  describe 'bugs' do
+    let!(:epic_issue) { create(:jira_issue, issue_type: 'epic' )}
+    let!(:bug_issue) { create(:jira_issue, issue_type: 'bug' )}
+
+    it 'returns the issues with a bug type' do
+      expect(JiraIssue.bugs).to contain_exactly(bug_issue)
+    end
+  end
 end

@@ -25,7 +25,7 @@ FactoryBot.define do
 
     informed_at { Faker::Date.between(from: 1.month.ago, to: Date.today) }
     sequence(:issue_type) { |n| %w[bug task story epic][n % 4] }
-    sequence(:environment) { |n| %w[no_env n_a local development qa staging production][n % 7] }
+    sequence(:environment) { |n| %w[not_assigned local development qa staging production][n % 7] }
 
     association :jira_project
 

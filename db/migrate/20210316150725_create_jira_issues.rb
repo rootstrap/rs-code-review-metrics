@@ -2,7 +2,7 @@ class CreateJiraIssues < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       CREATE TYPE issue_type AS ENUM ('bug', 'task', 'epic', 'story');
-      CREATE TYPE environment AS ENUM ('none', 'n/a', 'local', 'development', 'qa', 'staging', 'production');
+      CREATE TYPE environment AS ENUM ('not_assigned', 'local', 'development', 'qa', 'staging', 'production');
     SQL
 
     create_table :jira_issues do |t|
