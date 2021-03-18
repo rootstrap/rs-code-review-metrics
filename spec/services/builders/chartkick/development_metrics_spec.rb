@@ -7,7 +7,7 @@ RSpec.describe Builders::Chartkick::DevelopmentMetrics do
     let(:period) { 4 }
     let(:review_turnaround_entities) { %i[per_project per_users_project per_project_distribution] }
     let(:merge_time_entities) { %i[per_project per_users_project per_project_distribution] }
-    let(:defect_escape_rate_entities) { %i[per_project] }
+    let(:defect_escape_rate_entities) { %i[per_defect_escape_rate per_defect_escape_values] }
 
     describe '.call' do
       it 'returns a hash with the right data per entity for each metric' do
