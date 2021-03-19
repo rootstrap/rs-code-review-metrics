@@ -32,5 +32,4 @@ class JiraIssue < ApplicationRecord
   validates :environment, inclusion: { in: environments.keys }
 
   scope :bugs, -> { where(issue_type: 'bug') }
-  scope :for_project, ->(project_name) { joins(:jira_project).where(jira_projects: { project_name: project_name }) }
 end
