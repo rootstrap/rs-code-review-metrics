@@ -7,8 +7,8 @@ module Processors
     private
 
     def update_jira_bugs
-      JiraProject.each do |jira_project|
-        JiraProjectDefectEscapeRateUpdater.new(jira_project).call
+      JiraProject.find_each do |jira_project|
+        JiraProjectDefectEscapeRateUpdater.call(jira_project)
       end
     end
   end

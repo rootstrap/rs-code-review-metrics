@@ -37,7 +37,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
 
       it 'returns status ok' do
         allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
-        allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
+
         get :index, params: params
 
         assert_response :success

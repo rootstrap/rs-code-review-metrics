@@ -2,7 +2,7 @@
   <div class="container p-4">
     <h3>Summary</h3>
     <hr>
-    <% if metric -%>
+    <% if metric && metric[:rate] -%>
       <div class="item-list">
         <div>
           <h5>Overall Defect Escape Rate:</h5>
@@ -26,7 +26,7 @@
       </div>
     <% else -%>
       <div class="col-md-12 text-center mt-2">
-        <span class="text-danger">No information available</span>
+        <span class="text-danger">No bugs reported on this period</span>
       </div>
     <% end -%>
   </div>
