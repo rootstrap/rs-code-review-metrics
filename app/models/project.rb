@@ -113,6 +113,10 @@ class Project < ApplicationRecord
     ENV['GITHUB_ORGANIZATION']
   end
 
+  def jira_key
+    jira_project&.jira_project_key
+  end
+
   private
 
   def set_default_language
