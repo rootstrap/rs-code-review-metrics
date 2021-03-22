@@ -6,12 +6,13 @@ module Processors
 
     def call
       bugs_to_update.each do |bug|
-        bug_fields = bug['fields']
+        bug.deep_symbolize_keys!
+        bug_fields = bug[:fields]
         JiraIssue.find_or_create_by!(
-          key: bug['key'],
-          jira_project: jira_project,
-          informed_at: bug_fields['created'],
-          environment: bug_fields[ENV['JIRA_ENVIRONMENT_FIELD']]['value'],
+          key: bug[:key],
+          jira_project: @jira_project,
+          informed_at: bug_fields[:created],
+          environment: bug_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym][:value],
           issue_type: 'bug'
         )
       end
@@ -20,7 +21,7 @@ module Processors
     private
 
     def bugs_to_update
-      JiraClient::Repository.new(jira_project).bugs
+      JiraClient::Repository.new(@jira_project).bugs
     end
   end
 end

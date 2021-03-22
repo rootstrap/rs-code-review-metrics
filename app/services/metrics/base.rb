@@ -30,7 +30,7 @@ module Metrics
 
       return first.beginning_of_day..first.end_of_day if first == last
 
-      first..last
+      first..last.end_of_day
     end
 
     def find_user_project(user_id, project_id)
