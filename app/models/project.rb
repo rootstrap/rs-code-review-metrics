@@ -49,7 +49,7 @@ class Project < ApplicationRecord
            source: :user
 
   has_one :code_climate_project_metric, dependent: :destroy
-  has_one :jira_project
+  has_one :jira_project, dependent: :destroy
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }

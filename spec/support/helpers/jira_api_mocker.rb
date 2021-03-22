@@ -2,7 +2,10 @@ module JiraApiMock
   def stub_get_bugs_ok(payload, jira_project_key)
     stub_envs
 
-    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}/jira/rest/api/2/search?jql=project=#{jira_project_key}%20AND%20issuetype=Bug&fields=#{ENV['JIRA_ENVIRONMENT_FIELD']},created")
+    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}/jira/rest/api/2/search?jql=\
+                        project=#{jira_project_key}%20AND%20\
+                        issuetype=Bug&\
+                        fields=#{ENV['JIRA_ENVIRONMENT_FIELD']},created")
       .to_return(
         body: JSON.generate(payload),
         status: 200
@@ -12,7 +15,10 @@ module JiraApiMock
   def stub_failed_authentication(jira_project_key)
     stub_envs
 
-    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}/jira/rest/api/2/search?jql=project=#{jira_project_key}%20AND%20issuetype=Bug&fields=#{ENV['JIRA_ENVIRONMENT_FIELD']},created")
+    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}/jira/rest/api/2/search?jql=\
+                        project=#{jira_project_key}%20AND%20\
+                        issuetype=Bug&\
+                        fields=#{ENV['JIRA_ENVIRONMENT_FIELD']},created")
       .to_raise(Faraday::ForbiddenError, 'Unauthorized user')
   end
 
@@ -40,5 +46,4 @@ module JiraApiMock
   def jira_root_url
     'http://localhost:2990'
   end
-
 end

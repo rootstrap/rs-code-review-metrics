@@ -24,4 +24,3 @@ class CreateJiraIssues < ActiveRecord::Migration[6.0]
     SQL
   end
 end
-
