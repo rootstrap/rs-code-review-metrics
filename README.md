@@ -31,7 +31,7 @@ brew services start redis
 
 2. You'll need SUPERUSER permissions on postgresql for the defined user.
 
-Either assign superuser permissions to `postrges` or update the env vars: `GITHUB_ANALYZER_USERNAME` and `GITHUB_ANALYZER_PASSWORD`
+Either assign superuser permissions to `postgres` or update the env vars: `GITHUB_ANALYZER_USERNAME` and `GITHUB_ANALYZER_PASSWORD`
 ## Tasks
 - `rake code_climate:link` is run only to update projects' Code Climate repository ids.
 
