@@ -16,13 +16,20 @@ module Metrics
         project = JiraProject.find_by!(project_id: @entity_id)
         bug_issues = project.jira_issues.bugs.where(informed_at: interval)
         return [] if bug_issues.empty?
-        defect_rate = bug_issues.where(environment: ['staging', 'production']).count * 100 / bug_issues.count
-        [[@entity_id, { defect_rate: defect_rate, bugs_by_environment: bugs_by_environment(bug_issues) }]]
+
+        defect_rate = bug_issues
+                      .where(environment: %w[staging production]).count * 100 / bug_issues.count
+        [[
+          @entity_id, {
+            defect_rate: defect_rate,
+            bugs_by_environment: bugs_by_environment(bug_issues)
+          }
+        ]]
       end
 
       def bugs_by_environment(bug_issues)
-        bug_issues.inject({}) do |result, bug|
-          result[bug.environment] =+ 1; result
+        bug_issues.each_with_object({}) do |bug, result|
+          result[bug.environment] = +1
         end
       end
     end

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Builders::Chartkick::DefectEscapeValueData do
-  subject{ described_class.send(:new, 1, '') }
+  subject { described_class.send(:new, 1, '') }
 
   describe '.build_data' do
     context 'for a given set of metrics' do
       let(:yesterday) { Date.yesterday }
       let(:formatted_yesterday) { yesterday.strftime('%Y-%m-%d') }
       let(:yesterday_defect_rate) { 100 }
-      let(:today) { Date.today }
+      let(:today) { Time.zone.today }
       let(:today_defect_rate) { 50 }
       let(:formatted_today) { today.strftime('%Y-%m-%d') }
       let(:value_for_yesterday) do

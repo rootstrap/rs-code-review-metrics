@@ -40,7 +40,9 @@ module Builders
             merge_time: %w[project users_project project_distribution],
             pull_request_size: %w[project_distribution]
           }
-          metrics.merge!(defect_escape_rate_entities) if project_has_jira_board_associated?(@entity_id)
+          if project_has_jira_board_associated?(@entity_id)
+            metrics.merge!(defect_escape_rate_entities)
+          end
           metrics
         end
 

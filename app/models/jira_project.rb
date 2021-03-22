@@ -21,7 +21,7 @@
 class JiraProject < ApplicationRecord
   belongs_to :project
 
-  has_many :jira_issues
+  has_many :jira_issues, dependent: :destroy
 
   validates :jira_project_key, presence: true, uniqueness: true
 end

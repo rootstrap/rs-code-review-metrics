@@ -6,11 +6,12 @@ module Processors
 
     def call
       bugs_to_update.each do |bug|
+        bug_fields = bug['fields']
         JiraIssue.find_or_create_by!(
           key: bug['key'],
           jira_project: jira_project,
-          informed_at: bug['fields']['created'],
-          environment: bug['fields'][ENV['JIRA_ENVIRONMENT_FIELD']]['value'],
+          informed_at: bug_fields['created'],
+          environment: bug_fields[ENV['JIRA_ENVIRONMENT_FIELD']]['value'],
           issue_type: 'bug'
         )
       end

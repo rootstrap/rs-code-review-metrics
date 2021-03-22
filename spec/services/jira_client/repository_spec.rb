@@ -22,12 +22,12 @@ RSpec.describe JiraClient::Repository do
       let(:bugs) do
         [
           {
-            "key": "TES-4",
+            "key": 'TES-4',
             "fields": {
               "customfield_10000": {
-                "value": "Production",
+                "value": 'Production'
               },
-              "created": "2021-03-14T15:48:04.000-0300"
+              "created": '2021-03-14T15:48:04.000-0300'
             }
           }
         ]
