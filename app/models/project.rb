@@ -50,6 +50,7 @@ class Project < ApplicationRecord
 
   has_one :code_climate_project_metric, dependent: :destroy
   has_one :jira_project, dependent: :destroy
+  accepts_nested_attributes_for :jira_project
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
