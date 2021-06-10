@@ -23,7 +23,7 @@ RSpec.describe GithubClient::PullRequest do
   end
 
   describe '#files' do
-    let(:project) { create(:project) }
+    let(:project) { create(:project, name: 'MyProject') }
     let(:pull_request) { create(:pull_request, project: project) }
     let(:pull_request_file_payload) { create(:pull_request_file_payload) }
 
