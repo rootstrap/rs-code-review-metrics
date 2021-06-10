@@ -19,6 +19,19 @@ This project comes with:
 1. `rspec` and make sure all tests pass
 1. `rails s`
 
+**IMPORTANT: At the moment of running the tests**
+
+1. You will need to have redis installed.
+
+On Mac:
+```
+brew install redis
+brew services start redis
+```
+
+2. You'll need SUPERUSER permissions on postgresql for the defined user.
+
+Either assign superuser permissions to `postgres` or update the env vars: `GITHUB_ANALYZER_USERNAME` and `GITHUB_ANALYZER_PASSWORD`
 ## Tasks
 - `rake code_climate:link` is run only to update projects' Code Climate repository ids.
 
