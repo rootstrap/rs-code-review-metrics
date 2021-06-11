@@ -9,7 +9,7 @@ ActiveAdmin.register Event do
   end
 
   filter :name
-  filter :project, collection: Project.order('LOWER(name)')
+  filter :project, collection: -> { Project.order('LOWER(name)') }
   filter :handleable_type
   filter :created_at
   filter :updated_at

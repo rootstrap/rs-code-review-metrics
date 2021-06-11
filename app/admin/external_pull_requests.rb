@@ -17,8 +17,8 @@ ActiveAdmin.register ExternalPullRequest do
     actions
   end
 
-  filter :external_project, collection: ExternalProject.order('LOWER(name)')
-  filter :owner, collection: User.order('LOWER(login)')
+  filter :external_project, collection: -> { ExternalProject.order('LOWER(name)') }
+  filter :owner, collection: -> { User.order('LOWER(login)') }
   filter :state, as: :select, collection: ExternalPullRequest.states.values
   filter :github_id, label: 'GITHUB ID'
   filter :number
