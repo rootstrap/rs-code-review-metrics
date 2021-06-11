@@ -18,9 +18,9 @@ ActiveAdmin.register Project do
   filter :is_private
   filter :github_id, label: 'GITHUB ID'
   filter :relevance, as: :select, collection: Project.relevances.values
-  filter :language, as: :select, collection: Language.order('LOWER(name)')
-  filter :users, collection: User.order('LOWER(login)')
-  filter :code_owners, collection: User.order('LOWER(login)')
+  filter :language, as: :select, collection: -> { Language.order('LOWER(name)') }
+  filter :users, collection: -> { User.order('LOWER(login)') }
+  filter :code_owners, collection: -> { User.order('LOWER(login)') }
   filter :created_at
   filter :updated_at
 
