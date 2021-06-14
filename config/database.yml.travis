@@ -1,3 +1,0 @@
-test:
-  adapter: postgresql
-  database: code_review_metrics_travis

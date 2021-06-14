@@ -62,7 +62,7 @@ gem 'groupdate', '~> 5.0'
 gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
 
 group :development, :test do
-  gem 'brakeman', '~> 4.7', '>= 4.7.2'
+  gem 'brakeman', '~> 5.0.0'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'colorize', '~> 0.8.1'
@@ -88,6 +88,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
+  gem 'fakeredis', '~> 0.8.0', require: 'fakeredis/rspec'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'rails-controller-testing'
