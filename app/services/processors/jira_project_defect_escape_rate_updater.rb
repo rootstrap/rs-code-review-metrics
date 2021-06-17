@@ -8,11 +8,16 @@ module Processors
       bugs_to_update.each do |bug|
         bug.deep_symbolize_keys!
         bug_fields = bug[:fields]
-        JiraIssue.find_or_create_by!(
+        environment_field = bug_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym]
+
+        issue = JiraIssue.find_or_initialize_by(
           key: bug[:key],
-          jira_project: @jira_project,
+          jira_project_id: @jira_project.id
+        )
+
+        issue.update!(
           informed_at: bug_fields[:created],
-          environment: bug_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym][:value],
+          environment: environment_field ? environment_field[:value] : nil,
           issue_type: 'bug'
         )
       end

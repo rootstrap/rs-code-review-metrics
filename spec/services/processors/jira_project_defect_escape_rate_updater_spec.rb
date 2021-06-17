@@ -3,26 +3,25 @@ require 'rails_helper'
 RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
   describe '#call' do
     let(:project) { create(:project) }
-    let!(:jira_project) { create(:jira_project, project: project) }
+    let(:project_key) { 'TES' }
+    let!(:jira_project) { create(:jira_project, project: project, jira_project_key: project_key) }
     let(:subject) { described_class.call(jira_project) }
     let(:bugs) do
       [
         {
-          key: 'TES-4',
-          fields: {
-            customfield_10000: {
-              value: 'production'
+          'key': 'TES-4',
+          'fields': {
+            'customfield': {
+              'value': 'production'
             },
-            created: '2021-03-14T15:48:04.000-0300'
+            'created': '2021-03-14T15:48:04.000-0300'
           }
         }
       ]
     end
+    let(:payload) { { issues: bugs } }
 
-    before do
-      allow_any_instance_of(JiraClient::Repository).to receive(:bugs).and_return(bugs)
-      stub_env('JIRA_ENVIRONMENT_FIELD', 'customfield_10000')
-    end
+    before { stub_get_bugs_ok(payload, project_key) }
 
     context 'when there are not already returned bugs available' do
       it 'creates a record on the db' do
