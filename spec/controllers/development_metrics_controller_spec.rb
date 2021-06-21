@@ -5,6 +5,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
+  let!(:jira_project) { create(:jira_project, project: project) }
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -36,7 +37,7 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
 
       it 'returns status ok' do
         allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
-        allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
+
         get :index, params: params
 
         assert_response :success

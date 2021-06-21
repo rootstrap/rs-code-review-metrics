@@ -63,7 +63,7 @@ RSpec.describe GithubClient::Repository do
 
       before { stub_get_pull_requests(project.github_id, pull_requests_payload) }
 
-      it 'returns an empty array' do
+      it 'does not return an empty array' do
         expect(subject.pull_requests).not_to be_empty
       end
     end

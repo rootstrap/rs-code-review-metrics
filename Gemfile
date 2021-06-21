@@ -68,9 +68,9 @@ group :development, :test do
   gem 'colorize', '~> 0.8.1'
   gem 'factory_bot_rails', '~> 5.1'
   gem 'faker', '~> 2.10', '>= 2.10.2'
+  gem 'pry-rails', '~> 0.3.9'
   gem 'rspec-collection_matchers', '~> 1.2.0'
   gem 'rspec-rails', '4.0.0.beta3'
-  gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
