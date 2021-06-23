@@ -18,7 +18,7 @@ module JiraApiMock
 
   def stub_envs
     stub_env('JIRA_ADMIN_USER', jira_admin_user)
-    stub_env('JIRA_ADMIN_PASSWORD', jira_admin_password)
+    stub_env('JIRA_ADMIN_TOKEN', jira_admin_token)
     stub_env('JIRA_ENVIRONMENT_FIELD', jira_environment_field)
     stub_env('JIRA_ROOT_URL', jira_root_url)
   end
@@ -29,8 +29,8 @@ module JiraApiMock
     'adminuser'
   end
 
-  def jira_admin_password
-    'asdminpassword'
+  def jira_admin_token
+    '123ir123r91238ry123rihb'
   end
 
   def jira_environment_field
