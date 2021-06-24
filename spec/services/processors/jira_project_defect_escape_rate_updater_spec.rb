@@ -11,9 +11,7 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
         {
           'key': 'TES-4',
           'fields': {
-            'customfield': {
-              'value': 'production'
-            },
+            'customfield': [{ 'value': 'production' }],
             'created': '2021-03-14T15:48:04.000-0300'
           }
         }

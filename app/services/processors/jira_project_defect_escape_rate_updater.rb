@@ -17,7 +17,7 @@ module Processors
 
         issue.update!(
           informed_at: bug_fields[:created],
-          environment: environment_field ? environment_field[:value] : nil,
+          environment: environment_field ? environment_field.first[:value].downcase : nil,
           issue_type: 'bug'
         )
       end
