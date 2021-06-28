@@ -33,16 +33,13 @@ RSpec.describe JiraIssue, type: :model do
     it { is_expected.to validate_presence_of(:informed_at) }
     it { is_expected.to validate_presence_of(:issue_type) }
     it { is_expected.to belong_to(:jira_project) }
-    it { is_expected.to validate_inclusion_of(:issue_type).in_array(JiraIssue.issue_types.keys) }
-    it { is_expected.to validate_inclusion_of(:environment).in_array(JiraIssue.environments.keys) }
-  end
-
-  describe 'bugs' do
-    let!(:epic_issue) { create(:jira_issue, issue_type: 'epic') }
-    let!(:bug_issue) { create(:jira_issue, issue_type: 'bug') }
-
-    it 'returns the issues with a bug type' do
-      expect(JiraIssue.bugs).to contain_exactly(bug_issue)
+    it do
+      is_expected.to define_enum_for(:environment).with_values(JiraIssue.environments)
+                                                  .backed_by_column_of_type(:enum)
+    end
+    it do
+      is_expected.to define_enum_for(:issue_type).with_values(JiraIssue.issue_types)
+                                                 .backed_by_column_of_type(:enum)
     end
   end
 end
