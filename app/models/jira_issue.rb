@@ -21,21 +21,16 @@
 #
 
 class JiraIssue < ApplicationRecord
-  enum issue_types: { bug: :bug, task: :task, epic: :epic, story: :story }
-  enum environments: {
-    not_assigned: :not_assigned,
-    local: :local,
-    development: :development,
-    qa: :qa,
-    staging: :staging,
-    production: :production
+  enum issue_type: { bug: 'bug', task: 'task', epic: 'epic', story: 'story' }
+  enum environment: {
+    local: 'local',
+    development: 'development',
+    qa: 'qa',
+    staging: 'staging',
+    production: 'production'
   }
 
   belongs_to :jira_project
 
   validates :informed_at, :issue_type, presence: true
-  validates :issue_type, inclusion: { in: issue_types.keys }
-  validates :environment, inclusion: { in: environments.keys }, allow_nil: true
-
-  scope :bugs, -> { where(issue_type: 'bug') }
 end
