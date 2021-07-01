@@ -16,10 +16,9 @@
       <hr>
       <div>
         <h5>Bugs by environment:</h5>
-        <% metric[:values].each do |metric| %>
+        <% metric[:values].each do |environment, bugs| %>
           <div class="item-list">
-            <%= metric.first.to_s.capitalize %>:
-              <%= metric.second.to_s %>
+            <%= environment.to_s.capitalize.presence || 'None' %>: <%= bugs %>
           </div>
           <div></div>
         <% end %>
