@@ -44,6 +44,10 @@ FactoryBot.define do
       environment { 'staging' }
     end
 
+    trait :no_environment do
+      environment { nil }
+    end
+
     after(:build) do |jira_issue|
       jira_issue.key { "#{jira_issue.jira_project.jira_project_key}-#{Faker::Number.digits(3)}" }
     end

@@ -28,8 +28,8 @@ module Metrics
       end
 
       def bugs_by_environment(bug_issues)
-        bug_issues.each_with_object({}) do |bug, result|
-          result[bug.environment] = +1
+        bug_issues.each_with_object(Hash.new(0)) do |bug, result|
+          result[bug.environment] += 1
         end
       end
     end
