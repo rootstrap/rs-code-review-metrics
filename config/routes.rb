@@ -44,4 +44,7 @@ Rails.application.routes.draw do
   end
   get '/development_metrics', to: 'development_metrics#index'
   get 'tech_blog', to: 'tech_blog#index'
+  namespace :jira do
+    resources :defect_escape_rate, only: :index
+  end
 end

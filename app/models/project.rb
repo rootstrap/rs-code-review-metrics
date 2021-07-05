@@ -49,6 +49,8 @@ class Project < ApplicationRecord
            source: :user
 
   has_one :code_climate_project_metric, dependent: :destroy
+  has_one :jira_project, dependent: :destroy
+  accepts_nested_attributes_for :jira_project
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
@@ -110,6 +112,10 @@ class Project < ApplicationRecord
 
   def organization_name
     ENV['GITHUB_ORGANIZATION']
+  end
+
+  def jira_key
+    jira_project&.jira_project_key
   end
 
   private

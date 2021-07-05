@@ -35,6 +35,20 @@ CREATE TYPE public.department_name AS ENUM (
 
 
 --
+-- Name: environment; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.environment AS ENUM (
+    'not_assigned',
+    'local',
+    'development',
+    'qa',
+    'staging',
+    'production'
+);
+
+
+--
 -- Name: external_pull_request_state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -42,6 +56,18 @@ CREATE TYPE public.external_pull_request_state AS ENUM (
     'open',
     'closed',
     'merged'
+);
+
+
+--
+-- Name: issue_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.issue_type AS ENUM (
+    'bug',
+    'task',
+    'epic',
+    'story'
 );
 
 
@@ -84,7 +110,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'blog_visits',
     'merge_time',
     'blog_post_count',
-    'open_source_visits'
+    'open_source_visits',
+    'defect_escape_rate'
 );
 
 
@@ -642,6 +669,74 @@ CREATE SEQUENCE public.file_ignoring_rules_id_seq
 --
 
 ALTER SEQUENCE public.file_ignoring_rules_id_seq OWNED BY public.file_ignoring_rules.id;
+
+
+--
+-- Name: jira_issues; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_issues (
+    id bigint NOT NULL,
+    jira_project_id bigint NOT NULL,
+    informed_at timestamp without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    issue_type public.issue_type NOT NULL,
+    environment public.environment,
+    key character varying
+);
+
+
+--
+-- Name: jira_issues_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_issues_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_issues_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_issues_id_seq OWNED BY public.jira_issues.id;
+
+
+--
+-- Name: jira_projects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_projects (
+    id bigint NOT NULL,
+    project_id bigint,
+    jira_project_key character varying NOT NULL,
+    project_name character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: jira_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_projects_id_seq OWNED BY public.jira_projects.id;
 
 
 --
@@ -1234,6 +1329,20 @@ ALTER TABLE ONLY public.file_ignoring_rules ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: jira_issues id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_issues ALTER COLUMN id SET DEFAULT nextval('public.jira_issues_id_seq'::regclass);
+
+
+--
+-- Name: jira_projects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_projects ALTER COLUMN id SET DEFAULT nextval('public.jira_projects_id_seq'::regclass);
+
+
+--
 -- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1449,6 +1558,22 @@ ALTER TABLE ONLY public.external_pull_requests
 
 ALTER TABLE ONLY public.file_ignoring_rules
     ADD CONSTRAINT file_ignoring_rules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_issues jira_issues_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_issues
+    ADD CONSTRAINT jira_issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_projects jira_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_projects
+    ADD CONSTRAINT jira_projects_pkey PRIMARY KEY (id);
 
 
 --
@@ -1719,6 +1844,20 @@ CREATE INDEX index_file_ignoring_rules_on_language_id ON public.file_ignoring_ru
 
 
 --
+-- Name: index_jira_issues_on_jira_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_issues_on_jira_project_id ON public.jira_issues USING btree (jira_project_id);
+
+
+--
+-- Name: index_jira_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_projects_on_project_id ON public.jira_projects USING btree (project_id);
+
+
+--
 -- Name: index_languages_on_department_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1978,6 +2117,14 @@ ALTER TABLE ONLY public.pushes
 
 
 --
+-- Name: jira_projects fk_rails_42da1c3599; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_projects
+    ADD CONSTRAINT fk_rails_42da1c3599 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: blog_post_technologies fk_rails_47acaaf20e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2122,6 +2269,14 @@ ALTER TABLE ONLY public.merge_times
 
 
 --
+-- Name: jira_issues fk_rails_f5dae00480; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_issues
+    ADD CONSTRAINT fk_rails_f5dae00480 FOREIGN KEY (jira_project_id) REFERENCES public.jira_projects(id);
+
+
+--
 -- Name: review_requests fk_rails_feb865e207; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2247,6 +2402,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201211133046'),
 ('20201214192048'),
 ('20210115132729'),
-('20210118145940');
+('20210118145940'),
+('20210315154031'),
+('20210316150725'),
+('20210317024356'),
+('20210318034939');
 
 

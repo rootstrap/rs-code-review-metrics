@@ -12,7 +12,7 @@ ActiveAdmin.register FileIgnoringRule do
   end
 
   filter :regex
-  filter :language, as: :select, collection: Language.order('LOWER(name)')
+  filter :language, as: :select, collection: -> { Language.order('LOWER(name)') }
   filter :created_at
   filter :updated_at
 

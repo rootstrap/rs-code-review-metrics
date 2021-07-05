@@ -4,9 +4,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '~> 2.6.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.2'
+gem 'rails', '~> 6.0.3.7'
 # Use Puma as the app server
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 5.2.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 6'
 
@@ -59,16 +59,18 @@ gem 'rack-mini-profiler', '~> 2.0'
 
 gem 'groupdate', '~> 5.0'
 
+gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
+
 group :development, :test do
-  gem 'brakeman', '~> 4.7', '>= 4.7.2'
+  gem 'brakeman', '~> 5.0.0'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'colorize', '~> 0.8.1'
   gem 'factory_bot_rails', '~> 5.1'
   gem 'faker', '~> 2.10', '>= 2.10.2'
+  gem 'pry-rails', '~> 0.3.9'
   gem 'rspec-collection_matchers', '~> 1.2.0'
   gem 'rspec-rails', '4.0.0.beta3'
-  gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
@@ -86,6 +88,7 @@ end
 group :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
+  gem 'fakeredis', '~> 0.8.0', require: 'fakeredis/rspec'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'rails-controller-testing'

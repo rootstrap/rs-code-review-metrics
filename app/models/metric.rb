@@ -25,7 +25,8 @@ class Metric < ApplicationRecord
                blog_visits: 'blog_visits',
                merge_time: 'merge_time',
                blog_post_count: 'blog_post_count',
-               open_source_visits: 'open_source_visits' }
+               open_source_visits: 'open_source_visits',
+               defect_escape_rate: 'defect_escape_rate' }
 
   belongs_to :ownable, polymorphic: true
 

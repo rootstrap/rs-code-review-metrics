@@ -1,10 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe DevelopmentMetricsController, type: :controller do
+describe DevelopmentMetricsController, type: :controller do
   fixtures :departments, :languages
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
+  let!(:jira_project) { create(:jira_project, project: project) }
+  let(:beginning_of_day) { Time.zone.today.beginning_of_day }
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -36,17 +38,86 @@ RSpec.describe DevelopmentMetricsController, type: :controller do
 
       it 'returns status ok' do
         allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
-        allow(Metrics::Group::Weekly).to receive(:call).and_return(true)
+
         get :index, params: params
 
         assert_response :success
       end
 
       context '#projects' do
+        render_views
+
+        subject { get :projects, params: params }
+
+        let(:params) do
+          {
+            project_name: project.name,
+            metric: {
+              metric_name: 'defect_escape_rate',
+              period: 'weekly'
+            }
+          }
+        end
+
         it 'calls CodeClimate summary retriever class' do
           expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
 
-          get :projects, params: params
+          subject
+        end
+
+        context 'when it has issues from different environments' do
+          let!(:production_jira_bugs) do
+            create_list(:jira_issue, 2,
+                        :bug,
+                        :production,
+                        jira_project: jira_project,
+                        informed_at: beginning_of_day)
+          end
+          let!(:staging_jira_bugs) do
+            create_list(:jira_issue, 1,
+                        :bug,
+                        :staging,
+                        jira_project: jira_project,
+                        informed_at: beginning_of_day)
+          end
+          let!(:qa_jira_bugs) do
+            create_list(:jira_issue, 3,
+                        :bug,
+                        :qa,
+                        jira_project: jira_project,
+                        informed_at: beginning_of_day)
+          end
+          let!(:no_env_jira_bugs) do
+            create_list(:jira_issue, 2,
+                        :bug,
+                        :no_environment,
+                        jira_project: jira_project,
+                        informed_at: beginning_of_day)
+          end
+
+          before do
+            subject
+          end
+
+          it 'has a successful response' do
+            expect(response).to be_successful
+          end
+
+          it 'render EDR metric with correct production issues' do
+            expect(response.body).to include("Production: #{production_jira_bugs.count}")
+          end
+
+          it 'render EDR metric with correct staging issues' do
+            expect(response.body).to include("Staging: #{staging_jira_bugs.count}")
+          end
+
+          it 'render EDR metric with correct QA issues' do
+            expect(response.body).to include("Qa: #{qa_jira_bugs.count}")
+          end
+
+          it 'render EDR metric with correct issues when no environment defined' do
+            expect(response.body).to include("None: #{no_env_jira_bugs.count}")
+          end
         end
       end
 

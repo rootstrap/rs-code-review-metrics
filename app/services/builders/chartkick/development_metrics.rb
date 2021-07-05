@@ -35,11 +35,23 @@ module Builders
         private
 
         def entities_by_metric
-          {
+          metrics = {
             review_turnaround: %w[project users_project project_distribution],
             merge_time: %w[project users_project project_distribution],
             pull_request_size: %w[project_distribution]
           }
+          if project_has_jira_board_associated?(@entity_id)
+            metrics.merge!(defect_escape_rate_entities)
+          end
+          metrics
+        end
+
+        def defect_escape_rate_entities
+          { defect_escape_rate: %w[defect_escape_rate defect_escape_values] }
+        end
+
+        def project_has_jira_board_associated?(project_id)
+          ::Project.find(project_id).jira_project.present?
         end
       end
 
