@@ -20,7 +20,7 @@
 FactoryBot.define do
   factory :project do
     sequence(:github_id, 1000)
-    name { Faker::App.name.gsub(' ', '') }
+    name { Faker::App.name.split.first }
     description { Faker::FunnyName.name }
     language { Language.unassigned }
     is_private { false }

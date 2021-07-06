@@ -954,6 +954,40 @@ ALTER SEQUENCE public.pushes_id_seq OWNED BY public.pushes.id;
 
 
 --
+-- Name: repositories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.repositories (
+    id bigint NOT NULL,
+    action character varying,
+    html_url character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    sender_id bigint NOT NULL,
+    project_id bigint NOT NULL
+);
+
+
+--
+-- Name: repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.repositories_id_seq OWNED BY public.repositories.id;
+
+
+--
 -- Name: review_comments; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1385,6 +1419,13 @@ ALTER TABLE ONLY public.pushes ALTER COLUMN id SET DEFAULT nextval('public.pushe
 
 
 --
+-- Name: repositories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories ALTER COLUMN id SET DEFAULT nextval('public.repositories_id_seq'::regclass);
+
+
+--
 -- Name: review_comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1622,6 +1663,14 @@ ALTER TABLE ONLY public.pull_requests
 
 ALTER TABLE ONLY public.pushes
     ADD CONSTRAINT pushes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: repositories repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1935,6 +1984,20 @@ CREATE INDEX index_pushes_on_sender_id ON public.pushes USING btree (sender_id);
 
 
 --
+-- Name: index_repositories_on_project_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_project_id ON public.repositories USING btree (project_id);
+
+
+--
+-- Name: index_repositories_on_sender_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_repositories_on_sender_id ON public.repositories USING btree (sender_id);
+
+
+--
 -- Name: index_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2109,6 +2172,14 @@ ALTER TABLE ONLY public.review_turnarounds
 
 
 --
+-- Name: repositories fk_rails_36d1823ddd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_36d1823ddd FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
 -- Name: pushes fk_rails_3f633d82fd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2194,6 +2265,14 @@ ALTER TABLE ONLY public.code_owner_projects
 
 ALTER TABLE ONLY public.code_owner_projects
     ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: repositories fk_rails_9dbb09e26a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT fk_rails_9dbb09e26a FOREIGN KEY (sender_id) REFERENCES public.users(id);
 
 
 --
@@ -2406,6 +2485,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210315154031'),
 ('20210316150725'),
 ('20210317024356'),
-('20210318034939');
+('20210318034939'),
+('20210706143943');
 
 
