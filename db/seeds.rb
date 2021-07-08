@@ -26,9 +26,17 @@ if Rails.env.development?
       Language.create(name: lang)
     end
 
+    product = Product.create!(name: 'rs-code-review-metrics',
+                              description: 'Project for tracking PKIs')
+
+    jira_project = JiraProject.create!(jira_project_key: 'RSCODE',
+                                       project_name: 'rs-code-review-metrics',
+                                       product: product)
+
     project = Project.create!(github_id: rand(1000),
                               name: 'rs-code-review-metrics',
-                              language: Language.find_by(name: 'ruby'))
+                              language: Language.find_by(name: 'ruby'),
+                              product: product)
 
     %w[santiagovidal santib hdamico horacio hvilloria sandro].each do |name|
       FactoryBot.create(:user, login: name)
@@ -66,9 +74,17 @@ if Rails.env.development?
       end
     end
 
+    second_product = Product.create!(name: 'forecast',
+                                     description: 'Forecast')
+
+    second_jira_project = JiraProject.create!(jira_project_key: 'forc',
+                                              project_name: 'forecast',
+                                              product: second_product)
+
     second_project = Project.create!(github_id: rand(1000),
                                      name: 'forecast',
-                                     language: Language.find_by(name: 'ruby'))
+                                     language: Language.find_by(name: 'ruby'),
+                                     product: second_product)
 
     %w[juan pedro].each do |name|
       FactoryBot.create(:user, login: name)

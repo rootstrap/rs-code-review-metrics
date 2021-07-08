@@ -4,8 +4,9 @@ describe DevelopmentMetricsController, type: :controller do
   fixtures :departments, :languages
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
-  let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang) }
-  let!(:jira_project) { create(:jira_project, project: project) }
+  let(:product) { create(:product) }
+  let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang, product: product) }
+  let!(:jira_project) { create(:jira_project, product: product) }
   let(:beginning_of_day) { Time.zone.today.beginning_of_day }
 
   describe '#index' do
