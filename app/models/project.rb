@@ -3,6 +3,7 @@
 # Table name: projects
 #
 #  id          :bigint           not null, primary key
+#  deleted_at  :datetime
 #  description :string
 #  is_private  :boolean
 #  name        :string
@@ -18,6 +19,8 @@
 #
 
 class Project < ApplicationRecord
+  acts_as_paranoid
+
   enum relevance: {
     commercial: 'commercial',
     internal: 'internal',
@@ -28,6 +31,10 @@ class Project < ApplicationRecord
   belongs_to :language
 
   has_many :events, dependent: :destroy
+  has_many :repositories,
+           class_name: 'Events::Repository',
+           dependent: :destroy,
+           inverse_of: :project
   has_many :pull_requests,
            class_name: 'Events::PullRequest',
            dependent: :destroy,

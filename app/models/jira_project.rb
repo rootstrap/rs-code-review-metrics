@@ -3,6 +3,7 @@
 # Table name: jira_projects
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  jira_project_key :string           not null
 #  project_name     :string
 #  created_at       :datetime         not null
@@ -19,6 +20,8 @@
 #
 
 class JiraProject < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :project
 
   has_many :jira_issues, dependent: :destroy

@@ -6,6 +6,7 @@
 #  body       :text
 #  branch     :string
 #  closed_at  :datetime
+#  deleted_at :datetime
 #  draft      :boolean          not null
 #  html_url   :string
 #  locked     :boolean          not null

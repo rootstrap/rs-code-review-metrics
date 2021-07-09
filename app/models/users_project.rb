@@ -3,6 +3,7 @@
 # Table name: users_projects
 #
 #  id         :bigint           not null, primary key
+#  deleted_at :datetime
 #  project_id :bigint
 #  user_id    :bigint
 #
@@ -13,6 +14,8 @@
 #
 
 class UsersProject < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :user
   belongs_to :project
   has_many :metrics, as: :ownable, dependent: :destroy

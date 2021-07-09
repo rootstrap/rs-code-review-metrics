@@ -3,6 +3,7 @@
 # Table name: jira_projects
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  jira_project_key :string           not null
 #  project_name     :string
 #  created_at       :datetime         not null

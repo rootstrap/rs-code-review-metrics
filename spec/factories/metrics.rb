@@ -3,6 +3,7 @@
 # Table name: metrics
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  interval        :enum             default("daily")
 #  name            :enum
 #  ownable_type    :string           not null
