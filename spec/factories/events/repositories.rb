@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  action     :string
+#  deleted_at :datetime
 #  html_url   :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

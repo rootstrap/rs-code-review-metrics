@@ -338,7 +338,8 @@ CREATE TABLE public.code_climate_project_metrics (
     open_issues_count integer,
     snapshot_time timestamp without time zone,
     cc_repository_id character varying,
-    test_coverage numeric
+    test_coverage numeric,
+    deleted_at timestamp without time zone
 );
 
 
@@ -370,7 +371,8 @@ CREATE TABLE public.code_owner_projects (
     project_id bigint NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -402,7 +404,8 @@ CREATE TABLE public.completed_review_turnarounds (
     review_request_id bigint NOT NULL,
     value integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -469,7 +472,8 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    project_id bigint NOT NULL
+    project_id bigint NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -683,7 +687,8 @@ CREATE TABLE public.jira_issues (
     updated_at timestamp(6) without time zone NOT NULL,
     issue_type public.issue_type NOT NULL,
     environment public.environment,
-    key character varying
+    key character varying,
+    deleted_at timestamp without time zone
 );
 
 
@@ -716,7 +721,8 @@ CREATE TABLE public.jira_projects (
     jira_project_key character varying NOT NULL,
     project_name character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -778,7 +784,8 @@ CREATE TABLE public.merge_times (
     pull_request_id bigint NOT NULL,
     value integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -814,7 +821,8 @@ CREATE TABLE public.metrics (
     ownable_type character varying NOT NULL,
     ownable_id bigint NOT NULL,
     name public.metric_name,
-    "interval" public.metric_interval DEFAULT 'daily'::public.metric_interval
+    "interval" public.metric_interval DEFAULT 'daily'::public.metric_interval,
+    deleted_at timestamp without time zone
 );
 
 
@@ -850,7 +858,8 @@ CREATE TABLE public.projects (
     updated_at timestamp(6) without time zone NOT NULL,
     language_id bigint,
     is_private boolean,
-    relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL
+    relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -896,7 +905,8 @@ CREATE TABLE public.pull_requests (
     owner_id bigint,
     html_url character varying,
     branch character varying,
-    size integer
+    size integer,
+    deleted_at timestamp without time zone
 );
 
 
@@ -930,7 +940,8 @@ CREATE TABLE public.pushes (
     sender_id bigint NOT NULL,
     ref character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -964,7 +975,8 @@ CREATE TABLE public.repositories (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sender_id bigint NOT NULL,
-    project_id bigint NOT NULL
+    project_id bigint NOT NULL,
+    deleted_at timestamp without time zone
 );
 
 
@@ -999,7 +1011,8 @@ CREATE TABLE public.review_comments (
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    state public.review_comment_state DEFAULT 'active'::public.review_comment_state
+    state public.review_comment_state DEFAULT 'active'::public.review_comment_state,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1034,7 +1047,8 @@ CREATE TABLE public.review_requests (
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
     state public.review_request_state DEFAULT 'active'::public.review_request_state,
-    project_id bigint
+    project_id bigint,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1104,7 +1118,8 @@ CREATE TABLE public.reviews (
     state public.review_state NOT NULL,
     opened_at timestamp without time zone NOT NULL,
     review_request_id bigint,
-    project_id bigint
+    project_id bigint,
+    deleted_at timestamp without time zone
 );
 
 
@@ -1241,7 +1256,8 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 CREATE TABLE public.users_projects (
     id bigint NOT NULL,
     user_id bigint,
-    project_id bigint
+    project_id bigint,
+    deleted_at timestamp without time zone
 );
 
 
@@ -2486,6 +2502,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210316150725'),
 ('20210317024356'),
 ('20210318034939'),
-('20210706143943');
+('20210706143943'),
+('20210707194545');
 
 

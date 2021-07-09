@@ -3,6 +3,7 @@
 # Table name: users_projects
 #
 #  id         :bigint           not null, primary key
+#  deleted_at :datetime
 #  project_id :bigint
 #  user_id    :bigint
 #

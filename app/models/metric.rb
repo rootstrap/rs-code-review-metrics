@@ -3,6 +3,7 @@
 # Table name: metrics
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  interval        :enum             default("daily")
 #  name            :enum
 #  ownable_type    :string           not null
@@ -18,6 +19,8 @@
 #
 
 class Metric < ApplicationRecord
+  acts_as_paranoid
+
   include EntityTimeRepresentation
 
   enum interval: { daily: 'daily', weekly: 'weekly', monthly: 'monthly', all_times: 'all_times' }

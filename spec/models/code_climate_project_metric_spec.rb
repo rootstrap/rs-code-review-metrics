@@ -4,6 +4,7 @@
 #
 #  id                    :bigint           not null, primary key
 #  code_climate_rate     :string
+#  deleted_at            :datetime
 #  invalid_issues_count  :integer
 #  open_issues_count     :integer
 #  snapshot_time         :datetime

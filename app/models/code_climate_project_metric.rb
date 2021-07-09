@@ -4,6 +4,7 @@
 #
 #  id                    :bigint           not null, primary key
 #  code_climate_rate     :string
+#  deleted_at            :datetime
 #  invalid_issues_count  :integer
 #  open_issues_count     :integer
 #  snapshot_time         :datetime
@@ -24,6 +25,8 @@
 #
 
 class CodeClimateProjectMetric < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :project
 
   scope :with_rates, lambda {

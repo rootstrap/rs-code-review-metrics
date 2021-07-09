@@ -1,16 +1,17 @@
 require 'rails_helper'
 
-RSpec.describe Builders::Project do
+describe Builders::Project do
   describe '.call' do
     let(:repository_payload) { create(:repository_payload) }
+    subject { described_class.call(repository_payload) }
 
     context 'when the project has not been created' do
       it 'creates only one' do
-        expect { described_class.call(repository_payload) }.to change(Project, :count).by(1)
+        expect { subject }.to change(Project, :count).by(1)
       end
 
       it 'creates it' do
-        described_class.call(repository_payload)
+        subject
 
         created_project = Project.find_by(github_id: repository_payload['id'])
         expect(created_project.name).to eq repository_payload['name']
@@ -31,11 +32,26 @@ RSpec.describe Builders::Project do
       end
 
       it 'does not create a new project' do
-        expect { described_class.call(repository_payload) }.not_to change(Project, :count)
+        expect { subject }.not_to change(Project, :count)
       end
 
       it 'just returns it' do
-        expect(described_class.call(repository_payload)).to eq project
+        expect(subject).to eq project
+      end
+    end
+
+    context 'when the project is marked as deleted' do
+      let!(:project) { create(:project, github_id: repository_payload['id']) }
+
+      before { project.destroy }
+
+      it 'does not create a new project' do
+        expect { subject }.not_to change(Project.with_deleted, :count)
+      end
+
+      it 'returns it and restores it' do
+        expect(subject).to eq(project)
+        expect(subject.deleted?).to eq(false)
       end
     end
 
@@ -44,7 +60,7 @@ RSpec.describe Builders::Project do
         let(:repository_payload) { create(:repository_payload, archived: true) }
 
         it 'the project is assigned the "ignored" relevance' do
-          described_class.call(repository_payload)
+          subject
 
           project = Project.find_by(github_id: repository_payload['id'])
           expect(project.relevance).to eq Project.relevances[:ignored]
@@ -55,7 +71,7 @@ RSpec.describe Builders::Project do
         let(:repository_payload) { create(:repository_payload, archived: false) }
 
         it 'the project is not assigned a relevance' do
-          described_class.call(repository_payload)
+          subject
 
           project = Project.find_by(github_id: repository_payload['id'])
           expect(project.relevance).to eq Project.relevances[:unassigned]

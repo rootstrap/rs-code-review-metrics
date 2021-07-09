@@ -3,6 +3,7 @@
 # Table name: review_requests
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -27,6 +28,8 @@
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord
+  acts_as_paranoid
+
   enum state: { active: 'active', removed: 'removed' }
 
   belongs_to :owner, class_name: 'User',
