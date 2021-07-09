@@ -1,6 +1,6 @@
 module ActionHandlers
   class Repository < ActionHandler
-    ACTIONS = %w[deleted archived unarchived transferred].freeze
+    ACTIONS = %w[deleted archived transferred].freeze
     private_constant :ACTIONS
 
     private
@@ -17,16 +17,17 @@ module ActionHandlers
       mark_as_deleted
     end
 
-    def unarchived
-      # TODO
-    end
-
     def transferred
-      mark_as_deleted
+      mark_as_deleted if from_organization?
     end
 
     def mark_as_deleted
-      # TODO
+      @entity.project.destroy!
+    end
+
+    def from_organization?
+      owner = @payload['changes']['owner']
+      owner && owner['from']['organization']['login'] == ENV.fetch('GITHUB_ORGANIZATION')
     end
   end
 end

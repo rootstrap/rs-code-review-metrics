@@ -6,6 +6,7 @@
 #  body       :text
 #  branch     :string
 #  closed_at  :datetime
+#  deleted_at :datetime
 #  draft      :boolean          not null
 #  html_url   :string
 #  locked     :boolean          not null
@@ -36,6 +37,8 @@
 #
 module Events
   class PullRequest < ApplicationRecord
+    acts_as_paranoid
+
     enum state: { open: 'open', closed: 'closed' }
 
     belongs_to :project, inverse_of: :pull_requests

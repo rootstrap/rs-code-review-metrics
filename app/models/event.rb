@@ -4,6 +4,7 @@
 #
 #  id              :bigint           not null, primary key
 #  data            :jsonb
+#  deleted_at      :datetime
 #  handleable_type :string
 #  name            :string
 #  type            :string
@@ -19,6 +20,8 @@
 #
 
 class Event < ApplicationRecord
+  acts_as_paranoid
+
   TYPES = %w[pull_request review review_comment push repository].freeze
 
   belongs_to :handleable, polymorphic: true, optional: true

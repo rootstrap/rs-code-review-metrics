@@ -31,6 +31,7 @@ FactoryBot.define do
     html_url { Faker::Internet.url(host: 'github.com') }
     repository { create(:repository_payload) }
     sender { (attributes_for :user, id: generate(:user_id)).as_json }
+    changes { { 'owner': { 'from': { 'organization': { 'login': 'rootstrap' } } } } }
 
     initialize_with { attributes.deep_stringify_keys }
   end

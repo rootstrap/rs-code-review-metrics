@@ -3,6 +3,7 @@
 # Table name: pushes
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  ref             :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
