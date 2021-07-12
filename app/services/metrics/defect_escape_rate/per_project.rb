@@ -13,8 +13,8 @@ module Metrics
       end
 
       def query(interval)
-        project = JiraProject.find_by!(project_id: @entity_id)
-        bug_issues = project.jira_issues.bug.where(informed_at: interval)
+        product = Project.find(@entity_id).product
+        bug_issues = product.jira_project.jira_issues.bug.where(informed_at: interval)
         return [] if bug_issues.empty?
 
         defect_rate = bug_issues

@@ -1,7 +1,10 @@
+require 'rails_helper'
+
 describe Metrics::DefectEscapeRate::PerProject do
   describe '.call' do
-    let(:project) { create(:project) }
-    let!(:jira_project) { create(:jira_project, project: project) }
+    let(:product) { create(:product) }
+    let(:project) { create(:project, product: product) }
+    let!(:jira_project) { create(:jira_project, product: product) }
     let(:beginning_of_day) { Time.zone.today.beginning_of_day }
     let(:subject) { described_class.call(project.id) }
 

@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Builders::Chartkick::DevelopmentMetrics do
   describe Builders::Chartkick::DevelopmentMetrics::Project do
-    let(:project) { create(:project) }
-    let!(:jira_project) { create(:jira_project, project: project) }
+    let(:product) { create(:product) }
+    let(:project) { create(:project, product: product) }
+    let!(:jira_project) { create(:jira_project, product: product) }
     let(:period) { 4 }
     let(:review_turnaround_entities) { %i[per_project per_users_project per_project_distribution] }
     let(:merge_time_entities) { %i[per_project per_users_project per_project_distribution] }

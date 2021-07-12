@@ -7,15 +7,6 @@
 #  project_name     :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  project_id       :bigint
-#
-# Indexes
-#
-#  index_jira_projects_on_project_id  (project_id)
-#
-# Foreign Keys
-#
-#  fk_rails_...  (project_id => projects.id)
 #
 require 'rails_helper'
 
@@ -31,6 +22,5 @@ RSpec.describe JiraProject, type: :model do
     it { is_expected.to validate_uniqueness_of(:jira_project_key) }
 
     it { is_expected.to have_many(:jira_issues) }
-    it { is_expected.to belong_to(:project) }
   end
 end

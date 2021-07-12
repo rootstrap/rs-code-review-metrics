@@ -11,10 +11,16 @@
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
 #  language_id :bigint
+#  product_id  :bigint
 #
 # Indexes
 #
 #  index_projects_on_language_id  (language_id)
+#  index_projects_on_product_id   (product_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (product_id => products.id)
 #
 
 FactoryBot.define do
@@ -24,6 +30,7 @@ FactoryBot.define do
     description { Faker::FunnyName.name }
     language { Language.unassigned }
     is_private { false }
+    product
 
     transient do
       last_activity_in_weeks { 2 }
