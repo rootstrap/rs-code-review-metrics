@@ -717,11 +717,11 @@ ALTER SEQUENCE public.jira_issues_id_seq OWNED BY public.jira_issues.id;
 
 CREATE TABLE public.jira_projects (
     id bigint NOT NULL,
-    project_id bigint,
     jira_project_key character varying NOT NULL,
     project_name character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    product_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -846,6 +846,46 @@ ALTER SEQUENCE public.metrics_id_seq OWNED BY public.metrics.id;
 
 
 --
+-- Name: metrics_products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.metrics_products (
+    product_id bigint NOT NULL,
+    metric_id bigint NOT NULL
+);
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying
+);
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -859,6 +899,7 @@ CREATE TABLE public.projects (
     language_id bigint,
     is_private boolean,
     relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL,
+    product_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -1414,6 +1455,13 @@ ALTER TABLE ONLY public.metrics ALTER COLUMN id SET DEFAULT nextval('public.metr
 
 
 --
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1655,6 +1703,14 @@ ALTER TABLE ONLY public.merge_times
 
 ALTER TABLE ONLY public.metrics
     ADD CONSTRAINT metrics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 
 
 --
@@ -1916,10 +1972,10 @@ CREATE INDEX index_jira_issues_on_jira_project_id ON public.jira_issues USING bt
 
 
 --
--- Name: index_jira_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_jira_projects_on_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_jira_projects_on_project_id ON public.jira_projects USING btree (project_id);
+CREATE INDEX index_jira_projects_on_product_id ON public.jira_projects USING btree (product_id);
 
 
 --
@@ -1944,10 +2000,31 @@ CREATE INDEX index_metrics_on_ownable_type_and_ownable_id ON public.metrics USIN
 
 
 --
+-- Name: index_metrics_products_on_product_id_and_metric_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_metrics_products_on_product_id_and_metric_id ON public.metrics_products USING btree (product_id, metric_id);
+
+
+--
+-- Name: index_products_on_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_on_name ON public.products USING btree (name);
+
+
+--
 -- Name: index_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
+
+
+--
+-- Name: index_projects_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_projects_on_product_id ON public.projects USING btree (product_id);
 
 
 --
@@ -2156,6 +2233,14 @@ ALTER TABLE ONLY public.completed_review_turnarounds
 
 
 --
+-- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.projects
+    ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: pushes fk_rails_2981d8bb5a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2201,14 +2286,6 @@ ALTER TABLE ONLY public.repositories
 
 ALTER TABLE ONLY public.pushes
     ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: jira_projects fk_rails_42da1c3599; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.jira_projects
-    ADD CONSTRAINT fk_rails_42da1c3599 FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
@@ -2345,6 +2422,14 @@ ALTER TABLE ONLY public.review_requests
 
 ALTER TABLE ONLY public.review_requests
     ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (project_id) REFERENCES public.projects(id);
+
+
+--
+-- Name: jira_projects fk_rails_eaa3060e1c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_projects
+    ADD CONSTRAINT fk_rails_eaa3060e1c FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
@@ -2503,6 +2588,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210317024356'),
 ('20210318034939'),
 ('20210706143943'),
-('20210707194545');
+('20210707194545'),
+('20210707210306'),
+('20210707221342'),
+('20210707225815'),
+('20210708153602'),
+('20210712190532');
 
 

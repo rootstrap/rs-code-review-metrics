@@ -12,10 +12,16 @@
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
 #  language_id :bigint
+#  product_id  :bigint
 #
 # Indexes
 #
 #  index_projects_on_language_id  (language_id)
+#  index_projects_on_product_id   (product_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (product_id => products.id)
 #
 
 class Project < ApplicationRecord
@@ -29,6 +35,7 @@ class Project < ApplicationRecord
   }
 
   belongs_to :language
+  belongs_to :product, optional: true
 
   has_many :events, dependent: :destroy
   has_many :repositories,
@@ -56,13 +63,13 @@ class Project < ApplicationRecord
            source: :user
 
   has_one :code_climate_project_metric, dependent: :destroy
-  has_one :jira_project, dependent: :destroy
-  accepts_nested_attributes_for :jira_project
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
 
   before_validation :set_default_language, on: :create
+
+  delegate :jira_project, to: :product
 
   scope :open_source, lambda {
     internal.with_language.where(is_private: false)

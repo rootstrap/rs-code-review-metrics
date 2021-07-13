@@ -8,21 +8,21 @@
 #  project_name     :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  project_id       :bigint
+#  product_id       :bigint
 #
 # Indexes
 #
-#  index_jira_projects_on_project_id  (project_id)
+#  index_jira_projects_on_product_id  (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 class JiraProject < ApplicationRecord
   acts_as_paranoid
 
-  belongs_to :project
+  belongs_to :product
 
   has_many :jira_issues, dependent: :destroy
 
