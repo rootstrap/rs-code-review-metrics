@@ -3,6 +3,7 @@
 # Table name: merge_times
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  value           :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null

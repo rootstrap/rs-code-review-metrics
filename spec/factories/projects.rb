@@ -3,6 +3,7 @@
 # Table name: projects
 #
 #  id          :bigint           not null, primary key
+#  deleted_at  :datetime
 #  description :string
 #  is_private  :boolean
 #  name        :string
@@ -26,7 +27,7 @@
 FactoryBot.define do
   factory :project do
     sequence(:github_id, 1000)
-    name { Faker::App.name.gsub(' ', '') }
+    name { Faker::App.name.split.first }
     description { Faker::FunnyName.name }
     language { Language.unassigned }
     is_private { false }
