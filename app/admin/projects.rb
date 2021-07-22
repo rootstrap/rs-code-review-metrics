@@ -6,7 +6,6 @@ ActiveAdmin.register Project do
     selectable_column
     id_column
     column :github_id
-    column :jira_key
     column :name
     column :description
     column :language_id do |r|
@@ -16,15 +15,8 @@ ActiveAdmin.register Project do
     actions
   end
 
-  show do
-    attributes_table(*default_attribute_table_rows) do
-      row :jira_key
-    end
-  end
-
   filter :name
   filter :is_private
-  filter :jira_key, label: 'Jira Project Key'
   filter :github_id, label: 'GITHUB ID'
   filter :relevance, as: :select, collection: Project.relevances.values
   filter :language, as: :select, collection: -> { Language.order('LOWER(name)') }
@@ -40,16 +32,6 @@ ActiveAdmin.register Project do
       f.input :description, required: false
       f.input :language
       f.input :relevance, as: :radio, collection: Project.relevances.values
-      if object.jira_project
-        f.inputs for: [:jira_project, f.object.jira_project] do |s|
-          s.input :jira_project_key
-        end
-      else
-        jira_project = JiraProject.new(project: project)
-        f.inputs for: [:jira_project, jira_project] do |s|
-          s.input :jira_project_key, placeholder: 'Add your jira project key to link'
-        end
-      end
     end
     f.actions
   end

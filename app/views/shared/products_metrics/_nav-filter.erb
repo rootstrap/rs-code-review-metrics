@@ -1,0 +1,6 @@
+<%= simple_form_for :metric, url: products_metrics_development_metrics_path,
+  method: 'GET', html: {
+    class: 'nav-filter p-3 shadow-box',
+    id: 'nav-filter-form' } do |f|%>
+  <%= yield f if block_given? %>
+<% end %>

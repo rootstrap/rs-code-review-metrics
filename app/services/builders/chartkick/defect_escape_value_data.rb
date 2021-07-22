@@ -1,6 +1,6 @@
 module Builders
   module Chartkick
-    class DefectEscapeValueData < Builders::Chartkick::ProjectData
+    class DefectEscapeValueData < Builders::Chartkick::ProductData
       def build_data(metrics)
         values = metrics.inject({}) do |hash, metric|
           hash.merge!(metric.value[:bugs_by_environment]) { |_key, old, new| new + old }

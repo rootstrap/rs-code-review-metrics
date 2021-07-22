@@ -45,25 +45,19 @@ describe DevelopmentMetricsController, type: :controller do
         assert_response :success
       end
 
-      context '#projects' do
+      context '#products' do
         render_views
 
-        subject { get :projects, params: params }
+        subject { get :products, params: params }
 
         let(:params) do
           {
-            project_name: project.name,
+            product_name: product.name,
             metric: {
               metric_name: 'defect_escape_rate',
               period: 'weekly'
             }
           }
-        end
-
-        it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
-
-          subject
         end
 
         context 'when it has issues from different environments' do
@@ -119,6 +113,27 @@ describe DevelopmentMetricsController, type: :controller do
           it 'render EDR metric with correct issues when no environment defined' do
             expect(response.body).to include("None: #{no_env_jira_bugs.count}")
           end
+        end
+      end
+
+      context '#projects' do
+        render_views
+
+        subject { get :projects, params: params }
+
+        let(:params) do
+          {
+            project_name: project.name,
+            metric: {
+              period: 'weekly'
+            }
+          }
+        end
+
+        it 'calls CodeClimate summary retriever class' do
+          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+
+          subject
         end
       end
 
