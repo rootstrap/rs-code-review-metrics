@@ -2,7 +2,10 @@
   <div class="summary">
     <div class='p-3 chart-container <%if current_page?(products_development_metrics_path)%>col-md-4'<% else %>'<% end %> >
       <div class="metrics shadow-box">
-        <h4 class="p-3">Defect Escape Rate</h4>
+        <div class='row'>
+          <h4 class="p-3" style='margin-left:10px;'><%= metric_definition && metric_definition[:name] %></h4>
+          <span data-placement='right' class='metric_tooltip' style='margin-top: 4%;' aria-hidden='true' data-toggle='tooltip' title='<%= metric_definition && metric_definition[:explanation] %>'>?</span>
+        </div>
         <% if defect_escape_rate %>
 
           <%if current_page?(products_metrics_development_metrics_path)%>

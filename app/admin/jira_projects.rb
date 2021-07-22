@@ -1,4 +1,6 @@
 ActiveAdmin.register JiraProject do
+  permit_params :jira_key, :jira_project_key, :project_name, :product_id
+
   index do
     selectable_column
     id_column
