@@ -1,0 +1,30 @@
+<%= render 'development_metrics/products_dropdown' %>
+<%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
+
+<% if @product %>
+  <div class="col-md-12 text-center mt-2">
+    <b><%= @product[:name] %></b>
+  </div>
+  <%= render 'development_metrics/navigation', product: @product %>
+<% end %>
+<div class="metrics-container container col-md-12">
+  <%= render 'shared/products_metrics/nav-filter' do |f| %>
+    <div class="row">
+      <div class="col-md-5 period-input">
+        <%= render 'shared/interval-filter', form: f %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @product %>
+      <%if current_page?(products_metrics_development_metrics_path)%>
+        <%= render 'development_metrics/products/general', product: @product, defect_escape_rate: @defect_escape_rate  %>
+      <% end %>
+  <% else %>
+    <div class="row">
+      <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
+        <span>Please select a project to see its metrics</span>
+      </div>
+    </div>
+  <% end %>
+</div>

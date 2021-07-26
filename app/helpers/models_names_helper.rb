@@ -14,4 +14,8 @@ module ModelsNamesHelper
   def all_languages_names(department)
     department.languages.pluck(:name)
   end
+
+  def all_products_names
+    Product.pluck(:name).sort
+  end
 end

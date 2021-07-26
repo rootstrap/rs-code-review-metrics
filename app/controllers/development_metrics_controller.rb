@@ -4,6 +4,12 @@ class DevelopmentMetricsController < ApplicationController
 
   def index; end
 
+  def products
+    return if metric_params.blank?
+
+    build_product_metrics(product.id, Product.name)
+  end
+
   def projects
     return if metric_params.blank?
 
@@ -23,6 +29,12 @@ class DevelopmentMetricsController < ApplicationController
 
   def users; end
 
+  def products_metrics
+    return if metric_params.blank?
+
+    build_product_metrics(product.id, Product.name)
+  end
+
   private
 
   def build_success_rates
@@ -38,6 +50,16 @@ class DevelopmentMetricsController < ApplicationController
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
     @defect_escape_rate = metrics[:defect_escape_rate]
+  end
+
+  def build_product_metrics(entity_id, entity_name)
+    metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
+                                                     .call(entity_id, metric_params[:period])
+    @defect_escape_rate = metrics[:defect_escape_rate]
+  end
+
+  def product
+    @product ||= Product.find_by(name: params[:product_name])
   end
 
   def project

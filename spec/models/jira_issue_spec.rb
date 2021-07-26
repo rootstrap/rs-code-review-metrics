@@ -3,6 +3,7 @@
 # Table name: jira_issues
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  environment     :enum
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null

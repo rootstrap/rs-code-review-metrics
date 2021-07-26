@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
   describe '#call' do
-    let(:project) { create(:project) }
+    let(:product) { create(:product) }
+    let(:project) { create(:project, product: product) }
     let(:project_key) { 'TES' }
-    let!(:jira_project) { create(:jira_project, project: project, jira_project_key: project_key) }
+    let!(:jira_project) { create(:jira_project, product: product, jira_project_key: project_key) }
     let(:subject) { described_class.call(jira_project) }
     let(:bugs) do
       [

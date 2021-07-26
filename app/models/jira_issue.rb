@@ -3,6 +3,7 @@
 # Table name: jira_issues
 #
 #  id              :bigint           not null, primary key
+#  deleted_at      :datetime
 #  environment     :enum
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null
@@ -21,6 +22,8 @@
 #
 
 class JiraIssue < ApplicationRecord
+  acts_as_paranoid
+
   enum issue_type: { bug: 'bug', task: 'task', epic: 'epic', story: 'story' }
   enum environment: {
     local: 'local',

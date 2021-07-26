@@ -57,6 +57,10 @@ class User < ApplicationRecord
            class_name: 'Events::Push',
            dependent: :destroy,
            inverse_of: :sender
+  has_many :repositories,
+           class_name: 'Events::Repository',
+           dependent: :destroy,
+           inverse_of: :sender
   validates :github_id,
             :login,
             :node_id,

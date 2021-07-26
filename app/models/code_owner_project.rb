@@ -3,6 +3,7 @@
 # Table name: code_owner_projects
 #
 #  id         :bigint           not null, primary key
+#  deleted_at :datetime
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  project_id :bigint           not null
@@ -20,6 +21,8 @@
 #
 
 class CodeOwnerProject < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :project
   belongs_to :user
 end

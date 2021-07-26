@@ -2,9 +2,9 @@
   <div class="list-project">
     <select name="project_name" class="project-selection" form='nav-filter-form'>
       <% if params[:project_name].blank? %>
-        <option selected value disabled>Choose a project</option>
+        <option selected value disabled>Choose a repository</option>
       <% else %>
-        <option value disabled>Choose a project</option>
+        <option value disabled>Choose a repository</option>
       <% end %>
       <% all_projects_names.each do |name|%>
         <%if params[:project_name] == name %>

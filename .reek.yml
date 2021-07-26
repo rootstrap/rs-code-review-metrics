@@ -63,7 +63,7 @@ detectors:
     exclude: []
   RepeatedConditional:
     enabled: true
-    exclude: []
+    exclude: ['DevelopmentMetricsController']
     max_ifs: 3
   SubclassedFromCoreClass:
     enabled: true

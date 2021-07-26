@@ -3,6 +3,7 @@
 # Table name: projects
 #
 #  id          :bigint           not null, primary key
+#  deleted_at  :datetime
 #  description :string
 #  is_private  :boolean
 #  name        :string
@@ -11,15 +12,21 @@
 #  updated_at  :datetime         not null
 #  github_id   :integer          not null
 #  language_id :bigint
+#  product_id  :bigint
 #
 # Indexes
 #
 #  index_projects_on_language_id  (language_id)
+#  index_projects_on_product_id   (product_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (product_id => products.id)
 #
 
 require 'rails_helper'
 
-RSpec.describe Project, type: :model do
+describe Project, type: :model do
   subject { build :project }
 
   context 'validations' do
@@ -34,7 +41,6 @@ RSpec.describe Project, type: :model do
 
     it { is_expected.to validate_uniqueness_of(:github_id) }
     it { is_expected.to have_many(:events) }
-    it { is_expected.to have_one(:jira_project) }
   end
 
   describe '#open_source' do
