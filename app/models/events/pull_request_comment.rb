@@ -42,5 +42,13 @@ module Events
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id, :body, :opened_at, presence: true
+
+    after_create :build_review_or_comment_turnaround
+
+    private
+
+    def build_review_or_comment_turnaround
+      Builders::ReviewOrCommentTurnaround.call(review_request, pull_request, self)
+    end
   end
 end
