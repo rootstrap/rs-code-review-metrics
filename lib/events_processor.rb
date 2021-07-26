@@ -71,6 +71,11 @@ class EventsProcessor
       ::Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
     end
 
+    def find_issue_pull_request(payload, project_id)
+      ::Events::PullRequest.find_by!(number: payload['issue']['number'],
+                                     project_id: project_id)
+    end
+
     def find_last_review_request(pull_request, reviewer_id)
       review_request = pull_request.review_requests.where(reviewer_id: reviewer_id).last
       return review_request unless review_request.nil?
@@ -138,6 +143,19 @@ class EventsProcessor
         rc.pull_request = find_pull_request(payload)
         rc.body = comment_data['body']
         rc.save!
+      end
+    end
+  end
+
+  class PullRequestCommentBuilder < EventsProcessor
+    def self.build(payload)
+      comment_data = payload['comment']
+      project = Builders::Project.call(payload['repository'])
+      ::Events::PullRequestComment.find_or_initialize_by(github_id: comment_data['id']).tap do |prc|
+        prc.owner = find_or_create_user(comment_data['user'])
+        prc.pull_request = find_issue_pull_request(payload, project.id)
+        prc.body = comment_data['body']
+        prc.save!
       end
     end
   end
