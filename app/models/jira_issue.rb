@@ -8,6 +8,7 @@
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null
 #  key             :string
+#  resolved_at     :datetime
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  jira_project_id :bigint           not null
