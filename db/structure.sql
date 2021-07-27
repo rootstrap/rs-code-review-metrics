@@ -691,7 +691,8 @@ CREATE TABLE public.jira_issues (
     environment public.environment,
     key character varying,
     deleted_at timestamp without time zone,
-    resolved_at timestamp without time zone
+    resolved_at timestamp without time zone,
+    in_progress_at timestamp without time zone
 );
 
 

@@ -44,7 +44,7 @@ module JiraApiMock
   end
 
   def jira_environment_field
-    'customfield'
+    'customfield_10000'
   end
 
   def jira_root_url

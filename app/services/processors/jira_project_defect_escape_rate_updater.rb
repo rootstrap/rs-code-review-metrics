@@ -1,5 +1,8 @@
 module Processors
   class JiraProjectDefectEscapeRateUpdater < BaseService
+    IN_PROGRESS = 'In Progress'.freeze
+    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
+
     def initialize(jira_project)
       @jira_project = jira_project
     end
@@ -15,10 +18,6 @@ module Processors
         )
 
         issue_update!(issue, bug_fields)
-
-        if issue.resolved_at.present?
-          JiraClient::JiraIssueService.new(@jira_project, issue).generate_development_cycle_metric
-        end
       end
     end
 
@@ -29,11 +28,13 @@ module Processors
     end
 
     def issue_update!(issue, bug_fields)
-      environment_field = bug_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym]
+      environment_field = bug_fields[JIRA_ENVIRONMENT_FIELD]
+      status_field = bug_fields[:status][:name]
 
       issue.update!(
         informed_at: bug_fields[:created],
         resolved_at: bug_fields[:resolutiondate] || nil,
+        in_progress_at: status_field == IN_PROGRESS ? bug_fields[:updated] : issue.in_progress_at,
         environment: environment_field ? environment_field.first[:value].downcase : nil,
         issue_type: 'bug'
       )

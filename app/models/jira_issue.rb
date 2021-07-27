@@ -5,6 +5,7 @@
 #  id              :bigint           not null, primary key
 #  deleted_at      :datetime
 #  environment     :enum
+#  in_progress_at  :datetime
 #  informed_at     :datetime         not null
 #  issue_type      :enum             not null
 #  key             :string

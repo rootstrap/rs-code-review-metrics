@@ -1,5 +1,8 @@
 module Processors
   class JiraProjectDevelopmentCycleUpdater < BaseService
+    IN_PROGRESS = 'In Progress'.freeze
+    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
+
     def initialize(jira_project)
       @jira_project = jira_project
     end
@@ -15,10 +18,6 @@ module Processors
         )
 
         issue_update!(issue, issue_fields)
-
-        if issue.resolved_at.present?
-          JiraClient::JiraIssueService.new(@jira_project, issue).generate_development_cycle_metric
-        end
       end
     end
 
@@ -29,15 +28,20 @@ module Processors
     end
 
     def issue_update!(issue, issue_fields)
-      environment_field = issue_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym]
-      issue_type_field = issue_fields[:issuetype.to_sym][:name]
+      environment_field = issue_fields[JIRA_ENVIRONMENT_FIELD]
+      status_field = issue_fields[:status][:name]
 
       issue.update!(
         informed_at: issue_fields[:created],
         resolved_at: issue_fields[:resolutiondate] || nil,
+        in_progress_at: status_field == IN_PROGRESS ? issue_fields[:updated] : issue.in_progress_at,
         environment: environment_field ? environment_field.first[:value]&.downcase : nil,
-        issue_type: issue_type_field&.downcase
+        issue_type: issue_type_field(issue_fields)&.downcase
       )
+    end
+
+    def issue_type_field(issue_fields)
+      issue_fields[:issuetype.to_sym][:name]
     end
   end
 end
