@@ -942,14 +942,14 @@ CREATE TABLE public.pull_request_comments (
     id bigint NOT NULL,
     github_id integer,
     body character varying,
+    opened_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state,
-    deleted_at timestamp without time zone,
     review_request_id bigint,
-    opened_at timestamp without time zone NOT NULL
+    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state
 );
 
 
@@ -2092,6 +2092,13 @@ CREATE INDEX index_projects_on_product_id ON public.projects USING btree (produc
 
 
 --
+-- Name: index_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_deleted_at ON public.pull_request_comments USING btree (deleted_at);
+
+
+--
 -- Name: index_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2703,10 +2710,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210708153602'),
 ('20210712190532'),
 ('20210714143812'),
-('20210714144543'),
-('20210714155857'),
-('20210714194812'),
-('20210715184847'),
-('20210716215958');
+('20210714155857');
 
 
