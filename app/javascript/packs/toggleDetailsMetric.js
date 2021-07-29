@@ -20,3 +20,7 @@ $(document).on('turbolinks:load', function() {
     $('.details-button').show();
   }
 });
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});

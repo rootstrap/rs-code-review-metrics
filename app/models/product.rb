@@ -20,4 +20,5 @@ class Product < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
   accepts_nested_attributes_for :jira_project
+  accepts_nested_attributes_for :projects
 end

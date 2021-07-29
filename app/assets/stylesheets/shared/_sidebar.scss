@@ -1,6 +1,9 @@
 .project-selection {
   @include centered-flex-columns;
 }
+.product-selection {
+  @include centered-flex-columns;
+}
 .entity-btn {
   border-radius: 0px;
   margin-bottom: 5px;

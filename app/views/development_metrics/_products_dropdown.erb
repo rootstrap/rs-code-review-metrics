@@ -1,0 +1,18 @@
+<%= content_for :products_dropdown do %>
+  <div class="list-product">
+    <select name="product_name" class="product-selection" form='nav-filter-form'>
+      <% if params[:product_name].blank? %>
+        <option selected value disabled>Choose a project</option>
+      <% else %>
+        <option value disabled>Choose a project</option>
+      <% end %>
+      <% all_products_names.each do |name|%>
+        <%if params[:product_name] == name %>
+          <option selected value=<%= name %>> <%= name%> </option>
+        <% else %>
+          <option value=<%= name%>> <%= name%></option> %>
+        <% end %>
+      <% end %>
+    </select>
+  </div>
+<% end %>

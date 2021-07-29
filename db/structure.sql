@@ -111,7 +111,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'merge_time',
     'blog_post_count',
     'open_source_visits',
-    'defect_escape_rate'
+    'defect_escape_rate',
+    'pull_request_size'
 );
 
 
@@ -629,9 +630,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 
@@ -817,6 +818,39 @@ CREATE SEQUENCE public.merge_times_id_seq
 --
 
 ALTER SEQUENCE public.merge_times_id_seq OWNED BY public.merge_times.id;
+
+
+--
+-- Name: metric_definitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.metric_definitions (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    explanation character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    code public.metric_name NOT NULL
+);
+
+
+--
+-- Name: metric_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.metric_definitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: metric_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.metric_definitions_id_seq OWNED BY public.metric_definitions.id;
 
 
 --
@@ -1497,6 +1531,13 @@ ALTER TABLE ONLY public.merge_times ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: metric_definitions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metric_definitions ALTER COLUMN id SET DEFAULT nextval('public.metric_definitions_id_seq'::regclass);
+
+
+--
 -- Name: metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1751,6 +1792,14 @@ ALTER TABLE ONLY public.languages
 
 ALTER TABLE ONLY public.merge_times
     ADD CONSTRAINT merge_times_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: metric_definitions metric_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metric_definitions
+    ADD CONSTRAINT metric_definitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2709,6 +2758,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210707225815'),
 ('20210708153602'),
 ('20210712190532'),
+('20210720212026'),
+('20210722152015'),
 ('20210714143812'),
 ('20210714155857');
 
