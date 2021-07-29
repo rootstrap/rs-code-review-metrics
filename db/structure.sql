@@ -112,7 +112,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'blog_post_count',
     'open_source_visits',
     'defect_escape_rate',
-    'pull_request_size'
+    'pull_request_size',
+    'development_cycle'
 );
 
 
@@ -700,7 +701,9 @@ CREATE TABLE public.jira_issues (
     issue_type public.issue_type NOT NULL,
     environment public.environment,
     key character varying,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    resolved_at timestamp without time zone,
+    in_progress_at timestamp without time zone
 );
 
 
@@ -2760,6 +2763,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210712190532'),
 ('20210720212026'),
 ('20210722152015'),
+('20210723184744'),
+('20210726184449'),
 ('20210714143812'),
 ('20210714155857');
 
