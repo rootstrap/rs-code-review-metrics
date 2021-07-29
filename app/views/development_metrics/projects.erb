@@ -20,7 +20,10 @@
   </div>
   <% if @project %>
     <div class="metrics shadow-box">
-      <h4 class="p-3">Time to second review</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @review_turnaround_definition && @review_turnaround_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
       </div>
@@ -32,7 +35,10 @@
     </div>
 
     <div class="metrics shadow-box">
-      <h4 class="p-3">Time to merge</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @merge_time_definition && @merge_time_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
       </div>
@@ -44,7 +50,10 @@
     </div>
 
     <div class="metrics shadow-box">
-      <h4 class="p-3">PR Size</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
       </div>

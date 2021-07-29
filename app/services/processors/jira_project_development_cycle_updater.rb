@@ -41,7 +41,7 @@ module Processors
     end
 
     def issue_type_field(issue_fields)
-      issue_fields[:issuetype.to_sym][:name]
+      issue_fields[:issuetype][:name]
     end
   end
 end

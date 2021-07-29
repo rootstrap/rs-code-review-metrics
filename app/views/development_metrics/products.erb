@@ -14,7 +14,7 @@
 
   <% if @product %>
       <%if current_page?(products_development_metrics_path)%>
-        <%= render 'development_metrics/products/general', product: @product, defect_escape_rate: @defect_escape_rate %>
+        <%= render 'development_metrics/products/general', product: @product, defect_escape_rate: @defect_escape_rate, metric_definition: @metric_definition %>
       <% end %>
   <% else %>
     <div class="row">
