@@ -4,10 +4,18 @@ class DevelopmentMetricsController < ApplicationController
 
   def index; end
 
+  def products
+    return if metric_params.blank?
+
+    build_product_metrics(product.id, Product.name)
+  end
+
   def projects
     return if metric_params.blank?
 
     build_metrics(project.id, Project.name)
+    build_metrics_definitions
+
     @code_owners = project.code_owners.pluck(:login)
     @code_climate = code_climate_project_summary
   end
@@ -23,6 +31,12 @@ class DevelopmentMetricsController < ApplicationController
 
   def users; end
 
+  def products_metrics
+    return if metric_params.blank?
+
+    build_product_metrics(product.id, Product.name)
+  end
+
   private
 
   def build_success_rates
@@ -37,7 +51,23 @@ class DevelopmentMetricsController < ApplicationController
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
+  end
+
+  def build_product_metrics(entity_id, entity_name)
+    metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
+                                                     .call(entity_id, metric_params[:period])
     @defect_escape_rate = metrics[:defect_escape_rate]
+    @metric_definition = MetricDefinition.find_by(code: :defect_escape_rate)
+  end
+
+  def build_metrics_definitions
+    @review_turnaround_definition = MetricDefinition.find_by(code: :review_turnaround)
+    @merge_time_definition = MetricDefinition.find_by(code: :merge_time)
+    @pull_request_size_definition = MetricDefinition.find_by(code: :pull_request_size)
+  end
+
+  def product
+    @product ||= Product.find_by(name: params[:product_name])
   end
 
   def project

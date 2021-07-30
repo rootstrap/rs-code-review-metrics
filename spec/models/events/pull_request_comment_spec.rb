@@ -16,6 +16,7 @@
 #
 # Indexes
 #
+#  index_pull_request_comments_on_deleted_at         (deleted_at)
 #  index_pull_request_comments_on_owner_id           (owner_id)
 #  index_pull_request_comments_on_pull_request_id    (pull_request_id)
 #  index_pull_request_comments_on_review_request_id  (review_request_id)

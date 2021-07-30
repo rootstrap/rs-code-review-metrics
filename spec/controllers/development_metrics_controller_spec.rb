@@ -8,6 +8,14 @@ describe DevelopmentMetricsController, type: :controller do
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang, product: product) }
   let!(:jira_project) { create(:jira_project, product: product) }
   let(:beginning_of_day) { Time.zone.today.beginning_of_day }
+  let!(:der_metric_definition) { create(:metric_definition, code: :defect_escape_rate) }
+  let!(:review_turnaround_metric_definition) do
+    create(:metric_definition, code: :review_turnaround)
+  end
+  let!(:merge_time_metric_metric_definition) { create(:metric_definition, code: :merge_time) }
+  let!(:pull_request_size_metric_definition) do
+    create(:metric_definition, code: :pull_request_size)
+  end
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -45,25 +53,19 @@ describe DevelopmentMetricsController, type: :controller do
         assert_response :success
       end
 
-      context '#projects' do
+      context '#products' do
         render_views
 
-        subject { get :projects, params: params }
+        subject { get :products, params: params }
 
         let(:params) do
           {
-            project_name: project.name,
+            product_name: product.name,
             metric: {
               metric_name: 'defect_escape_rate',
               period: 'weekly'
             }
           }
-        end
-
-        it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
-
-          subject
         end
 
         context 'when it has issues from different environments' do
@@ -119,6 +121,50 @@ describe DevelopmentMetricsController, type: :controller do
           it 'render EDR metric with correct issues when no environment defined' do
             expect(response.body).to include("None: #{no_env_jira_bugs.count}")
           end
+
+          it 'render metric name' do
+            expect(response.body).to include(der_metric_definition.name)
+          end
+
+          it 'render metric tooltip' do
+            expect(response.body).to include(der_metric_definition.explanation)
+          end
+        end
+      end
+
+      context '#projects' do
+        render_views
+
+        subject { get :projects, params: params }
+
+        let(:params) do
+          {
+            project_name: project.name,
+            metric: {
+              period: 'weekly'
+            }
+          }
+        end
+
+        it 'calls CodeClimate summary retriever class' do
+          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+
+          subject
+        end
+
+        it 'render review turnaround metric tooltip' do
+          subject
+          expect(response.body).to include(review_turnaround_metric_definition.explanation)
+        end
+
+        it 'render merge time metric tooltip' do
+          subject
+          expect(response.body).to include(merge_time_metric_metric_definition.explanation)
+        end
+
+        it 'render pull request size metric tooltip' do
+          subject
+          expect(response.body).to include(pull_request_size_metric_definition.explanation)
         end
       end
 

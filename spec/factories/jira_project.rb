@@ -21,7 +21,7 @@
 FactoryBot.define do
   factory :jira_project do
     project_name { Faker::Lorem.sentence }
-    jira_project_key { Faker::Name.name }
+    jira_project_key { Faker::App.unique.name }
 
     product
   end

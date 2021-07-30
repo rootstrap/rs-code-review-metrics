@@ -111,7 +111,9 @@ CREATE TYPE public.metric_name AS ENUM (
     'merge_time',
     'blog_post_count',
     'open_source_visits',
-    'defect_escape_rate'
+    'defect_escape_rate',
+    'pull_request_size',
+    'development_cycle'
 );
 
 
@@ -629,9 +631,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 
@@ -699,7 +701,9 @@ CREATE TABLE public.jira_issues (
     issue_type public.issue_type NOT NULL,
     environment public.environment,
     key character varying,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    resolved_at timestamp without time zone,
+    in_progress_at timestamp without time zone
 );
 
 
@@ -817,6 +821,39 @@ CREATE SEQUENCE public.merge_times_id_seq
 --
 
 ALTER SEQUENCE public.merge_times_id_seq OWNED BY public.merge_times.id;
+
+
+--
+-- Name: metric_definitions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.metric_definitions (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    explanation character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    code public.metric_name NOT NULL
+);
+
+
+--
+-- Name: metric_definitions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.metric_definitions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: metric_definitions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.metric_definitions_id_seq OWNED BY public.metric_definitions.id;
 
 
 --
@@ -942,14 +979,14 @@ CREATE TABLE public.pull_request_comments (
     id bigint NOT NULL,
     github_id integer,
     body character varying,
+    opened_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state,
-    deleted_at timestamp without time zone,
     review_request_id bigint,
-    opened_at timestamp without time zone NOT NULL
+    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state
 );
 
 
@@ -1497,6 +1534,13 @@ ALTER TABLE ONLY public.merge_times ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: metric_definitions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metric_definitions ALTER COLUMN id SET DEFAULT nextval('public.metric_definitions_id_seq'::regclass);
+
+
+--
 -- Name: metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1751,6 +1795,14 @@ ALTER TABLE ONLY public.languages
 
 ALTER TABLE ONLY public.merge_times
     ADD CONSTRAINT merge_times_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: metric_definitions metric_definitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.metric_definitions
+    ADD CONSTRAINT metric_definitions_pkey PRIMARY KEY (id);
 
 
 --
@@ -2092,6 +2144,16 @@ CREATE INDEX index_projects_on_product_id ON public.projects USING btree (produc
 
 
 --
+<<<<<<< HEAD
+=======
+-- Name: index_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_deleted_at ON public.pull_request_comments USING btree (deleted_at);
+
+
+--
+>>>>>>> develop
 -- Name: index_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2702,11 +2764,20 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210707225815'),
 ('20210708153602'),
 ('20210712190532'),
+<<<<<<< HEAD
 ('20210714143812'),
 ('20210714144543'),
 ('20210714155857'),
 ('20210714194812'),
 ('20210715184847'),
 ('20210716215958');
+=======
+('20210720212026'),
+('20210722152015'),
+('20210723184744'),
+('20210726184449'),
+('20210714143812'),
+('20210714155857');
+>>>>>>> develop
 
 

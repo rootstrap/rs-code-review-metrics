@@ -1,6 +1,6 @@
 module Builders
   module Chartkick
-    class DefectEscapeRateData < Builders::Chartkick::ProjectData
+    class DefectEscapeRateData < Builders::Chartkick::ProductData
       def build_data(metrics)
         metrics.inject({}) do |hash, metric|
           hash.merge!(

@@ -1,8 +1,10 @@
-<%= render 'development_metrics/projects_dropdown' %>
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
+
+<%= render 'development_metrics/navigation', product: @project.product %>
 
 <div class="metrics-container container col-md-12">
   <%= render 'shared/project/nav-filter' do |f| %>
+    <%= hidden_field_tag 'project_name', @project.name  %>
     <div class="row">
       <div class="col-md-5 period-input">
         <%= render 'shared/interval-filter', form: f %>
@@ -18,7 +20,10 @@
   </div>
   <% if @project %>
     <div class="metrics shadow-box">
-      <h4 class="p-3">Time to second review</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @review_turnaround_definition && @review_turnaround_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
       </div>
@@ -30,7 +35,10 @@
     </div>
 
     <div class="metrics shadow-box">
-      <h4 class="p-3">Time to merge</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @merge_time_definition && @merge_time_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
       </div>
@@ -42,25 +50,13 @@
     </div>
 
     <div class="metrics shadow-box">
-      <h4 class="p-3">PR Size</h4>
+      <div class='row'>
+        <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
+        <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>?</span>
+      </div>
       <div class="graph">
         <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
       </div>
-    </div>
-
-    <div class="metrics shadow-box">
-      <h4 class="p-3">Defect Escape Rate</h4>
-      <% if @defect_escape_rate %>
-        <div class="graph">
-          <%= render 'development_metrics/defect_escape_rate/main_metric', defect_escape_rate: @defect_escape_rate %>
-        </div>
-      <% else %>
-        <div class="summary col-md-12">
-          <div class="container p-12 text-center">
-            <span class="text-danger extra-padding"><h5>No Jira project associated. Contact an administrator</h5></span>
-          </div>
-        </div>
-      <% end %>
     </div>
   <% else %>
     <div class="row">

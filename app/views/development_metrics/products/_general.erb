@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="summary">
+    <div class='p-3 chart-container <%if current_page?(products_development_metrics_path)%>col-md-4'<% else %>'<% end %> >
+      <div class="metrics shadow-box">
+        <div class='row'>
+          <h4 class="p-3" style='margin-left:10px;'><%= metric_definition && metric_definition[:name] %></h4>
+          <span data-placement='right' class='metric_tooltip' style='margin-top: 4%;' aria-hidden='true' data-toggle='tooltip' title='<%= metric_definition && metric_definition[:explanation] %>'>?</span>
+        </div>
+        <% if defect_escape_rate %>
+
+          <%if current_page?(products_metrics_development_metrics_path)%>
+            <div class="metrics shadow-box">
+              <div class="graph">
+                <%= render 'development_metrics/defect_escape_rate/main_metric', defect_escape_rate: defect_escape_rate, details: true %>
+              </div>
+            </div>
+          <% else %>
+            <%= render partial: 'development_metrics/defect_escape_rate/values_details',
+            locals: {
+              metric: defect_escape_rate[:per_defect_escape_values].first[:data],
+              details: false
+            } if defect_escape_rate && defect_escape_rate[:per_defect_escape_values] %>
+            <div class="distribution-report-button mr-3 mb-2"><%= link_to 'See details',
+                      products_metrics_development_metrics_path({product_name: product[:name], metric: { period: params&.dig(:metric, :period) }}),
+                      class: 'btn btn-secondary'
+            %></div>
+          <% end %>
+        <% else %>
+          <div class="summary col-md-12">
+            <div class="container p-12 text-center">
+              <span class="text-danger extra-padding"><h5>No Jira project associated. Contact an administrator</h5></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

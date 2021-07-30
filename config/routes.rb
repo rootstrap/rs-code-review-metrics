@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       resources :users, only: [] do
         resources :projects, only: :index, controller: 'users/projects'
       end
+
       get 'projects'
       get 'departments'
       get 'users'
@@ -26,6 +27,10 @@ Rails.application.routes.draw do
         resources :departments, only: :show, param: :department_name
       end
     end
+  end
+  resources :development_metrics, only: [] do
+    get 'products', on: :collection
+    get 'products_metrics', on: :collection
   end
   resources :departments, only: [], param: :name do
     namespace :projects do

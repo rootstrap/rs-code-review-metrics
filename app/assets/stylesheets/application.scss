@@ -70,3 +70,16 @@ canvas[style] {
     }
   }
 }
+
+.metric_tooltip {
+  font-size: x-large;
+  color: white;
+  background:black;
+  border-radius:50%;
+  height: 26px;
+  width: 26px;
+  line-height: 26px;
+  display: inline-block;
+  text-align: center;
+  margin-right: 6px;
+}
