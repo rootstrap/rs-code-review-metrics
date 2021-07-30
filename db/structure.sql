@@ -631,9 +631,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -2144,8 +2144,6 @@ CREATE INDEX index_projects_on_product_id ON public.projects USING btree (produc
 
 
 --
-<<<<<<< HEAD
-=======
 -- Name: index_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2153,7 +2151,6 @@ CREATE INDEX index_pull_request_comments_on_deleted_at ON public.pull_request_co
 
 
 --
->>>>>>> develop
 -- Name: index_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2764,20 +2761,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210707225815'),
 ('20210708153602'),
 ('20210712190532'),
-<<<<<<< HEAD
 ('20210714143812'),
-('20210714144543'),
 ('20210714155857'),
-('20210714194812'),
-('20210715184847'),
-('20210716215958');
-=======
 ('20210720212026'),
 ('20210722152015'),
 ('20210723184744'),
-('20210726184449'),
-('20210714143812'),
-('20210714155857');
->>>>>>> develop
+('20210726184449');
 
 
