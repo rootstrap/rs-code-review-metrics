@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Builders::ReviewOrCommentTurnaround do
+describe Builders::ReviewOrCommentTurnaround do
   describe '#build_review_turnaround' do
     let(:pull_request)    { create(:pull_request) }
     let(:santib)          { create(:user, login: 'santib') }
@@ -114,7 +114,7 @@ RSpec.describe Builders::ReviewOrCommentTurnaround do
     shared_examples 'when the owner of the second action makes a third action' do
       before { second_action }
 
-      it 'does not build the completd review turnaround' do
+      it 'does not build the completed review turnaround' do
         expect { third_action }.not_to change { CompletedReviewTurnaround.count }
       end
     end
