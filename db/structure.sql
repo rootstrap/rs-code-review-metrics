@@ -130,6 +130,17 @@ CREATE TYPE public.project_relevance AS ENUM (
 
 
 --
+-- Name: pull_request_comment_state; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.pull_request_comment_state AS ENUM (
+    'created',
+    'edited',
+    'deleted'
+);
+
+
+--
 -- Name: pull_request_state; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -961,6 +972,44 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 
 
 --
+-- Name: pull_request_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pull_request_comments (
+    id bigint NOT NULL,
+    github_id integer,
+    body character varying,
+    opened_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    pull_request_id bigint NOT NULL,
+    owner_id bigint,
+    review_request_id bigint,
+    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state
+);
+
+
+--
+-- Name: pull_request_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pull_request_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pull_request_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pull_request_comments_id_seq OWNED BY public.pull_request_comments.id;
+
+
+--
 -- Name: pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1513,6 +1562,13 @@ ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: pull_request_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_comments ALTER COLUMN id SET DEFAULT nextval('public.pull_request_comments_id_seq'::regclass);
+
+
+--
 -- Name: pull_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1771,6 +1827,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pull_request_comments pull_request_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_comments
+    ADD CONSTRAINT pull_request_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2080,6 +2144,41 @@ CREATE INDEX index_projects_on_product_id ON public.projects USING btree (produc
 
 
 --
+-- Name: index_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_deleted_at ON public.pull_request_comments USING btree (deleted_at);
+
+
+--
+-- Name: index_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_owner_id ON public.pull_request_comments USING btree (owner_id);
+
+
+--
+-- Name: index_pull_request_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_pull_request_id ON public.pull_request_comments USING btree (pull_request_id);
+
+
+--
+-- Name: index_pull_request_comments_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_review_request_id ON public.pull_request_comments USING btree (review_request_id);
+
+
+--
+-- Name: index_pull_request_comments_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pull_request_comments_on_state ON public.pull_request_comments USING btree (state);
+
+
+--
 -- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2285,6 +2384,14 @@ ALTER TABLE ONLY public.completed_review_turnarounds
 
 
 --
+-- Name: pull_request_comments fk_rails_161aa5ffd0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_comments
+    ADD CONSTRAINT fk_rails_161aa5ffd0 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
 -- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2477,6 +2584,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: pull_request_comments fk_rails_e74e223f63; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pull_request_comments
+    ADD CONSTRAINT fk_rails_e74e223f63 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+
+
+--
 -- Name: jira_projects fk_rails_eaa3060e1c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2649,6 +2764,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210720212026'),
 ('20210722152015'),
 ('20210723184744'),
-('20210726184449');
+('20210726184449'),
+('20210714143812'),
+('20210714155857');
 
 
