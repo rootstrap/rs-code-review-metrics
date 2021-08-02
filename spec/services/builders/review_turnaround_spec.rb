@@ -27,7 +27,7 @@ RSpec.describe Builders::ReviewTurnaround do
       end
     end
 
-    shared_examples 'for same week' do
+    shared_examples 'returns corresponding review turnaround for same week' do
       it 'returns the correct value for the action in seconds' do
         expect(described_class.call(review_request).value).to eq(seventy_two_hours_as_seconds)
       end
@@ -49,7 +49,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday)
       end
 
-      it_behaves_like 'for same week'
+      it_behaves_like 'returns corresponding review turnaround for same week'
     end
 
     context 'when review request and comment' do
@@ -63,7 +63,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday)
       end
 
-      it_behaves_like 'for same week'
+      it_behaves_like 'returns corresponding review turnaround for same week'
     end
 
     shared_context 'have a weekend inbetween' do
@@ -81,7 +81,7 @@ RSpec.describe Builders::ReviewTurnaround do
       end
     end
 
-    shared_examples 'for different weeks' do
+    shared_examples 'returns corresponding review turnaround for different weeks' do
       it 'does not count those days' do
         expect(described_class.call(review_request).value).to eq(twelve_hours_as_seconds)
       end
@@ -99,7 +99,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: next_monday)
       end
 
-      it_behaves_like 'for different weeks'
+      it_behaves_like 'returns corresponding review turnaround for different weeks'
     end
 
     context 'when the review request and the comment' do
@@ -113,7 +113,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: next_monday)
       end
 
-      it_behaves_like 'for different weeks'
+      it_behaves_like 'returns corresponding review turnaround for different weeks'
     end
 
     shared_context 'on friday and on sunday respectively' do
@@ -131,7 +131,7 @@ RSpec.describe Builders::ReviewTurnaround do
       end
     end
 
-    shared_examples 'for friday and sunday' do
+    shared_examples 'returns corresponding review turnaround for friday and sunday' do
       it 'calculates the value substracting all the second of weekend days' do
         expect(described_class.call(review_request).value).to eq(six_hours_as_seconds)
       end
@@ -148,7 +148,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: sunday)
       end
 
-      it_behaves_like 'for friday and sunday'
+      it_behaves_like 'returns corresponding review turnaround for friday and sunday'
     end
 
     context 'when the review request and comment are' do
@@ -161,7 +161,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: sunday)
       end
 
-      it_behaves_like 'for friday and sunday'
+      it_behaves_like 'returns corresponding review turnaround for friday and sunday'
     end
 
     shared_context 'on thursday and two weeks later on wednesday respectively' do
@@ -185,7 +185,7 @@ RSpec.describe Builders::ReviewTurnaround do
       end
     end
 
-    shared_examples 'for thursday and two weeks later on wednesday' do
+    shared_examples 'returns corresponding review turnaround for thursday and two weeks later' do
       it 'calculates the value substracting all the second of weekend days' do
         expect(described_class.call(review_request).value)
           .to eq(two_hundread_and_seventy_six_hours_seconds)
@@ -204,7 +204,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday_next_week)
       end
 
-      it_behaves_like 'for thursday and two weeks later on wednesday'
+      it_behaves_like 'returns corresponding review turnaround for thursday and two weeks later'
     end
 
     context 'when the review request and comment are' do
@@ -218,7 +218,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday_next_week)
       end
 
-      it_behaves_like 'for thursday and two weeks later on wednesday'
+      it_behaves_like 'returns corresponding review turnaround for thursday and two weeks later'
     end
 
     context 'when comment was opened before a review' do
@@ -241,7 +241,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday + 1.hour)
       end
 
-      it_behaves_like 'for same week'
+      it_behaves_like 'returns corresponding review turnaround for same week'
     end
 
     context 'when review was opened before a comment' do
@@ -264,7 +264,7 @@ RSpec.describe Builders::ReviewTurnaround do
                opened_at: thursday + 1.hour)
       end
 
-      it_behaves_like 'for same week'
+      it_behaves_like 'returns corresponding review turnaround for same week'
     end
   end
 end

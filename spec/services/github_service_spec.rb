@@ -310,8 +310,9 @@ RSpec.describe GithubService do
       end
 
       context 'when the action is created' do
+        before { change_action_to('created') }
+
         it 'sets body' do
-          change_action_to('created')
           expect {
             subject
           }.to change { pull_request_comment.reload.body }
@@ -321,8 +322,9 @@ RSpec.describe GithubService do
       end
 
       context 'when the action is edited' do
+        before { change_action_to('edited') }
+
         it 'edits body' do
-          change_action_to('edited')
           body = payload['comment']['body']
           pull_request_comment.update!(body: body)
 
@@ -333,7 +335,6 @@ RSpec.describe GithubService do
         end
 
         it 'sets edited' do
-          change_action_to('edited')
           expect {
             subject
           }.to change { pull_request_comment.reload.state }
@@ -342,8 +343,9 @@ RSpec.describe GithubService do
       end
 
       context 'when the action is deleted' do
+        before { change_action_to('deleted') }
+
         it 'sets deleted' do
-          change_action_to('deleted')
           expect {
             subject
           }.to change { pull_request_comment.reload.state }

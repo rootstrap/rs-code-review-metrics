@@ -15,12 +15,12 @@ RSpec.describe Builders::CompletedReviewTurnaround do
       review.opened_at.to_i - pr.opened_at.to_i
     end
 
-    shared_examples 'returns' do
-      it 'the completed review turnaround created' do
+    shared_examples 'the corresponding completed review turnaround is created' do
+      it 'returns the correct class' do
         expect(described_class.call(review)).to be_an(CompletedReviewTurnaround)
       end
 
-      it 'the correct value for the review in seconds' do
+      it 'returns the correct value in seconds' do
         expect(described_class.call(review).value).to eq(correct_value)
       end
     end
@@ -30,7 +30,7 @@ RSpec.describe Builders::CompletedReviewTurnaround do
         create(:review, owner: santib, project: project, pull_request: pr, review_request: rr)
       end
 
-      it_behaves_like 'returns'
+      it_behaves_like 'the corresponding completed review turnaround is created'
     end
 
     context 'when second review is a comment' do
@@ -41,7 +41,7 @@ RSpec.describe Builders::CompletedReviewTurnaround do
                review_request: rr)
       end
 
-      it_behaves_like 'returns'
+      it_behaves_like 'the corresponding completed review turnaround is created'
     end
   end
 end

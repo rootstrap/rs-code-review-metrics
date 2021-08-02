@@ -30,13 +30,13 @@ module Builders
     end
 
     def reviews_or_comments_different_users
-      count_reviews = @pull_request .reviews.distinct.pluck(:owner_id)
-      count_comments = @pull_request .pull_request_comments.distinct.pluck(:owner_id)
+      count_reviews = @pull_request.reviews.distinct.pluck(:owner_id)
+      count_comments = @pull_request.pull_request_comments.distinct.pluck(:owner_id)
       (count_reviews | count_comments).count
     end
 
     def uniq_review_on_review_request?
-      reviews_or_comments_on_review_request.equal?(1)
+      @uniq_review_on_review_request ||= reviews_or_comments_on_review_request.equal?(1)
     end
 
     def reviews_or_comments_on_review_request
