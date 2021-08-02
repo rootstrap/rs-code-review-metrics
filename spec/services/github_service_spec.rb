@@ -281,5 +281,84 @@ RSpec.describe GithubService do
         expect { subject }.to raise_error(Events::NotHandleableError)
       end
     end
+
+    context 'pull_request_comment' do
+      let(:payload) do
+        create :pull_request_comment_payload,
+               body: 'initial body contents',
+               changes: { body: 'new body contents' }
+      end
+      let(:event) { 'pull_request_comment' }
+      let(:pull_request_comment) do
+        create :pull_request_comment, github_id: payload['comment']['id'], state: 'created'
+      end
+      let!(:user) { create :user, github_id: payload['comment']['user']['id'] }
+      let!(:project) do
+        create :project, github_id: payload['repository']['id']
+      end
+      let!(:pull_request) do
+        create :pull_request, number: payload['issue']['number'], project_id: project.id
+      end
+      let!(:review_request) do
+        create :review_request,
+               pull_request_id: pull_request.id,
+               reviewer_id: user.id
+      end
+
+      it 'creates a pull request comment event' do
+        expect { subject }.to change(Events::PullRequestComment, :count).by(1)
+      end
+
+      context 'when the action is created' do
+        before { change_action_to('created') }
+
+        it 'sets body' do
+          expect {
+            subject
+          }.to change { pull_request_comment.reload.body }
+            .from(pull_request_comment.body)
+            .to(payload['comment']['body'])
+        end
+      end
+
+      context 'when the action is edited' do
+        before { change_action_to('edited') }
+
+        it 'edits body' do
+          body = payload['comment']['body']
+          pull_request_comment.update!(body: body)
+
+          expect {
+            subject
+          }.to change { pull_request_comment.reload.body }
+            .from(body).to('new body contents')
+        end
+
+        it 'sets edited' do
+          expect {
+            subject
+          }.to change { pull_request_comment.reload.state }
+            .from(pull_request_comment.state).to('edited')
+        end
+      end
+
+      context 'when the action is deleted' do
+        before { change_action_to('deleted') }
+
+        it 'sets deleted' do
+          expect {
+            subject
+          }.to change { pull_request_comment.reload.state }
+            .from(pull_request_comment.state).to('deleted')
+        end
+      end
+
+      it 'raise an exception if there is no review request' do
+        review_request.update!(reviewer: (create :user))
+        expect {
+          subject
+        }.to raise_error(Reviews::NoReviewRequestError)
+      end
+    end
   end
 end

@@ -631,9 +631,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -2761,11 +2761,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210707225815'),
 ('20210708153602'),
 ('20210712190532'),
+('20210714143812'),
+('20210714155857'),
 ('20210720212026'),
 ('20210722152015'),
 ('20210723184744'),
-('20210726184449'),
-('20210714143812'),
-('20210714155857');
+('20210726184449');
 
 

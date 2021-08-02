@@ -22,7 +22,12 @@ module Builders
     end
 
     def review_opened_at
-      @review_opened_at ||= @review_request.reviews.first.opened_at
+      @review_opened_at ||= first_review_or_comment
+    end
+
+    def first_review_or_comment
+      (@review_request.pull_request_comments | @review_request.reviews)
+        .min_by(&:opened_at).opened_at
     end
   end
 end

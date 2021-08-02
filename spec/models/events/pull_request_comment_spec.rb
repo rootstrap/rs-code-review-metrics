@@ -56,4 +56,23 @@ describe Events::PullRequestComment, type: :model do
       expect(subject).to_not be_valid
     end
   end
+
+  describe 'callbacks' do
+    describe '#build_review_or_comment_turnaround' do
+      context 'when a pull request comment is created' do
+        let(:pull_request) { create(:pull_request) }
+        let(:review_request) { create(:review_request, pull_request: pull_request) }
+        let(:pull_request_comment) do
+          create :pull_request_comment, review_request: review_request
+        end
+
+        before { travel_to(Time.zone.today.beginning_of_day) }
+
+        it 'calls the review/comment builder helper' do
+          expect(Builders::ReviewOrCommentTurnaround). to receive(:call)
+          pull_request_comment
+        end
+      end
+    end
+  end
 end

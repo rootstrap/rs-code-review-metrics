@@ -29,13 +29,19 @@ class GithubService < BaseService
   end
 
   def resolve_event_name(event)
+    return event.gsub('issue_', 'pull_request_') if pull_request_comment?
+
     return event.gsub('pull_request_', '') unless event == 'pull_request'
 
     event
   end
 
   def handleable_event?
-    Event::TYPES.include?(@event)
+    Event::TYPES.include?(@event) || pull_request_comment?
+  end
+
+  def pull_request_comment?
+    @payload.dig('issue', 'pull_request').present?
   end
 
   def find_or_create_event_type
