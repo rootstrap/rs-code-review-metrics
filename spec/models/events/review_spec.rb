@@ -61,7 +61,7 @@ RSpec.describe Events::Review, type: :model do
         let(:review) { create :review, review_request: review_request }
 
         it 'calls the review/comment builder helper' do
-          expect(Builders::ReviewOrCommentTurnaround). to receive(:call)
+          expect(Builders::ReviewOrCommentTurnaround).to receive(:call)
           review
         end
       end
