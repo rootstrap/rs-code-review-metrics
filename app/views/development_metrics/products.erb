@@ -14,7 +14,15 @@
 
   <% if @product %>
       <%if current_page?(products_development_metrics_path)%>
-        <%= render 'development_metrics/products/general', product: @product, defect_escape_rate: @defect_escape_rate, metric_definition: @metric_definition %>
+        <%= render 'development_metrics/products/general',
+          product: @product,
+          defect_escape_rate: @defect_escape_rate,
+          development_cycle: @development_cycle,
+          development_cycle_definition: @development_cycle_definition,
+          defect_escape_rate_definition: @defect_escape_rate_definition,
+          has_jira_project: @has_jira_project,
+          show_defect_escape_rate: @show_defect_escape_rate,
+          show_development_cycle: @show_development_cycle %>
       <% end %>
   <% else %>
     <div class="row">
