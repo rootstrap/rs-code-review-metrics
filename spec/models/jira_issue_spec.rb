@@ -2,25 +2,25 @@
 #
 # Table name: jira_issues
 #
-#  id              :bigint           not null, primary key
-#  deleted_at      :datetime
-#  environment     :enum
-#  in_progress_at  :datetime
-#  informed_at     :datetime         not null
-#  issue_type      :enum             not null
-#  key             :string
-#  resolved_at     :datetime
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  jira_project_id :bigint           not null
+#  id             :bigint           not null, primary key
+#  deleted_at     :datetime
+#  environment    :enum
+#  in_progress_at :datetime
+#  informed_at    :datetime         not null
+#  issue_type     :enum             not null
+#  key            :string
+#  resolved_at    :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  product_id     :bigint
 #
 # Indexes
 #
-#  index_jira_issues_on_jira_project_id  (jira_project_id)
+#  index_jira_issues_on_product_id  (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_project_id => jira_projects.id)
+#  fk_rails_...  (product_id => products.id)
 #
 
 require 'rails_helper'

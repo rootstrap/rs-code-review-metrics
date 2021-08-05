@@ -2,9 +2,10 @@
 #
 # Table name: products
 #
-#  id          :bigint           not null, primary key
-#  description :string
-#  name        :string           not null
+#  id               :bigint           not null, primary key
+#  description      :string
+#  jira_project_key :string
+#  name             :string           not null
 #
 # Indexes
 #
