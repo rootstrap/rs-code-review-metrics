@@ -631,9 +631,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -877,7 +877,10 @@ CREATE TABLE public.products (
     id bigint NOT NULL,
     name character varying NOT NULL,
     description character varying,
-    jira_project_key character varying
+    jira_project_key character varying,
+    created_at timestamp(6) without time zone,
+    updated_at timestamp(6) without time zone,
+    deleted_at timestamp without time zone
 );
 
 
@@ -2068,6 +2071,13 @@ CREATE INDEX index_metrics_products_on_product_id_and_metric_id ON public.metric
 
 
 --
+-- Name: index_products_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_on_deleted_at ON public.products USING btree (deleted_at);
+
+
+--
 -- Name: index_products_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2706,6 +2716,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210726184449'),
 ('20210805141951'),
 ('20210805145436'),
-('20210805151203');
+('20210805151203'),
+('20210806155926');
 
 
