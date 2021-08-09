@@ -5,7 +5,7 @@
     <% if metric && metric[:rate] -%>
       <div class="item-list">
         <div>
-          <h5>Overall Defect Escape Rate:</h5>
+          <h5>Overall <%= defect_escape_rate_definition && defect_escape_rate_definition[:name] %>:</h5>
           <span class="text-primary">
                 <h2>
                   <%= metric[:rate] %> %

@@ -1,0 +1,10 @@
+<%= line_chart development_cycle[:per_development_cycle_values],
+        ytitle: "Days",
+        suffix: " days",
+        library: { spanGaps: true } if development_cycle %>
+<%= render partial: 'development_metrics/development_cycle/values_details',
+           locals: {
+             metric: development_cycle[:per_development_cycle_average].first[:data],
+             development_cycle_definition: development_cycle_definition,
+             details: details
+           } if development_cycle %>

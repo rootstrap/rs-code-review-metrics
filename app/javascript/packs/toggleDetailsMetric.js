@@ -19,8 +19,6 @@ $(document).on('turbolinks:load', function() {
   } else {
     $('.details-button').show();
   }
-});
 
-$(function () {
   $('[data-toggle="tooltip"]').tooltip();
 });

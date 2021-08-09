@@ -7,5 +7,6 @@
 <%= render partial: 'development_metrics/defect_escape_rate/values_details',
            locals: {
              metric: defect_escape_rate[:per_defect_escape_values].first[:data],
-             details: details
+             details: details,
+             defect_escape_rate_definition: defect_escape_rate_definition
            } if defect_escape_rate && defect_escape_rate[:per_defect_escape_values] %>
