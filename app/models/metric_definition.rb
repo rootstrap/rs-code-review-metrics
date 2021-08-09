@@ -17,7 +17,8 @@ class MetricDefinition < ApplicationRecord
                blog_post_count: 'blog_post_count',
                open_source_visits: 'open_source_visits',
                defect_escape_rate: 'defect_escape_rate',
-               pull_request_size: 'pull_request_size' }
+               pull_request_size: 'pull_request_size',
+               development_cycle: 'development_cycle' }
 
   validates :code, uniqueness: true
   validates :name, presence: true, uniqueness: true

@@ -2,6 +2,8 @@ class DevelopmentMetricsController < ApplicationController
   layout 'sidebar_metrics'
   include LoadSettings
 
+  PRODUCTS_ACTION = 'products'.freeze
+
   def index; end
 
   def products
@@ -54,16 +56,71 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_product_metrics(entity_id, entity_name)
+    @has_jira_project = product.jira_project&.present?
+
+    return unless @has_jira_project
+
+    @query_metric_name = metric_params[:name]
+
+    set_metrics_to_show
+
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
                                                      .call(entity_id, metric_params[:period])
-    @defect_escape_rate = metrics[:defect_escape_rate]
-    @metric_definition = MetricDefinition.find_by(code: :defect_escape_rate)
+
+    defect_escape_rate(metrics)
+    development_cycle(metrics)
   end
 
   def build_metrics_definitions
     @review_turnaround_definition = MetricDefinition.find_by(code: :review_turnaround)
     @merge_time_definition = MetricDefinition.find_by(code: :merge_time)
     @pull_request_size_definition = MetricDefinition.find_by(code: :pull_request_size)
+  end
+
+  def set_metrics_to_show
+    metrics_to_show if @query_metric_name.present?
+
+    show_defect_escape_rate
+    show_development_cycle
+  end
+
+  def metrics_to_show
+    case @query_metric_name.to_sym
+    when :defect_escape_rate
+      @show_defect_escape_rate = true
+    when :development_cycle
+      @show_development_cycle = true
+    end
+  end
+
+  def defect_escape_rate(metrics)
+    return unless @show_defect_escape_rate
+
+    @defect_escape_rate = metrics[:defect_escape_rate]
+    @defect_escape_rate_definition = MetricDefinition.find_by(code: :defect_escape_rate)
+  end
+
+  def development_cycle(metrics)
+    return unless @show_development_cycle
+
+    @development_cycle = metrics[:development_cycle]
+    @development_cycle_definition = MetricDefinition.find_by(code: :development_cycle)
+
+    return unless @development_cycle[:per_development_cycle_values].first[:data].empty?
+
+    @show_development_cycle = false
+  end
+
+  def show_defect_escape_rate
+    @show_defect_escape_rate ||= product_action
+  end
+
+  def show_development_cycle
+    @show_development_cycle ||= product_action
+  end
+
+  def product_action
+    @product_action ||= action == PRODUCTS_ACTION
   end
 
   def product
@@ -80,6 +137,10 @@ class DevelopmentMetricsController < ApplicationController
 
   def metric_params
     @metric_params ||= params[:metric]
+  end
+
+  def action
+    @action ||= params[:action]
   end
 
   def code_climate_project_summary
