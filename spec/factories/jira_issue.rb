@@ -9,15 +9,15 @@
 #  key             :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  jira_project_id :bigint           not null
+#  product_id      :bigint           not null
 #
 # Indexes
 #
-#  index_jira_issues_on_jira_project_id  (jira_project_id)
+#  index_jira_issues_on_product_id  (product_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_project_id => jira_projects.id)
+#  fk_rails_...  (product_id => product.id)
 #
 
 FactoryBot.define do
@@ -49,7 +49,7 @@ FactoryBot.define do
     end
 
     after(:build) do |jira_issue|
-      jira_issue.key { "#{jira_issue.jira_project.jira_project_key}-#{Faker::Number.digits(3)}" }
+      jira_issue.key { "#{jira_issue.product.jira_project_key}-#{Faker::Number.digits(3)}" }
     end
   end
 end

@@ -69,8 +69,6 @@ class Project < ApplicationRecord
 
   before_validation :set_default_language, on: :create
 
-  delegate :jira_project, to: :product
-
   scope :open_source, lambda {
     internal.with_language.where(is_private: false)
   }
@@ -129,7 +127,7 @@ class Project < ApplicationRecord
   end
 
   def jira_key
-    jira_project&.jira_project_key
+    product&.jira_project_key
   end
 
   private

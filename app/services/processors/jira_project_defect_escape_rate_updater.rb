@@ -3,8 +3,8 @@ module Processors
     IN_PROGRESS = 'In Progress'.freeze
     JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
 
-    def initialize(jira_project)
-      @jira_project = jira_project
+    def initialize(product)
+      @product = product
     end
 
     def call
@@ -14,7 +14,7 @@ module Processors
 
         issue = JiraIssue.find_or_initialize_by(
           key: bug[:key],
-          jira_project_id: @jira_project.id
+          product_id: @product.id
         )
 
         issue_update!(issue, bug_fields)
@@ -24,7 +24,7 @@ module Processors
     private
 
     def bugs_to_update
-      JiraClient::Repository.new(@jira_project).bugs
+      JiraClient::Repository.new(@product).bugs
     end
 
     def issue_update!(issue, bug_fields)

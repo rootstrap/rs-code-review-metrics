@@ -2,12 +2,11 @@ require 'rails_helper'
 
 describe Processors::JiraProjectDevelopmentCycleUpdater do
   describe '#call' do
-    let(:product) { create(:product) }
-    let(:project) { create(:project, product: product) }
     let(:project_key) { 'TES' }
-    let!(:jira_project) { create(:jira_project, product: product, jira_project_key: project_key) }
+    let(:product) { create(:product, jira_project_key: project_key) }
+    let!(:project) { create(:project, product: product) }
     let(:last_issue) { JiraIssue.last }
-    let(:subject) { described_class.call(jira_project) }
+    let(:subject) { described_class.call(product) }
     let(:bugs) do
       [
         {
@@ -37,7 +36,7 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
 
       it 'is associated to the project' do
         subject
-        expect(last_issue.jira_project).to eq(jira_project)
+        expect(last_issue.product).to eq(product)
       end
 
       it 'is set the informed at date' do
@@ -93,7 +92,7 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
                in_progress_at: '2021-03-15T15:48:04.000-0300',
                issue_type: 'task',
                environment: 'production',
-               jira_project: jira_project,
+               product: product,
                key: 'TES-4')
       end
 

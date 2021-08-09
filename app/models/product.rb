@@ -24,7 +24,7 @@ class Product < ApplicationRecord
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
-  validates :jira_project_key, uniqueness: true
+  validates :jira_project_key, uniqueness: true, allow_blank: true
 
   accepts_nested_attributes_for :projects
 end

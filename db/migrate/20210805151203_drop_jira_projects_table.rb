@@ -2,12 +2,12 @@ class DropJiraProjectsTable < ActiveRecord::Migration[6.0]
   def up
     execute <<-SQL
       UPDATE jira_issues AS T1
-      SET product_id = T2.id 
-      FROM 
+      SET product_id = T2.id
+      FROM
         products AS T2
         INNER JOIN jira_projects AS T3
         ON T2.id = T3.product_id
-      WHERE 
+      WHERE
         T1.jira_project_id = T3.id;
     SQL
 

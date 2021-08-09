@@ -56,7 +56,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_product_metrics(entity_id, entity_name)
-    @has_jira_project = product.jira_project&.present?
+    @has_jira_project = product.jira_project_key.present?
 
     return unless @has_jira_project
 

@@ -16,6 +16,8 @@
 #  index_products_on_name        (name)
 #
 
+require 'rails_helper'
+
 describe Product, type: :model do
   subject { build :product }
 
@@ -31,6 +33,13 @@ describe Product, type: :model do
       it { is_expected.to have_many(:projects) }
       it { is_expected.to have_many(:metrics) }
       it { is_expected.to have_many(:jira_issues) }
+    end
+
+    context 'when jira project is empty' do
+      it 'is valid' do
+        subject.jira_project_key = ''
+        expect(subject).to be_valid
+      end
     end
 
     context 'with invalid attributes' do
