@@ -3,16 +3,18 @@
 # Table name: products
 #
 #  id               :bigint           not null, primary key
+#  deleted_at       :datetime
 #  description      :string
 #  jira_project_key :string
 #  name             :string           not null
+#  created_at       :datetime
+#  updated_at       :datetime
 #
 # Indexes
 #
-#  index_products_on_name  (name)
+#  index_products_on_deleted_at  (deleted_at)
+#  index_products_on_name        (name)
 #
-
-require 'rails_helper'
 
 describe Product, type: :model do
   subject { build :product }
@@ -25,9 +27,10 @@ describe Product, type: :model do
 
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_uniqueness_of(:name) }
+      it { is_expected.to validate_uniqueness_of(:jira_project_key) }
       it { is_expected.to have_many(:projects) }
       it { is_expected.to have_many(:metrics) }
-      it { is_expected.to have_one(:jira_project) }
+      it { is_expected.to have_many(:jira_issues) }
     end
 
     context 'with invalid attributes' do

@@ -48,7 +48,7 @@ module Builders
         end
 
         def product_has_jira_board_associated?(product_id)
-          ::Product.find(product_id).jira_project&.present?
+          ::Product.find(product_id)&.jira_project_key.present?
         end
       end
 

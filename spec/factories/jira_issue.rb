@@ -26,7 +26,7 @@ FactoryBot.define do
     sequence(:issue_type) { |n| %w[bug task story epic][n % 4] }
     sequence(:environment) { |n| %w[local development qa staging production][n % 7] }
 
-    association :jira_project
+    association :product
 
     trait :bug do
       issue_type { 'bug' }

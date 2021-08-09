@@ -3,7 +3,6 @@ require 'rails_helper'
 describe Builders::Chartkick::DevelopmentMetrics do
   describe Builders::Chartkick::DevelopmentMetrics::Product do
     let(:product) { create(:product) }
-    let!(:jira_project) { create(:jira_project, product: product) }
     let(:period) { 4 }
     let(:defect_escape_rate_entities) { %i[per_defect_escape_rate per_defect_escape_values] }
 

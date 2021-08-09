@@ -23,9 +23,7 @@
 #  fk_rails_...  (product_id => products.id)
 #
 
-require 'rails_helper'
-
-RSpec.describe JiraIssue, type: :model do
+describe JiraIssue, type: :model do
   subject { build :jira_issue }
 
   context 'validations' do
@@ -35,7 +33,7 @@ RSpec.describe JiraIssue, type: :model do
 
     it { is_expected.to validate_presence_of(:informed_at) }
     it { is_expected.to validate_presence_of(:issue_type) }
-    it { is_expected.to belong_to(:jira_project) }
+    it { is_expected.to belong_to(:product) }
     it do
       is_expected.to define_enum_for(:environment).with_values(JiraIssue.environments)
                                                   .backed_by_column_of_type(:enum)

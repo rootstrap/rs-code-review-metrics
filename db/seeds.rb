@@ -27,11 +27,8 @@ if Rails.env.development?
     end
 
     product = Product.create!(name: 'rs-code-review-metrics',
-                              description: 'Project for tracking PKIs')
-
-    jira_project = JiraProject.create!(jira_project_key: 'RSCODE',
-                                       project_name: 'rs-code-review-metrics',
-                                       product: product)
+                              description: 'Project for tracking PKIs',
+                              jira_project_key: 'RSCODE')
 
     project = Project.create!(github_id: rand(1000),
                               name: 'rs-code-review-metrics',
@@ -75,11 +72,8 @@ if Rails.env.development?
     end
 
     second_product = Product.create!(name: 'forecast',
-                                     description: 'Forecast')
-
-    second_jira_project = JiraProject.create!(jira_project_key: 'forc',
-                                              project_name: 'forecast',
-                                              product: second_product)
+                                     description: 'Forecast',
+                                     jira_project_key: 'forc')
 
     second_project = Project.create!(github_id: rand(1000),
                                      name: 'forecast',

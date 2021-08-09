@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe JiraClient::Repository do
   let(:project_key) { 'TES' }
-  let(:jira_project) { create(:jira_project, jira_project_key: project_key) }
+  let(:product) { create(:product, jira_project_key: project_key) }
   let(:payload) { { issues: bugs } }
 
   describe 'bugs' do
-    subject { described_class.new(jira_project).bugs }
+    subject { described_class.new(product).bugs }
 
     before { stub_get_bugs_ok(payload, project_key) }
 
@@ -50,7 +50,7 @@ describe JiraClient::Repository do
   end
 
   describe 'issues' do
-    subject { described_class.new(jira_project).issues }
+    subject { described_class.new(product).issues }
 
     before { stub_get_issues_ok(payload, project_key) }
 

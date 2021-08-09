@@ -35,7 +35,7 @@ class JiraIssue < ApplicationRecord
     production: 'production'
   }
 
-  belongs_to :jira_project
+  belongs_to :product
 
   validates :informed_at, :issue_type, presence: true
 end
