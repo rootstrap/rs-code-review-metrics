@@ -28,10 +28,16 @@ RSpec.describe JiraBoard, type: :model do
       expect(subject).to be_valid
     end
 
-    it { is_expected.to validate_presence_of(:jira_project_key) }
     it { is_expected.to validate_uniqueness_of(:jira_project_key) }
 
     it { is_expected.to have_many(:jira_issues) }
     it { is_expected.to belong_to(:product) }
+
+    context 'when jira project is empty' do
+      it 'is valid' do
+        subject.jira_project_key = ''
+        expect(subject).to be_valid
+      end
+    end
   end
 end

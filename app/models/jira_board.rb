@@ -26,5 +26,5 @@ class JiraBoard < ApplicationRecord
 
   has_many :jira_issues, dependent: :destroy
 
-  validates :jira_project_key, presence: true, uniqueness: true
+  validates :jira_project_key, presence: true, uniqueness: true, allow_blank: true
 end

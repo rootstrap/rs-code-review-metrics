@@ -20,7 +20,7 @@ ActiveAdmin.register Product do
         row :jira_project_key
       end
 
-      table_for product.projects.order('name ASC') do
+      table_for product.projects.order(:name) do
         column 'Projects' do |project|
           link_to project.name, [:admin, project]
         end
@@ -39,9 +39,15 @@ ActiveAdmin.register Product do
         f.inputs for: [:jira_board, f.object.jira_board] do |s|
           s.input :jira_project_key
         end
+      else
+        f.inputs for: [:jira_board, f.object.jira_board || JiraBoard.new] do |s|
+          s.input :jira_project_key, required: false
+        end
       end
 
-      f.input :projects, as: :check_boxes
+      f.input :projects,
+              as: :check_boxes,
+              collection: Project.order(:name)
     end
     f.actions
   end
