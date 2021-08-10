@@ -12,13 +12,13 @@
 #
 
 class Product < ApplicationRecord
-  has_one :jira_project, dependent: :destroy
+  has_one :jira_board, dependent: :destroy
 
   has_many :projects, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 
-  accepts_nested_attributes_for :jira_project
+  accepts_nested_attributes_for :jira_board
   accepts_nested_attributes_for :projects
 end

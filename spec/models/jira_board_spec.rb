@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: jira_projects
+# Table name: jira_boards
 #
 #  id               :bigint           not null, primary key
 #  deleted_at       :datetime
@@ -12,7 +12,7 @@
 #
 # Indexes
 #
-#  index_jira_projects_on_product_id  (product_id)
+#  index_jira_boards_on_product_id  (product_id)
 #
 # Foreign Keys
 #
@@ -20,8 +20,8 @@
 #
 require 'rails_helper'
 
-RSpec.describe JiraProject, type: :model do
-  subject { build :jira_project }
+RSpec.describe JiraBoard, type: :model do
+  subject { build :jira_board }
 
   context 'validations' do
     it 'is valid with valid attributes' do

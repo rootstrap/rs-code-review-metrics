@@ -1,6 +1,6 @@
 ActiveAdmin.register Product do
   permit_params :id, :description, :name, :jira_key, :new_jira_key,
-                jira_project_attributes: %i[id jira_project_key],
+                jira_board_attributes: %i[id jira_project_key],
                 project_ids: []
 
   index do
@@ -8,15 +8,15 @@ ActiveAdmin.register Product do
     id_column
     column :name
     column :description
-    column :jira_project do |product|
-      product.jira_project&.jira_project_key
+    column :jira_project_key do |product|
+      product.jira_board&.jira_project_key
     end
     actions
   end
 
   show do
     attributes_table(*default_attribute_table_rows) do
-      attributes_table_for product.jira_project do
+      attributes_table_for product.jira_board do
         row :jira_project_key
       end
 
@@ -35,8 +35,8 @@ ActiveAdmin.register Product do
     f.inputs do
       f.input :name
       f.input :description, required: false
-      if object.jira_project
-        f.inputs for: [:jira_project, f.object.jira_project] do |s|
+      if object.jira_board
+        f.inputs for: [:jira_board, f.object.jira_board] do |s|
           s.input :jira_project_key
         end
       end

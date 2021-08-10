@@ -26,7 +26,7 @@ describe Product, type: :model do
       it { is_expected.to validate_uniqueness_of(:name) }
       it { is_expected.to have_many(:projects) }
       it { is_expected.to have_many(:metrics) }
-      it { is_expected.to have_one(:jira_project) }
+      it { is_expected.to have_one(:jira_board) }
     end
 
     context 'with invalid attributes' do

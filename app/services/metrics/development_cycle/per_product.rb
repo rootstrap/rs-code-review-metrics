@@ -15,7 +15,7 @@ module Metrics
       def query(interval)
         product = Product.find(@entity_id)
 
-        resolved_issues = product.jira_project.jira_issues.where(resolved_at: interval)
+        resolved_issues = product.jira_board.jira_issues.where(resolved_at: interval)
         return [] if resolved_issues.empty?
 
         total_development_cycle = development_cycle(resolved_issues)['average']
