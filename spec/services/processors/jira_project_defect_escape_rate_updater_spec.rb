@@ -5,9 +5,9 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
     let(:product) { create(:product) }
     let(:project) { create(:project, product: product) }
     let(:project_key) { 'TES' }
-    let!(:jira_project) { create(:jira_project, product: product, jira_project_key: project_key) }
+    let!(:jira_board) { create(:jira_board, product: product, jira_project_key: project_key) }
     let(:last_issue) { JiraIssue.last }
-    let(:subject) { described_class.call(jira_project) }
+    let(:subject) { described_class.call(jira_board) }
     let(:bugs) do
       [
         {
@@ -33,7 +33,7 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
 
       it 'is associated to the project' do
         subject
-        expect(last_issue.jira_project).to eq(jira_project)
+        expect(last_issue.jira_board).to eq(jira_board)
       end
 
       it 'is set the environment' do
