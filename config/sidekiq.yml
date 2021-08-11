@@ -4,4 +4,3 @@ production:
   :concurrency: 10
 :queues:
   - default
-  - weekly_metrics
