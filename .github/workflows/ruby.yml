@@ -80,6 +80,7 @@ jobs:
       PGUSER: postgres
       PGPASSWORD: postgres
       RAILS_ENV: test
+      JIRA_ENVIRONMENT_FIELD: customfield_10000
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

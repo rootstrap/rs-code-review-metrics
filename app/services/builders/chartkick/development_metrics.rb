@@ -38,7 +38,7 @@ module Builders
           metrics = {}
 
           if product_has_jira_board_associated?(@entity_id)
-            metrics.merge!(defect_escape_rate_entities)
+            metrics.merge!(defect_escape_rate_entities, development_cycle_entities)
           end
           metrics
         end
@@ -47,8 +47,12 @@ module Builders
           { defect_escape_rate: %w[defect_escape_rate defect_escape_values] }
         end
 
+        def development_cycle_entities
+          { development_cycle: %w[development_cycle_average development_cycle_values] }
+        end
+
         def product_has_jira_board_associated?(product_id)
-          ::Product.find(product_id).jira_project&.present?
+          ::Product.find(product_id).jira_board&.present?
         end
       end
 

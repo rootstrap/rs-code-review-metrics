@@ -1,32 +1,43 @@
 module Processors
   class JiraProjectDefectEscapeRateUpdater < BaseService
-    def initialize(jira_project)
-      @jira_project = jira_project
+    IN_PROGRESS = 'In Progress'.freeze
+    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
+
+    def initialize(jira_board)
+      @jira_board = jira_board
     end
 
     def call
       bugs_to_update.each do |bug|
         bug.deep_symbolize_keys!
         bug_fields = bug[:fields]
-        environment_field = bug_fields[ENV['JIRA_ENVIRONMENT_FIELD'].to_sym]
 
         issue = JiraIssue.find_or_initialize_by(
           key: bug[:key],
-          jira_project_id: @jira_project.id
+          jira_board_id: @jira_board.id
         )
 
-        issue.update!(
-          informed_at: bug_fields[:created],
-          environment: environment_field ? environment_field.first[:value].downcase : nil,
-          issue_type: 'bug'
-        )
+        issue_update!(issue, bug_fields)
       end
     end
 
     private
 
     def bugs_to_update
-      JiraClient::Repository.new(@jira_project).bugs
+      JiraClient::Repository.new(@jira_board).bugs
+    end
+
+    def issue_update!(issue, bug_fields)
+      environment_field = bug_fields[JIRA_ENVIRONMENT_FIELD]
+      status_field = bug_fields[:status][:name]
+
+      issue.update!(
+        informed_at: bug_fields[:created],
+        resolved_at: bug_fields[:resolutiondate] || nil,
+        in_progress_at: status_field == IN_PROGRESS ? bug_fields[:updated] : issue.in_progress_at,
+        environment: environment_field ? environment_field.first[:value].downcase : nil,
+        issue_type: 'bug'
+      )
     end
   end
 end

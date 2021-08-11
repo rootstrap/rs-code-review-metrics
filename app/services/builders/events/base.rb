@@ -15,6 +15,11 @@ module Builders
         ::Events::PullRequest.find_by!(github_id: @payload['pull_request']['id'])
       end
 
+      def find_issue_pull_request(project_id)
+        ::Events::PullRequest.find_by!(number: @payload['issue']['number'],
+                                       project_id: project_id)
+      end
+
       def find_last_review_request(pull_request, reviewer_id)
         review_request = pull_request.review_requests.where(reviewer_id: reviewer_id).last
         return review_request unless review_request.nil?

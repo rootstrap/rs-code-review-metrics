@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Builders::Chartkick::DevelopmentMetrics do
   describe Builders::Chartkick::DevelopmentMetrics::Product do
     let(:product) { create(:product) }
-    let!(:jira_project) { create(:jira_project, product: product) }
+    let!(:jira_board) { create(:jira_board, product: product) }
     let(:period) { 4 }
     let(:defect_escape_rate_entities) { %i[per_defect_escape_rate per_defect_escape_values] }
 
@@ -11,6 +11,29 @@ describe Builders::Chartkick::DevelopmentMetrics do
       it 'returns a hash with the right data per entity for each metric' do
         metric_data = described_class.call(product.id, period)
         expect(metric_data[:defect_escape_rate].keys).to match_array(defect_escape_rate_entities)
+      end
+    end
+  end
+
+  describe Builders::Chartkick::DevelopmentMetrics::Product do
+    let(:product) { create(:product) }
+    let(:project_key) { 'TES' }
+    let!(:jira_board) { create(:jira_board, product: product) }
+    let(:period) { 4 }
+    let(:defect_escape_rate_entities) { %i[per_defect_escape_rate per_defect_escape_values] }
+    let(:development_cycle_entities) do
+      %i[per_development_cycle_average per_development_cycle_values]
+    end
+
+    describe '.call' do
+      it 'returns a hash with the right data per entity for defect escape rate metric' do
+        metric_data = described_class.call(product.id, period)
+        expect(metric_data[:defect_escape_rate].keys).to match_array(defect_escape_rate_entities)
+      end
+
+      it 'returns a hash with the right data per entity for development cycle metric' do
+        metric_data = described_class.call(product.id, period)
+        expect(metric_data[:development_cycle].keys).to match_array(development_cycle_entities)
       end
     end
   end

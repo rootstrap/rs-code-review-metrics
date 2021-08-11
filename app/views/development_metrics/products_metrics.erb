@@ -2,13 +2,16 @@
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
 
 <% if @product %>
-  <div class="col-md-12 text-center mt-2">
-    <b><%= @product[:name] %></b>
+  <div class="row">
+    <div class="col-md-12 text-center mt-2">
+      <b><%= @product[:name] %></b>
+    </div>
+    <%= render 'development_metrics/navigation', product: @product %>
   </div>
-  <%= render 'development_metrics/navigation', product: @product %>
 <% end %>
 <div class="metrics-container container col-md-12">
   <%= render 'shared/products_metrics/nav-filter' do |f| %>
+    <%= hidden_field_tag 'metric[name]', @query_metric_name  %>
     <div class="row">
       <div class="col-md-5 period-input">
         <%= render 'shared/interval-filter', form: f %>
@@ -18,7 +21,15 @@
 
   <% if @product %>
       <%if current_page?(products_metrics_development_metrics_path)%>
-        <%= render 'development_metrics/products/general', product: @product, defect_escape_rate: @defect_escape_rate  %>
+        <%= render 'development_metrics/products/general',
+          product: @product,
+          defect_escape_rate: @defect_escape_rate,
+          development_cycle: @development_cycle,
+          development_cycle_definition: @development_cycle_definition,
+          defect_escape_rate_definition: @defect_escape_rate_definition,
+          has_jira_project: @has_jira_project,
+          show_defect_escape_rate: @show_defect_escape_rate,
+          show_development_cycle: @show_development_cycle %>
       <% end %>
   <% else %>
     <div class="row">

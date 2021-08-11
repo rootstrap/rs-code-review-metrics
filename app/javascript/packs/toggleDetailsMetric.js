@@ -19,4 +19,6 @@ $(document).on('turbolinks:load', function() {
   } else {
     $('.details-button').show();
   }
+
+  $('[data-toggle="tooltip"]').tooltip();
 });

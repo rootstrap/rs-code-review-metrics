@@ -29,7 +29,7 @@ if Rails.env.development?
     product = Product.create!(name: 'rs-code-review-metrics',
                               description: 'Project for tracking PKIs')
 
-    jira_project = JiraProject.create!(jira_project_key: 'RSCODE',
+    jira_board = JiraBoard.create!(jira_project_key: 'RSCODE',
                                        project_name: 'rs-code-review-metrics',
                                        product: product)
 
@@ -77,7 +77,7 @@ if Rails.env.development?
     second_product = Product.create!(name: 'forecast',
                                      description: 'Forecast')
 
-    second_jira_project = JiraProject.create!(jira_project_key: 'forc',
+    second_jira_board = JiraBoard.create!(jira_project_key: 'forc',
                                               project_name: 'forecast',
                                               product: second_product)
 

@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: jira_projects
+# Table name: jira_boards
 #
 #  id               :bigint           not null, primary key
 #  jira_project_key :string           not null
@@ -19,9 +19,9 @@
 #
 
 FactoryBot.define do
-  factory :jira_project do
+  factory :jira_board do
     project_name { Faker::Lorem.sentence }
-    jira_project_key { Faker::Name.name }
+    jira_project_key { Faker::App.unique.name }
 
     product
   end

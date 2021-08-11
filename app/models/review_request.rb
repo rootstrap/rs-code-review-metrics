@@ -46,6 +46,8 @@ class ReviewRequest < ApplicationRecord
                      dependent: :destroy
   has_many :completed_review_turnarounds,
            dependent: :destroy
+  has_many :pull_request_comments, class_name: 'Events::PullRequestComment',
+                                   dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
 end

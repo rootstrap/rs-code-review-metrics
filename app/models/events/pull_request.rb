@@ -50,6 +50,8 @@ module Events
     has_many :reviews, class_name: 'Events::Review', dependent: :destroy,
                        inverse_of: :pull_request
     has_many :pushes, class_name: 'Events::Push', dependent: :destroy, inverse_of: :pull_request
+    has_many :pull_request_comments, class_name: 'Events::PullRequestComment',
+                                     dependent: :destroy, inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
     has_one :merge_time, dependent: :destroy
 

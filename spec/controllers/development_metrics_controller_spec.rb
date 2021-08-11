@@ -4,10 +4,18 @@ describe DevelopmentMetricsController, type: :controller do
   fixtures :departments, :languages
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
-  let(:product) { create(:product) }
+  let!(:product) { create(:product) }
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang, product: product) }
-  let!(:jira_project) { create(:jira_project, product: product) }
+  let!(:jira_board) { create(:jira_board, product: product) }
   let(:beginning_of_day) { Time.zone.today.beginning_of_day }
+  let!(:der_metric_definition) { create(:metric_definition, code: :defect_escape_rate) }
+  let!(:review_turnaround_metric_definition) do
+    create(:metric_definition, code: :review_turnaround)
+  end
+  let!(:merge_time_metric_metric_definition) { create(:metric_definition, code: :merge_time) }
+  let!(:pull_request_size_metric_definition) do
+    create(:metric_definition, code: :pull_request_size)
+  end
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -65,28 +73,28 @@ describe DevelopmentMetricsController, type: :controller do
             create_list(:jira_issue, 2,
                         :bug,
                         :production,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:staging_jira_bugs) do
             create_list(:jira_issue, 1,
                         :bug,
                         :staging,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:qa_jira_bugs) do
             create_list(:jira_issue, 3,
                         :bug,
                         :qa,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:no_env_jira_bugs) do
             create_list(:jira_issue, 2,
                         :bug,
                         :no_environment,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
 
@@ -113,6 +121,14 @@ describe DevelopmentMetricsController, type: :controller do
           it 'render EDR metric with correct issues when no environment defined' do
             expect(response.body).to include("None: #{no_env_jira_bugs.count}")
           end
+
+          it 'render metric name' do
+            expect(response.body).to include(der_metric_definition.name)
+          end
+
+          it 'render metric tooltip' do
+            expect(response.body).to include(der_metric_definition.explanation)
+          end
         end
       end
 
@@ -134,6 +150,21 @@ describe DevelopmentMetricsController, type: :controller do
           expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
 
           subject
+        end
+
+        it 'render review turnaround metric tooltip' do
+          subject
+          expect(response.body).to include(review_turnaround_metric_definition.explanation)
+        end
+
+        it 'render merge time metric tooltip' do
+          subject
+          expect(response.body).to include(merge_time_metric_metric_definition.explanation)
+        end
+
+        it 'render pull request size metric tooltip' do
+          subject
+          expect(response.body).to include(pull_request_size_metric_definition.explanation)
         end
       end
 

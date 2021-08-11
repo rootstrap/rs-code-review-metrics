@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Metrics::DefectEscapeRate::PerProduct do
   describe '.call' do
     let(:product) { create(:product) }
-    let!(:jira_project) { create(:jira_project, product: product) }
+    let!(:jira_board) { create(:jira_board, product: product) }
     let(:beginning_of_day) { Time.zone.today.beginning_of_day }
     let(:subject) { described_class.call(product.id) }
     let(:defect_rate) { 100 }
@@ -14,7 +14,7 @@ describe Metrics::DefectEscapeRate::PerProduct do
         create_list(:jira_issue, rand(1..10),
                     :bug,
                     :production,
-                    jira_project: jira_project,
+                    jira_board: jira_board,
                     informed_at: beginning_of_day)
       end
 

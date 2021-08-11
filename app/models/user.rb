@@ -61,6 +61,11 @@ class User < ApplicationRecord
            class_name: 'Events::Repository',
            dependent: :destroy,
            inverse_of: :sender
+  has_many :owned_pull_request_comments,
+           class_name: 'Events::PullRequestComment',
+           foreign_key: :owner_id,
+           dependent: :destroy,
+           inverse_of: :owner
   validates :github_id,
             :login,
             :node_id,
