@@ -26,6 +26,13 @@ module JiraApiMock
       .to_raise(Faraday::ForbiddenError, 'Unauthorized user')
   end
 
+  def stub_issues_failed_authentication(jira_project_key)
+    stub_envs
+
+    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}search?jql=project=#{jira_project_key}%20AND%20issuetype!=Bug&fields=#{ENV['JIRA_ENVIRONMENT_FIELD']},created")
+      .to_raise(Faraday::ForbiddenError, 'Unauthorized user')
+  end
+
   def stub_envs
     stub_env('JIRA_ADMIN_USER', jira_admin_user)
     stub_env('JIRA_ADMIN_TOKEN', jira_admin_token)
