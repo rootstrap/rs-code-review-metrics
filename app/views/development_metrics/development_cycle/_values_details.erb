@@ -2,7 +2,7 @@
   <div class="container p-4">
     <h3>Summary</h3>
     <hr>
-    <% if metric -%>
+    <% if metric && metric[:average]&.positive? -%>
       <div class="item-list">
         <div>
           <h5>Overall <%= development_cycle_definition && development_cycle_definition[:name] %>:</h5>
