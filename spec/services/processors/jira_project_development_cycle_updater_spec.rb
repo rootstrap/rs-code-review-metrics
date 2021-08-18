@@ -7,6 +7,9 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
     let(:project_key) { 'TES' }
     let!(:jira_board) { create(:jira_board, product: product, jira_project_key: project_key) }
     let(:last_issue) { JiraIssue.last }
+    let(:informed_at_date) { '2021-03-14T15:48:04.000-0300' }
+    let(:in_progress_date) { '2021-03-17T15:48:04.000-0300' }
+    let(:resolved_at_date) { '2021-03-19T17:30:04.000-0300' }
     let(:subject) { described_class.call(jira_board) }
     let(:bugs) do
       [
@@ -14,14 +17,22 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
           'key': 'TES-4',
           'fields': {
             'customfield_10000': [{ 'value': 'production' }],
-            'created': '2021-03-14T15:48:04.000-0300',
+            'created': informed_at_date,
             'issuetype': {
               'name': 'Task'
-            },
-            'status': {
-              'name': 'In Progress'
-            },
-            'updated': '2021-03-15T15:48:04.000-0300'
+            }
+          },
+          'changelog': {
+            'histories': [
+              {
+                'created': '2021-03-17T15:48:04.000-0300',
+                'items': [
+                  'fieldId': 'status',
+                  'fromString': 'To Do',
+                  'toString': 'In Progress'
+                ]
+              }
+            ]
           }
         }
       ]
@@ -42,7 +53,7 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
 
       it 'is set the informed at date' do
         subject
-        expect(last_issue.informed_at).to eq('2021-03-14T15:48:04.000-0300')
+        expect(last_issue.informed_at).to eq(informed_at_date)
       end
 
       it 'is set the environment' do
@@ -55,9 +66,9 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
         expect(last_issue.issue_type).to eq('task')
       end
 
-      it 'is set in progress date' do
+      it 'sets in_progress_at date' do
         subject
-        expect(last_issue.in_progress_at).to eq('2021-03-15T15:48:04.000-0300')
+        expect(last_issue.in_progress_at).to eq(in_progress_date)
       end
 
       it 'has no resolution date' do
@@ -73,15 +84,11 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
             'key': 'TES-4',
             'fields': {
               'customfield_10000': [{ 'value': 'production' }],
-              'created': '2021-03-14T15:48:00.000-0300',
-              'resolutiondate': '2021-03-20T17:30:04.000-0300',
+              'created': informed_at_date,
+              'resolutiondate': resolved_at_date,
               'issuetype': {
                 'name': 'Task'
-              },
-              'status': {
-                'name': 'Done'
-              },
-              'updated': '2021-03-20T15:48:04.000-0300'
+              }
             }
           }
         ]
@@ -89,7 +96,7 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
 
       let!(:jira_issue) do
         create(:jira_issue,
-               informed_at: '2021-03-14T15:48:00.000-0300',
+               informed_at: informed_at_date,
                in_progress_at: '2021-03-15T15:48:04.000-0300',
                issue_type: 'task',
                environment: 'production',
@@ -99,7 +106,7 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
 
       it 'is updated the resolution date' do
         subject
-        expect(last_issue.reload.resolved_at).to eq('2021-03-20T17:30:04.000-0300')
+        expect(last_issue.reload.resolved_at).to eq(resolved_at_date)
       end
 
       it 'is not updated in progress date' do
