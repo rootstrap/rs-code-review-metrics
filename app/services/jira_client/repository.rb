@@ -27,7 +27,8 @@ module JiraClient
     def create_request(issue_type)
       @request_params = {
         jql: "project=#{@jira_board.jira_project_key} AND #{issue_type}",
-        fields: "#{JIRA_ENVIRONMENT_FIELD},created"
+        fields: "#{JIRA_ENVIRONMENT_FIELD},created,resolutiondate,issuetype",
+        expand: 'changelog'
       }
     end
 
