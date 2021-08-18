@@ -3,15 +3,15 @@ require 'rails_helper'
 describe ProductService do
   let(:product) { create(:product) }
   let(:projects) { create_list(:project, 2) }
-  let(:jira_project) { create(:jira_project, product: product) }
+  let(:jira_board) { create(:jira_board, product: product) }
 
   let!(:params) do
     {
       name: product.name,
       description: product.description,
-      jira_project_attributes: {
-        id: jira_project.id,
-        jira_project_key: jira_project.jira_project_key
+      jira_board_attributes: {
+        id: jira_board.id,
+        jira_project_key: jira_board.jira_project_key
       },
       project_ids: projects.first.id
     }

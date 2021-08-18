@@ -1,4 +1,4 @@
-ActiveAdmin.register JiraProject do
+ActiveAdmin.register JiraBoard do
   permit_params :jira_key, :jira_project_key, :project_name, :product_id
 
   index do

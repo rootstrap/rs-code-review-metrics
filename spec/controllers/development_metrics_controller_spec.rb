@@ -4,9 +4,9 @@ describe DevelopmentMetricsController, type: :controller do
   fixtures :departments, :languages
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
-  let(:product) { create(:product) }
+  let!(:product) { create(:product) }
   let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang, product: product) }
-  let!(:jira_project) { create(:jira_project, product: product) }
+  let!(:jira_board) { create(:jira_board, product: product) }
   let(:beginning_of_day) { Time.zone.today.beginning_of_day }
   let!(:der_metric_definition) { create(:metric_definition, code: :defect_escape_rate) }
   let!(:review_turnaround_metric_definition) do
@@ -73,28 +73,28 @@ describe DevelopmentMetricsController, type: :controller do
             create_list(:jira_issue, 2,
                         :bug,
                         :production,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:staging_jira_bugs) do
             create_list(:jira_issue, 1,
                         :bug,
                         :staging,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:qa_jira_bugs) do
             create_list(:jira_issue, 3,
                         :bug,
                         :qa,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
           let!(:no_env_jira_bugs) do
             create_list(:jira_issue, 2,
                         :bug,
                         :no_environment,
-                        jira_project: jira_project,
+                        jira_board: jira_board,
                         informed_at: beginning_of_day)
           end
 
