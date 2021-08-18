@@ -11,7 +11,7 @@ module JiraClient
 
       JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
     rescue Faraday::ForbiddenError => exception
-      ExceptionHunter.track(exception)
+      raised_exception(exception)
     end
 
     def issues
@@ -19,7 +19,7 @@ module JiraClient
 
       JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
     rescue Faraday::ForbiddenError => exception
-      ExceptionHunter.track(exception)
+      raised_exception(exception)
     end
 
     private
@@ -36,6 +36,11 @@ module JiraClient
       connection.get('search') do |request|
         request.params = @request_params
       end
+    end
+
+    def raised_exception(exception)
+      ExceptionHunter.track(JiraBoards::NoProjectKeyError.new(@jira_board.jira_project_key),
+                            custom_data: exception)
     end
   end
 end

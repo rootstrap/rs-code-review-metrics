@@ -42,7 +42,9 @@ describe JiraClient::Repository do
       before { stub_failed_authentication(project_key) }
 
       it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(Faraday::ForbiddenError)
+        expect(ExceptionHunter).to receive(:track)
+          .with(JiraBoards::NoProjectKeyError.new(project_key),
+                custom_data: Faraday::ForbiddenError)
 
         subject
       end
@@ -85,6 +87,20 @@ describe JiraClient::Repository do
 
       it 'returns an array with the data' do
         expect(subject).to match_array(bugs)
+      end
+    end
+
+    context 'when the request fails for unauthorized user' do
+      let(:bugs) { [] }
+
+      before { stub_issues_failed_authentication(project_key) }
+
+      it 'notifies the error to exception hunter' do
+        expect(ExceptionHunter).to receive(:track)
+          .with(JiraBoards::NoProjectKeyError.new(project_key),
+                custom_data: Faraday::ForbiddenError)
+
+        subject
       end
     end
   end
