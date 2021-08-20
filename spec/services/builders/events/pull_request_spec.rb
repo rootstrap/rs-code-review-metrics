@@ -50,6 +50,22 @@ RSpec.describe Builders::Events::PullRequest do
           .not_to change { Events::PullRequest.count }
       end
     end
+
+    context 'when multiple hooks for the same pull request are sent at the same time' do
+      let(:threads) { [] }
+
+      it 'does not raise a validation error' do
+        expect {
+          2.times do
+            threads << Thread.new do
+              described_class.call(payload: payload)
+            end
+          end
+
+          threads.map(&:join)
+        }.to_not raise_error
+      end
+    end
   end
 
   def boolean_of(value)

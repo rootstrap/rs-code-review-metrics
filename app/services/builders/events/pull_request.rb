@@ -7,14 +7,17 @@ module Builders
 
       def build
         pull_request_data = @payload['pull_request']
+
         ::Events::PullRequest
-          .find_or_create_by!(github_id: pull_request_data['id']) do |pull_request|
+          .create_or_find_by(github_id: pull_request_data['id']) do |pull_request|
           ATTR_PAYLOAD_MAP.each do |key, value|
             pull_request.public_send("#{key}=", pull_request_data.fetch(value))
           end
           pull_request.branch = pull_request_data.dig('head', 'ref')
 
           assign_attrs(pull_request, pull_request_data)
+
+          pull_request.save!(validate: false)
         end
       end
 
