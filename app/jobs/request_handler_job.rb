@@ -4,6 +4,8 @@ class RequestHandlerJob < ApplicationJob
              Reviews::NoReviewRequestError,
              PullRequests::RequestTeamAsReviewerError
 
+  retry_on PullRequests::GithubUniquenessError
+
   def perform(payload, event)
     GithubService.call(payload: payload, event: event)
   end
