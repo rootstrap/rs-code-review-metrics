@@ -75,6 +75,28 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
         subject
         expect(last_issue.resolved_at).to be_nil
       end
+
+      context 'when the issue type is not in the enum' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'production' }],
+                'created': informed_at_date,
+                'resolutiondate': resolved_at_date,
+                'issuetype': {
+                  'name': 'test_execution'
+                }
+              }
+            }
+          ]
+        end
+
+        it 'does not creates a record in the db' do
+          expect { subject }.not_to change(JiraIssue, :count)
+        end
+      end
     end
 
     context 'when the issue is done' do
