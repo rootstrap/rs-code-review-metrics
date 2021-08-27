@@ -24,5 +24,15 @@ FactoryBot.define do
     jira_project_key { Faker::App.unique.name }
 
     product
+
+    trait :with_board_id do
+      jira_board_id { Faker::Internet.uuid }
+      jira_self_url { Faker::Internet.url }
+    end
+
+    trait :no_board_id do
+      jira_board_id { nil }
+      jira_self_url { nil }
+    end
   end
 end

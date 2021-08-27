@@ -5,9 +5,11 @@
 #  id               :bigint           not null, primary key
 #  deleted_at       :datetime
 #  jira_project_key :string           not null
+#  jira_self_url    :string
 #  project_name     :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  jira_board_id    :integer
 #  product_id       :bigint
 #
 # Indexes
@@ -25,6 +27,8 @@ class JiraProject < ApplicationRecord
   belongs_to :product
 
   has_many :jira_issues, dependent: :destroy
+  has_many :jira_sprints, dependent: :destroy
 
   validates :jira_project_key, presence: true, uniqueness: true
+  validates :jira_board_id, uniqueness: true, allow_blank: true
 end
