@@ -11,7 +11,7 @@ module Builders
         metrics_length = metrics.count
         total = values.values.inject(:+)
 
-        average = total / metrics_length if metrics_length.positive?
+        average = (total / metrics_length).round(1) if metrics_length.positive?
 
         { average: average }
       end

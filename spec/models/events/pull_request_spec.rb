@@ -44,7 +44,6 @@ RSpec.describe Events::PullRequest, type: :model do
 
     it { is_expected.to have_many(:events) }
     it { is_expected.to belong_to(:owner) }
-    it { is_expected.to validate_uniqueness_of(:github_id) }
     it { is_expected.to validate_presence_of(:opened_at) }
     it { is_expected.to validate_presence_of(:github_id) }
     it { is_expected.to validate_presence_of(:title) }
@@ -64,6 +63,18 @@ RSpec.describe Events::PullRequest, type: :model do
     it 'is not valid without draft' do
       subject.draft = nil
       expect(subject).to_not be_valid
+    end
+
+    context 'when github id is already been taken' do
+      let!(:pull_request) { create(:pull_request, github_id: 100) }
+
+      it 'raise uniqueness exception' do
+        subject.github_id = 100
+
+        expect {
+          subject.save!
+        }.to raise_error(PullRequests::GithubUniquenessError)
+      end
     end
   end
 

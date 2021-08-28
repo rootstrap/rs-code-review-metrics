@@ -12,16 +12,16 @@
 #  started_at       :datetime         not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  jira_board_id    :bigint           not null
 #  jira_id          :integer          not null
-#  jira_project_id  :bigint           not null
 #
 # Indexes
 #
-#  index_jira_sprints_on_jira_project_id  (jira_project_id)
+#  index_jira_sprints_on_jira_board_id  (jira_board_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_project_id => jira_projects.id)
+#  fk_rails_...  (jira_board_id => jira_boards.id)
 #
 
 require 'rails_helper'
@@ -38,6 +38,6 @@ describe JiraSprint, type: :model do
     it { is_expected.to validate_presence_of(:jira_id) }
     it { is_expected.to validate_uniqueness_of(:jira_id) }
 
-    it { is_expected.to belong_to(:jira_project) }
+    it { is_expected.to belong_to(:jira_board) }
   end
 end

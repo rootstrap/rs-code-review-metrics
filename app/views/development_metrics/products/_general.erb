@@ -1,6 +1,6 @@
 <div class="container">
   <div class="summary">
-    <div class='p-3 chart-container <%if current_page?(products_development_metrics_path)%>col-md-8 info'<% else %>'<% end %> >
+    <div class='p-3 chart-container <%if current_page?(products_development_metrics_path) && has_jira_project%>col-md-8 info'<% else %>'<% end %> >
         <% if has_jira_project %>
           <% if show_defect_escape_rate %>
               <div class="metrics shadow-box">

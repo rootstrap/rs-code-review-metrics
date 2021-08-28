@@ -14,7 +14,7 @@ class CreateJiraSprints < ActiveRecord::Migration[6.0]
 
       t.timestamps null: false
 
-      t.references :jira_project, null: false, foreign_key: true
+      t.references :jira_board, null: false, foreign_key: true
     end
   end
 end

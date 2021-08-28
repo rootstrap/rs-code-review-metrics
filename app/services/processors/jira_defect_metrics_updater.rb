@@ -7,11 +7,11 @@ module Processors
     private
 
     def update_jira_issues
-      JiraProject.find_each do |jira_project|
-        JiraProjectBoardUpdater.call(jira_project)
-        JiraProjectDefectEscapeRateUpdater.call(jira_project)
-        JiraProjectDevelopmentCycleUpdater.call(jira_project)
-        JiraProjectPlannedToDoneUpdater.call(jira_project)
+      JiraBoard.find_each do |jira_board|
+        JiraProjectBoardUpdater.call(jira_board)
+        JiraProjectDefectEscapeRateUpdater.call(jira_board)
+        JiraProjectDevelopmentCycleUpdater.call(jira_board)
+        JiraProjectPlannedToDoneUpdater.call(jira_board)
       end
     end
   end

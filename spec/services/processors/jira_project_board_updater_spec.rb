@@ -5,7 +5,7 @@ describe Processors::JiraProjectBoardUpdater do
     let(:product) { create(:product) }
     let(:project_key) { 'TES' }
     let(:jira_project) do
-      create(:jira_project,
+      create(:jira_board,
              :no_board_id,
              product: product,
              jira_project_key: project_key)
@@ -48,7 +48,7 @@ describe Processors::JiraProjectBoardUpdater do
 
     context 'when there is board id' do
       let!(:jira_project) do
-        create(:jira_project,
+        create(:jira_board,
                :with_board_id,
                product: product,
                jira_project_key: project_key)

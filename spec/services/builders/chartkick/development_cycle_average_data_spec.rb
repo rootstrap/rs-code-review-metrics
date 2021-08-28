@@ -10,7 +10,7 @@ describe Builders::Chartkick::DevelopmentCycleAverageData do
       let(:formatted_first_week) { first_week.strftime('%Y-%m-%d') }
       let(:formatted_this_week) { this_week.strftime('%Y-%m-%d') }
 
-      let(:jira_project) { create(:jira_project) }
+      let(:jira_board) { create(:jira_board) }
 
       let(:jira_issue1) do
         create(:jira_issue,
@@ -19,7 +19,7 @@ describe Builders::Chartkick::DevelopmentCycleAverageData do
                resolved_at: '2021-07-21T15:48:04.000-0300',
                issue_type: 'task',
                environment: 'development',
-               jira_project: jira_project)
+               jira_board: jira_board)
       end
 
       let(:jira_issue2) do
@@ -29,7 +29,7 @@ describe Builders::Chartkick::DevelopmentCycleAverageData do
                resolved_at: '2021-07-30T15:48:04.000-0300',
                issue_type: 'task',
                environment: 'development',
-               jira_project: jira_project)
+               jira_board: jira_board)
       end
 
       let(:average_last_week) { (jira_issue1.resolved_at - jira_issue1.in_progress_at) / 1.day }

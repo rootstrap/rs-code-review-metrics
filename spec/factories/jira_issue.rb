@@ -9,15 +9,15 @@
 #  key             :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  jira_project_id :bigint           not null
+#  jira_board_id :bigint           not null
 #
 # Indexes
 #
-#  index_jira_issues_on_jira_project_id  (jira_project_id)
+#  index_jira_issues_on_jira_board_id  (jira_board_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (jira_project_id => jira_projects.id)
+#  fk_rails_...  (jira_board_id => jira_boards.id)
 #
 
 FactoryBot.define do
@@ -26,7 +26,7 @@ FactoryBot.define do
     sequence(:issue_type) { |n| %w[bug task story epic][n % 4] }
     sequence(:environment) { |n| %w[local development qa staging production][n % 7] }
 
-    association :jira_project
+    association :jira_board
 
     trait :bug do
       issue_type { 'bug' }
@@ -49,7 +49,7 @@ FactoryBot.define do
     end
 
     after(:build) do |jira_issue|
-      jira_issue.key { "#{jira_issue.jira_project.jira_project_key}-#{Faker::Number.digits(3)}" }
+      jira_issue.key { "#{jira_issue.jira_board.jira_project_key}-#{Faker::Number.digits(3)}" }
     end
   end
 end

@@ -12,7 +12,7 @@ module Processors
 
         jira_sprint = JiraSprint.find_or_initialize_by(
           jira_id: sprint[:id],
-          jira_project_id: @jira_board.id
+          jira_board_id: @jira_board.id
         )
 
         sprint_update!(jira_sprint, sprint)

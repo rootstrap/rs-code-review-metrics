@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Processors::JiraDefectMetricsUpdater do
   describe '#call' do
-    let!(:first_project) { create :jira_project }
-    let!(:second_project) { create :jira_project }
+    let!(:first_project) { create :jira_board }
+    let!(:second_project) { create :jira_board }
     let(:subject) { described_class.call }
 
     it('calls jira metrics processors on each jira project') do

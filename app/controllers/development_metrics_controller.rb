@@ -56,7 +56,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_product_metrics(entity_id, entity_name)
-    @has_jira_project = product.jira_project&.present?
+    @has_jira_project = product.jira_board&.present?
 
     return unless @has_jira_project
 
@@ -105,10 +105,6 @@ class DevelopmentMetricsController < ApplicationController
 
     @development_cycle = metrics[:development_cycle]
     @development_cycle_definition = MetricDefinition.find_by(code: :development_cycle)
-
-    return unless @development_cycle[:per_development_cycle_values].first[:data].empty?
-
-    @show_development_cycle = false
   end
 
   def show_defect_escape_rate

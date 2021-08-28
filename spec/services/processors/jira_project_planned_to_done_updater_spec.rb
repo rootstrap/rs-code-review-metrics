@@ -6,7 +6,7 @@ describe Processors::JiraProjectPlannedToDoneUpdater do
     let(:project_key) { 'TES' }
     let!(:jira_board_id) { 1 }
     let!(:jira_project) do
-      create(:jira_project,
+      create(:jira_board,
              :with_board_id,
              product: product,
              jira_project_key: project_key,
@@ -99,7 +99,7 @@ describe Processors::JiraProjectPlannedToDoneUpdater do
 
       it 'is associated to the project' do
         subject
-        expect(last_sprint.jira_project).to eq(jira_project)
+        expect(last_sprint.jira_board).to eq(jira_project)
       end
 
       it 'is set the started at date' do
