@@ -9,9 +9,9 @@ module Processors
     def update_jira_issues
       JiraBoard.find_each do |jira_board|
         JiraProjectBoardUpdater.call(jira_board)
+        JiraProjectPlannedToDoneUpdater.call(jira_board)
         JiraProjectDefectEscapeRateUpdater.call(jira_board)
         JiraProjectDevelopmentCycleUpdater.call(jira_board)
-        JiraProjectPlannedToDoneUpdater.call(jira_board)
       end
     end
   end
