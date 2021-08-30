@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: repositories
+# Table name: events_repositories
 #
 #  id         :bigint           not null, primary key
 #  action     :string
@@ -13,8 +13,8 @@
 #
 # Indexes
 #
-#  index_repositories_on_project_id  (project_id)
-#  index_repositories_on_sender_id   (sender_id)
+#  index_events_repositories_on_project_id  (project_id)
+#  index_events_repositories_on_sender_id   (sender_id)
 #
 # Foreign Keys
 #

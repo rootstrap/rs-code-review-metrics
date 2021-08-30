@@ -92,11 +92,11 @@ class Project < ApplicationRecord
   }
 
   scope :with_a_pr_opened_after, lambda { |date|
-    joins(:pull_requests).where('pull_requests.opened_at > ?', date)
+    joins(:pull_requests).where('events_pull_requests.opened_at > ?', date)
   }
 
   scope :with_a_pr_merged_after, lambda { |date|
-    joins(:pull_requests).where('pull_requests.merged_at > ?', date)
+    joins(:pull_requests).where('events_pull_requests.merged_at > ?', date)
   }
 
   scope :by_department, lambda { |department|

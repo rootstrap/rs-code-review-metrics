@@ -14,7 +14,7 @@ module Metrics
 
       def query(interval)
         Project.joins(pull_requests: :merge_time)
-               .where(pull_requests: { merged_at: interval })
+               .where(events_pull_requests: { merged_at: interval })
                .where(id: @entity_id)
                .group(:id)
                .pluck(:id, Arel.sql('AVG(merge_times.value)'))

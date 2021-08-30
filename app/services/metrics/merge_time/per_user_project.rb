@@ -15,7 +15,7 @@ module Metrics
 
       def query(interval)
         ::MergeTime.joins(:pull_request)
-                   .where(pull_requests: { merged_at: interval, owner_id: @entity_id })
+                   .where(events_pull_requests: { merged_at: interval, owner_id: @entity_id })
                    .group(:project_id, :owner_id)
                    .pluck(:project_id, :owner_id, Arel.sql('AVG(merge_times.value)'))
       end

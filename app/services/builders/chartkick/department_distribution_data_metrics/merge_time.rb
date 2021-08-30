@@ -6,7 +6,7 @@ module Builders
           ::MergeTime
             .joins(pull_request: { project: { language: :department } })
             .where(departments: { id: entity_id })
-            .where(pull_requests: { merged_at: time_range })
+            .where(events_pull_requests: { merged_at: time_range })
         end
 
         def resolve_interval(entity)
