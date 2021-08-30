@@ -66,7 +66,7 @@ module Events
     validates :draft,
               :locked,
               inclusion: { in: [true, false] }
-    validates :github_id, uniqueness: true
+    validates :github_id, uniqueness: true, strict: PullRequests::GithubUniquenessError
 
     after_validation :build_merge_time, on: :update, if: :merged_at_changed?
 

@@ -30,6 +30,8 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos' do
     context 'returns anything but 200' do
       before do
+        stub_notification_webhook
+
         on_request_repository_by_slug(project_name: project.name,
                                       respond: { status: 500 })
       end
@@ -39,8 +41,8 @@ describe CodeClimate::UpdateProjectService do
           .not_to change { CodeClimateProjectMetric.count }
       end
 
-      it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
+      it 'notifies the error to slack channel' do
+        expect(SlackService).to receive(:code_climate_error).with(project, anything)
 
         update_project_code_climate_info
       end
@@ -48,6 +50,8 @@ describe CodeClimate::UpdateProjectService do
 
     context 'returns empty data' do
       before do
+        stub_notification_webhook
+
         on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 200, body: code_climate_repository_json }
@@ -68,6 +72,8 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos/:id/snapshots/' do
     context 'returns anything but 200' do
       before do
+        stub_notification_webhook
+
         on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 200, body: code_climate_repository_json }
@@ -83,8 +89,8 @@ describe CodeClimate::UpdateProjectService do
           .not_to change { CodeClimateProjectMetric.count }
       end
 
-      it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
+      it 'notifies the error to slack channel' do
+        expect(SlackService).to receive(:code_climate_error).with(project, anything)
 
         update_project_code_climate_info
       end
@@ -94,6 +100,8 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos/:id/snapshots/issues' do
     context 'returns anything but 200' do
       before do
+        stub_notification_webhook
+
         on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 200, body: code_climate_repository_json }
@@ -113,8 +121,8 @@ describe CodeClimate::UpdateProjectService do
           .not_to change { CodeClimateProjectMetric.count }
       end
 
-      it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
+      it 'notifies the error to slack channel' do
+        expect(SlackService).to receive(:code_climate_error).with(project, anything)
 
         update_project_code_climate_info
       end
@@ -124,6 +132,8 @@ describe CodeClimate::UpdateProjectService do
   context 'when the call to /repos/:id/test_report/' do
     context 'returns anything but 200' do
       before do
+        stub_notification_webhook
+
         on_request_repository_by_slug(
           project_name: project.name,
           respond: { status: 200, body: code_climate_repository_json }
@@ -147,8 +157,8 @@ describe CodeClimate::UpdateProjectService do
           .not_to change { CodeClimateProjectMetric.count }
       end
 
-      it 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
+      it 'notifies the error to slack channel' do
+        expect(SlackService).to receive(:code_climate_error).with(project, anything)
 
         update_project_code_climate_info
       end

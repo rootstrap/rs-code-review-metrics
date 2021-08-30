@@ -34,3 +34,5 @@ en:
     slack:
       open_source_reminder:
         message: 'Hey! check this out: [Open Source metrics](%{url}) 🚀'
+      code_climate_error:
+        message: 'Hey! Check this out: [Code Climate error] Repository: %{repository} - Error: %{error}'
