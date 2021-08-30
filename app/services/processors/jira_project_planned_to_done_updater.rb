@@ -27,10 +27,10 @@ module Processors
 
     def sprint_update!(jira_sprint, sprint)
       sprint_report = sprint[:report]
-      completed = sprint_report[:completedIssuesEstimateSum][:value]
+      completed = sprint_report[:completedIssuesEstimateSum][:value] || 0
       jira_sprint.update!(
         name: sprint[:name],
-        points_committed: completed + sprint_report[:issuesNotCompletedEstimateSum][:value],
+        points_committed: completed + (sprint_report[:issuesNotCompletedEstimateSum][:value] || 0),
         points_completed: completed,
         started_at: sprint[:startDate],
         ended_at: sprint[:endDate],

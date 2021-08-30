@@ -64,7 +64,9 @@ module JiraClient
     end
 
     def fetch_sprint_response
-      agile_connection.get("board/#{@jira_board.jira_board_id}/sprint")
+      agile_connection.get("board/#{@jira_board.jira_board_id}/sprint") do |request|
+        request.params['state'] = 'active,closed'
+      end
     end
 
     def fetch_report_response(sprint_id)
