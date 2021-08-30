@@ -35,7 +35,10 @@ module JiraApiMock
   def stub_get_sprints_ok(payload, jira_board_id)
     stub_envs
 
+    params = { state: 'active,closed' }
+
     stub_request(:get, "#{ENV['JIRA_AGILE_URL']}board/#{jira_board_id}/sprint")
+      .with(query: params)
       .to_return(
         body: JSON.generate(payload),
         status: 200
