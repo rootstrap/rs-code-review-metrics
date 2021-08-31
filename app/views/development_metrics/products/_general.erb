@@ -1,6 +1,6 @@
 <div class="container">
   <div class="summary">
-    <div class='p-3 chart-container <%if current_page?(products_development_metrics_path) && has_jira_project%>col-md-8 info'<% else %>'<% end %> >
+    <div class='p-3 chart-container <%if current_page?(products_development_metrics_path) && has_jira_project%>col-md-12 info'<% else %>'<% end %> >
         <% if has_jira_project %>
           <% if show_defect_escape_rate %>
               <div class="metrics shadow-box">
@@ -30,7 +30,7 @@
           <% end %>
 
           <% if show_development_cycle %>
-              <div class="metrics shadow-box" style="margin-left:10%">
+              <div class="metrics shadow-box" style="margin-left:5%">
                 <div class='row'>
                   <h4 class="p-3" style='margin-left:10px;'><%= development_cycle_definition && development_cycle_definition[:name] %></h4>
                   <span data-placement='right' class='metric_tooltip' style=<% if current_page?(products_development_metrics_path) %> 'margin-top: 4%;' <% else %> 'margin-top: 1.5%;' <% end %> aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>?</span>
@@ -58,7 +58,7 @@
               </div>
           <% end %>
           <% if show_planned_to_done %>
-              <div class="metrics shadow-box">
+              <div class="metrics shadow-box" style="margin-left:5%">
                 <div class='row'>
                   <h4 class="p-3" style='margin-left:10px;'><%= planned_to_done_definition && planned_to_done_definition[:name] %></h4>
                   <span data-placement='right' class='metric_tooltip' style=<% if current_page?(products_development_metrics_path) %> 'margin-top: 4%;' <% else %> 'margin-top: 1.5%;' <% end %> aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>?</span>

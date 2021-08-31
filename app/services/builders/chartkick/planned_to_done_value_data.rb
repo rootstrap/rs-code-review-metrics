@@ -4,8 +4,11 @@ module Builders
       def build_data(metrics)
         metrics.inject({}) do |hash, metric|
           hash.merge!(
-            metric.value_timestamp.strftime('%Y-%m-%d').to_s =>
-              metric.value[:planned_to_done_rate].round(1)
+            metric.value[:planned_to_done_values][:sprint] =>
+            [
+              metric.value[:planned_to_done_values][:completed],
+              metric.value[:planned_to_done_values][:committed]
+            ]
           )
         end
       end

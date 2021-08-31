@@ -54,7 +54,7 @@ module Builders
         end
 
         def planned_to_done_entities
-          { planned_to_done: %w[planned_to_done planned_to_done_values] }
+          { planned_to_done: %w[planned_to_done_rate planned_to_done_values] }
         end
 
         def product_has_jira_board_associated?(product_id)
