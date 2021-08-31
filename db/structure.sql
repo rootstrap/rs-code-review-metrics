@@ -113,7 +113,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'open_source_visits',
     'defect_escape_rate',
     'pull_request_size',
-    'development_cycle'
+    'development_cycle',
+    'planned_to_done'
 );
 
 
@@ -631,9 +632,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 
@@ -2852,6 +2853,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210810123929'),
 ('20210810184003'),
 ('20210810202705'),
-('20210811165206');
+('20210811165206'),
+('20210830211654');
 
 
