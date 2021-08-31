@@ -35,12 +35,16 @@ module Processors
     def issue_update!(issue, issue_fields, histories)
       environment_field = issue_fields[JIRA_ENVIRONMENT_FIELD]
 
+      issue_type = issue_type_field(issue_fields)&.downcase
+
+      return unless handleable_issue?(issue_type)
+
       issue.update!(
         informed_at: issue_fields[:created],
         resolved_at: issue_fields[:resolutiondate] || nil,
         in_progress_at: in_progress_at(histories) || issue.in_progress_at,
         environment: environment_field ? environment_field.first[:value]&.downcase : nil,
-        issue_type: issue_type_field(issue_fields)&.downcase
+        issue_type: issue_type
       )
     end
 
@@ -59,6 +63,10 @@ module Processors
       end
 
       in_progress_at[:created] if in_progress_at.presence
+    end
+
+    def handleable_issue?(issue_type)
+      JiraIssue.issue_types.include?(issue_type)
     end
   end
 end
