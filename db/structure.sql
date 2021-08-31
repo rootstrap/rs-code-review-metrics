@@ -631,9 +631,9 @@ CREATE TABLE public.external_pull_requests (
     external_project_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -699,7 +699,9 @@ CREATE TABLE public.jira_boards (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     deleted_at timestamp without time zone,
-    product_id bigint
+    product_id bigint,
+    jira_board_id integer,
+    jira_self_url character varying
 );
 
 
@@ -758,6 +760,45 @@ CREATE SEQUENCE public.jira_issues_id_seq
 --
 
 ALTER SEQUENCE public.jira_issues_id_seq OWNED BY public.jira_issues.id;
+
+
+--
+-- Name: jira_sprints; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_sprints (
+    id bigint NOT NULL,
+    jira_id integer NOT NULL,
+    name character varying,
+    points_committed integer,
+    points_completed integer,
+    started_at timestamp without time zone NOT NULL,
+    ended_at timestamp without time zone,
+    active boolean,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    jira_board_id bigint NOT NULL
+);
+
+
+--
+-- Name: jira_sprints_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_sprints_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_sprints_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_sprints_id_seq OWNED BY public.jira_sprints.id;
 
 
 --
@@ -1523,6 +1564,13 @@ ALTER TABLE ONLY public.jira_issues ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: jira_sprints id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints ALTER COLUMN id SET DEFAULT nextval('public.jira_sprints_id_seq'::regclass);
+
+
+--
 -- Name: languages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1782,6 +1830,14 @@ ALTER TABLE ONLY public.jira_boards
 
 ALTER TABLE ONLY public.jira_issues
     ADD CONSTRAINT jira_issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_sprints jira_sprints_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints
+    ADD CONSTRAINT jira_sprints_pkey PRIMARY KEY (id);
 
 
 --
@@ -2095,6 +2151,13 @@ CREATE INDEX index_jira_boards_on_product_id ON public.jira_boards USING btree (
 --
 
 CREATE INDEX index_jira_issues_on_jira_board_id ON public.jira_issues USING btree (jira_board_id);
+
+
+--
+-- Name: index_jira_sprints_on_jira_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_sprints_on_jira_board_id ON public.jira_sprints USING btree (jira_board_id);
 
 
 --
@@ -2586,6 +2649,14 @@ ALTER TABLE ONLY public.external_pull_requests
 
 
 --
+-- Name: jira_sprints fk_rails_d195b736d0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints
+    ADD CONSTRAINT fk_rails_d195b736d0 FOREIGN KEY (jira_board_id) REFERENCES public.jira_boards(id);
+
+
+--
 -- Name: review_requests fk_rails_d83bae1089; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2779,6 +2850,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210726184449'),
 ('20210810122756'),
 ('20210810123929'),
-('20210810184003');
+('20210810184003'),
+('20210810202705'),
+('20210811165206');
 
 
