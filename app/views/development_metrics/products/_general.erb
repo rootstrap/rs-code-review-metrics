@@ -72,10 +72,10 @@
                 <% else %>
                   <%= render partial: 'development_metrics/planned_to_done/values_details',
                   locals: {
-                    metric: planned_to_done[:per_planned_to_done_values].first[:data],
+                    metric: planned_to_done[:per_planned_to_done_average].first[:data],
                     details: false,
                     planned_to_done_definition: planned_to_done_definition
-                  } if planned_to_done && planned_to_done[:per_planned_to_done_values] %>
+                  } if planned_to_done && planned_to_done[:per_planned_to_done_average] %>
                   <div class="distribution-report-button mr-3 mb-2"><%= link_to 'See details',
                             products_metrics_development_metrics_path({product_name: product[:name], metric: { period: params&.dig(:metric, :period), name: 'planned_to_done'}}),
                             class: 'btn btn-secondary'

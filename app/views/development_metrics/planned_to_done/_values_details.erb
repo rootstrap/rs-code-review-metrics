@@ -2,13 +2,13 @@
   <div class="container p-4">
     <h3>Summary</h3>
     <hr>
-    <% if metric && metric[:rate] -%>
+    <% if metric && metric[:average] -%>
       <div class="item-list">
         <div>
           <h5>Overall <%= planned_to_done_definition && planned_to_done_definition[:name] %>:</h5>
           <span class="text-primary">
                 <h2>
-                  <%= metric[:rate] %> %
+                  <%= metric[:average] %> %
                 </h2>
               </span>
         </div>

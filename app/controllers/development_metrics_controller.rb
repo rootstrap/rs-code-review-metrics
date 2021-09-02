@@ -114,8 +114,6 @@ class DevelopmentMetricsController < ApplicationController
   def planned_to_done(metrics)
     return unless @show_planned_to_done
 
-    binding.pry
-
     @planned_to_done = metrics[:planned_to_done]
     @planned_to_done_definition = MetricDefinition.find_by(code: :planned_to_done)
   end
