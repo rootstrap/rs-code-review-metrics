@@ -5,6 +5,8 @@ module Builders
         @count = 0
         @values = values(metrics)
 
+        return if @values.empty?
+
         percentage = (@values.values.inject(:+) * 100)
         average = percentage.round / @count if @count.positive?
 
