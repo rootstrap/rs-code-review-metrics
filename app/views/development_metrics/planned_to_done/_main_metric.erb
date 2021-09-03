@@ -3,7 +3,7 @@
              metric_name: '',
              metric: planned_to_done[:per_planned_to_done_values].first[:data]
                       .group_by{ |sprint| sprint[:name] }
-                      .map do |label, points| 
+                      .map do |label, points|
                         {
                           name: label,
                           data: points.map { |sprint| sprint[:data] }.reduce(&:merge)
