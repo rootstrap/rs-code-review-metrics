@@ -6,6 +6,6 @@ class CodeClimateSummaryRetriever < BaseService
   end
 
   def call
-    CodeClimateProjectMetric.joins(:repository).find_by(repositories: { id: repository_id })
+    CodeClimateRepositoryMetric.joins(:repository).find_by(repositories: { id: repository_id })
   end
 end

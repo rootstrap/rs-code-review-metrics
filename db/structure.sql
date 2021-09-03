@@ -338,10 +338,10 @@ ALTER SEQUENCE public.blog_posts_id_seq OWNED BY public.blog_posts.id;
 
 
 --
--- Name: code_climate_project_metrics; Type: TABLE; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.code_climate_project_metrics (
+CREATE TABLE public.code_climate_repository_metrics (
     id bigint NOT NULL,
     repository_id bigint NOT NULL,
     code_climate_rate character varying,
@@ -358,10 +358,10 @@ CREATE TABLE public.code_climate_project_metrics (
 
 
 --
--- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.code_climate_project_metrics_id_seq
+CREATE SEQUENCE public.code_climate_repository_metrics_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -370,17 +370,17 @@ CREATE SEQUENCE public.code_climate_project_metrics_id_seq
 
 
 --
--- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.code_climate_project_metrics_id_seq OWNED BY public.code_climate_project_metrics.id;
+ALTER SEQUENCE public.code_climate_repository_metrics_id_seq OWNED BY public.code_climate_repository_metrics.id;
 
 
 --
--- Name: code_owner_projects; Type: TABLE; Schema: public; Owner: -
+-- Name: code_owner_repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.code_owner_projects (
+CREATE TABLE public.code_owner_repositories (
     id bigint NOT NULL,
     repository_id bigint NOT NULL,
     user_id bigint NOT NULL,
@@ -391,10 +391,10 @@ CREATE TABLE public.code_owner_projects (
 
 
 --
--- Name: code_owner_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: code_owner_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.code_owner_projects_id_seq
+CREATE SEQUENCE public.code_owner_repositories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -403,10 +403,10 @@ CREATE SEQUENCE public.code_owner_projects_id_seq
 
 
 --
--- Name: code_owner_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: code_owner_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_projects.id;
+ALTER SEQUENCE public.code_owner_repositories_id_seq OWNED BY public.code_owner_repositories.id;
 
 
 --
@@ -813,42 +813,6 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 
 --
--- Name: external_projects; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.external_projects (
-    id bigint NOT NULL,
-    description character varying,
-    name character varying,
-    full_name character varying NOT NULL,
-    github_id bigint NOT NULL,
-    language_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    enabled boolean DEFAULT true NOT NULL
-);
-
-
---
--- Name: external_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.external_projects_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: external_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.external_projects_id_seq OWNED BY public.external_projects.id;
-
-
---
 -- Name: external_pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -859,7 +823,7 @@ CREATE TABLE public.external_pull_requests (
     title text,
     github_id bigint,
     owner_id bigint,
-    external_project_id bigint NOT NULL,
+    external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     number integer,
@@ -885,6 +849,42 @@ CREATE SEQUENCE public.external_pull_requests_id_seq
 --
 
 ALTER SEQUENCE public.external_pull_requests_id_seq OWNED BY public.external_pull_requests.id;
+
+
+--
+-- Name: external_repositories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_repositories (
+    id bigint NOT NULL,
+    description character varying,
+    name character varying,
+    full_name character varying NOT NULL,
+    github_id bigint NOT NULL,
+    language_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: external_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_repositories_id_seq OWNED BY public.external_repositories.id;
 
 
 --
@@ -1422,10 +1422,10 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: users_projects; Type: TABLE; Schema: public; Owner: -
+-- Name: users_repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.users_projects (
+CREATE TABLE public.users_repositories (
     id bigint NOT NULL,
     user_id bigint,
     repository_id bigint,
@@ -1434,10 +1434,10 @@ CREATE TABLE public.users_projects (
 
 
 --
--- Name: users_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: users_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.users_projects_id_seq
+CREATE SEQUENCE public.users_repositories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1446,10 +1446,10 @@ CREATE SEQUENCE public.users_projects_id_seq
 
 
 --
--- Name: users_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: users_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.users_projects_id_seq OWNED BY public.users_projects.id;
+ALTER SEQUENCE public.users_repositories_id_seq OWNED BY public.users_repositories.id;
 
 
 --
@@ -1481,17 +1481,17 @@ ALTER TABLE ONLY public.blog_posts ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
--- Name: code_climate_project_metrics id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics ALTER COLUMN id SET DEFAULT nextval('public.code_climate_project_metrics_id_seq'::regclass);
+ALTER TABLE ONLY public.code_climate_repository_metrics ALTER COLUMN id SET DEFAULT nextval('public.code_climate_repository_metrics_id_seq'::regclass);
 
 
 --
--- Name: code_owner_projects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: code_owner_repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval('public.code_owner_projects_id_seq'::regclass);
+ALTER TABLE ONLY public.code_owner_repositories ALTER COLUMN id SET DEFAULT nextval('public.code_owner_repositories_id_seq'::regclass);
 
 
 --
@@ -1572,17 +1572,17 @@ ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: external_projects id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.external_projects ALTER COLUMN id SET DEFAULT nextval('public.external_projects_id_seq'::regclass);
-
-
---
 -- Name: external_pull_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_pull_requests ALTER COLUMN id SET DEFAULT nextval('public.external_pull_requests_id_seq'::regclass);
+
+
+--
+-- Name: external_repositories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_repositories ALTER COLUMN id SET DEFAULT nextval('public.external_repositories_id_seq'::regclass);
 
 
 --
@@ -1691,10 +1691,10 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: users_projects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users_repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users_projects ALTER COLUMN id SET DEFAULT nextval('public.users_projects_id_seq'::regclass);
+ALTER TABLE ONLY public.users_repositories ALTER COLUMN id SET DEFAULT nextval('public.users_repositories_id_seq'::regclass);
 
 
 --
@@ -1738,19 +1738,19 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
--- Name: code_climate_project_metrics code_climate_project_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics code_climate_repository_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics
-    ADD CONSTRAINT code_climate_project_metrics_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.code_climate_repository_metrics
+    ADD CONSTRAINT code_climate_repository_metrics_pkey PRIMARY KEY (id);
 
 
 --
--- Name: code_owner_projects code_owner_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories code_owner_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
-    ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.code_owner_repositories
+    ADD CONSTRAINT code_owner_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1842,19 +1842,19 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 
 --
--- Name: external_projects external_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.external_projects
-    ADD CONSTRAINT external_projects_pkey PRIMARY KEY (id);
-
-
---
 -- Name: external_pull_requests external_pull_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_pull_requests
     ADD CONSTRAINT external_pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: external_repositories external_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_repositories
+    ADD CONSTRAINT external_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1986,11 +1986,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users_projects users_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users_repositories users_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users_projects
-    ADD CONSTRAINT users_projects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.users_repositories
+    ADD CONSTRAINT users_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -2043,24 +2043,24 @@ CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_t
 
 
 --
--- Name: index_code_climate_project_metrics_on_repository_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_climate_repository_metrics_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_climate_project_metrics_on_repository_id ON public.code_climate_project_metrics USING btree (repository_id);
-
-
---
--- Name: index_code_owner_projects_on_repository_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_code_owner_projects_on_repository_id ON public.code_owner_projects USING btree (repository_id);
+CREATE INDEX index_code_climate_repository_metrics_on_repository_id ON public.code_climate_repository_metrics USING btree (repository_id);
 
 
 --
--- Name: index_code_owner_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_owner_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects USING btree (user_id);
+CREATE INDEX index_code_owner_repositories_on_repository_id ON public.code_owner_repositories USING btree (repository_id);
+
+
+--
+-- Name: index_code_owner_repositories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_code_owner_repositories_on_user_id ON public.code_owner_repositories USING btree (user_id);
 
 
 --
@@ -2267,17 +2267,10 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 
 
 --
--- Name: index_external_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_external_pull_requests_on_external_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_external_projects_on_language_id ON public.external_projects USING btree (language_id);
-
-
---
--- Name: index_external_pull_requests_on_external_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_external_pull_requests_on_external_project_id ON public.external_pull_requests USING btree (external_project_id);
+CREATE INDEX index_external_pull_requests_on_external_repository_id ON public.external_pull_requests USING btree (external_repository_id);
 
 
 --
@@ -2285,6 +2278,13 @@ CREATE INDEX index_external_pull_requests_on_external_project_id ON public.exter
 --
 
 CREATE INDEX index_external_pull_requests_on_owner_id ON public.external_pull_requests USING btree (owner_id);
+
+
+--
+-- Name: index_external_repositories_on_language_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_repositories_on_language_id ON public.external_repositories USING btree (language_id);
 
 
 --
@@ -2428,17 +2428,17 @@ CREATE UNIQUE INDEX index_users_on_github_id ON public.users USING btree (github
 
 
 --
--- Name: index_users_projects_on_repository_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_users_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_projects_on_repository_id ON public.users_projects USING btree (repository_id);
+CREATE INDEX index_users_repositories_on_repository_id ON public.users_repositories USING btree (repository_id);
 
 
 --
--- Name: index_users_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_users_repositories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_projects_on_user_id ON public.users_projects USING btree (user_id);
+CREATE INDEX index_users_repositories_on_user_id ON public.users_repositories USING btree (user_id);
 
 
 --
@@ -2490,10 +2490,10 @@ ALTER TABLE ONLY public.repositories
 
 
 --
--- Name: code_owner_projects fk_rails_22881d1001; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories fk_rails_22881d1001; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
+ALTER TABLE ONLY public.code_owner_repositories
     ADD CONSTRAINT fk_rails_22881d1001 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
@@ -2518,7 +2518,7 @@ ALTER TABLE ONLY public.blog_post_technologies
 --
 
 ALTER TABLE ONLY public.external_pull_requests
-    ADD CONSTRAINT fk_rails_2c98f94e16 FOREIGN KEY (external_project_id) REFERENCES public.external_projects(id);
+    ADD CONSTRAINT fk_rails_2c98f94e16 FOREIGN KEY (external_repository_id) REFERENCES public.external_repositories(id);
 
 
 --
@@ -2594,10 +2594,18 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
--- Name: code_climate_project_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: external_pull_requests fk_rails_51325610fd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics
+ALTER TABLE ONLY public.external_pull_requests
+    ADD CONSTRAINT fk_rails_51325610fd FOREIGN KEY (external_repository_id) REFERENCES public.external_repositories(id);
+
+
+--
+-- Name: code_climate_repository_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_repository_metrics
     ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
@@ -2634,34 +2642,34 @@ ALTER TABLE ONLY public.languages
 
 
 --
--- Name: code_climate_project_metrics fk_rails_8af0265fff; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics fk_rails_8af0265fff; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics
+ALTER TABLE ONLY public.code_climate_repository_metrics
     ADD CONSTRAINT fk_rails_8af0265fff FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: code_owner_projects fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
+ALTER TABLE ONLY public.code_owner_repositories
     ADD CONSTRAINT fk_rails_8b5e8dfa3f FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: code_owner_projects fk_rails_98029d380a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories fk_rails_98029d380a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
+ALTER TABLE ONLY public.code_owner_repositories
     ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: users_projects fk_rails_9bab11adb3; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: users_repositories fk_rails_9bab11adb3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users_projects
+ALTER TABLE ONLY public.users_repositories
     ADD CONSTRAINT fk_rails_9bab11adb3 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
@@ -2930,6 +2938,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210830200109'),
 ('20210830200129'),
 ('20210830211654'),
-('20210902140638');
+('20210902140638'),
+('20210902182225');
 
 

@@ -28,7 +28,7 @@ RSpec.describe GithubClient::Repository do
     context 'when the request succeeds' do
       before { stub_successful_repository_views(repository, repository_views_payload) }
 
-      it 'returns the views hash of that project on Github' do
+      it 'returns the views hash of that repository on Github' do
         expect(described_class.new(repository).views).to eq repository_views_payload
       end
     end
@@ -43,12 +43,12 @@ RSpec.describe GithubClient::Repository do
   end
 
   describe '#pull_requests' do
-    let(:project) { build(:external_project) }
-    subject { described_class.new(project) }
+    let(:repository) { build(:external_repository) }
+    subject { described_class.new(repository) }
 
     context 'when repo does not have any pull request' do
       before do
-        stub_get_pull_requests(project.github_id)
+        stub_get_pull_requests(repository.github_id)
       end
 
       it 'returns an empty array' do
@@ -61,7 +61,7 @@ RSpec.describe GithubClient::Repository do
         [create(:github_api_client_pull_request_payload)]
       end
 
-      before { stub_get_pull_requests(project.github_id, pull_requests_payload) }
+      before { stub_get_pull_requests(repository.github_id, pull_requests_payload) }
 
       it 'does not return an empty array' do
         expect(subject.pull_requests).not_to be_empty

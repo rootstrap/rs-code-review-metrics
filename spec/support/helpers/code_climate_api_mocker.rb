@@ -3,7 +3,7 @@ module CodeClimateApiMocker
 
   def on_request_repository_by_slug(project_name:, respond:)
     stub_env('CODE_CLIMATE_API_ORG_NAME', 'rootstrap')
-    code_climate_org_name = CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME
+    code_climate_org_name = CodeClimate::GetRepositorySummary::CODE_CLIMATE_API_ORG_NAME
     url = "#{CODE_CLIMATE_API_URL}/repos?github_slug=#{code_climate_org_name}/#{project_name}"
 
     stub_request(:get, url)

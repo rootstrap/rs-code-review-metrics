@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe CodeClimate::GetProjectSummary do
+describe CodeClimate::GetRepositorySummary do
   describe '#repository' do
     subject(:repository) { described_class.send(:new, repository: repo).send(:find_repository) }
 
@@ -23,7 +23,7 @@ describe CodeClimate::GetProjectSummary do
     context 'when the repository has a code climate repository metric' do
       context 'but not a repository id' do
         before do
-          create(:code_climate_project_metric, cc_repository_id: nil, repository: repo)
+          create(:code_climate_repository_metric, cc_repository_id: nil, repository: repo)
 
           on_request_repository_by_slug(
             project_name: repo.name,
@@ -38,10 +38,10 @@ describe CodeClimate::GetProjectSummary do
 
       context 'and a repository id' do
         before do
-          code_climate_project_metric = create(:code_climate_project_metric, repository: repo)
+          code_climate_repository_metric = create(:code_climate_repository_metric, repository: repo)
 
           on_request_repository_by_repo_id(
-            repo_id: code_climate_project_metric.cc_repository_id,
+            repo_id: code_climate_repository_metric.cc_repository_id,
             respond: { status: 200, body: code_climate_repository_json }
           )
         end

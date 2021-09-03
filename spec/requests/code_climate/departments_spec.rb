@@ -5,11 +5,13 @@ describe 'CodeClimate department repositories report page ', type: :request do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { repository.language.department }
     let(:repository) { create :repository, :with_activity, language: ruby_lang }
-    let!(:project_with_no_cc) { create :repository, :with_activity, :internal, language: ruby_lang }
+    let!(:repository_with_no_cc) do
+      create :repository, :with_activity, :internal, language: ruby_lang
+    end
     let(:test_coverage) { 97.832 }
 
     before do
-      create :code_climate_project_metric,
+      create :code_climate_repository_metric,
              repository: repository,
              invalid_issues_count: 1,
              wont_fix_issues_count: 2,
@@ -28,7 +30,7 @@ describe 'CodeClimate department repositories report page ', type: :request do
 
     it 'shows the title' do
       expect(response.body).to include(
-        "CodeClimate report for #{department.name.capitalize} department projects"
+        "CodeClimate report for #{department.name.capitalize} department repositories"
       )
     end
 
@@ -63,12 +65,12 @@ describe 'CodeClimate department repositories report page ', type: :request do
     context 'when there are repositories without CC data' do
       it 'shows the title of a new table' do
         expect(response.body).to include(
-          'Projects without available CodeClimate data for selected time range'
+          'Repositories without available CodeClimate data for selected time range'
         )
       end
 
       it 'shows name repository' do
-        expect(response.body).to include(project_with_no_cc.name)
+        expect(response.body).to include(repository_with_no_cc.name)
       end
     end
   end

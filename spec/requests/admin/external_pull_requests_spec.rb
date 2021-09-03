@@ -8,17 +8,17 @@ RSpec.describe 'Admin::ExternalPullRequests' do
   before { sign_in admin }
 
   describe '#create' do
-    let(:project_owner) { 'rootstrap' }
-    let(:project_name) { 'rs-code-review-metrics' }
-    let(:project_full_name) { "#{project_owner}/#{project_name}" }
+    let(:repository_owner) { 'rootstrap' }
+    let(:repository_name) { 'rs-code-review-metrics' }
+    let(:repository_full_name) { "#{repository_owner}/#{repository_name}" }
     let(:pull_request_number) { 111 }
-    let(:url) { "https://github.com/#{project_full_name}/pull/#{pull_request_number}" }
-    let(:project) { ExternalProject.new(full_name: project_full_name) }
+    let(:url) { "https://github.com/#{repository_full_name}/pull/#{pull_request_number}" }
+    let(:repository) { ExternalRepository.new(full_name: repository_full_name) }
     let(:pull_request) do
-      ExternalPullRequest.new(number: pull_request_number, external_project: project)
+      ExternalPullRequest.new(number: pull_request_number, external_repository: repository)
     end
     let(:repository_payload) do
-      build(:repository_payload, name: project_name, owner: { login: project_owner })
+      build(:repository_payload, name: repository_name, owner: { login: repository_owner })
     end
     let(:pull_request_payload) do
       build(
@@ -46,7 +46,7 @@ RSpec.describe 'Admin::ExternalPullRequests' do
 
       created_pull_request = ExternalPullRequest.last
       expect(created_pull_request.number).to eq pull_request_number
-      expect(created_pull_request.repository.full_name).to eq project_full_name
+      expect(created_pull_request.repository.full_name).to eq repository_full_name
     end
   end
 end

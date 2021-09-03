@@ -27,7 +27,7 @@ module Builders
       pull_request.opened_at = pull_request_data[:created_at]
       pull_request.number = pull_request_data[:number]
       pull_request.owner = owner
-      pull_request.external_project = external_project
+      pull_request.external_repository = external_repository
     end
 
     def assign_state
@@ -36,7 +36,7 @@ module Builders
       pull_request_data[:state]
     end
 
-    def external_project
+    def external_repository
       Builders::ExternalProject.call(pull_request_data.dig(:base, :repo))
     end
 
@@ -61,8 +61,8 @@ module Builders
       end
 
       def pull_request
-        project = ::ExternalProject.new(full_name: @project_full_name)
-        ::ExternalPullRequest.new(number: @pull_request_number, external_project: project)
+        repository = ::ExternalRepository.new(full_name: @project_full_name)
+        ::ExternalPullRequest.new(number: @pull_request_number, external_repository: repository)
       end
     end
   end

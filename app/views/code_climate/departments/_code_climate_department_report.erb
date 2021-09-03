@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <div class="table-responsive">
       <table class="table table-striped table-bordered table-hover">
-      <thead class="thead-dark"><th colspan="7">Projects with available CodeClimate data for selected time range</th></thead>
+      <thead class="thead-dark"><th colspan="7">Repositories with available CodeClimate data for selected time range</th></thead>
         <thead class="thead-light">
           <th>Name</th>
           <th>Rate</th>
@@ -13,25 +13,25 @@
           <th></th>
         </thead>
         <tbody>
-          <% projects_details.each do |project_summary| -%>
-            <%= render 'code_climate_project_report',
+          <% repositories_details.each do |repository_summary| -%>
+            <%= render 'code_climate_repository_report',
               code_climate: {
-                name: project_summary.name,
-                code_climate_rate: project_summary.rate,
-                invalid_issues_count: project_summary.invalid_issues_count,
-                wont_fix_issues_count: project_summary.wont_fix_issues_count,
-                open_issues_count: project_summary.open_issues_count,
-                test_coverage: project_summary.test_coverage
+                name: repository_summary.name,
+                code_climate_rate: repository_summary.rate,
+                invalid_issues_count: repository_summary.invalid_issues_count,
+                wont_fix_issues_count: repository_summary.wont_fix_issues_count,
+                open_issues_count: repository_summary.open_issues_count,
+                test_coverage: repository_summary.test_coverage
               } %>
           <% end %>
         </tbody>
       </table>
-      <% if projects_without_cc.present? -%>
+      <% if repositories_without_cc.present? -%>
         <table class="table table-striped table-bordered table-hover">
-          <thead class="thead-dark"><th colspan="7">Projects without available CodeClimate data for selected time range</th></thead>
+          <thead class="thead-dark"><th colspan="7">Repositories without available CodeClimate data for selected time range</th></thead>
           <tbody>
-            <% projects_without_cc.each do |project| -%>
-              <%= render 'code_climate_project_without_cc', project: project %>
+            <% repositories_without_cc.each do |repository| -%>
+              <%= render 'code_climate_repository_without_cc', repository: repository %>
             <% end %>
           </tbody>
         </table>

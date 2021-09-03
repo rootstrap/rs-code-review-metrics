@@ -4,7 +4,7 @@ module Users
     include LoadSettings
 
     def index
-      @projects = user.projects_as_code_owner
+      @repositories = user.repositories_as_code_owner
     end
 
     private

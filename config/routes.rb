@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     get 'products_metrics', on: :collection
   end
   resources :departments, only: [], param: :name do
-    namespace :projects do
+    namespace :repositories do
       resources :by_relevance, only: :index, param: :department_name
     end
   end

@@ -159,7 +159,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def code_climate_department_summary
-    CodeClimate::ProjectsSummaryService.call(
+    CodeClimate::RepositoriesSummaryService.call(
       department: department,
       from: metric_params[:period],
       technologies: []

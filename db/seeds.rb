@@ -42,9 +42,9 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, repository: repository) }
+    User.all.each { |user| UsersRepository.create!(user: user, repository: repository) }
 
-    UsersProject.all.each do |uspr|
+    UsersRepository.all.each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
       end
@@ -90,18 +90,18 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, repository: second_repository) }
+    User.all.each { |user| UsersRepository.create!(user: user, repository: second_repository) }
 
     Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
     Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
-    FactoryBot.create(:code_climate_project_metric, repository: repository)
-    FactoryBot.create(:code_climate_project_metric, repository: second_repository)
+    FactoryBot.create(:code_climate_repository_metric, repository: repository)
+    FactoryBot.create(:code_climate_repository_metric, repository: second_repository)
 
-    User.first(3).each { |user| CodeOwnerProject.create!(user: user, repository: repository) }
+    User.first(3).each { |user| CodeOwnerRepository.create!(user: user, repository: repository) }
 
-    User.last(2).each { |user| CodeOwnerProject.create!(user: user, repository: second_repository) }
+    User.last(2).each { |user| CodeOwnerRepository.create!(user: user, repository: second_repository) }
 
     santiagovidal = User.find_by(login: 'santiagovidal')
     santib = User.find_by(login: 'santib')

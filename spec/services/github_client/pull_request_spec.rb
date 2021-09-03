@@ -8,10 +8,10 @@ RSpec.describe GithubClient::PullRequest do
       create(
         :external_pull_request,
         number: pull_request_payload['number'],
-        external_project: project
+        external_repository: repository
       )
     end
-    let(:project) { create(:external_project, full_name: repository_payload['full_name']) }
+    let(:repository) { create(:external_repository, full_name: repository_payload['full_name']) }
 
     subject(:client) { described_class.new(pull_request) }
 
@@ -23,7 +23,7 @@ RSpec.describe GithubClient::PullRequest do
   end
 
   describe '#files' do
-    let(:repository) { create(:repository, name: 'MyProject') }
+    let(:repository) { create(:repository, name: 'MyRepository') }
     let(:pull_request) { create(:pull_request, repository: repository) }
     let(:pull_request_file_payload) { create(:pull_request_file_payload) }
 

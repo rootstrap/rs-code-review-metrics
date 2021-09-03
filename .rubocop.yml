@@ -33,7 +33,7 @@ Metrics/AbcSize:
   # a Float.
   Max: 17
   Exclude:
-    - app/services/code_climate/update_project_service.rb
+    - app/services/code_climate/update_repository_service.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -79,7 +79,7 @@ Metrics/ParameterLists:
   Max: 5
   CountKeywordArgs: true
   Exclude:
-    - app/services/code_climate/project_summary.rb
+    - app/services/code_climate/repository_summary.rb
 
 Metrics/PerceivedComplexity:
   Max: 12

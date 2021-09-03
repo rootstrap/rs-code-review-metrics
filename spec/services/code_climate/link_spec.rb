@@ -6,11 +6,11 @@ describe CodeClimate::Link do
   let(:new_cc_repo_id) { code_climate_repository_json['data'].first['id'] }
 
   context 'when repository has Code Climate' do
-    let(:code_climate_project_metric) do
-      create(:code_climate_project_metric, cc_repository_id: local_cc_repo_id)
+    let(:code_climate_repository_metric) do
+      create(:code_climate_repository_metric, cc_repository_id: local_cc_repo_id)
     end
     let(:repository) do
-      create(:repository, code_climate_project_metric: code_climate_project_metric)
+      create(:repository, code_climate_repository_metric: code_climate_repository_metric)
     end
 
     context "when repository has OUTDATED code climate repository metric's cc_repository_id" do
@@ -32,7 +32,7 @@ describe CodeClimate::Link do
         expect {
           subject
         }.to change {
-          repository.code_climate_project_metric.reload.cc_repository_id
+          repository.code_climate_repository_metric.reload.cc_repository_id
         }.from(local_cc_repo_id)
           .to(new_cc_repo_id)
       end
@@ -57,7 +57,7 @@ describe CodeClimate::Link do
         expect {
           subject
         }.not_to change {
-          repository.code_climate_project_metric.reload.cc_repository_id
+          repository.code_climate_repository_metric.reload.cc_repository_id
         }
       end
     end
@@ -76,7 +76,7 @@ describe CodeClimate::Link do
     end
 
     it 'does not change code climate repository metric count' do
-      expect { subject }.not_to change { CodeClimateProjectMetric.count }
+      expect { subject }.not_to change { CodeClimateRepositoryMetric.count }
     end
   end
 end

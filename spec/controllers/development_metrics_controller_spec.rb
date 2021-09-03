@@ -41,7 +41,7 @@ describe DevelopmentMetricsController, type: :controller do
         }
       end
       let(:code_climate_metric) do
-        create :code_climate_project_metric,
+        create :code_climate_repository_metric,
                repository: repository, code_climate_rate: 'A',
                invalid_issues_count: 1,
                wont_fix_issues_count: 2
@@ -174,7 +174,7 @@ describe DevelopmentMetricsController, type: :controller do
         before { params[:department_name] = repository.language.department.name }
 
         it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimate::ProjectsSummaryService)
+          expect(CodeClimate::RepositoriesSummaryService)
             .to receive(:call).and_return(code_climate_metric)
 
           get :departments, params: params

@@ -11,14 +11,14 @@ describe 'Open Source', type: :request do
         get open_source_index_url
 
         expect(response.body)
-          .to include("<b>#{repository_count}</b> #{language.name.titleize} project")
+          .to include("<b>#{repository_count}</b> #{language.name.titleize} repository")
       end
 
       it 'renders the repository count totals' do
         get open_source_index_url
 
         expect(response.body)
-          .to include("<b>#{repository_count}</b> open source project")
+          .to include("<b>#{repository_count}</b> open source repository")
       end
 
       context 'when the repository count is greater than 1' do
@@ -28,9 +28,9 @@ describe 'Open Source', type: :request do
           get open_source_index_url
 
           expect(response.body)
-            .to include("<b>#{repository_count}</b> #{language.name.titleize} projects")
+            .to include("<b>#{repository_count}</b> #{language.name.titleize} repositories")
           expect(response.body)
-            .to include("<b>#{repository_count}</b> open source projects")
+            .to include("<b>#{repository_count}</b> open source repositories")
         end
       end
     end

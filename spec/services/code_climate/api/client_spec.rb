@@ -4,7 +4,7 @@ describe CodeClimate::Api::Client do
   describe '#repository_by_slug' do
     let(:repository) { create(:repository) }
     let(:github_slug) do
-      "#{CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
+      "#{CodeClimate::GetRepositorySummary::CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
     end
 
     context 'when the request succeeds' do

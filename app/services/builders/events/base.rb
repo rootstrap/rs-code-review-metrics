@@ -28,7 +28,7 @@ module Builders
       end
 
       def find_or_create_user_repository(repository_id, user_id)
-        UsersProject.find_or_create_by!(repository_id: repository_id, user_id: user_id)
+        UsersRepository.find_or_create_by!(repository_id: repository_id, user_id: user_id)
       end
     end
   end

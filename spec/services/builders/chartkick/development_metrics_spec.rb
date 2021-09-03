@@ -10,7 +10,9 @@ describe Builders::Chartkick::DevelopmentMetrics do
     describe '.call' do
       it 'returns a hash with the right data per entity for each metric' do
         metric_data = described_class.call(product.id, period)
-        expect(metric_data[:defect_escape_rate].keys).to match_array(defect_escape_rate_entities)
+
+        expect(metric_data[:defect_escape_rate].keys)
+          .to match_array(defect_escape_rate_entities)
       end
     end
   end
@@ -50,8 +52,12 @@ describe Builders::Chartkick::DevelopmentMetrics do
     let(:product) { create(:product) }
     let(:repository) { create(:repository, product: product) }
     let(:period) { 4 }
-    let(:review_turnaround_entities) { %i[per_project per_users_project per_project_distribution] }
-    let(:merge_time_entities) { %i[per_project per_users_project per_project_distribution] }
+    let(:review_turnaround_entities) do
+      %i[per_repository per_users_repository per_repository_distribution]
+    end
+    let(:merge_time_entities) do
+      %i[per_repository per_users_repository per_repository_distribution]
+    end
 
     describe '.call' do
       it 'returns a hash with the right data per entity for each metric' do

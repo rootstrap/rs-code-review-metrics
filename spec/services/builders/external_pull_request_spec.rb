@@ -37,7 +37,7 @@ RSpec.describe Builders::ExternalPullRequest do
       let(:project_name) { 'rs-code-review-metrics' }
       let(:project_full_name) { "#{project_owner}/#{project_name}" }
       let(:pull_request_number) { 111 }
-      let(:project) { ExternalProject.new(full_name: project_full_name) }
+      let(:repository) { ExternalRepository.new(full_name: project_full_name) }
 
       let(:repository_payload) do
         build(:repository_payload, name: project_name, owner: { login: project_owner })
@@ -52,7 +52,7 @@ RSpec.describe Builders::ExternalPullRequest do
       end
 
       let(:pull_request) do
-        ExternalPullRequest.new(number: pull_request_number, external_project: project)
+        ExternalPullRequest.new(number: pull_request_number, external_repository: repository)
       end
 
       before { stub_get_pull_request(pull_request, pull_request_data) }
@@ -93,9 +93,9 @@ RSpec.describe Builders::ExternalPullRequest do
       let(:project_name) { 'rs-code-review-metrics' }
       let(:project_full_name) { "#{project_owner}/#{project_name}" }
       let(:pull_request_number) { 111 }
-      let(:project) { ExternalProject.new(full_name: project_full_name) }
+      let(:repository) { ExternalRepository.new(full_name: project_full_name) }
       let(:pull_request) do
-        ExternalPullRequest.new(number: pull_request_number, external_project: project)
+        ExternalPullRequest.new(number: pull_request_number, external_repository: repository)
       end
       let(:repository_payload) do
         build(:repository_payload, name: project_name, owner: { login: project_owner })
