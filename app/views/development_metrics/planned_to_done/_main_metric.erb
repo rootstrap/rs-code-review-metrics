@@ -1,7 +1,7 @@
-<%= render partial: 'shared/multi-column-chart',
+<%= render partial: 'shared/column-labels',
            locals: {
              metric_name: '',
-             metric: planned_to_done[:per_planned_to_done_values]
+             metric: planned_to_done[:per_planned_to_done_values].first[:data]
            } if planned_to_done && planned_to_done[:per_planned_to_done_values] %>
 <%= render partial: 'development_metrics/planned_to_done/values_details',
            locals: {
