@@ -12,8 +12,8 @@ module Builders
 
       def sprints_points(sprints)
         sprints.map do |sprint|
-          @values.push('name' => 'Commitment', 'data' => { sprint[:sprint] => sprint[:committed] })
-          @values.push('name' => 'Completed', 'data' => { sprint[:sprint] => sprint[:completed] })
+          @values.push(name: 'Commitment', data: { sprint[:sprint] => sprint[:committed] })
+          @values.push(name: 'Completed', data: { sprint[:sprint] => sprint[:completed] })
         end
       end
     end
