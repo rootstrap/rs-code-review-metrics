@@ -23,7 +23,9 @@ module Builders
 
       def sprints_average(sprints)
         sprints.each_with_object(Hash.new(0)) do |sprint, result|
-          result['rate'] += (sprint[:completed] / sprint[:committed].to_f).round(2)
+          if sprint[:committed].positive?
+            result['rate'] += (sprint[:completed] / sprint[:committed].to_f).round(2)
+          end
           result['count'] += 1
         end
       end
