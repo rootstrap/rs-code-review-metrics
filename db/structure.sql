@@ -343,7 +343,7 @@ ALTER SEQUENCE public.blog_posts_id_seq OWNED BY public.blog_posts.id;
 
 CREATE TABLE public.code_climate_project_metrics (
     id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     code_climate_rate character varying,
     invalid_issues_count integer,
     wont_fix_issues_count integer,
@@ -382,7 +382,7 @@ ALTER SEQUENCE public.code_climate_project_metrics_id_seq OWNED BY public.code_c
 
 CREATE TABLE public.code_owner_projects (
     id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -486,7 +486,7 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     deleted_at timestamp without time zone
 );
 
@@ -567,7 +567,7 @@ CREATE TABLE public.events_pull_requests (
     updated_at timestamp(6) without time zone NOT NULL,
     state public.pull_request_state,
     opened_at timestamp without time zone,
-    project_id bigint,
+    repository_id bigint,
     owner_id bigint,
     html_url character varying,
     branch character varying,
@@ -601,7 +601,7 @@ ALTER SEQUENCE public.events_pull_requests_id_seq OWNED BY public.events_pull_re
 
 CREATE TABLE public.events_pushes (
     id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     pull_request_id bigint,
     sender_id bigint NOT NULL,
     ref character varying,
@@ -641,7 +641,7 @@ CREATE TABLE public.events_repositories (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sender_id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     deleted_at timestamp without time zone
 );
 
@@ -716,7 +716,7 @@ CREATE TABLE public.events_reviews (
     state public.review_state NOT NULL,
     opened_at timestamp without time zone NOT NULL,
     review_request_id bigint,
-    project_id bigint,
+    repository_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -1209,10 +1209,10 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
--- Name: projects; Type: TABLE; Schema: public; Owner: -
+-- Name: repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.projects (
+CREATE TABLE public.repositories (
     id bigint NOT NULL,
     github_id integer NOT NULL,
     name character varying,
@@ -1228,10 +1228,10 @@ CREATE TABLE public.projects (
 
 
 --
--- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.projects_id_seq
+CREATE SEQUENCE public.repositories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1240,10 +1240,10 @@ CREATE SEQUENCE public.projects_id_seq
 
 
 --
--- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
+ALTER SEQUENCE public.repositories_id_seq OWNED BY public.repositories.id;
 
 
 --
@@ -1258,7 +1258,7 @@ CREATE TABLE public.review_requests (
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
     state public.review_request_state DEFAULT 'active'::public.review_request_state,
-    project_id bigint,
+    repository_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -1428,7 +1428,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 CREATE TABLE public.users_projects (
     id bigint NOT NULL,
     user_id bigint,
-    project_id bigint,
+    repository_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -1649,10 +1649,10 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
--- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
+ALTER TABLE ONLY public.repositories ALTER COLUMN id SET DEFAULT nextval('public.repositories_id_seq'::regclass);
 
 
 --
@@ -1930,11 +1930,11 @@ ALTER TABLE ONLY public.products
 
 
 --
--- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: repositories repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.repositories
+    ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -2043,17 +2043,17 @@ CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_t
 
 
 --
--- Name: index_code_climate_project_metrics_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_climate_project_metrics_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_climate_project_metrics_on_project_id ON public.code_climate_project_metrics USING btree (project_id);
+CREATE INDEX index_code_climate_project_metrics_on_repository_id ON public.code_climate_project_metrics USING btree (repository_id);
 
 
 --
--- Name: index_code_owner_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_owner_projects_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_owner_projects_on_project_id ON public.code_owner_projects USING btree (project_id);
+CREATE INDEX index_code_owner_projects_on_repository_id ON public.code_owner_projects USING btree (repository_id);
 
 
 --
@@ -2085,10 +2085,10 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 
 
 --
--- Name: index_events_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_events_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id);
+CREATE INDEX index_events_on_repository_id ON public.events USING btree (repository_id);
 
 
 --
@@ -2141,10 +2141,10 @@ CREATE INDEX index_events_pull_requests_on_owner_id ON public.events_pull_reques
 
 
 --
--- Name: index_events_pull_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_events_pull_requests_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_events_pull_requests_on_project_id ON public.events_pull_requests USING btree (project_id);
+CREATE INDEX index_events_pull_requests_on_repository_id ON public.events_pull_requests USING btree (repository_id);
 
 
 --
@@ -2155,17 +2155,17 @@ CREATE INDEX index_events_pull_requests_on_state ON public.events_pull_requests 
 
 
 --
--- Name: index_events_pushes_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_pushes_on_project_id ON public.events_pushes USING btree (project_id);
-
-
---
 -- Name: index_events_pushes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_events_pushes_on_pull_request_id ON public.events_pushes USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_pushes_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pushes_on_repository_id ON public.events_pushes USING btree (repository_id);
 
 
 --
@@ -2176,10 +2176,10 @@ CREATE INDEX index_events_pushes_on_sender_id ON public.events_pushes USING btre
 
 
 --
--- Name: index_events_repositories_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_events_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_events_repositories_on_project_id ON public.events_repositories USING btree (project_id);
+CREATE INDEX index_events_repositories_on_repository_id ON public.events_repositories USING btree (repository_id);
 
 
 --
@@ -2218,17 +2218,17 @@ CREATE INDEX index_events_reviews_on_owner_id ON public.events_reviews USING btr
 
 
 --
--- Name: index_events_reviews_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_reviews_on_project_id ON public.events_reviews USING btree (project_id);
-
-
---
 -- Name: index_events_reviews_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_events_reviews_on_pull_request_id ON public.events_reviews USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_reviews_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_repository_id ON public.events_reviews USING btree (repository_id);
 
 
 --
@@ -2358,17 +2358,17 @@ CREATE INDEX index_products_on_name ON public.products USING btree (name);
 
 
 --
--- Name: index_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repositories_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
+CREATE INDEX index_repositories_on_language_id ON public.repositories USING btree (language_id);
 
 
 --
--- Name: index_projects_on_product_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repositories_on_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_product_id ON public.projects USING btree (product_id);
+CREATE INDEX index_repositories_on_product_id ON public.repositories USING btree (product_id);
 
 
 --
@@ -2379,17 +2379,17 @@ CREATE INDEX index_review_requests_on_owner_id ON public.review_requests USING b
 
 
 --
--- Name: index_review_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_review_requests_on_project_id ON public.review_requests USING btree (project_id);
-
-
---
 -- Name: index_review_requests_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_review_requests_on_pull_request_id ON public.review_requests USING btree (pull_request_id);
+
+
+--
+-- Name: index_review_requests_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_requests_on_repository_id ON public.review_requests USING btree (repository_id);
 
 
 --
@@ -2428,10 +2428,10 @@ CREATE UNIQUE INDEX index_users_on_github_id ON public.users USING btree (github
 
 
 --
--- Name: index_users_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_users_projects_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_projects_on_project_id ON public.users_projects USING btree (project_id);
+CREATE INDEX index_users_projects_on_repository_id ON public.users_projects USING btree (repository_id);
 
 
 --
@@ -2439,6 +2439,14 @@ CREATE INDEX index_users_projects_on_project_id ON public.users_projects USING b
 --
 
 CREATE INDEX index_users_projects_on_user_id ON public.users_projects USING btree (user_id);
+
+
+--
+-- Name: events fk_rails_022a085166; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT fk_rails_022a085166 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2474,11 +2482,19 @@ ALTER TABLE ONLY public.events_pull_request_comments
 
 
 --
--- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repositories fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects
+ALTER TABLE ONLY public.repositories
     ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: code_owner_projects fk_rails_22881d1001; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_projects
+    ADD CONSTRAINT fk_rails_22881d1001 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2518,7 +2534,15 @@ ALTER TABLE ONLY public.review_turnarounds
 --
 
 ALTER TABLE ONLY public.events_repositories
-    ADD CONSTRAINT fk_rails_36d1823ddd FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_36d1823ddd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pull_requests fk_rails_3c427fd106; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_requests
+    ADD CONSTRAINT fk_rails_3c427fd106 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2526,7 +2550,15 @@ ALTER TABLE ONLY public.events_repositories
 --
 
 ALTER TABLE ONLY public.events_pushes
-    ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pushes fk_rails_4767e99b87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes
+    ADD CONSTRAINT fk_rails_4767e99b87 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2554,11 +2586,19 @@ ALTER TABLE ONLY public.events_review_comments
 
 
 --
+-- Name: review_requests fk_rails_4f74da58c1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_requests
+    ADD CONSTRAINT fk_rails_4f74da58c1 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
 -- Name: code_climate_project_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.code_climate_project_metrics
-    ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2566,7 +2606,7 @@ ALTER TABLE ONLY public.code_climate_project_metrics
 --
 
 ALTER TABLE ONLY public.events_pull_requests
-    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2578,11 +2618,27 @@ ALTER TABLE ONLY public.events_pull_requests
 
 
 --
+-- Name: events_reviews fk_rails_65b0ea4a71; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_reviews
+    ADD CONSTRAINT fk_rails_65b0ea4a71 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
 -- Name: languages fk_rails_822295ed05; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.languages
     ADD CONSTRAINT fk_rails_822295ed05 FOREIGN KEY (department_id) REFERENCES public.departments(id);
+
+
+--
+-- Name: code_climate_project_metrics fk_rails_8af0265fff; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_project_metrics
+    ADD CONSTRAINT fk_rails_8af0265fff FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2598,7 +2654,15 @@ ALTER TABLE ONLY public.code_owner_projects
 --
 
 ALTER TABLE ONLY public.code_owner_projects
-    ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: users_projects fk_rails_9bab11adb3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users_projects
+    ADD CONSTRAINT fk_rails_9bab11adb3 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2631,6 +2695,14 @@ ALTER TABLE ONLY public.events_pushes
 
 ALTER TABLE ONLY public.events_reviews
     ADD CONSTRAINT fk_rails_bcf65590e4 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: events_repositories fk_rails_bd0a1859aa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_repositories
+    ADD CONSTRAINT fk_rails_bd0a1859aa FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2670,7 +2742,7 @@ ALTER TABLE ONLY public.review_requests
 --
 
 ALTER TABLE ONLY public.review_requests
-    ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2855,6 +2927,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210810202705'),
 ('20210811165206'),
 ('20210827172747'),
-('20210830211654');
+('20210830200109'),
+('20210830200129'),
+('20210830211654'),
+('20210902140638');
 
 

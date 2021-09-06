@@ -6,26 +6,26 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReview do
     let(:user2) { create(:user, login: 'user2') }
     let(:user3) { create(:user, login: 'user3') }
 
-    let(:ruby_project) { create(:project, language: Language.find_by(name: 'ruby')) }
-    let(:node_project) { create(:project, language: Language.find_by(name: 'nodejs')) }
+    let(:ruby_repository) { create(:repository, language: Language.find_by(name: 'ruby')) }
+    let(:node_repository) { create(:repository, language: Language.find_by(name: 'nodejs')) }
 
     let!(:first_ruby_pull_request) do
       create(:pull_request,
-             project: ruby_project,
+             repository: ruby_repository,
              owner: user1,
              opened_at: 6.hours.ago)
     end
 
     let!(:node_pull_request) do
       create(:pull_request,
-             project: node_project,
+             repository: node_repository,
              owner: user1,
              opened_at: 14.hours.ago)
     end
 
     let!(:second_ruby_pull_request) do
       create(:pull_request,
-             project: ruby_project,
+             repository: ruby_repository,
              owner: user1,
              opened_at: 26.hours.ago)
     end
@@ -34,13 +34,13 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReview do
 
     before do
       prs.each do |pr|
-        create(:review_request, owner: user1, reviewer: user2, project: pr.project,
+        create(:review_request, owner: user1, reviewer: user2, repository: pr.repository,
                                 pull_request: pr)
-        create(:review, owner: user2, project: pr.project, pull_request: pr,
+        create(:review, owner: user2, repository: pr.repository, pull_request: pr,
                         review_request: ReviewRequest.last)
-        create(:review_request, owner: user1, reviewer: user3, project: pr.project,
+        create(:review_request, owner: user1, reviewer: user3, repository: pr.repository,
                                 pull_request: pr)
-        create(:review, owner: user3, project: pr.project, pull_request: pr,
+        create(:review, owner: user3, repository: pr.repository, pull_request: pr,
                         review_request: ReviewRequest.last)
       end
     end
@@ -90,20 +90,20 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReview do
     context 'when pull request has html_url attribute nil' do
       let!(:pr) do
         create(:pull_request,
-               project: ruby_project,
+               repository: ruby_repository,
                html_url: nil,
                owner: user1,
                opened_at: 40.hours.ago)
       end
 
       before do
-        create(:review_request, owner: user1, reviewer: user2, project: pr.project,
+        create(:review_request, owner: user1, reviewer: user2, repository: pr.repository,
                                 pull_request: pr)
-        create(:review, owner: user2, project: pr.project, pull_request: pr,
+        create(:review, owner: user2, repository: pr.repository, pull_request: pr,
                         review_request: ReviewRequest.last)
-        create(:review_request, owner: user1, reviewer: user3, project: pr.project,
+        create(:review_request, owner: user1, reviewer: user3, repository: pr.repository,
                                 pull_request: pr)
-        create(:review, owner: user3, project: pr.project, pull_request: pr,
+        create(:review, owner: user3, repository: pr.repository, pull_request: pr,
                         review_request: ReviewRequest.last)
       end
 

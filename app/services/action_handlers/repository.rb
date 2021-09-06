@@ -22,7 +22,7 @@ module ActionHandlers
     end
 
     def mark_as_deleted
-      @entity.project.destroy!
+      @entity.repository.destroy!
     end
 
     def from_organization?

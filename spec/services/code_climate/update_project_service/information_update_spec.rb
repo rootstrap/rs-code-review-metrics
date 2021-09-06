@@ -39,8 +39,8 @@ describe CodeClimate::UpdateProjectService do
           coverage: coverage
   end
 
-  let(:project) { create :project, name: 'rs-code-review-metrics' }
-  let(:update_project_code_climate_info) { subject.call(project) }
+  let(:repository) { create :repository, name: 'rs-code-review-metrics' }
+  let(:update_project_code_climate_info) { subject.call(repository) }
   let(:yesterday) { Time.zone.yesterday.beginning_of_day }
   let(:today) { Time.zone.today.beginning_of_day }
   let(:coverage) { 99.0 }
@@ -48,7 +48,7 @@ describe CodeClimate::UpdateProjectService do
   context 'with a project not registered in CodeClimate' do
     before do
       on_request_repository_by_slug(
-        project_name: project.name,
+        project_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end
@@ -63,10 +63,10 @@ describe CodeClimate::UpdateProjectService do
     end
   end
 
-  context 'with a project registered in CodeClimate that has not been updated before' do
+  context 'with a repository registered in CodeClimate that has not been updated before' do
     before do
       on_request_repository_by_slug(
-        project_name: project.name,
+        project_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end
@@ -80,38 +80,38 @@ describe CodeClimate::UpdateProjectService do
       expect { update_project_code_climate_info }.to change { CodeClimateProjectMetric.count }.by(1)
     end
 
-    it 'sets the new CodeClimate rate for the project' do
+    it 'sets the new CodeClimate rate for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.code_climate_rate).to eq('A')
     end
 
-    it 'sets the new CodeClimate invalid_issues_count for the project' do
+    it 'sets the new CodeClimate invalid_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.invalid_issues_count).to eq(2)
     end
 
-    it 'sets the new CodeClimate wont_fix_issues_count for the project' do
+    it 'sets the new CodeClimate wont_fix_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.wont_fix_issues_count).to eq(1)
     end
 
-    it 'sets the new CodeClimate open_issues_count for the project' do
+    it 'sets the new CodeClimate open_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
     end
 
-    it 'sets the new CodeClimate repository id for the project' do
+    it 'sets the new CodeClimate repository id for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.cc_repository_id).to eq(repo_id)
     end
 
-    it 'sets the new CodeClimate test coverage for the project' do
+    it 'sets the new CodeClimate test coverage for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.test_coverage).to eq(coverage)
     end
   end
 
-  context 'with a project registered in CodeClimate that is outdated' do
+  context 'with a repository registered in CodeClimate that is outdated' do
     before do
       existing_code_climate_project_metric
 
@@ -128,7 +128,7 @@ describe CodeClimate::UpdateProjectService do
 
     let(:existing_code_climate_project_metric) do
       create :code_climate_project_metric,
-             project: project,
+             repository: repository,
              code_climate_rate: 'C',
              invalid_issues_count: 0,
              wont_fix_issues_count: 0,
@@ -146,33 +146,33 @@ describe CodeClimate::UpdateProjectService do
       expect(CodeClimateProjectMetric.first.code_climate_rate).to eq('A')
     end
 
-    it 'sets the new CodeClimate invalid_issues_count for the project' do
+    it 'sets the new CodeClimate invalid_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.invalid_issues_count).to eq(2)
     end
 
-    it 'sets the new CodeClimate wont_fix_issues_count for the project' do
+    it 'sets the new CodeClimate wont_fix_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.wont_fix_issues_count).to eq(1)
     end
 
-    it 'sets the new CodeClimate open_issues_count for the project' do
+    it 'sets the new CodeClimate open_issues_count for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.open_issues_count).to eq(3)
     end
 
-    it 'sets the new CodeClimate repository id for the project' do
+    it 'sets the new CodeClimate repository id for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.cc_repository_id).to eq(repo_id)
     end
 
-    it 'sets the new CodeClimate test coverage for the project' do
+    it 'sets the new CodeClimate test coverage for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.test_coverage).to eq(coverage)
     end
   end
 
-  context 'with a project registered in CodeClimate that is up to date' do
+  context 'with a repository registered in CodeClimate that is up to date' do
     before do
       existing_code_climate_project_metric
 
@@ -189,7 +189,7 @@ describe CodeClimate::UpdateProjectService do
 
     let(:existing_code_climate_project_metric) do
       create :code_climate_project_metric,
-             project: project,
+             repository: repository,
              code_climate_rate: 'C',
              invalid_issues_count: 0,
              wont_fix_issues_count: 0,
@@ -206,13 +206,13 @@ describe CodeClimate::UpdateProjectService do
       update_project_code_climate_info
     end
 
-    it 'does not update the CodeClimateProjectMetric record for the project' do
+    it 'does not update the CodeClimateProjectMetric record for the repository' do
       update_project_code_climate_info
       expect(CodeClimateProjectMetric.first.updated_at).to eq(today)
     end
   end
 
-  describe 'a project having incomplete info on Code Climate' do
+  describe 'a repository having incomplete info on Code Climate' do
     let(:code_climate_repository_json) do
       build :code_climate_repository_by_slug_payload,
             repository_payload: repository_payload['data']
@@ -220,7 +220,7 @@ describe CodeClimate::UpdateProjectService do
 
     before do
       on_request_repository_by_slug(
-        project_name: project.name,
+        project_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end
@@ -232,7 +232,7 @@ describe CodeClimate::UpdateProjectService do
               latest_default_branch_test_report_id: nil
       end
 
-      it 'does not set test coverage for the project metric' do
+      it 'does not set test coverage for the repository metric' do
         update_project_code_climate_info
         expect(CodeClimateProjectMetric.first.test_coverage).to be_nil
       end
@@ -245,15 +245,15 @@ describe CodeClimate::UpdateProjectService do
               latest_default_branch_test_report_id: test_report_id
       end
 
-      it 'does not set any snapshot info for the project metric' do
+      it 'does not set any snapshot info for the repository metric' do
         update_project_code_climate_info
 
-        project_metric = CodeClimateProjectMetric.first
-        expect(project_metric.code_climate_rate).to be_nil
-        expect(project_metric.invalid_issues_count).to be_nil
-        expect(project_metric.open_issues_count).to be_nil
-        expect(project_metric.wont_fix_issues_count).to be_nil
-        expect(project_metric.snapshot_time).to be_nil
+        repository_metric = CodeClimateProjectMetric.first
+        expect(repository_metric.code_climate_rate).to be_nil
+        expect(repository_metric.invalid_issues_count).to be_nil
+        expect(repository_metric.open_issues_count).to be_nil
+        expect(repository_metric.wont_fix_issues_count).to be_nil
+        expect(repository_metric.snapshot_time).to be_nil
       end
     end
 
@@ -263,7 +263,7 @@ describe CodeClimate::UpdateProjectService do
               ratings: []
       end
 
-      it 'does not set rate for the project metric' do
+      it 'does not set rate for the repository metric' do
         update_project_code_climate_info
         expect(CodeClimateProjectMetric.first.code_climate_rate).to be_nil
       end

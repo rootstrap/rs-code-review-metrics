@@ -11,15 +11,15 @@ module Builders
     private
 
     def fetch_or_create
-      ::Project.with_deleted
-               .find_or_initialize_by(github_id: @repository_data['id'])
-               .tap do |project|
-        project.recover if project.deleted?
-        project.name = @repository_data['name']
-        project.description = @repository_data['description']
-        project.is_private = @repository_data['private']
-        project.relevance = ::Project.relevances[:ignored] if @repository_data['archived']
-        project.save!
+      ::Repository.with_deleted
+                  .find_or_initialize_by(github_id: @repository_data['id'])
+                  .tap do |repository|
+        repository.recover if repository.deleted?
+        repository.name = @repository_data['name']
+        repository.description = @repository_data['description']
+        repository.is_private = @repository_data['private']
+        repository.relevance = ::Repository.relevances[:ignored] if @repository_data['archived']
+        repository.save!
       end
     end
   end

@@ -4,8 +4,8 @@ module Builders
       class MergeTime
         def retrieve_records(entity_id:, time_range:)
           ::MergeTime
-            .joins(pull_request: :project)
-            .where(projects: { id: entity_id })
+            .joins(pull_request: :repository)
+            .where(repositories: { id: entity_id })
             .where(events_pull_requests: { merged_at: time_range })
         end
 

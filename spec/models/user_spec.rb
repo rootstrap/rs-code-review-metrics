@@ -26,7 +26,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:owned_reviews) }
   it { is_expected.to have_many(:received_review_requests) }
   it { is_expected.to have_many(:users_projects) }
-  it { is_expected.to have_many(:projects) }
+  it { is_expected.to have_many(:repositories) }
   it { is_expected.to have_many(:created_pull_requests) }
   it { is_expected.to have_many(:owned_pull_request_comments) }
   it { is_expected.to validate_uniqueness_of(:github_id) }

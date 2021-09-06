@@ -4,7 +4,7 @@ module Builders
       class ReviewTurnaround
         def retrieve_records(entity_id:, time_range:)
           ::CompletedReviewTurnaround
-            .joins(review_request: { project: { language: :department } })
+            .joins(review_request: { repository: { language: :department } })
             .where(departments: { id: entity_id })
             .where(created_at: time_range)
         end

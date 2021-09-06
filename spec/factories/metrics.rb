@@ -25,7 +25,7 @@ FactoryBot.define do
     name { 'review_turnaround' }
     value_timestamp { Time.zone.now }
 
-    association :ownable, factory: :project
+    association :ownable, factory: :repository
 
     factory :weekly_metric do
       interval { 'weekly' }

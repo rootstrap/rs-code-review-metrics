@@ -2,20 +2,20 @@ module CodeClimate
   class GetProjectSummary < BaseService
     CODE_CLIMATE_API_ORG_NAME = ENV['CODE_CLIMATE_API_ORG_NAME']
 
-    def initialize(project:)
-      @project = project
+    def initialize(repository:)
+      @repository = repository
     end
 
     def call
-      repository&.summary
+      find_repository&.summary
     end
 
     private
 
-    attr_reader :project
+    attr_reader :repository
 
-    def repository
-      repo_id = project.code_climate_project_metric&.cc_repository_id
+    def find_repository
+      repo_id = repository.code_climate_project_metric&.cc_repository_id
 
       if repo_id.present?
         CodeClimate::Api::Client.new.repository_by_repo_id(repo_id: repo_id)
@@ -25,7 +25,7 @@ module CodeClimate
     end
 
     def github_slug
-      "#{CODE_CLIMATE_API_ORG_NAME}/#{project.name}"
+      "#{CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
     end
   end
 end

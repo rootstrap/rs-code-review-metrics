@@ -1,4 +1,4 @@
-ActiveAdmin.register Project do
+ActiveAdmin.register Repository do
   permit_params :language_id, :description, :name, :github_id, :relevance, :jira_key, :new_jira_key,
                 jira_project_attributes: %i[id jira_project_key]
 
@@ -18,7 +18,7 @@ ActiveAdmin.register Project do
   filter :name
   filter :is_private
   filter :github_id, label: 'GITHUB ID'
-  filter :relevance, as: :select, collection: Project.relevances.values
+  filter :relevance, as: :select, collection: Repository.relevances.values
   filter :language, as: :select, collection: -> { Language.order('LOWER(name)') }
   filter :users, collection: -> { User.order('LOWER(login)') }
   filter :code_owners, collection: -> { User.order('LOWER(login)') }
@@ -31,7 +31,7 @@ ActiveAdmin.register Project do
       f.input :name
       f.input :description, required: false
       f.input :language
-      f.input :relevance, as: :radio, collection: Project.relevances.values
+      f.input :relevance, as: :radio, collection: Repository.relevances.values
     end
     f.actions
   end

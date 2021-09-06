@@ -5,7 +5,7 @@ FactoryBot.define do
     state { 'active' }
 
     association :pull_request
-    association :project
+    association :repository
     association :reviewer, factory: :user
     association :owner, factory: :user
   end

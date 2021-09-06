@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: projects
+# Table name: repositories
 #
 #  id          :bigint           not null, primary key
 #  deleted_at  :datetime
@@ -16,15 +16,15 @@
 #
 # Indexes
 #
-#  index_projects_on_language_id  (language_id)
-#  index_projects_on_product_id   (product_id)
+#  index_repositories_on_language_id  (language_id)
+#  index_repositories_on_product_id   (product_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (product_id => products.id)
 #
 
-class Project < ApplicationRecord
+class Repository < ApplicationRecord
   acts_as_paranoid
 
   enum relevance: {
@@ -41,18 +41,18 @@ class Project < ApplicationRecord
   has_many :repositories,
            class_name: 'Events::Repository',
            dependent: :destroy,
-           inverse_of: :project
+           inverse_of: :repository
   has_many :pull_requests,
            class_name: 'Events::PullRequest',
            dependent: :destroy,
-           inverse_of: :project
+           inverse_of: :repository
   has_many :reviews,
            class_name: 'Events::Review',
            dependent: :destroy,
-           inverse_of: :project
+           inverse_of: :repository
   has_many :review_requests,
            dependent: :destroy,
-           inverse_of: :project
+           inverse_of: :repository
   has_many :users_projects, dependent: :destroy
   has_many :users, through: :users_projects
   has_many :metrics, as: :ownable, dependent: :destroy
@@ -126,10 +126,6 @@ class Project < ApplicationRecord
 
   def organization_name
     ENV['GITHUB_ORGANIZATION']
-  end
-
-  def jira_key
-    jira_board&.jira_project_key
   end
 
   private

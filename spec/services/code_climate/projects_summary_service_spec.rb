@@ -4,17 +4,21 @@ describe CodeClimate::ProjectsSummaryService do
   describe '.call' do
     let(:department) { Department.mobile.take }
     let(:language) { create(:language, name: 'react_native', department_id: department.id) }
-    let(:first_project) { create(:project, language_id: language.id, relevance: 'commercial') }
-    let(:second_project) { create(:project, language_id: language.id, relevance: 'commercial') }
-    let!(:project_without_cc) do
-      create(:project, language_id: language.id, relevance: 'commercial')
+    let(:first_repository) do
+      create(:repository, language_id: language.id, relevance: 'commercial')
+    end
+    let(:second_repository) do
+      create(:repository, language_id: language.id, relevance: 'commercial')
+    end
+    let!(:repository_without_cc) do
+      create(:repository, language_id: language.id, relevance: 'commercial')
     end
     let(:technologies) { ['react_native'] }
-    let!(:first_code_climate_project) do
-      create(:code_climate_project_metric, project_id: first_project.id)
+    let!(:first_code_climate_repository) do
+      create(:code_climate_project_metric, repository_id: first_repository.id)
     end
-    let!(:second_code_climate_project) do
-      create(:code_climate_project_metric, project_id: second_project.id)
+    let!(:second_code_climate_repository) do
+      create(:code_climate_project_metric, repository_id: second_repository.id)
     end
     let(:code_climate_metrics) { CodeClimateProjectMetric.all }
 
@@ -38,7 +42,7 @@ describe CodeClimate::ProjectsSummaryService do
       end
     end
 
-    it 'instances a project summary to collect the code climate issues' do
+    it 'instances a repository summary to collect the code climate issues' do
       expect(CodeClimate::ProjectsSummary).to receive(:new)
       subject
     end
@@ -59,12 +63,12 @@ describe CodeClimate::ProjectsSummaryService do
       expect(subject.ratings).to eq(ratings)
     end
 
-    it 'returns projects without code climate count' do
+    it 'returns repositories without code climate count' do
       expect(subject.projects_without_cc_count).to eq(1)
     end
 
     context 'when there is a code climate metric without the snapshot info' do
-      let(:third_project) { create(:project, language: language) }
+      let(:third_repository) { create(:repository, language: language) }
       let!(:empty_code_climate_project_metric) do
         create(
           :code_climate_project_metric,
@@ -73,12 +77,12 @@ describe CodeClimate::ProjectsSummaryService do
           open_issues_count: nil,
           wont_fix_issues_count: nil,
           snapshot_time: nil,
-          project: third_project
+          repository: third_repository
         )
       end
 
       let(:code_climate_metrics_with_data) do
-        [first_code_climate_project, second_code_climate_project]
+        [first_code_climate_repository, second_code_climate_repository]
       end
 
       let(:invalid_issues_count_average) do
@@ -95,8 +99,8 @@ describe CodeClimate::ProjectsSummaryService do
 
       let(:ratings) do
         ratings = Hash.new(0)
-        ratings[first_code_climate_project.code_climate_rate] += 1
-        ratings[second_code_climate_project.code_climate_rate] += 1
+        ratings[first_code_climate_repository.code_climate_rate] += 1
+        ratings[second_code_climate_repository.code_climate_rate] += 1
         ratings
       end
 

@@ -1,7 +1,7 @@
 ActiveAdmin.register Product do
   permit_params :id, :description, :name, :jira_key, :new_jira_key,
                 jira_board_attributes: %i[id jira_project_key],
-                project_ids: []
+                repository_ids: []
 
   index do
     selectable_column
@@ -20,9 +20,9 @@ ActiveAdmin.register Product do
         row :jira_project_key
       end
 
-      table_for product.projects.order(:name) do
-        column 'Projects' do |project|
-          link_to project.name, [:admin, project]
+      table_for product.repositories.order(:name) do
+        column 'Repositories' do |repository|
+          link_to repository.name, [:admin, repository]
         end
       end
     end
@@ -45,9 +45,9 @@ ActiveAdmin.register Product do
         end
       end
 
-      f.input :projects,
+      f.input :repositories,
               as: :check_boxes,
-              collection: Project.order(:name)
+              collection: Repository.order(:name)
     end
     f.actions
   end

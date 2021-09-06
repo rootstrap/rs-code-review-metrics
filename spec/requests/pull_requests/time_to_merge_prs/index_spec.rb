@@ -1,29 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe 'Time To Merge PRs' do
-  let(:ruby_project)  { create(:project, language: Language.find_by(name: 'ruby')) }
-  let(:node_project)  { create(:project, language: Language.find_by(name: 'nodejs')) }
+  let(:ruby_project)  { create(:repository, language: Language.find_by(name: 'ruby')) }
+  let(:node_project)  { create(:repository, language: Language.find_by(name: 'nodejs')) }
   let(:subject) do
     get department_time_to_merge_prs_path(department_name: 'backend'), params: params
   end
 
   let!(:first_ruby_pull_request) do
     create(:pull_request,
-           project: ruby_project,
+           repository: ruby_project,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 6.hours)
   end
 
   let!(:node_pull_request) do
     create(:pull_request,
-           project: node_project,
+           repository: node_project,
            html_url: 'node_pr_url',
            opened_at: Time.zone.now - 14.hours)
   end
 
   let!(:second_ruby_pull_request) do
     create(:pull_request,
-           project: ruby_project,
+           repository: ruby_project,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 26.hours)
   end

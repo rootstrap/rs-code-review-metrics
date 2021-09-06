@@ -46,7 +46,7 @@ RSpec.describe 'Admin::ExternalPullRequests' do
 
       created_pull_request = ExternalPullRequest.last
       expect(created_pull_request.number).to eq pull_request_number
-      expect(created_pull_request.project.full_name).to eq project_full_name
+      expect(created_pull_request.repository.full_name).to eq project_full_name
     end
   end
 end

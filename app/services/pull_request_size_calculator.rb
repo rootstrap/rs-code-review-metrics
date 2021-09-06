@@ -34,6 +34,6 @@ class PullRequestSizeCalculator < BaseService
   end
 
   def file_ignoring_rules
-    @file_ignoring_rules ||= pull_request.project.language.file_ignoring_rules
+    @file_ignoring_rules ||= pull_request.repository.language.file_ignoring_rules
   end
 end

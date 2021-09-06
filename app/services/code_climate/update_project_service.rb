@@ -1,7 +1,7 @@
 module CodeClimate
   class UpdateProjectService < BaseService
-    def initialize(project)
-      @project = project
+    def initialize(repository)
+      @repository = repository
     end
 
     def call
@@ -11,12 +11,12 @@ module CodeClimate
     rescue Faraday::Error => exception
       response = exception.response
       error = response[:status].to_s + ' - ' + response[:body]
-      SlackService.code_climate_error(project, error)
+      SlackService.code_climate_error(repository, error)
     end
 
     private
 
-    attr_reader :project
+    attr_reader :repository
 
     def update_metric
       project_code_climate_metric.update!(
@@ -31,7 +31,7 @@ module CodeClimate
     end
 
     def code_climate_project_summary
-      @code_climate_project_summary ||= CodeClimate::GetProjectSummary.call(project: project)
+      @code_climate_project_summary ||= CodeClimate::GetProjectSummary.call(repository: repository)
     end
 
     def today
@@ -45,7 +45,7 @@ module CodeClimate
 
     def project_code_climate_metric
       @project_code_climate_metric ||=
-        CodeClimateProjectMetric.find_or_initialize_by(project: project)
+        CodeClimateProjectMetric.find_or_initialize_by(repository: repository)
     end
   end
 end

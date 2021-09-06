@@ -62,7 +62,7 @@ module Builders
         end
       end
 
-      class Project < DevelopmentMetrics
+      class Repository < DevelopmentMetrics
         private
 
         def entities_by_metric
