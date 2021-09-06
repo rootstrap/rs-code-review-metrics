@@ -69,6 +69,7 @@ class DevelopmentMetricsController < ApplicationController
 
     defect_escape_rate(metrics)
     development_cycle(metrics)
+    planned_to_done(metrics)
   end
 
   def build_metrics_definitions
@@ -82,6 +83,7 @@ class DevelopmentMetricsController < ApplicationController
 
     show_defect_escape_rate
     show_development_cycle
+    show_planned_to_done
   end
 
   def metrics_to_show
@@ -90,6 +92,8 @@ class DevelopmentMetricsController < ApplicationController
       @show_defect_escape_rate = true
     when :development_cycle
       @show_development_cycle = true
+    when :planned_to_done
+      @show_planned_to_done = true
     end
   end
 
@@ -107,12 +111,23 @@ class DevelopmentMetricsController < ApplicationController
     @development_cycle_definition = MetricDefinition.find_by(code: :development_cycle)
   end
 
+  def planned_to_done(metrics)
+    return unless @show_planned_to_done
+
+    @planned_to_done = metrics[:planned_to_done]
+    @planned_to_done_definition = MetricDefinition.find_by(code: :planned_to_done)
+  end
+
   def show_defect_escape_rate
     @show_defect_escape_rate ||= product_action
   end
 
   def show_development_cycle
     @show_development_cycle ||= product_action
+  end
+
+  def show_planned_to_done
+    @show_planned_to_done ||= product_action
   end
 
   def product_action

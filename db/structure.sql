@@ -113,7 +113,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'open_source_visits',
     'defect_escape_rate',
     'pull_request_size',
-    'development_cycle'
+    'development_cycle',
+    'planned_to_done'
 );
 
 
@@ -2852,6 +2853,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210810123929'),
 ('20210810184003'),
 ('20210810202705'),
-('20210811165206');
+('20210811165206'),
+('20210830211654');
 
 

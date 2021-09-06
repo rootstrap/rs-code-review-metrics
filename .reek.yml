@@ -78,7 +78,7 @@ detectors:
     max_instance_variables: 9
   TooManyMethods:
     enabled: true
-    exclude: []
+    exclude: ['DevelopmentMetricsController']
     max_methods: 25
   TooManyStatements:
     enabled: true

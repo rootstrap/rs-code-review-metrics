@@ -30,7 +30,8 @@ class Metric < ApplicationRecord
                blog_post_count: 'blog_post_count',
                open_source_visits: 'open_source_visits',
                defect_escape_rate: 'defect_escape_rate',
-               development_cycle: 'development_cycle' }
+               development_cycle: 'development_cycle',
+               planned_to_done: 'planned_to_done' }
 
   belongs_to :ownable, polymorphic: true
 
