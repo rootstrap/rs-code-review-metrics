@@ -4,24 +4,24 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
   describe '.call' do
     before { travel_to Time.zone.parse('2020-08-20') }
 
-    let(:ruby_project) { create(:project, language: Language.find_by(name: 'ruby')) }
-    let(:node_project) { create(:project, language: Language.find_by(name: 'nodejs')) }
+    let(:ruby_repository) { create(:repository, language: Language.find_by(name: 'ruby')) }
+    let(:node_repository) { create(:repository, language: Language.find_by(name: 'nodejs')) }
 
     let!(:first_ruby_pull_request) do
       create(:pull_request,
-             project: ruby_project,
+             repository: ruby_repository,
              opened_at: 6.hours.ago)
     end
 
     let!(:node_pull_request) do
       create(:pull_request,
-             project: node_project,
+             repository: node_repository,
              opened_at: 14.hours.ago)
     end
 
     let!(:second_ruby_pull_request) do
       create(:pull_request,
-             project: ruby_project,
+             repository: ruby_repository,
              opened_at: 26.hours.ago)
     end
 
@@ -82,7 +82,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
     context 'when pull request has html_url attribute nil' do
       let!(:third_ruby_pull_request_html_url_nil) do
         create(:pull_request,
-               project: ruby_project,
+               repository: ruby_repository,
                html_url: nil,
                opened_at: 40.hours.ago)
       end

@@ -46,16 +46,16 @@ describe Builders::Chartkick::DevelopmentMetrics do
     end
   end
 
-  describe Builders::Chartkick::DevelopmentMetrics::Project do
+  describe Builders::Chartkick::DevelopmentMetrics::Repository do
     let(:product) { create(:product) }
-    let(:project) { create(:project, product: product) }
+    let(:repository) { create(:repository, product: product) }
     let(:period) { 4 }
     let(:review_turnaround_entities) { %i[per_project per_users_project per_project_distribution] }
     let(:merge_time_entities) { %i[per_project per_users_project per_project_distribution] }
 
     describe '.call' do
       it 'returns a hash with the right data per entity for each metric' do
-        metric_data = described_class.call(project.id, period)
+        metric_data = described_class.call(repository.id, period)
         expect(metric_data[:review_turnaround].keys).to match_array(review_turnaround_entities)
         expect(metric_data[:merge_time].keys).to match_array(merge_time_entities)
       end

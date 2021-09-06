@@ -28,17 +28,17 @@ module Builders
         end
 
         def relevances_overview(language)
-          project_relevances.index_with do |relevance|
-            ::Project.joins(:language)
-                     .relevant.with_activity_after(from)
-                     .where(relevance: relevance)
-                     .where('languages.name = ?', language)
-                     .distinct
+          repository_relevances.index_with do |relevance|
+            ::Repository.joins(:language)
+                        .relevant.with_activity_after(from)
+                        .where(relevance: relevance)
+                        .where('languages.name = ?', language)
+                        .distinct
           end
         end
 
-        def project_relevances
-          relevances = ::Project.relevances
+        def repository_relevances
+          relevances = ::Repository.relevances
           [
             relevances[:internal],
             relevances[:commercial]

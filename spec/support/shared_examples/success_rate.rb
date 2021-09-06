@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.shared_examples 'success rate' do
   before do
     values_in_seconds.each do |value|
-      pull_request = create(:pull_request, project: project, merged_at: Time.zone.now)
+      pull_request = create(:pull_request, repository: repository, merged_at: Time.zone.now)
       create(:merge_time, pull_request: pull_request, value: value)
     end
     query.merge!(name: :merge_time)

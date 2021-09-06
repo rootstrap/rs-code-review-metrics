@@ -13,7 +13,7 @@ module Metrics
       end
 
       def query(interval)
-        Language.joins(projects: { pull_requests: :merge_time })
+        Language.joins(repositories: { pull_requests: :merge_time })
                 .where(events_pull_requests: { merged_at: interval })
                 .where(id: @entity_id)
                 .group(:id)

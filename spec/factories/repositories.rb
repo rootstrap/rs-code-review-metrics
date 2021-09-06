@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: projects
+# Table name: repositories
 #
 #  id          :bigint           not null, primary key
 #  deleted_at  :datetime
@@ -16,8 +16,8 @@
 #
 # Indexes
 #
-#  index_projects_on_language_id  (language_id)
-#  index_projects_on_product_id   (product_id)
+#  index_repositories_on_language_id  (language_id)
+#  index_repositories_on_product_id   (product_id)
 #
 # Foreign Keys
 #
@@ -25,7 +25,7 @@
 #
 
 FactoryBot.define do
-  factory :project do
+  factory :repository do
     sequence(:github_id, 1000)
     name { Faker::App.name.split.first }
     description { Faker::FunnyName.name }
@@ -39,19 +39,19 @@ FactoryBot.define do
 
     trait :open_source do
       language { Language.find_by(name: 'ruby') }
-      relevance { Project.relevances[:internal] }
+      relevance { Repository.relevances[:internal] }
       is_private { false }
     end
 
     trait :with_activity do
-      after(:build) do |project, evaluator|
-        create(:pull_request, project: project,
+      after(:build) do |repository, evaluator|
+        create(:pull_request, repository: repository,
                               opened_at: evaluator.last_activity_in_weeks.weeks.ago)
       end
     end
 
     trait :internal do
-      relevance { Project.relevances[:internal] }
+      relevance { Repository.relevances[:internal] }
     end
   end
 end

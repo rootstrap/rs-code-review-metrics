@@ -3,9 +3,9 @@ require 'rails_helper'
 describe ActionHandlers::Repository do
   describe '.call' do
     let(:payload) { create(:repository_event_payload, action: action) }
-    let!(:repository) { create(:repository) }
+    let!(:event_repository) { create(:event_repository) }
 
-    subject(:handle_action) { described_class.call(payload: payload, entity: repository) }
+    subject(:handle_action) { described_class.call(payload: payload, entity: event_repository) }
 
     handleable_actions = %w[deleted archived transferred].freeze
     unhandleable_actions = Events::Repository.actions.values - handleable_actions
@@ -14,9 +14,9 @@ describe ActionHandlers::Repository do
       handleable_actions.each do |action|
         let(:action) { action }
 
-        it 'marks the project as deleted' do
-          expect { handle_action }.to change(Project, :count)
-          expect(repository.project.deleted?).to be(true)
+        it 'marks the repository as deleted' do
+          expect { handle_action }.to change(Repository, :count)
+          expect(event_repository.repository.deleted?).to be(true)
         end
       end
     end
@@ -25,9 +25,9 @@ describe ActionHandlers::Repository do
       unhandleable_actions.each do |action|
         let(:action) { action }
 
-        it 'does not mark the project as deleted' do
-          expect { handle_action }.not_to change(Project, :count)
-          expect(repository.project.deleted?).to be(false)
+        it 'does not mark the repository as deleted' do
+          expect { handle_action }.not_to change(Repository, :count)
+          expect(event_repository.repository.deleted?).to be(false)
         end
       end
     end

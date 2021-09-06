@@ -13,21 +13,22 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  cc_repository_id      :string
-#  project_id            :bigint           not null
+#  repository_id         :bigint           not null
 #
 # Indexes
 #
-#  index_code_climate_project_metrics_on_project_id  (project_id)
+#  index_code_climate_project_metrics_on_repository_id  (repository_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (repository_id => repositories.id)
+#  fk_rails_...  (repository_id => repositories.id)
 #
 
 require 'rails_helper'
 
 RSpec.describe CodeClimateProjectMetric, type: :model do
-  it { is_expected.to belong_to(:project) }
+  it { is_expected.to belong_to(:repository) }
 
   it do
     is_expected.to have_db_column(:code_climate_rate)

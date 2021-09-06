@@ -7,17 +7,17 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionDataMetrics::ReviewTur
     let(:backend_department) { Department.find_by(name: 'backend') }
     let(:frontend_department) { Department.find_by(name: 'frontend') }
 
-    let(:backend_project) { create(:project, language: backend_department.languages.first) }
-    let(:frontend_project) { create(:project, language: frontend_department.languages.first) }
+    let(:backend_repository) { create(:repository, language: backend_department.languages.first) }
+    let(:frontend_repository) { create(:repository, language: frontend_department.languages.first) }
 
     let(:frontend_rr) do
-      create(:review_request, project: frontend_project)
+      create(:review_request, repository: frontend_repository)
     end
     let(:last_week_backend_rr) do
-      create(:review_request, project: backend_project)
+      create(:review_request, repository: backend_repository)
     end
     let(:this_week_backend_rr) do
-      create(:review_request, project: backend_project)
+      create(:review_request, repository: backend_repository)
     end
 
     let!(:frontend_review_turnaround) do

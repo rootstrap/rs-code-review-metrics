@@ -13,9 +13,9 @@ describe Builders::Events::Repository do
     it 'creates or assigns correctly its attributes' do
       expect(subject.html_url).to eq(payload['html_url'])
       expect(subject.action).to eq(payload['action'])
-      expect(subject.project.github_id).to eq(repository_payload['id'])
+      expect(subject.repository.github_id).to eq(repository_payload['id'])
       expect(subject.sender.github_id).to eq(user_payload['id'])
-      expect(subject.sender.projects).to include(subject.project)
+      expect(subject.sender.repositories).to include(subject.repository)
     end
   end
 end

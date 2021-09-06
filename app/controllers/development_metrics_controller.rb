@@ -15,7 +15,7 @@ class DevelopmentMetricsController < ApplicationController
   def projects
     return if metric_params.blank?
 
-    build_metrics(project.id, Project.name)
+    build_metrics(project.id, Repository.name)
     build_metrics_definitions
 
     @code_owners = project.code_owners.pluck(:login)
@@ -139,7 +139,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def project
-    @project ||= Project.find_by(name: params[:project_name])
+    @project ||= Repository.find_by(name: params[:project_name])
   end
 
   def department

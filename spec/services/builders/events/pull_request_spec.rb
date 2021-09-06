@@ -32,9 +32,9 @@ RSpec.describe Builders::Events::PullRequest do
 
       it 'creates or assigns the correct references to it' do
         built_pull_request = described_class.call(payload: payload)
-        expect(built_pull_request.project.github_id).to eq(repository_payload['id'])
+        expect(built_pull_request.repository.github_id).to eq(repository_payload['id'])
         expect(built_pull_request.owner.github_id).to eq(user_payload['id'])
-        expect(built_pull_request.owner.projects).to include(built_pull_request.project)
+        expect(built_pull_request.owner.repositories).to include(built_pull_request.repository)
       end
     end
 

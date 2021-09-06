@@ -2,9 +2,9 @@ module Builders
   module Chartkick
     class ProjectDistributionData < Builders::Chartkick::Base
       def call
-        project_name = ::Project.find(@entity_id).name
+        repository_name = ::Repository.find(@entity_id).name
 
-        [{ name: project_name, data: build_distribution_data(retrieve_records) }]
+        [{ name: repository_name, data: build_distribution_data(retrieve_records) }]
       end
 
       private

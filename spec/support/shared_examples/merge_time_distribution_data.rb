@@ -8,7 +8,7 @@ RSpec.shared_examples 'merge time data distribution' do
   context 'when name is merge time' do
     before do
       values_in_seconds.each do |value|
-        pull_request = create(:pull_request, project: project, merged_at: Time.zone.now)
+        pull_request = create(:pull_request, repository: repository, merged_at: Time.zone.now)
         create(:merge_time, pull_request: pull_request, value: value)
       end
       query.merge!(name: :merge_time)
@@ -39,7 +39,7 @@ RSpec.shared_examples 'merge time data distribution' do
     context 'when there are pull requests merged outside of the requested period' do
       before do
         old_timestamp = range.first.yesterday
-        pull_request = create(:pull_request, project: project, merged_at: old_timestamp)
+        pull_request = create(:pull_request, repository: repository, merged_at: old_timestamp)
         create(:merge_time, pull_request: pull_request, value: 90_000)
       end
 

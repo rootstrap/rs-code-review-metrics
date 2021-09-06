@@ -32,17 +32,17 @@ RSpec.describe Metrics::Group::Weekly do
       end
     end
 
-    context 'when querying metrics per project' do
-      let(:project) { create(:project) }
+    context 'when querying metrics per repository' do
+      let(:repository) { create(:repository) }
       let(:subject) do
-        described_class.call(entity_name: 'project', entity_id: project.id,
+        described_class.call(entity_name: 'project', entity_id: repository.id,
                              metric_name: 'review_turnaround')
       end
 
       it 'calls service' do
         expect(Builders::Chartkick::ProjectData)
           .to receive(:call)
-          .with(project.id, any_args)
+          .with(repository.id, any_args)
         subject
       end
     end

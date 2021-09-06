@@ -14,7 +14,7 @@ module Metrics
 
       def query(interval)
         Department.joins(languages: {
-                           projects: { review_requests: :completed_review_turnarounds }
+                           repositories: { review_requests: :completed_review_turnarounds }
                          })
                   .where(completed_review_turnarounds: { created_at: interval })
                   .where(id: @entity_id)

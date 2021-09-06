@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :users_project do
     association :user
-    association :project
+    association :repository
   end
 end

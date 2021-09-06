@@ -83,7 +83,7 @@ class EventsProcessor
       raise Reviews::NoReviewRequestError
     end
 
-    def find_or_create_user_project(project_id, user_id)
+    def find_or_create_user_repository(project_id, user_id)
       UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
     end
   end

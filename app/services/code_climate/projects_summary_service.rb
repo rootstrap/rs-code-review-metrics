@@ -16,7 +16,7 @@ module CodeClimate
         wont_fix_issues_count_average: wont_fix_issues_count_average.round(2),
         open_issues_count_average: open_issues_count_average.round(2),
         ratings: ratings,
-        projects_without_cc_count: projects_without_cc_count
+        projects_without_cc_count: repositories_without_cc_count
       )
     end
 
@@ -79,26 +79,26 @@ module CodeClimate
     end
 
     def metrics_in_department
-      Project.joins(:code_climate_project_metric, :language)
-             .where(language: department.languages)
-             .distinct
-             .relevant
+      Repository.joins(:code_climate_project_metric, :language)
+                .where(language: department.languages)
+                .distinct
+                .relevant
     end
 
-    def projects_without_cc_count
+    def repositories_without_cc_count
       (ids_without_rate - ids_with_rate).count
     end
 
     def ids_without_rate
-      projects_without_cc = Project.without_cc_or_cc_rate
-                                   .joins(:language)
-                                   .where(language: department.languages)
-                                   .distinct
-                                   .relevant
+      repositories_without_cc = Repository.without_cc_or_cc_rate
+                                          .joins(:language)
+                                          .where(language: department.languages)
+                                          .distinct
+                                          .relevant
       if from.positive?
-        projects_without_cc = projects_without_cc.with_activity_after(from.weeks.ago)
+        repositories_without_cc = repositories_without_cc.with_activity_after(from.weeks.ago)
       end
-      projects_without_cc.pluck(:id)
+      repositories_without_cc.pluck(:id)
     end
 
     def ids_with_rate

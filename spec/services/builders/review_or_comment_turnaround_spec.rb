@@ -55,18 +55,26 @@ describe Builders::ReviewOrCommentTurnaround do
   end
 
   describe '#build_second_review_turnaround' do
-    let(:project) { create(:project, language: Language.first) }
+    let(:repository) { create(:repository, language: Language.first) }
     let(:vita)    { create(:user, login: 'santiagovidal') }
     let(:santib)  { create(:user, login: 'santib') }
     let(:hernan)  { create(:user, login: 'hdamico') }
-    let(:pr)      { create(:pull_request, owner: vita, project: project) }
+    let(:pr)      { create(:pull_request, owner: vita, repository: repository) }
 
     let(:rr) do
-      create(:review_request, owner: vita, reviewer: santib, project: project, pull_request: pr)
+      create(:review_request,
+             owner: vita,
+             reviewer: santib,
+             repository: repository,
+             pull_request: pr)
     end
 
     let(:second_rr) do
-      create(:review_request, owner: vita, reviewer: hernan, project: project, pull_request: pr)
+      create(:review_request,
+             owner: vita,
+             reviewer: hernan,
+             repository: repository,
+             pull_request: pr)
     end
 
     shared_context 'when a different user make the second review' do

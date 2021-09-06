@@ -2,8 +2,8 @@ module CodeClimate
   class Link < BaseService
     CODE_CLIMATE_API_ORG_NAME = ENV['CODE_CLIMATE_API_ORG_NAME']
 
-    def initialize(project)
-      @project = project
+    def initialize(repository)
+      @repository = repository
     end
 
     def call
@@ -16,10 +16,11 @@ module CodeClimate
 
     private
 
-    attr_reader :project
+    attr_reader :repository
 
     def code_climate_project_metric
-      @code_climate_project_metric ||= CodeClimateProjectMetric.find_by(project_id: project.id)
+      @code_climate_project_metric ||=
+        CodeClimateProjectMetric.find_by(repository_id: repository.id)
     end
 
     def ids_differ?
@@ -39,12 +40,12 @@ module CodeClimate
     end
 
     def github_slug
-      "#{CODE_CLIMATE_API_ORG_NAME}/#{project.name}"
+      "#{CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
     end
 
     def message
       <<-MESSAGE
-      PROJECT #{code_climate_project_metric.project_id}
+      PROJECT #{code_climate_project_metric.repository_id}
        updated CodeClimateProjectMetric (#{code_climate_project_metric.id})
        cc_repository_id from #{local_cc_repository_id}
        to #{code_climate_project_metric.cc_repository_id}

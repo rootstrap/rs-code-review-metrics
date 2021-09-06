@@ -9,11 +9,11 @@ RSpec.describe GithubService do
       let(:action) { 'open' }
       let(:merged) { false }
       let!(:event) { 'pull_request' }
-      let(:project) { create(:project, github_id: payload['repository']['id']) }
+      let(:repository) { create(:repository, github_id: payload['repository']['id']) }
       let(:pr_size) { 10 }
       let(:pull_request) do
         create :pull_request,
-               project: project,
+               repository: repository,
                github_id: payload['pull_request']['id'],
                number: payload['pull_request']['number'],
                size: pr_size
@@ -252,8 +252,8 @@ RSpec.describe GithubService do
       end
 
       context 'when it has a matching pull request' do
-        let!(:pull_request) { create(:pull_request, project: project, branch: branch) }
-        let(:project) { create(:project, github_id: repository_payload['id']) }
+        let!(:pull_request) { create(:pull_request, repository: repository, branch: branch) }
+        let(:repository) { create(:repository, github_id: repository_payload['id']) }
         let(:repository_payload) { payload['repository'] }
         let(:pull_request_file_payload) { create(:pull_request_file_payload) }
         let(:additions) { pull_request_file_payload['additions'] }
@@ -293,11 +293,11 @@ RSpec.describe GithubService do
         create :pull_request_comment, github_id: payload['comment']['id'], state: 'created'
       end
       let!(:user) { create :user, github_id: payload['comment']['user']['id'] }
-      let!(:project) do
-        create :project, github_id: payload['repository']['id']
+      let!(:repository) do
+        create :repository, github_id: payload['repository']['id']
       end
       let!(:pull_request) do
-        create :pull_request, number: payload['issue']['number'], project_id: project.id
+        create :pull_request, number: payload['issue']['number'], repository_id: repository.id
       end
       let!(:review_request) do
         create :review_request,

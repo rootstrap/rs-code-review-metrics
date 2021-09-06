@@ -2,42 +2,42 @@ require 'rails_helper'
 
 RSpec.describe GithubClient::Repository do
   describe '#code_owners' do
-    let(:project) { create(:project, name: 'rs-code-metrics') }
+    let(:repository) { create(:repository, name: 'rs-code-metrics') }
 
-    context 'when the project or the file is not found' do
+    context 'when the repository or the file is not found' do
       before { stub_get_code_owners_not_found }
       it 'returns an empty string' do
-        expect(described_class.new(project).code_owners)
+        expect(described_class.new(repository).code_owners)
           .to be_empty
       end
     end
 
-    context 'when the project or the file is found' do
+    context 'when the repository or the file is found' do
       before { stub_get_code_owners_file_ok }
       it 'returns a string with the codeowners as mentions' do
-        expect(described_class.new(project).code_owners)
+        expect(described_class.new(repository).code_owners)
           .to include('@santiagovidal')
       end
     end
   end
 
   describe '#views' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:repository_views_payload) { create(:repository_views_payload) }
 
     context 'when the request succeeds' do
-      before { stub_successful_repository_views(project, repository_views_payload) }
+      before { stub_successful_repository_views(repository, repository_views_payload) }
 
       it 'returns the views hash of that project on Github' do
-        expect(described_class.new(project).views).to eq repository_views_payload
+        expect(described_class.new(repository).views).to eq repository_views_payload
       end
     end
 
     context 'when the request fails' do
-      before { stub_failed_repository_views(project) }
+      before { stub_failed_repository_views(repository) }
 
       it 'raises an exception' do
-        expect { described_class.new(project).views }.to raise_error Faraday::ClientError
+        expect { described_class.new(repository).views }.to raise_error Faraday::ClientError
       end
     end
   end

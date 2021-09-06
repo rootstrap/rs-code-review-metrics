@@ -33,7 +33,7 @@ if Rails.env.development?
                                        project_name: 'rs-code-review-metrics',
                                        product: product)
 
-    project = Project.create!(github_id: rand(1000),
+    repository = Repository.create!(github_id: rand(1000),
                               name: 'rs-code-review-metrics',
                               language: Language.find_by(name: 'ruby'),
                               product: product)
@@ -42,7 +42,7 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, project: project) }
+    User.all.each { |user| UsersProject.create!(user: user, repository: repository) }
 
     UsersProject.all.each do |uspr|
       20.times do |v|
@@ -59,7 +59,7 @@ if Rails.env.development?
       end
     end
 
-    Project.all.each do |uspr|
+    Repository.all.each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
       end
@@ -81,7 +81,7 @@ if Rails.env.development?
                                               project_name: 'forecast',
                                               product: second_product)
 
-    second_project = Project.create!(github_id: rand(1000),
+    second_repository = Repository.create!(github_id: rand(1000),
                                      name: 'forecast',
                                      language: Language.find_by(name: 'ruby'),
                                      product: second_product)
@@ -90,18 +90,18 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, project: second_project) }
+    User.all.each { |user| UsersProject.create!(user: user, repository: second_repository) }
 
     Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
     Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
-    FactoryBot.create(:code_climate_project_metric, project: project)
-    FactoryBot.create(:code_climate_project_metric, project: second_project)
+    FactoryBot.create(:code_climate_project_metric, repository: repository)
+    FactoryBot.create(:code_climate_project_metric, repository: second_repository)
 
-    User.first(3).each { |user| CodeOwnerProject.create!(user: user, project: project) }
+    User.first(3).each { |user| CodeOwnerProject.create!(user: user, repository: repository) }
 
-    User.last(2).each { |user| CodeOwnerProject.create!(user: user, project: second_project) }
+    User.last(2).each { |user| CodeOwnerProject.create!(user: user, repository: second_repository) }
 
     santiagovidal = User.find_by(login: 'santiagovidal')
     santib = User.find_by(login: 'santib')
@@ -111,18 +111,18 @@ if Rails.env.development?
     sandro = User.find_by(login: 'sandro')
 
     # Review turnaround and Second review turnaround
-    vita_pr = FactoryBot.create(:pull_request, owner: santiagovidal, project: project)
-    vita_rr_santib = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: santib)
-    FactoryBot.create(:review, owner: santib, project: project, pull_request: vita_pr, review_request: vita_rr_santib)
+    vita_pr = FactoryBot.create(:pull_request, owner: santiagovidal, repository: repository)
+    vita_rr_santib = FactoryBot.create(:review_request, owner: santiagovidal, repository: repository, pull_request: vita_pr, reviewer: santib)
+    FactoryBot.create(:review, owner: santib, repository: repository, pull_request: vita_pr, review_request: vita_rr_santib)
 
-    vita_rr_hernan = FactoryBot.create(:review_request, owner: santiagovidal, project: project, pull_request: vita_pr, reviewer: hernan)
-    FactoryBot.create(:review, owner: hernan, project: project, pull_request: vita_pr, review_request: vita_rr_hernan)
+    vita_rr_hernan = FactoryBot.create(:review_request, owner: santiagovidal, repository: repository, pull_request: vita_pr, reviewer: hernan)
+    FactoryBot.create(:review, owner: hernan, repository: repository, pull_request: vita_pr, review_request: vita_rr_hernan)
 
     # Merge Time
     hvilloria_pr = FactoryBot.create(
       :pull_request,
       owner: hvilloria,
-      project: project,
+      repository: repository,
       opened_at: 5.hours.ago,
       merged_at: Time.zone.now
     )
@@ -130,7 +130,7 @@ if Rails.env.development?
     sandro_pr = FactoryBot.create(
       :pull_request,
       owner: sandro,
-      project: project,
+      repository: repository,
       opened_at: Time.zone.now - 14.hours,
       merged_at: Time.zone.now
     )
@@ -138,10 +138,16 @@ if Rails.env.development?
     horacio_pr = FactoryBot.create(
       :pull_request,
       owner: horacio,
-      project: project,
+      repository: repository,
       opened_at: Time.zone.now - 27.hours,
       merged_at: Time.zone.now
     )
     Builders::MergeTime.call(horacio_pr)
   end
+
+  MetricDefinition.create!(code: :defect_escape_rate, explanation: 'Is the ratio of defects filed by customer or end user, for a particular release to the total number of defects for that release.', name: 'Defect Escape Rate')
+  MetricDefinition.create!(code: :review_turnaround, explanation: 'The time it takes for the PR to have two approvals.', name: 'Time to second review')
+  MetricDefinition.create!(code: :merge_time, explanation: 'Time to merge measures the amount of time from pull request open until pull request merge.', name: 'Time to merge')
+  MetricDefinition.create!(code: :pull_request_size, explanation: 'Is the average of total lines of code added plus the total lines of code removed.', name: 'PR Size')
+  MetricDefinition.create!(code: :development_cycle, explanation: 'It measures how much time the team spends working on a task.', name: 'Development Cycle')
 end

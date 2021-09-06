@@ -3,22 +3,22 @@ require 'rails_helper'
 RSpec.describe 'Development Metrics', type: :request do
   describe '#departments' do
     describe 'overview' do
-      let(:internal) { Project.relevances[:internal] }
-      let(:commercial) { Project.relevances[:commercial] }
+      let(:internal) { Repository.relevances[:internal] }
+      let(:commercial) { Repository.relevances[:commercial] }
 
       let(:ruby) { Language.find_or_create_by(name: 'ruby') }
-      let!(:ruby_internal_project_1) { create(:project, language: ruby, relevance: internal) }
-      let!(:ruby_internal_project_2) { create(:project, language: ruby, relevance: internal) }
-      let!(:ruby_commercial_project) { create(:project, language: ruby, relevance: commercial) }
+      let!(:ruby_internal_project_1) { create(:repository, language: ruby, relevance: internal) }
+      let!(:ruby_internal_project_2) { create(:repository, language: ruby, relevance: internal) }
+      let!(:ruby_commercial_project) { create(:repository, language: ruby, relevance: commercial) }
 
       let(:department) { ruby.department.name }
       let(:number_of_weeks) { 4 }
 
       before do
         opened_date = number_of_weeks.weeks.ago.tomorrow
-        create(:pull_request, project: ruby_internal_project_1, opened_at: opened_date)
-        create(:pull_request, project: ruby_internal_project_2, opened_at: opened_date)
-        create(:pull_request, project: ruby_commercial_project, opened_at: opened_date)
+        create(:pull_request, repository: ruby_internal_project_1, opened_at: opened_date)
+        create(:pull_request, repository: ruby_internal_project_2, opened_at: opened_date)
+        create(:pull_request, repository: ruby_commercial_project, opened_at: opened_date)
       end
 
       describe 'language count' do
