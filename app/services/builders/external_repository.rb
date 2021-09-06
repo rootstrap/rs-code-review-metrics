@@ -1,5 +1,5 @@
 module Builders
-  class ExternalProject < BaseService
+  class ExternalRepository < BaseService
     def initialize(repository_data)
       @repository_data = repository_data
     end

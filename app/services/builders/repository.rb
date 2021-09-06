@@ -1,5 +1,5 @@
 module Builders
-  class Project < BaseService
+  class Repository < BaseService
     def initialize(repository_data)
       @repository_data = repository_data
     end

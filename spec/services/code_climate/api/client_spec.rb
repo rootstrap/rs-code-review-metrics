@@ -10,7 +10,7 @@ describe CodeClimate::Api::Client do
     context 'when the request succeeds' do
       before do
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
@@ -40,7 +40,7 @@ describe CodeClimate::Api::Client do
     context 'when the request fails' do
       before do
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 404 }
         )
       end

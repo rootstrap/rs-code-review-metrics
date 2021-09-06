@@ -33,7 +33,7 @@ describe DevelopmentMetricsController, type: :controller do
     context 'when metric type and period are valid' do
       let(:params) do
         {
-          project_name: repository.name,
+          repository_name: repository.name,
           metric: {
             metric_name: 'review_turnaround',
             period: 'weekly'
@@ -134,14 +134,14 @@ describe DevelopmentMetricsController, type: :controller do
         end
       end
 
-      context '#projects' do
+      context '#repositories' do
         render_views
 
-        subject { get :projects, params: params }
+        subject { get :repositories, params: params }
 
         let(:params) do
           {
-            project_name: repository.name,
+            repository_name: repository.name,
             metric: {
               period: 'weekly'
             }

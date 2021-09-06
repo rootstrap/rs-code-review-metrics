@@ -1,7 +1,7 @@
 module FiltersHelper
   def filter_url_query
     {
-      project_name: params[:project_name],
+      repository_name: params[:repository_name],
       metric: { period: params&.dig(:metric, :period) }
     }
   end

@@ -43,7 +43,7 @@
                     <td class="align-middle"><%= repository[:name] %></td>
                     <td class="align-middle"><%= repository[:is_private] %></td>
                     <td class="align-middle text-center">
-                      <a class="btn btn-primary" href="<%= repositories_development_metrics_path({project_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See repository</a>
+                      <a class="btn btn-primary" href="<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See repository</a>
                     </td>
                   </tr>
                 <% end %>

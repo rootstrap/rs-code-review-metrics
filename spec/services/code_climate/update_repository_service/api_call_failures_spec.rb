@@ -32,7 +32,7 @@ describe CodeClimate::UpdateRepositoryService do
       before do
         stub_notification_webhook
 
-        on_request_repository_by_slug(project_name: repository.name,
+        on_request_repository_by_slug(repository_name: repository.name,
                                       respond: { status: 500 })
       end
 
@@ -53,7 +53,7 @@ describe CodeClimate::UpdateRepositoryService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
@@ -75,7 +75,7 @@ describe CodeClimate::UpdateRepositoryService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 
@@ -103,7 +103,7 @@ describe CodeClimate::UpdateRepositoryService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 
@@ -135,7 +135,7 @@ describe CodeClimate::UpdateRepositoryService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 

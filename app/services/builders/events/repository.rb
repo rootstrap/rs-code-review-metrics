@@ -14,7 +14,7 @@ module Builders
       end
 
       def repository
-        @repository ||= Builders::Project.call(@payload['repository'])
+        @repository ||= Builders::Repository.call(@payload['repository'])
       end
     end
   end

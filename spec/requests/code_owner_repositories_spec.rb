@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Code Owner Repositories' do
   describe '#index' do
     let(:user) { create(:user) }
-    subject { get "/development_metrics/users/#{user.id}/projects" }
+    subject { get "/development_metrics/users/#{user.id}/repositories" }
     context 'when a user has not repositories as code owner' do
       before do
         subject

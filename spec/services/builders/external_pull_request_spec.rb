@@ -33,14 +33,14 @@ RSpec.describe Builders::ExternalPullRequest do
     end
 
     context 'when there is no pull request created with a given id' do
-      let(:project_owner) { 'rootstrap' }
-      let(:project_name) { 'rs-code-review-metrics' }
-      let(:project_full_name) { "#{project_owner}/#{project_name}" }
+      let(:repository_owner) { 'rootstrap' }
+      let(:repository_name) { 'rs-code-review-metrics' }
+      let(:repository_full_name) { "#{repository_owner}/#{repository_name}" }
       let(:pull_request_number) { 111 }
-      let(:repository) { ExternalRepository.new(full_name: project_full_name) }
+      let(:repository) { ExternalRepository.new(full_name: repository_full_name) }
 
       let(:repository_payload) do
-        build(:repository_payload, name: project_name, owner: { login: project_owner })
+        build(:repository_payload, name: repository_name, owner: { login: repository_owner })
       end
 
       let(:pull_request_data) do
@@ -89,16 +89,16 @@ RSpec.describe Builders::ExternalPullRequest do
 
   describe Builders::ExternalPullRequest::FromUrlParams do
     describe '.call' do
-      let(:project_owner) { 'rootstrap' }
-      let(:project_name) { 'rs-code-review-metrics' }
-      let(:project_full_name) { "#{project_owner}/#{project_name}" }
+      let(:repository_owner) { 'rootstrap' }
+      let(:repository_name) { 'rs-code-review-metrics' }
+      let(:repository_full_name) { "#{repository_owner}/#{repository_name}" }
       let(:pull_request_number) { 111 }
-      let(:repository) { ExternalRepository.new(full_name: project_full_name) }
+      let(:repository) { ExternalRepository.new(full_name: repository_full_name) }
       let(:pull_request) do
         ExternalPullRequest.new(number: pull_request_number, external_repository: repository)
       end
       let(:repository_payload) do
-        build(:repository_payload, name: project_name, owner: { login: project_owner })
+        build(:repository_payload, name: repository_name, owner: { login: repository_owner })
       end
       let(:pull_request_payload) do
         build(
@@ -110,7 +110,9 @@ RSpec.describe Builders::ExternalPullRequest do
 
       before { stub_get_pull_request(pull_request, pull_request_payload) }
 
-      subject(:built_pull_request) { described_class.call(project_full_name, pull_request_number) }
+      subject(:built_pull_request) do
+        described_class.call(repository_full_name, pull_request_number)
+      end
 
       it 'creates a new ExternalPullRequest' do
         expect { subject }.to change { ExternalPullRequest.count }.by(1)

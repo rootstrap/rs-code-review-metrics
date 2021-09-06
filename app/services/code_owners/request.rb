@@ -6,7 +6,7 @@ module CodeOwners
         next if content_file.empty?
 
         code_owners = CodeOwners::FileHandler.call(content_file)
-        CodeOwners::ProjectHandler.call(repository, code_owners)
+        CodeOwners::RepositoryHandler.call(repository, code_owners)
       end
     end
   end

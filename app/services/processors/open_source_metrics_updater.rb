@@ -7,8 +7,8 @@ module Processors
     private
 
     def update_open_source_visits
-      Repository.open_source.each do |project|
-        OpenSourceProjectViewsUpdater.call(project)
+      Repository.open_source.each do |repository|
+        OpenSourceRepositoryViewsUpdater.call(repository)
       end
     end
   end

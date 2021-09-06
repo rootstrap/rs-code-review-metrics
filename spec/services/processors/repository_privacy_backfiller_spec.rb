@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Processors::ProjectPrivacyBackfiller do
+RSpec.describe Processors::RepositoryPrivacyBackfiller do
   describe '.call' do
     let(:repository) { create(:repository, is_private: nil) }
     let!(:event) { create(:event, repository: repository, data: check_run_payload) }

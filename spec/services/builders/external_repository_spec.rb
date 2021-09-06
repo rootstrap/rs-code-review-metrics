@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Builders::ExternalProject do
+RSpec.describe Builders::ExternalRepository do
   describe '.call' do
     subject { described_class.call(repository_data) }
 

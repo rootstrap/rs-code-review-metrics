@@ -19,7 +19,7 @@ module Builders
       {
         reviewer: find_or_create_user(@payload['requested_reviewer']),
         owner: find_or_create_user(@payload['pull_request']['user']),
-        repository: Builders::Project.call(@payload['repository']),
+        repository: Builders::Repository.call(@payload['repository']),
         state: 'active'
       }
     end

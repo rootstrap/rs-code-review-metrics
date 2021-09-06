@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CodeOwners::ProjectHandler do
+RSpec.describe CodeOwners::RepositoryHandler do
   describe '.call' do
     let!(:repository) { create(:repository, name: 'rs-code-metrics') }
     let!(:hosward_code_owner) { create(:user, login: 'hvilloria') }

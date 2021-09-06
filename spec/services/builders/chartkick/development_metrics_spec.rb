@@ -19,7 +19,7 @@ describe Builders::Chartkick::DevelopmentMetrics do
 
   describe Builders::Chartkick::DevelopmentMetrics::Product do
     let(:product) { create(:product) }
-    let(:project_key) { 'TES' }
+    let(:repository_key) { 'TES' }
     let!(:jira_board) { create(:jira_board, product: product) }
     let(:period) { 4 }
     let(:defect_escape_rate_entities) { %i[per_defect_escape_rate per_defect_escape_values] }

@@ -6,6 +6,6 @@
   <%= render partial: 'shared/line-chart',
               locals: {
                 metric_name: '',
-                metric: merge_time[:per_users_project] || merge_time[:per_language]
-              } if merge_time && (merge_time[:per_users_project] || merge_time[:per_language]) %>
+                metric: merge_time[:per_users_repository] || merge_time[:per_language]
+              } if merge_time && (merge_time[:per_users_repository] || merge_time[:per_language]) %>
 </div>

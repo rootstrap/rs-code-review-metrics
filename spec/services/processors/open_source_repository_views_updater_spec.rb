@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Processors::OpenSourceProjectViewsUpdater do
+RSpec.describe Processors::OpenSourceRepositoryViewsUpdater do
   describe '.call' do
     let(:repository) { create(:repository, :open_source) }
 

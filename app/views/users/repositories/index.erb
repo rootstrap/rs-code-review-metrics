@@ -4,12 +4,12 @@
   <h2 class='user-name'><%= @user.login%></h2>
   <hr>
   <span class='ml-3'>Code Owner in:</span>
-  <% if @projects.present? %>
+  <% if @repositories.present? %>
     <ul>
-      <% @projects.each do |project|%>
+      <% @repositories.each do |repository|%>
         <li class='ml-3'>
-          <%= link_to project.name,
-              projects_development_metrics_path(project_name: project.name, metric: {period: 4}),
+          <%= link_to repository.name,
+              repositories_development_metrics_path(repository_name: repository.name, metric: {period: 4}),
               class: 'link-none-style-black'
           %>
         </li>
@@ -19,7 +19,7 @@
     <p>
       <br>
       <strong>
-        <em class='ml-3'>This user is not participating in any project as code owner</em>.
+        <em class='ml-3'>This user is not participating in any repository as code owner</em>.
       </strong>
     </p>
   <% end %>

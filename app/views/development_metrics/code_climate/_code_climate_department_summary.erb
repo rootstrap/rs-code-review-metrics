@@ -13,14 +13,14 @@
       <% else -%>
         <div class="info">
           <div class="item-list">
-            <% code_climate.each_project_rate do |letter, projects_count| -%>
+            <% code_climate.each_repository_rate do |letter, repositories_count| -%>
               <div>
-                <%= projects_count %> <%= 'project'.pluralize(projects_count) %> with
+                <%= repositories_count %> <%= 'repository'.pluralize(repositories_count) %> with
                 <span class="text-primary"><b><%= letter %></b></span>
               </div>
             <% end -%>
             <div>
-              <%= code_climate.projects_without_cc_count %> <%= 'project'.pluralize(code_climate.projects_without_cc_count) %> without CodeClimate
+              <%= code_climate.repositories_without_cc_count %> <%= 'repository'.pluralize(code_climate.repositories_without_cc_count) %> without CodeClimate
             </div>
           </div>
           <div class="item-list">

@@ -1,5 +1,5 @@
 module Users
-  class ProjectsController < ApplicationController
+  class RepositoriesController < ApplicationController
     layout 'sidebar_metrics'
     include LoadSettings
 

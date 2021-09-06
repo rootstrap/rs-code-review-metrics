@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Builders::Project do
+describe Builders::Repository do
   describe '.call' do
     let(:repository_payload) { create(:repository_payload) }
     subject { described_class.call(repository_payload) }

@@ -12,14 +12,14 @@ class DevelopmentMetricsController < ApplicationController
     build_product_metrics(product.id, Product.name)
   end
 
-  def projects
+  def repositories
     return if metric_params.blank?
 
-    build_metrics(project.id, Repository.name)
+    build_metrics(repository.id, Repository.name)
     build_metrics_definitions
 
-    @code_owners = project.code_owners.pluck(:login)
-    @code_climate = code_climate_project_summary
+    @code_owners = repository.code_owners.pluck(:login)
+    @code_climate = code_climate_repository_summary
   end
 
   def departments
@@ -138,8 +138,8 @@ class DevelopmentMetricsController < ApplicationController
     @product ||= Product.find_by(name: params[:product_name])
   end
 
-  def project
-    @project ||= Repository.find_by(name: params[:project_name])
+  def repository
+    @repository ||= Repository.find_by(name: params[:repository_name])
   end
 
   def department
@@ -154,8 +154,8 @@ class DevelopmentMetricsController < ApplicationController
     @action ||= params[:action]
   end
 
-  def code_climate_project_summary
-    CodeClimateSummaryRetriever.call(project.id)
+  def code_climate_repository_summary
+    CodeClimateSummaryRetriever.call(repository.id)
   end
 
   def code_climate_department_summary

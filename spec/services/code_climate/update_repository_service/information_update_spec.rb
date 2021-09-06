@@ -48,7 +48,7 @@ describe CodeClimate::UpdateRepositoryService do
   context 'with a repository not registered in CodeClimate' do
     before do
       on_request_repository_by_slug(
-        project_name: repository.name,
+        repository_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end
@@ -67,7 +67,7 @@ describe CodeClimate::UpdateRepositoryService do
   context 'with a repository registered in CodeClimate that has not been updated before' do
     before do
       on_request_repository_by_slug(
-        project_name: repository.name,
+        repository_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end
@@ -225,7 +225,7 @@ describe CodeClimate::UpdateRepositoryService do
 
     before do
       on_request_repository_by_slug(
-        project_name: repository.name,
+        repository_name: repository.name,
         respond: { status: 200, body: code_climate_repository_json }
       )
     end

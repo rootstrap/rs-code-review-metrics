@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Processors::ProjectsImporter do
+RSpec.describe Processors::RepositoriesImporter do
   describe '.call' do
     let(:repository_payload) { create(:repository_payload) }
 

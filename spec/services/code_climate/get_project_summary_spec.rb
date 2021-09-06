@@ -10,7 +10,7 @@ describe CodeClimate::GetRepositorySummary do
     context 'when the repository does not have a code climate repo metric' do
       before do
         on_request_repository_by_slug(
-          project_name: repo.name,
+          repository_name: repo.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
@@ -26,7 +26,7 @@ describe CodeClimate::GetRepositorySummary do
           create(:code_climate_repository_metric, cc_repository_id: nil, repository: repo)
 
           on_request_repository_by_slug(
-            project_name: repo.name,
+            repository_name: repo.name,
             respond: { status: 200, body: code_climate_repository_json }
           )
         end

@@ -15,7 +15,7 @@ ActiveAdmin.register ReviewRequest do
 
   filter :owner, collection: -> { User.order('LOWER(login)') }
   filter :reviewer, collection: -> { User.order('LOWER(login)') }
-  filter :project, collection: -> { Project.order('LOWER(name)') }
+  filter :repository, collection: -> { Repository.order('LOWER(name)') }
   filter :created_at
   filter :updated_at
 end

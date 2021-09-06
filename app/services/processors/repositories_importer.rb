@@ -1,10 +1,10 @@
 module Processors
-  class ProjectsImporter < Processors::Base
+  class RepositoriesImporter < Processors::Base
     private
 
     def process
       repositories.each do |repository_payload|
-        Builders::Project.call(repository_payload)
+        Builders::Repository.call(repository_payload)
       end
     end
 

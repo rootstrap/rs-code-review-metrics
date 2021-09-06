@@ -2,13 +2,13 @@
 
 <div class="row">
   <div class="col-md-12 text-center mt-2">
-    <b><%= @project.product[:name] %></b>
+    <b><%= @repository.product[:name] %></b>
   </div>
-  <%= render 'development_metrics/navigation', product: @project.product %>
+  <%= render 'development_metrics/navigation', product: @repository.product %>
 
   <div class="metrics-container container col-md-12">
-    <%= render 'shared/project/nav-filter' do |f| %>
-      <%= hidden_field_tag 'project_name', @project.name  %>
+    <%= render 'shared/repository/nav-filter' do |f| %>
+      <%= hidden_field_tag 'repository_name', @repository.name  %>
       <div class="row">
         <div class="col-md-5 period-input">
           <%= render 'shared/interval-filter', form: f %>
@@ -16,13 +16,13 @@
       </div>
     <% end %>
 
-    <% if @enabled_project_codeowners_section %>
+    <% if @enabled_repository_codeowners_section %>
       <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
     <% end %>
     <div class="row">
-      <%= render 'development_metrics/code_climate/code_climate_project_summary', code_climate: @code_climate %>
+      <%= render 'development_metrics/code_climate/code_climate_repository_summary', code_climate: @code_climate %>
     </div>
-    <% if @project %>
+    <% if @repository %>
       <div class="metrics shadow-box">
         <div class='row'>
           <h4 class="p-3" style='margin-left:10px;'><%= @review_turnaround_definition && @review_turnaround_definition[:name] %></h4>
@@ -31,7 +31,7 @@
         <div class="graph">
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
         </div>
-        <% if @enabled_project_per_user_graph %>
+        <% if @enabled_repository_per_user_graph %>
           <div class="graph details">
             <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: @review_turnaround %>
           </div>
@@ -46,7 +46,7 @@
         <div class="graph">
           <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
         </div>
-        <% if @enabled_project_per_user_graph %>
+        <% if @enabled_repository_per_user_graph %>
           <div class="graph details">
             <%= render 'development_metrics/merge_time/details_metric', merge_time: @merge_time %>
           </div>
@@ -65,7 +65,7 @@
     <% else %>
       <div class="row">
         <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
-          <span>Please select a project to see its metrics</span>
+          <span>Please select a repository to see its metrics</span>
         </div>
       </div>
     <% end %>

@@ -6,7 +6,7 @@ describe Processors::CodeClimateUpdater do
     let!(:second_repository) { create :repository }
     let(:subject) { described_class.call }
 
-    it('calls UpdateProjectService on each repository') do
+    it('calls UpdateRepositoryService on each repository') do
       expect(CodeClimate::Link).to receive(:call).once.with(first_repository)
       expect(CodeClimate::Link).to receive(:call).once.with(second_repository)
       subject
