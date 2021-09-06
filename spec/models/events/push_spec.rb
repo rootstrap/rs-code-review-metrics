@@ -20,7 +20,7 @@
 # Foreign Keys
 #
 #  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (pull_request_id => pull_requests.id)
+#  fk_rails_...  (pull_request_id => events_pull_requests.id)
 #  fk_rails_...  (sender_id => users.id)
 #
 

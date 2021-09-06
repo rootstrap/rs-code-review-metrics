@@ -24,6 +24,9 @@ describe Builders::Chartkick::DevelopmentMetrics do
     let(:development_cycle_entities) do
       %i[per_development_cycle_average per_development_cycle_values]
     end
+    let(:planned_to_done_entities) do
+      %i[per_planned_to_done_average per_planned_to_done_values]
+    end
 
     describe '.call' do
       it 'returns a hash with the right data per entity for defect escape rate metric' do
@@ -34,6 +37,11 @@ describe Builders::Chartkick::DevelopmentMetrics do
       it 'returns a hash with the right data per entity for development cycle metric' do
         metric_data = described_class.call(product.id, period)
         expect(metric_data[:development_cycle].keys).to match_array(development_cycle_entities)
+      end
+
+      it 'returns a hash with the right data per entity for planned to done metric' do
+        metric_data = described_class.call(product.id, period)
+        expect(metric_data[:planned_to_done].keys).to match_array(planned_to_done_entities)
       end
     end
   end
