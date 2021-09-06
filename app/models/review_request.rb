@@ -24,7 +24,7 @@
 #
 #  fk_rails_...  (owner_id => users.id)
 #  fk_rails_...  (project_id => projects.id)
-#  fk_rails_...  (pull_request_id => pull_requests.id)
+#  fk_rails_...  (pull_request_id => events_pull_requests.id)
 #  fk_rails_...  (reviewer_id => users.id)
 #
 class ReviewRequest < ApplicationRecord

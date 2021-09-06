@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: pull_request_comments
+# Table name: events_pull_request_comments
 #
 #  id                :bigint           not null, primary key
 #  body              :string
@@ -16,11 +16,11 @@
 #
 # Indexes
 #
-#  index_pull_request_comments_on_deleted_at         (deleted_at)
-#  index_pull_request_comments_on_owner_id           (owner_id)
-#  index_pull_request_comments_on_pull_request_id    (pull_request_id)
-#  index_pull_request_comments_on_review_request_id  (review_request_id)
-#  index_pull_request_comments_on_state              (state)
+#  index_events_pull_request_comments_on_deleted_at         (deleted_at)
+#  index_events_pull_request_comments_on_owner_id           (owner_id)
+#  index_events_pull_request_comments_on_pull_request_id    (pull_request_id)
+#  index_events_pull_request_comments_on_review_request_id  (review_request_id)
+#  index_events_pull_request_comments_on_state              (state)
 #
 # Foreign Keys
 #

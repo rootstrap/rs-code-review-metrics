@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: pull_requests
+# Table name: events_pull_requests
 #
 #  id         :bigint           not null, primary key
 #  body       :text
@@ -25,10 +25,10 @@
 #
 # Indexes
 #
-#  index_pull_requests_on_github_id   (github_id) UNIQUE
-#  index_pull_requests_on_owner_id    (owner_id)
-#  index_pull_requests_on_project_id  (project_id)
-#  index_pull_requests_on_state       (state)
+#  index_events_pull_requests_on_github_id   (github_id) UNIQUE
+#  index_events_pull_requests_on_owner_id    (owner_id)
+#  index_events_pull_requests_on_project_id  (project_id)
+#  index_events_pull_requests_on_state       (state)
 #
 # Foreign Keys
 #

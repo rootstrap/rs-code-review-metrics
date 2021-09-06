@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: reviews
+# Table name: events_reviews
 #
 #  id                :bigint           not null, primary key
 #  body              :string
@@ -17,16 +17,16 @@
 #
 # Indexes
 #
-#  index_reviews_on_owner_id           (owner_id)
-#  index_reviews_on_project_id         (project_id)
-#  index_reviews_on_pull_request_id    (pull_request_id)
-#  index_reviews_on_review_request_id  (review_request_id)
-#  index_reviews_on_state              (state)
+#  index_events_reviews_on_owner_id           (owner_id)
+#  index_events_reviews_on_project_id         (project_id)
+#  index_events_reviews_on_pull_request_id    (pull_request_id)
+#  index_events_reviews_on_review_request_id  (review_request_id)
+#  index_events_reviews_on_state              (state)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (owner_id => users.id)
-#  fk_rails_...  (pull_request_id => pull_requests.id)
+#  fk_rails_...  (pull_request_id => events_pull_requests.id)
 #
 
 module Events

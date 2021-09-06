@@ -28,7 +28,7 @@ module Builders
                                        .joins(review_request:
                                         { pull_request: { project: { language: :department } } })
                                        .where(departments: { name: @department_name })
-                                       .where.not(pull_requests: { html_url: nil })
+                                       .where.not(events_pull_requests: { html_url: nil })
                                        .includes(review_request: :pull_request)
           end
         end
