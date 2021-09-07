@@ -25,10 +25,12 @@
 #
 
 FactoryBot.define do
+  sequence(:sprint_id, 1000)
+
   factory :jira_sprint do
     active            { false }
     name              { Faker::App.unique.name }
-    jira_id           { Faker::Internet.uuid }
+    jira_id           { generate(:sprint_id) }
     points_committed  { Faker::Number.number(digits: 2) }
     points_completed  { Faker::Number.between(from: 1, to: 99) }
 

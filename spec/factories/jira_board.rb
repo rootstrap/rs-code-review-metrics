@@ -19,6 +19,8 @@
 #
 
 FactoryBot.define do
+  sequence(:board_id, 1000)
+
   factory :jira_board do
     project_name { Faker::Lorem.sentence }
     jira_project_key { Faker::App.unique.name }
@@ -26,7 +28,7 @@ FactoryBot.define do
     product
 
     trait :with_board_id do
-      jira_board_id { Faker::Internet.uuid }
+      jira_board_id { generate(:board_id) }
       jira_self_url { Faker::Internet.url }
     end
 

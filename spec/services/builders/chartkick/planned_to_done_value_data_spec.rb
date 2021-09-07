@@ -10,7 +10,7 @@ describe Builders::Chartkick::PlannedToDoneValueData do
       let(:this_week) { Time.zone.today.beginning_of_week }
       let(:this_week_end) { Time.zone.today.end_of_week }
 
-      let(:jira_board) { create(:jira_board) }
+      let(:jira_board) { create(:jira_board, :with_board_id) }
 
       let(:jira_sprint1) do
         create(:jira_sprint,
