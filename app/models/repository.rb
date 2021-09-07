@@ -53,16 +53,16 @@ class Repository < ApplicationRecord
   has_many :review_requests,
            dependent: :destroy,
            inverse_of: :repository
-  has_many :users_projects, dependent: :destroy
-  has_many :users, through: :users_projects
+  has_many :users_repositories, dependent: :destroy
+  has_many :users, through: :users_repositories
   has_many :metrics, as: :ownable, dependent: :destroy
 
-  has_many :code_owner_projects, dependent: :destroy
+  has_many :code_owner_repositories, dependent: :destroy
   has_many :code_owners,
-           through: :code_owner_projects,
+           through: :code_owner_repositories,
            source: :user
 
-  has_one :code_climate_project_metric, dependent: :destroy
+  has_one :code_climate_repository_metric, dependent: :destroy
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
@@ -108,12 +108,12 @@ class Repository < ApplicationRecord
   }
 
   scope :without_cc, lambda {
-    left_joins(:code_climate_project_metric).where(code_climate_project_metrics: { id: nil })
+    left_joins(:code_climate_repository_metric).where(code_climate_repository_metrics: { id: nil })
   }
 
   scope :without_cc_rate, lambda {
-    left_joins(:code_climate_project_metric)
-      .where(code_climate_project_metrics: { code_climate_rate: nil })
+    left_joins(:code_climate_repository_metric)
+      .where(code_climate_repository_metrics: { code_climate_rate: nil })
   }
 
   scope :without_cc_or_cc_rate, lambda {

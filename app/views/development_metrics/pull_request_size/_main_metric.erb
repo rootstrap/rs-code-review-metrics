@@ -2,5 +2,5 @@
            locals: {
                metric_name: 'Distribution',
                suffix: " pull requests",
-               metric: pull_request_size[:per_project_distribution] || pull_request_size[:per_department_distribution]
-           } if pull_request_size && (pull_request_size[:per_project_distribution] || pull_request_size[:per_department_distribution]) %>
+               metric: pull_request_size[:per_repository_distribution] || pull_request_size[:per_department_distribution]
+           } if pull_request_size && (pull_request_size[:per_repository_distribution] || pull_request_size[:per_department_distribution]) %>

@@ -34,7 +34,7 @@ module Metrics
     end
 
     def find_user_repository(user_id, repository_id)
-      ::UsersProject.find_by(user_id: user_id, repository_id: repository_id)
+      ::UsersRepository.find_by(user_id: user_id, repository_id: repository_id)
     end
   end
 end

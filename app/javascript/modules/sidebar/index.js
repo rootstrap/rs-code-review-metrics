@@ -9,7 +9,7 @@ let elementSelector = (className) => {
 
 export const disablePeriod = () => {
   const button = document.getElementById('submitButton');
-  const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection')
+  const sidebarSelectionInput = elementSelector('repository-selection') || elementSelector('department-selection')
     || elementSelector('product-selection');
   if (sidebarSelectionInput && sidebarSelectionInput.selectedIndex === 0){
     button.disabled = true;
@@ -17,7 +17,7 @@ export const disablePeriod = () => {
 }
 
 export const handleChangeSidebar = () => {
-  const sidebarSelectionInput = elementSelector('project-selection') || elementSelector('department-selection')
+  const sidebarSelectionInput = elementSelector('repository-selection') || elementSelector('department-selection')
     || elementSelector('product-selection');
   if (sidebarSelectionInput != null) {
     sidebarSelectionInput.onchange = () => {
@@ -43,7 +43,7 @@ export const handleChangeUser = () => {
     userSelect.onchange = function() {
       const optionSelected = userSelect.options.selectedIndex;
       const resource = `development_metrics/users/` +
-      `${userSelect.options[optionSelected].value}/projects`;
+      `${userSelect.options[optionSelected].value}/repositories`;
       window.location.href = `${current_base_url}/${resource}`
     }
   }
@@ -51,7 +51,7 @@ export const handleChangeUser = () => {
 
 export const initializeSelect2 = () => {
   if (!elementSelector('select2')) {
-    $('.project-selection, .product-selection, .department-selection, .user-selection').select2({
+    $('.repository-selection, .product-selection, .department-selection, .user-selection').select2({
       theme: 'bootstrap4',
     })
   }

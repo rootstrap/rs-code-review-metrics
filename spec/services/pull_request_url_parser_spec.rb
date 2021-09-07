@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe PullRequestUrlParser do
-  let(:project_full_name) { 'rootstrap/rs-code-review-metrics' }
+  let(:repository_full_name) { 'rootstrap/rs-code-review-metrics' }
   let(:pull_request_number) { 111 }
-  let(:url) { "https://github.com/#{project_full_name}/pull/#{pull_request_number}" }
+  let(:url) { "https://github.com/#{repository_full_name}/pull/#{pull_request_number}" }
   let(:parser) { described_class.call(url) }
 
-  describe '#project_full_name' do
-    it 'returns the full name of the project' do
-      expect(parser.project_full_name).to eq project_full_name
+  describe '#repository_full_name' do
+    it 'returns the full name of the repository' do
+      expect(parser.repository_full_name).to eq repository_full_name
     end
   end
 

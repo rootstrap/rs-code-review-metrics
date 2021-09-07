@@ -67,9 +67,9 @@ module Builders
 
         def entities_by_metric
           metrics = {
-            review_turnaround: %w[project users_project project_distribution],
-            merge_time: %w[project users_project project_distribution],
-            pull_request_size: %w[project_distribution]
+            review_turnaround: %w[repository users_repository repository_distribution],
+            merge_time: %w[repository users_repository repository_distribution],
+            pull_request_size: %w[repository_distribution]
           }
           metrics
         end

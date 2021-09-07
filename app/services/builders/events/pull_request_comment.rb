@@ -15,7 +15,7 @@ module Builders
       end
 
       def assign_attrs(prc, comment_data)
-        repository = Builders::Project.call(@payload['repository'])
+        repository = Builders::Repository.call(@payload['repository'])
         prc.owner = find_or_create_user(comment_data['user'])
         prc.pull_request = find_issue_pull_request(repository.id)
         prc.review_request = find_last_review_request(prc.pull_request, prc.owner.id)

@@ -19,7 +19,7 @@ class Language < ApplicationRecord
   belongs_to :department, optional: true
   has_many :repositories, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
-  has_many :projects_metrics, through: :repositories, source: :metrics
+  has_many :repositories_metrics, through: :repositories, source: :metrics
   has_many :file_ignoring_rules, dependent: :destroy
 
   def self.unassigned

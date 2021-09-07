@@ -19,7 +19,7 @@ module Builders
         review.owner = find_or_create_user(review_data['user'])
         review.pull_request = find_pull_request
         review.review_request = find_last_review_request(review.pull_request, review.owner.id)
-        review.repository = Builders::Project.call(@payload['repository'])
+        review.repository = Builders::Repository.call(@payload['repository'])
       end
     end
   end

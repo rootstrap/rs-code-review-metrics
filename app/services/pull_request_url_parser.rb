@@ -7,7 +7,7 @@ class PullRequestUrlParser < BaseService
     self
   end
 
-  def project_full_name
+  def repository_full_name
     "#{url_parts[1]}/#{url_parts[2]}"
   end
 

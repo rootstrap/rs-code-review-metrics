@@ -1,6 +1,0 @@
-<tr>
-  <td class="align-middle text-center"><%= "#{project[:name]}"%></td>
-  <td class="align-middle text-center">
-    <a class="btn btn-primary" href="<%= projects_development_metrics_path({project_name: project[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See project</a>
-  </td>
-</tr>

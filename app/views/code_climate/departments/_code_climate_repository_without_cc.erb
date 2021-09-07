@@ -1,0 +1,6 @@
+<tr>
+  <td class="align-middle text-center"><%= "#{repository[:name]}"%></td>
+  <td class="align-middle text-center">
+    <a class="btn btn-primary" href="<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See repository</a>
+  </td>
+</tr>

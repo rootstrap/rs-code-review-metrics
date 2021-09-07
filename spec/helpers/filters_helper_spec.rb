@@ -5,7 +5,7 @@ RSpec.describe FiltersHelper, type: :helper do
     let(:params) do
       {
         metric: { period: 'daily' },
-        project_name: 'rs-metrics'
+        repository_name: 'rs-metrics'
       }
     end
 

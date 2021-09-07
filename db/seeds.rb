@@ -42,9 +42,9 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, repository: repository) }
+    User.all.each { |user| UsersRepository.create!(user: user, repository: repository) }
 
-    UsersProject.all.each do |uspr|
+    UsersRepository.all.each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
       end
@@ -90,18 +90,18 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersProject.create!(user: user, repository: second_repository) }
+    User.all.each { |user| UsersRepository.create!(user: user, repository: second_repository) }
 
     Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
     Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')
     Technology.create_with(keyword_string: '').find_or_create_by!(name: 'other')
 
-    FactoryBot.create(:code_climate_project_metric, repository: repository)
-    FactoryBot.create(:code_climate_project_metric, repository: second_repository)
+    FactoryBot.create(:code_climate_repository_metric, repository: repository)
+    FactoryBot.create(:code_climate_repository_metric, repository: second_repository)
 
-    User.first(3).each { |user| CodeOwnerProject.create!(user: user, repository: repository) }
+    User.first(3).each { |user| CodeOwnerRepository.create!(user: user, repository: repository) }
 
-    User.last(2).each { |user| CodeOwnerProject.create!(user: user, repository: second_repository) }
+    User.last(2).each { |user| CodeOwnerRepository.create!(user: user, repository: second_repository) }
 
     santiagovidal = User.find_by(login: 'santiagovidal')
     santib = User.find_by(login: 'santib')
@@ -150,4 +150,5 @@ if Rails.env.development?
   MetricDefinition.create!(code: :merge_time, explanation: 'Time to merge measures the amount of time from pull request open until pull request merge.', name: 'Time to merge')
   MetricDefinition.create!(code: :pull_request_size, explanation: 'Is the average of total lines of code added plus the total lines of code removed.', name: 'PR Size')
   MetricDefinition.create!(code: :development_cycle, explanation: 'It measures how much time the team spends working on a task.', name: 'Development Cycle')
+  MetricDefinition.create!(code: :planned_to_done, explanation: 'The planned-to-done ratio measures what percentage of the tasks you set out for your team were completed satisfactorily.', name: 'Planned to Done Ratio')
 end

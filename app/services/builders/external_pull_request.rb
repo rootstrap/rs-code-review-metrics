@@ -27,7 +27,7 @@ module Builders
       pull_request.opened_at = pull_request_data[:created_at]
       pull_request.number = pull_request_data[:number]
       pull_request.owner = owner
-      pull_request.external_project = external_project
+      pull_request.external_repository = external_repository
     end
 
     def assign_state
@@ -36,8 +36,8 @@ module Builders
       pull_request_data[:state]
     end
 
-    def external_project
-      Builders::ExternalProject.call(pull_request_data.dig(:base, :repo))
+    def external_repository
+      Builders::ExternalRepository.call(pull_request_data.dig(:base, :repo))
     end
 
     def owner
@@ -45,8 +45,8 @@ module Builders
     end
 
     class FromUrlParams < BaseService
-      def initialize(project_full_name, pull_request_number)
-        @project_full_name = project_full_name
+      def initialize(repository_full_name, pull_request_number)
+        @repository_full_name = repository_full_name
         @pull_request_number = pull_request_number
       end
 
@@ -61,8 +61,8 @@ module Builders
       end
 
       def pull_request
-        project = ::ExternalProject.new(full_name: @project_full_name)
-        ::ExternalPullRequest.new(number: @pull_request_number, external_project: project)
+        repository = ::ExternalRepository.new(full_name: @repository_full_name)
+        ::ExternalPullRequest.new(number: @pull_request_number, external_repository: repository)
       end
     end
   end

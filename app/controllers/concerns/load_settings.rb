@@ -10,8 +10,8 @@ module LoadSettings
   def load_settings
     enabled_users_section
     enabled_department_per_tech_graph
-    enabled_project_codeowners_section
-    enabled_project_per_user_graph
+    enabled_repository_codeowners_section
+    enabled_repository_per_user_graph
   end
 
   def enabled_users_section
@@ -22,11 +22,11 @@ module LoadSettings
     @enabled_department_per_tech_graph ||= SettingsService.enabled_department_per_tech_graph
   end
 
-  def enabled_project_codeowners_section
-    @enabled_project_codeowners_section ||= SettingsService.enabled_project_codeowners_section
+  def enabled_repository_codeowners_section
+    @enabled_repository_codeowners_section ||= SettingsService.enabled_repository_codeowners_section
   end
 
-  def enabled_project_per_user_graph
-    @enabled_project_per_user_graph ||= SettingsService.enabled_project_per_user_graph
+  def enabled_repository_per_user_graph
+    @enabled_repository_per_user_graph ||= SettingsService.enabled_repository_per_user_graph
   end
 end

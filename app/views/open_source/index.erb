@@ -2,9 +2,9 @@
 
 <div class="metrics-container">
   <div class="p-5">
-    <span><b><%= @total_projects %></b> open source <%= 'project'.pluralize(@total_projects) %>:</span>
-    <% @projects_per_language.each do |language, project_count| %>
-      <li><b><%= project_count %></b> <%= language.titleize %> <%= 'project'.pluralize(project_count) %></li>
+    <span><b><%= @total_repositories %></b> open source <%= 'repository'.pluralize(@total_repositories) %>:</span>
+    <% @repositories_per_language.each do |language, repository_count| %>
+      <li><b><%= repository_count %></b> <%= language.titleize %> <%= 'repository'.pluralize(repository_count) %></li>
     <% end %>
   </div>
   <div class="main-container">

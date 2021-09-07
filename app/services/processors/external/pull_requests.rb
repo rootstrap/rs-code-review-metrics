@@ -13,7 +13,7 @@ module Processors
             pull_request_event.dig(:payload, :pull_request, :html_url)
           )
           Builders::ExternalPullRequest::FromUrlParams.call(
-            url_parser.project_full_name,
+            url_parser.repository_full_name,
             url_parser.pull_request_number
           )
         end

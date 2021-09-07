@@ -8,16 +8,16 @@
         <% overview.each do |language, language_overview| %>
           <div class="item-list">
             <span>
-              <%= language_overview[:totals] %> <b><%= language.titleize %></b> <%= 'project'.pluralize(language_overview[:totals]) %>, of which:
+              <%= language_overview[:totals] %> <b><%= language.titleize %></b> <%= 'repository'.pluralize(language_overview[:totals]) %>, of which:
             </span>
-            <% language_overview[:per_relevance].each do |relevance, project_count| %>
-              <li><b><%= project_count %></b> <%= relevance %></li>
+            <% language_overview[:per_relevance].each do |relevance, repository_count| %>
+              <li><b><%= repository_count %></b> <%= relevance %></li>
             <% end %>
           </div>
         <% end %>
         <div>
           <%= link_to 'See report',
-                      department_projects_by_relevance_index_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
+                      department_repositories_by_relevance_index_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
                       class: 'btn btn-secondary'
           %>
         </div>

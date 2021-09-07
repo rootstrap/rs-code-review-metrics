@@ -21,10 +21,10 @@ RSpec.describe Processors::External::PullRequests do
     stub_get_pull_requests_events(user.login, pull_requests_events_payload)
   end
 
-  context 'when user has pull request in a given project' do
-    it 'saves given project' do
+  context 'when user has pull request in a given repository' do
+    it 'saves given repository' do
       expect { described_class.call(user.login) }
-        .to change { ExternalProject.count }.by(1)
+        .to change { ExternalRepository.count }.by(1)
     end
 
     it 'saves pull requests where the username is owner' do

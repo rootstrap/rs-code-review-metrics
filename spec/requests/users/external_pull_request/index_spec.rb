@@ -6,17 +6,17 @@ RSpec.describe 'External Pull Requests' do
   let!(:former_org_user) do
     create(:user, company_member_since: 5.weeks.ago, company_member_until: 3.weeks.ago)
   end
-  let!(:disabled_external_project) { create(:external_project, enabled: false) }
+  let!(:disabled_external_repository) { create(:external_repository, enabled: false) }
   let!(:non_org_user_pull_request) do
     create(:external_pull_request, state: 'open', owner: non_org_user, opened_at: Time.current)
   end
   let!(:current_org_user_pull_request) do
     create(:external_pull_request, state: 'open', owner: current_org_user, opened_at: Time.current)
   end
-  let!(:disabled_project_pull_request) do
+  let!(:disabled_repository_pull_request) do
     create(:external_pull_request, state: 'open', owner: current_org_user,
                                    opened_at: Time.current,
-                                   external_project: disabled_external_project)
+                                   external_repository: disabled_external_repository)
   end
   let!(:former_org_user_pull_request) do
     create(:external_pull_request, state: 'open', owner: former_org_user, opened_at: Time.current)
@@ -41,9 +41,9 @@ RSpec.describe 'External Pull Requests' do
                    assigns(:external_pull_requests))
     end
 
-    it 'should not return disabled_project_pull_request' do
+    it 'should not return disabled_repository_pull_request' do
       refute_includes(assigns(:external_pull_requests)[current_org_user.login],
-                      disabled_project_pull_request)
+                      disabled_repository_pull_request)
     end
   end
 

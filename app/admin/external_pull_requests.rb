@@ -7,8 +7,8 @@ ActiveAdmin.register ExternalPullRequest do
     column :owner_id do |r|
       r.owner.login
     end
-    column :external_project_id do |r|
-      r.external_project.full_name
+    column :external_repository_id do |r|
+      r.external_repository.full_name
     end
     column :number
     column :title
@@ -17,7 +17,7 @@ ActiveAdmin.register ExternalPullRequest do
     actions
   end
 
-  filter :external_project, collection: -> { ExternalProject.order('LOWER(name)') }
+  filter :external_repository, collection: -> { ExternalRepository.order('LOWER(name)') }
   filter :owner, collection: -> { User.order('LOWER(login)') }
   filter :state, as: :select, collection: ExternalPullRequest.states.values
   filter :github_id, label: 'GITHUB ID'
@@ -37,14 +37,14 @@ ActiveAdmin.register ExternalPullRequest do
   controller do
     def create
       external_pull_request = Builders::ExternalPullRequest::FromUrlParams.call(
-        project_full_name,
+        repository_full_name,
         pull_request_number
       )
       flash[:notice] = 'External Pull Request created successfully'
       redirect_to admin_external_pull_request_path external_pull_request.id
     end
 
-    delegate :project_full_name, :pull_request_number, to: :url_parser
+    delegate :repository_full_name, :pull_request_number, to: :url_parser
 
     def url_parser
       @url_parser ||= PullRequestUrlParser.call(params.dig('external_pull_request', 'html_url'))

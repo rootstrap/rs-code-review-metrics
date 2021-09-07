@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe JiraClient::Repository do
-  let(:project_key) { 'TES' }
+  let(:repository_key) { 'TES' }
   let!(:jira_board_id) { 1 }
-  let(:jira_board) { create(:jira_board, jira_project_key: project_key) }
+  let(:jira_board) { create(:jira_board, jira_project_key: repository_key) }
   let(:payload) { { issues: bugs } }
 
   describe 'board' do
@@ -29,12 +29,12 @@ describe JiraClient::Repository do
     end
     subject { described_class.new(jira_board).board }
 
-    before { stub_get_board_ok(payload, project_key) }
+    before { stub_get_board_ok(payload, repository_key) }
 
     context 'when board id is already present' do
       let!(:jira_board) do
         create(:jira_board,
-               jira_project_key: project_key,
+               jira_project_key: repository_key,
                jira_board_id: jira_board_id)
       end
 
@@ -47,7 +47,7 @@ describe JiraClient::Repository do
       let!(:jira_board) do
         create(:jira_board,
                :no_board_id,
-               jira_project_key: project_key)
+               jira_project_key: repository_key)
       end
       it 'returns an array with the data' do
         expect(subject).to match_array(board)
@@ -58,7 +58,7 @@ describe JiraClient::Repository do
   describe 'sprints' do
     let!(:jira_board) do
       create(:jira_board,
-             jira_project_key: project_key,
+             jira_project_key: repository_key,
              jira_board_id: jira_board_id)
     end
     let!(:sprints) do
@@ -161,7 +161,7 @@ describe JiraClient::Repository do
   describe 'bugs' do
     subject { described_class.new(jira_board).bugs }
 
-    before { stub_get_bugs_ok(payload, project_key) }
+    before { stub_get_bugs_ok(payload, repository_key) }
 
     let(:bugs) { [] }
 
@@ -192,11 +192,11 @@ describe JiraClient::Repository do
     end
 
     context 'when the request fails for unauthorized user' do
-      before { stub_failed_authentication(project_key) }
+      before { stub_failed_authentication(repository_key) }
 
       it 'notifies the error to exception hunter' do
         expect(ExceptionHunter).to receive(:track)
-          .with(JiraBoards::NoProjectKeyError.new(project_key),
+          .with(JiraBoards::NoProjectKeyError.new(repository_key),
                 custom_data: Faraday::ForbiddenError)
 
         subject
@@ -207,7 +207,7 @@ describe JiraClient::Repository do
   describe 'issues' do
     subject { described_class.new(jira_board).issues }
 
-    before { stub_get_issues_ok(payload, project_key) }
+    before { stub_get_issues_ok(payload, repository_key) }
 
     context 'when there is not any issue on the account' do
       let(:bugs) { [] }
@@ -246,11 +246,11 @@ describe JiraClient::Repository do
     context 'when the request fails for unauthorized user' do
       let(:bugs) { [] }
 
-      before { stub_issues_failed_authentication(project_key) }
+      before { stub_issues_failed_authentication(repository_key) }
 
       it 'notifies the error to exception hunter' do
         expect(ExceptionHunter).to receive(:track)
-          .with(JiraBoards::NoProjectKeyError.new(project_key),
+          .with(JiraBoards::NoProjectKeyError.new(repository_key),
                 custom_data: Faraday::ForbiddenError)
 
         subject

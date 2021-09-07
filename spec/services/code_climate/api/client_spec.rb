@@ -4,13 +4,13 @@ describe CodeClimate::Api::Client do
   describe '#repository_by_slug' do
     let(:repository) { create(:repository) }
     let(:github_slug) do
-      "#{CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
+      "#{CodeClimate::GetRepositorySummary::CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
     end
 
     context 'when the request succeeds' do
       before do
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
@@ -40,7 +40,7 @@ describe CodeClimate::Api::Client do
     context 'when the request fails' do
       before do
         on_request_repository_by_slug(
-          project_name: repository.name,
+          repository_name: repository.name,
           respond: { status: 404 }
         )
       end

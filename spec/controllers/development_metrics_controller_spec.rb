@@ -33,7 +33,7 @@ describe DevelopmentMetricsController, type: :controller do
     context 'when metric type and period are valid' do
       let(:params) do
         {
-          project_name: repository.name,
+          repository_name: repository.name,
           metric: {
             metric_name: 'review_turnaround',
             period: 'weekly'
@@ -41,7 +41,7 @@ describe DevelopmentMetricsController, type: :controller do
         }
       end
       let(:code_climate_metric) do
-        create :code_climate_project_metric,
+        create :code_climate_repository_metric,
                repository: repository, code_climate_rate: 'A',
                invalid_issues_count: 1,
                wont_fix_issues_count: 2
@@ -134,14 +134,14 @@ describe DevelopmentMetricsController, type: :controller do
         end
       end
 
-      context '#projects' do
+      context '#repositories' do
         render_views
 
-        subject { get :projects, params: params }
+        subject { get :repositories, params: params }
 
         let(:params) do
           {
-            project_name: repository.name,
+            repository_name: repository.name,
             metric: {
               period: 'weekly'
             }
@@ -174,7 +174,7 @@ describe DevelopmentMetricsController, type: :controller do
         before { params[:department_name] = repository.language.department.name }
 
         it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimate::ProjectsSummaryService)
+          expect(CodeClimate::RepositoriesSummaryService)
             .to receive(:call).and_return(code_climate_metric)
 
           get :departments, params: params
