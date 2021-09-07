@@ -13,20 +13,21 @@
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
 #  cc_repository_id      :string
-#  project_id            :bigint           not null
+#  repository_id         :bigint           not null
 #
 # Indexes
 #
-#  index_code_climate_project_metrics_on_project_id  (project_id)
+#  index_code_climate_project_metrics_on_repository_id  (repository_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (repository_id => repositories.id)
+#  fk_rails_...  (repository_id => repositories.id)
 #
 
 FactoryBot.define do
   factory :code_climate_project_metric do
-    project
+    repository
     code_climate_rate { %w[A B C D].sample }
     invalid_issues_count { Faker::Number.between(from: 0, to: 30) }
     open_issues_count { Faker::Number.between(from: 0, to: 30) }

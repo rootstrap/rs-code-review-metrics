@@ -2,22 +2,22 @@ require 'rails_helper'
 
 describe CodeClimate::Api::Client do
   describe '#repository_by_slug' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:github_slug) do
-      "#{CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME}/#{project.name}"
+      "#{CodeClimate::GetProjectSummary::CODE_CLIMATE_API_ORG_NAME}/#{repository.name}"
     end
 
     context 'when the request succeeds' do
       before do
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
 
       context 'and has repository data' do
         let(:code_climate_repository_json) do
-          create(:code_climate_repository_by_slug_payload, name: project.name)
+          create(:code_climate_repository_by_slug_payload, name: repository.name)
         end
 
         it 'returns a Repository with the data' do
@@ -40,7 +40,7 @@ describe CodeClimate::Api::Client do
     context 'when the request fails' do
       before do
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 404 }
         )
       end
@@ -53,9 +53,9 @@ describe CodeClimate::Api::Client do
   end
 
   describe '#repository_by_repo_id' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_by_id_payload, name: project.name)
+      create(:code_climate_repository_by_id_payload, name: repository.name)
     end
     let(:repo_id) { code_climate_repository_json['data']['id'] }
 
@@ -89,9 +89,9 @@ describe CodeClimate::Api::Client do
   end
 
   describe '#snapshot' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_by_slug_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: repository.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }
@@ -135,9 +135,9 @@ describe CodeClimate::Api::Client do
   end
 
   describe '#snapshot_issues' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_by_slug_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: repository.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }
@@ -181,9 +181,9 @@ describe CodeClimate::Api::Client do
   end
 
   describe '#test_report' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:code_climate_repository_json) do
-      create(:code_climate_repository_by_slug_payload, name: project.name)
+      create(:code_climate_repository_by_slug_payload, name: repository.name)
     end
     let(:repo_json) { code_climate_repository_json['data'].first }
     let(:repo_id) { repo_json['id'] }

@@ -1,6 +1,6 @@
 module ModelsNamesHelper
-  def all_projects_names
-    Project.pluck(:name).sort_by(&:downcase)
+  def all_repositories_names
+    Repository.pluck(:name).sort_by(&:downcase)
   end
 
   def all_users_names

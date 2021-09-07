@@ -6,28 +6,28 @@ RSpec.describe Processors::ProjectsImporter do
 
     before { stub_organization_repositories([repository_payload]) }
 
-    it 'successfully imports the project' do
+    it 'successfully imports the repository' do
       described_class.call
 
-      imported_project = Project.find_by(github_id: repository_payload['id'])
-      expect(imported_project.name).to eq repository_payload['name']
-      expect(imported_project.description).to eq repository_payload['description']
-      expect(imported_project.is_private).to eq repository_payload['private']
+      imported_repository = Repository.find_by(github_id: repository_payload['id'])
+      expect(imported_repository.name).to eq repository_payload['name']
+      expect(imported_repository.description).to eq repository_payload['description']
+      expect(imported_repository.is_private).to eq repository_payload['private']
     end
 
-    context 'when the project is new' do
-      it 'creates a new project' do
-        expect { described_class.call }.to change(Project, :count).by 1
+    context 'when the repository is new' do
+      it 'creates a new repository' do
+        expect { described_class.call }.to change(Repository, :count).by 1
       end
     end
 
-    context 'when the project has already been imported' do
+    context 'when the repository has already been imported' do
       let(:github_id) { repository_payload['id'] }
 
-      before { create(:project, github_id: github_id) }
+      before { create(:repository, github_id: github_id) }
 
       it 'does not create a new one' do
-        expect { described_class.call }.not_to change(Project, :count)
+        expect { described_class.call }.not_to change(Repository, :count)
       end
 
       context 'when there is information to update' do
@@ -36,7 +36,7 @@ RSpec.describe Processors::ProjectsImporter do
 
         it 'updates it' do
           expect { described_class.call }
-            .to change { Project.find_by(github_id: github_id).name }
+            .to change { Repository.find_by(github_id: github_id).name }
             .to(updated_name)
         end
       end

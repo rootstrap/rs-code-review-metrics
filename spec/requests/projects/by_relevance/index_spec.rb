@@ -2,22 +2,22 @@ require 'rails_helper'
 
 RSpec.describe 'By Relevance' do
   let(:ruby_project_1) do
-    create(:project, relevance: 'internal', language: Language.find_by(name: 'ruby'))
+    create(:repository, relevance: 'internal', language: Language.find_by(name: 'ruby'))
   end
   let(:ruby_project_2) do
-    create(:project, relevance: 'commercial', language: Language.find_by(name: 'ruby'))
+    create(:repository, relevance: 'commercial', language: Language.find_by(name: 'ruby'))
   end
   let(:node_project_1) do
-    create(:project, relevance: 'internal', language: Language.find_by(name: 'nodejs'))
+    create(:repository, relevance: 'internal', language: Language.find_by(name: 'nodejs'))
   end
   let(:node_project_2) do
-    create(:project, relevance: 'commercial', language: Language.find_by(name: 'nodejs'))
+    create(:repository, relevance: 'commercial', language: Language.find_by(name: 'nodejs'))
   end
   let(:python_project_1) do
-    create(:project, relevance: 'internal', language: Language.find_by(name: 'python'))
+    create(:repository, relevance: 'internal', language: Language.find_by(name: 'python'))
   end
   let(:python_project_2) do
-    create(:project, relevance: 'commercial', language: Language.find_by(name: 'python'))
+    create(:repository, relevance: 'commercial', language: Language.find_by(name: 'python'))
   end
   let(:subject) do
     get department_projects_by_relevance_index_path(department_name: 'backend'), params: params

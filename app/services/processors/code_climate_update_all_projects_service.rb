@@ -9,7 +9,7 @@ module Processors
     private
 
     def projects(&block)
-      Project.find_each(&block)
+      Repository.find_each(&block)
     end
 
     def update_project(project)

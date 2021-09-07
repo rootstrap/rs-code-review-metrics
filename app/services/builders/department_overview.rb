@@ -17,14 +17,14 @@ module Builders
 
     attr_reader :department, :from
 
-    def projects_by_language_and_relevance
-      @projects_by_language_and_relevance ||=
-        ::Project.joins(:language)
-                 .relevant.with_activity_after(from)
-                 .where(language: department.languages)
-                 .distinct
-                 .group('languages.name', 'projects.relevance')
-                 .count
+    def repositories_by_language_and_relevance
+      @repositories_by_language_and_relevance ||=
+        ::Repository.joins(:language)
+                    .relevant.with_activity_after(from)
+                    .where(language: department.languages)
+                    .distinct
+                    .group('languages.name', 'repositories.relevance')
+                    .count
     end
 
     def language_overview(language)
@@ -36,8 +36,8 @@ module Builders
     end
 
     def relevances_overview(language)
-      project_relevances.index_with do |relevance|
-        projects_by_language_and_relevance[[language, relevance]] || 0
+      repositories_relevances.index_with do |relevance|
+        repositories_by_language_and_relevance[[language, relevance]] || 0
       end
     end
 
@@ -45,8 +45,8 @@ module Builders
       all_languages_names(department)
     end
 
-    def project_relevances
-      relevances = ::Project.relevances
+    def repositories_relevances
+      relevances = ::Repository.relevances
       [
         relevances[:internal],
         relevances[:commercial]

@@ -9,33 +9,33 @@ module CodeClimate
     end
 
     def call
-      projects_in_given_languages
+      repository_in_given_languages
         .without_cc_or_cc_rate
         .distinct
         .relevant
-        .order('projects.name')
+        .order('repositories.name')
     end
 
     private
 
-    def projects_in_given_languages
+    def repository_in_given_languages
       if languages.present?
-        projects_in_time_period.by_language(languages)
+        repository_in_time_period.by_language(languages)
       else
-        projects_in_time_period
+        repository_in_time_period
       end
     end
 
-    def projects_in_time_period
+    def repository_in_time_period
       if from.positive?
-        projects_in_department.with_activity_after(from.weeks.ago)
+        repository_in_department.with_activity_after(from.weeks.ago)
       else
-        projects_in_department
+        repository_in_department
       end
     end
 
-    def projects_in_department
-      Project.by_department(department)
+    def repository_in_department
+      Repository.by_department(department)
     end
   end
 end

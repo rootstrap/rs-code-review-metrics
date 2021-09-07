@@ -4,7 +4,7 @@ module Builders
       class PullRequestSize
         def retrieve_records(entity_id:, time_range:)
           ::Events::PullRequest
-            .joins(project: { language: :department })
+            .joins(repository: { language: :department })
             .where(departments: { id: entity_id })
             .where(opened_at: time_range)
             .where.not(size: nil)

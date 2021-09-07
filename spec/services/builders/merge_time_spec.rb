@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Builders::MergeTime do
   describe '.call' do
-    let(:project) { create(:project, language: Language.first) }
+    let(:repository) { create(:repository, language: Language.first) }
     let(:vita) { create(:user, login: 'santiagovidal') }
 
     context 'when pull request has different days for opening and merging in same week' do
@@ -13,7 +13,7 @@ RSpec.describe Builders::MergeTime do
       let(:pull_request) do
         create(:pull_request,
                owner: vita,
-               project: project,
+               repository: repository,
                opened_at: monday,
                merged_at: thursday)
       end
@@ -35,7 +35,7 @@ RSpec.describe Builders::MergeTime do
       let(:pull_request) do
         create(:pull_request,
                owner: vita,
-               project: project,
+               repository: repository,
                opened_at: friday,
                merged_at: next_monday)
       end
@@ -53,7 +53,7 @@ RSpec.describe Builders::MergeTime do
       let(:pull_request) do
         create(:pull_request,
                owner: vita,
-               project: project,
+               repository: repository,
                opened_at: friday,
                merged_at: sunday)
       end
@@ -77,7 +77,7 @@ RSpec.describe Builders::MergeTime do
       let(:pull_request) do
         create(:pull_request,
                owner: vita,
-               project: project,
+               repository: repository,
                opened_at: wednesday_past_week,
                merged_at: thursday_next_week)
       end

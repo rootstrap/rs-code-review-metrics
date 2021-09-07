@@ -14,17 +14,17 @@ RSpec.describe Builders::Events::Push do
 
     it 'creates or assigns the correct references to it' do
       built_push = build_push
-      expect(built_push.project.github_id).to eq(repository_payload['id'])
+      expect(built_push.repository.github_id).to eq(repository_payload['id'])
       expect(built_push.sender.github_id).to eq(user_payload['id'])
-      expect(built_push.sender.projects).to include(built_push.project)
+      expect(built_push.sender.repositories).to include(built_push.repository)
     end
 
     context 'when there is a pull request for the pushed branch' do
       let(:branch) { 'add_super_feature' }
       let(:push_payload) { create(:push_payload, branch: branch) }
-      let(:project) { create(:project, github_id: repository_payload['id']) }
+      let(:repository) { create(:repository, github_id: repository_payload['id']) }
       let!(:pull_request) do
-        create(:pull_request, branch: branch, state: pr_status, project: project)
+        create(:pull_request, branch: branch, state: pr_status, repository: repository)
       end
 
       context 'and it is open' do

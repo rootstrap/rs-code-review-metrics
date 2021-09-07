@@ -6,21 +6,21 @@ class ProductService
   end
 
   def update!(params)
-    project_ids = params['project_ids']
+    repositories_ids = params['repository_ids']
 
-    update_projects(project_ids, params['name']) if project_ids
+    update_repositories(repositories_ids, params['name']) if repositories_ids
 
     product.update!(params)
   end
 
   private
 
-  def update_projects(project_ids, name)
+  def update_repositories(repositories_ids, name)
     product_id = Product.find_by(name: name)
-    projects = Project.where(product_id: product_id)
+    repositories = Repository.where(product_id: product_id)
 
-    projects.each do |project|
-      project.update!(product_id: nil) unless project_ids.include?(project.id)
+    repositories.each do |repository|
+      repository.update!(product_id: nil) unless repositories_ids.include?(repository.id)
     end
   end
 end

@@ -26,9 +26,9 @@ module Builders
           @completed_rt ||= begin
             ::CompletedReviewTurnaround.where(created_at: period)
                                        .joins(review_request:
-                                        { pull_request: { project: { language: :department } } })
+                                        { pull_request: { repository: { language: :department } } })
                                        .where(departments: { name: @department_name })
-                                       .where.not(pull_requests: { html_url: nil })
+                                       .where.not(events_pull_requests: { html_url: nil })
                                        .includes(review_request: :pull_request)
           end
         end

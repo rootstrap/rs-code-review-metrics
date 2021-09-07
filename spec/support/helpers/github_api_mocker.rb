@@ -29,7 +29,7 @@ module GithubApiMock
   end
 
   def stub_get_pull_request(pull_request, pull_request_payload)
-    repo_full_name = pull_request.project.full_name
+    repo_full_name = pull_request.repository.full_name
     pr_number = pull_request.number
 
     stub_request(:get, "https://api.github.com/repos/#{repo_full_name}/pulls/#{pr_number}")
@@ -39,22 +39,22 @@ module GithubApiMock
       )
   end
 
-  def stub_successful_repository_views(project, repository_views_payload)
-    stub_repository_views(project, repository_views_payload, 200)
+  def stub_successful_repository_views(repository, repository_views_payload)
+    stub_repository_views(repository, repository_views_payload, 200)
   end
 
-  def stub_failed_repository_views(project)
+  def stub_failed_repository_views(repository)
     response_body = {
       'message': 'Not Found',
       'documentation_url': 'https://docs.github.com/rest/reference/repos#get-page-views'
     }
-    stub_repository_views(project, response_body, 404)
+    stub_repository_views(repository, response_body, 404)
   end
 
-  def stub_repository_views(project, response_body, status_code)
+  def stub_repository_views(repository, response_body, status_code)
     stub_auth_envs
 
-    url = "https://api.github.com/repositories/#{project.github_id}/traffic/views"
+    url = "https://api.github.com/repositories/#{repository.github_id}/traffic/views"
 
     stub_request(:get, url)
       .with(basic_auth: [github_admin_user, github_admin_token], query: { per: 'week' })
@@ -103,9 +103,9 @@ module GithubApiMock
     file_payloads = [create(:pull_request_file_payload)],
     results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
   )
-    project_id = pull_request_payload.dig('repository', 'id')
+    repository_id = pull_request_payload.dig('repository', 'id')
     pr_number = pull_request_payload.dig('pull_request', 'number')
-    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+    stub_pull_request_files(repository_id, pr_number, file_payloads, results_per_page)
   end
 
   def stub_pull_request_files_with_pr(
@@ -113,15 +113,15 @@ module GithubApiMock
     file_payloads = [create(:pull_request_file_payload)],
     results_per_page: GithubClient::PullRequest::MAX_FILES_PER_PAGE
   )
-    project_id = pull_request.project.github_id
+    repository_id = pull_request.repository.github_id
     pr_number = pull_request.number
-    stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
+    stub_pull_request_files(repository_id, pr_number, file_payloads, results_per_page)
   end
 
   def stub_failed_pull_request_files(pull_request)
-    project_id = pull_request.project.github_id
+    repository_id = pull_request.repository.github_id
     pr_number = pull_request.number
-    url = "https://api.github.com/repositories/#{project_id}/pulls/#{pr_number}/files"
+    url = "https://api.github.com/repositories/#{repository_id}/pulls/#{pr_number}/files"
 
     response_body = {
       'message': 'Not Found',
@@ -162,8 +162,8 @@ module GithubApiMock
 
   # The results_per_page attribute is meant just for testing purposes
   # The API will be stubbed anyway with the amount used in GithubClient::PullRequest#files
-  def stub_pull_request_files(project_id, pr_number, file_payloads, results_per_page)
-    url = "https://api.github.com/repositories/#{project_id}/pulls/#{pr_number}/files"
+  def stub_pull_request_files(repository_id, pr_number, file_payloads, results_per_page)
+    url = "https://api.github.com/repositories/#{repository_id}/pulls/#{pr_number}/files"
 
     stub_paginated_items(
       file_payloads,

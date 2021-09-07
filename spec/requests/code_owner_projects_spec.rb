@@ -18,22 +18,22 @@ RSpec.describe 'Code Owner Projects' do
 
     context 'when user has projects as code owner' do
       before do
-        create_list(:project, projects_count)
-        Project.all.each { |project| project.code_owners << user }
+        create_list(:repository, repositories_count)
+        Repository.all.each { |repository| repository.code_owners << user }
         subject
       end
 
-      let(:projects_count) { 5 }
+      let(:repositories_count) { 5 }
 
       it_behaves_like 'controller index response'
 
       it 'returns the correct number of projects for that code owner' do
-        expect(assigns(:projects).size).to eq(projects_count)
+        expect(assigns(:projects).size).to eq(repositories_count)
       end
 
       it 'returns the projects that belongs to that code owner' do
-        assigns(:projects).each do |project|
-          expect(project.code_owners.include?(user)).to eq(true)
+        assigns(:projects).each do |repository|
+          expect(repository.code_owners.include?(user)).to eq(true)
         end
       end
     end

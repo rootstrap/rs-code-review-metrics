@@ -4,7 +4,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
   describe '.call' do
     let(:department)      { Department.find_by(name: 'backend') }
     let(:ruby_lang)       { Language.find_by(name: 'ruby') }
-    let!(:project)        { create(:project, language: ruby_lang) }
+    let!(:repository)     { create(:repository, language: ruby_lang) }
     let(:entity_type)     { 'Department' }
     let(:metric_name)     { :review_turnaround }
     let(:metrics_number)  { 1 }
@@ -12,8 +12,8 @@ RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
 
     context 'when there is available data' do
       before do
-        review_request1 = create(:review_request, project: project)
-        review_request2 = create(:review_request, project: project)
+        review_request1 = create(:review_request, repository: repository)
+        review_request2 = create(:review_request, repository: repository)
         create(:completed_review_turnaround, review_request: review_request1, value: 1.hour)
         create(:completed_review_turnaround, review_request: review_request2, value: 3.hours)
       end
@@ -24,7 +24,7 @@ RSpec.describe Metrics::ReviewTurnaround::PerDepartment do
         let(:subject) { described_class.call(department.id, interval) }
 
         before do
-          review_request = create(:review_request, project: project)
+          review_request = create(:review_request, repository: repository)
           create(:completed_review_turnaround, review_request: review_request,
                                                value: 1.hour, created_at: 5.weeks.ago)
         end

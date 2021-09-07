@@ -14,7 +14,7 @@ module CodeClimate
                            issues: issues_collection(metric),
                            snapshot_time: metric.snapshot_time,
                            test_coverage: metric.test_coverage&.round,
-                           name: metric.project.name)
+                           name: metric.repository.name)
       end
     end
 
@@ -42,9 +42,9 @@ module CodeClimate
 
     def metrics_in_time_period
       if from.positive?
-        metrics_in_department.merge(Project.with_activity_after(from.weeks.ago))
+        metrics_in_department.merge(Repository.with_activity_after(from.weeks.ago))
                              .group('code_climate_project_metrics.id')
-                             .group('projects.id')
+                             .group('repositories.id')
       else
         metrics_in_department
       end
@@ -53,9 +53,9 @@ module CodeClimate
     def metrics_in_department
       CodeClimateProjectMetric
         .with_rates
-        .joins(project: { language: :department })
+        .joins(repository: { language: :department })
         .where(departments: { id: department.id })
-        .order('LOWER(projects.name)')
+        .order('LOWER(repositories.name)')
     end
   end
 end

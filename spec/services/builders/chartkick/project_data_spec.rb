@@ -8,15 +8,15 @@ RSpec.describe Builders::Chartkick::ProjectData do
         Time.zone.today.beginning_of_week..Time.zone.today.end_of_week
       end
 
-      let(:entity_id) { Project.last.id }
+      let(:entity_id) { Repository.last.id }
 
       let(:query) do
         { name: 'ReviewTurnaround', interval: :weekly, value_timestamp: range }
       end
 
       let!(:user_project) do
-        create(:project, language: language).tap do |project|
-          create(:users_project, project: project)
+        create(:repository, language: language).tap do |repository|
+          create(:users_project, repository: repository)
         end
       end
 

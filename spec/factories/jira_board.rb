@@ -7,15 +7,15 @@
 #  project_name     :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  project_id       :bigint
+#  repository_id       :bigint
 #
 # Indexes
 #
-#  index_jira_projects_on_project_id  (project_id)
+#  index_jira_repositories_on_repository_id  (repository_id)
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (repository_id => repositories.id)
 #
 
 FactoryBot.define do

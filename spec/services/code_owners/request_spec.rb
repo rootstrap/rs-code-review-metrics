@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CodeOwners::Request do
   describe '.call' do
-    let!(:project) { create(:project, name: 'rs-code-metrics') }
+    let!(:repository) { create(:repository, name: 'rs-code-metrics') }
     context 'when project content from the github repo api' do
       context 'was not found or is empty' do
         before { stub_get_code_owners_not_found }
@@ -23,7 +23,7 @@ RSpec.describe CodeOwners::Request do
           described_class.call
         end
 
-        it 'calls the code owner project handler' do
+        it 'calls the code owner repository handler' do
           expect_any_instance_of(CodeOwners::ProjectHandler).to receive(:call)
           described_class.call
         end

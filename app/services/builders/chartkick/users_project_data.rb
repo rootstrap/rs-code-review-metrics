@@ -17,7 +17,7 @@ module Builders
       end
 
       def users_ids
-        UsersProject.where(project_id: @entity_id).pluck(:user_id)
+        UsersProject.where(repository_id: @entity_id).pluck(:user_id)
       end
     end
   end

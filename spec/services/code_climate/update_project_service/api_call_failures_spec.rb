@@ -24,15 +24,15 @@ describe CodeClimate::UpdateProjectService do
     build :code_climate_test_report_payload
   end
 
-  let(:project) { create :project, name: 'rs-code-review-metrics' }
-  let(:update_project_code_climate_info) { subject.call(project) }
+  let(:repository) { create :repository, name: 'rs-code-review-metrics' }
+  let(:update_project_code_climate_info) { subject.call(repository) }
 
   context 'when the call to /repos' do
     context 'returns anything but 200' do
       before do
         stub_notification_webhook
 
-        on_request_repository_by_slug(project_name: project.name,
+        on_request_repository_by_slug(project_name: repository.name,
                                       respond: { status: 500 })
       end
 
@@ -42,7 +42,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to slack channel' do
-        expect(SlackService).to receive(:code_climate_error).with(project, anything)
+        expect(SlackService).to receive(:code_climate_error).with(repository, anything)
 
         update_project_code_climate_info
       end
@@ -53,7 +53,7 @@ describe CodeClimate::UpdateProjectService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
       end
@@ -75,7 +75,7 @@ describe CodeClimate::UpdateProjectService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 
@@ -90,7 +90,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to slack channel' do
-        expect(SlackService).to receive(:code_climate_error).with(project, anything)
+        expect(SlackService).to receive(:code_climate_error).with(repository, anything)
 
         update_project_code_climate_info
       end
@@ -103,7 +103,7 @@ describe CodeClimate::UpdateProjectService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 
@@ -122,7 +122,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to slack channel' do
-        expect(SlackService).to receive(:code_climate_error).with(project, anything)
+        expect(SlackService).to receive(:code_climate_error).with(repository, anything)
 
         update_project_code_climate_info
       end
@@ -135,7 +135,7 @@ describe CodeClimate::UpdateProjectService do
         stub_notification_webhook
 
         on_request_repository_by_slug(
-          project_name: project.name,
+          project_name: repository.name,
           respond: { status: 200, body: code_climate_repository_json }
         )
 
@@ -158,7 +158,7 @@ describe CodeClimate::UpdateProjectService do
       end
 
       it 'notifies the error to slack channel' do
-        expect(SlackService).to receive(:code_climate_error).with(project, anything)
+        expect(SlackService).to receive(:code_climate_error).with(repository, anything)
 
         update_project_code_climate_info
       end

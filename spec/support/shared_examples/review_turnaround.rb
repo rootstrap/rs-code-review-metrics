@@ -4,7 +4,7 @@ RSpec.shared_examples 'review turnaround data distribution' do
   context 'when name is review turnaround' do
     before do
       values_in_seconds.each do |value|
-        review_request = create :review_request, project: project
+        review_request = create :review_request, repository: repository
         create(:completed_review_turnaround, review_request: review_request, value: value)
       end
     end

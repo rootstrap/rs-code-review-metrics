@@ -7,17 +7,17 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionDataMetrics::MergeTime
     let(:backend_department) { Department.find_by(name: 'backend') }
     let(:frontend_department) { Department.find_by(name: 'frontend') }
 
-    let(:backend_project) { create(:project, language: backend_department.languages.first) }
-    let(:frontend_project) { create(:project, language: frontend_department.languages.first) }
+    let(:backend_repository) { create(:repository, language: backend_department.languages.first) }
+    let(:frontend_repository) { create(:repository, language: frontend_department.languages.first) }
 
     let(:frontend_pr) do
-      create(:pull_request, project: frontend_project, merged_at: Time.zone.now)
+      create(:pull_request, repository: frontend_repository, merged_at: Time.zone.now)
     end
     let(:last_week_backend_pr) do
-      create(:pull_request, project: backend_project, merged_at: old_timestamp)
+      create(:pull_request, repository: backend_repository, merged_at: old_timestamp)
     end
     let(:this_week_backend_pr) do
-      create(:pull_request, project: backend_project, merged_at: Time.zone.now)
+      create(:pull_request, repository: backend_repository, merged_at: Time.zone.now)
     end
 
     let!(:frontend_pr_merge_time) do

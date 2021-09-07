@@ -14,7 +14,7 @@ RSpec.shared_examples 'pull request size data distribution' do
 
   before do
     sizes_values.each do |size_value|
-      create(:pull_request, project: project, opened_at: Time.zone.now, size: size_value)
+      create(:pull_request, repository: repository, opened_at: Time.zone.now, size: size_value)
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.shared_examples 'pull request size data distribution' do
   context 'when some pull requests have been created outside of the requested period' do
     before do
       old_timestamp = range.first.yesterday
-      create(:pull_request, project: project, opened_at: old_timestamp, size: 3)
+      create(:pull_request, repository: repository, opened_at: old_timestamp, size: 3)
     end
 
     it 'does not count them' do
