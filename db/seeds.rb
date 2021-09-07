@@ -150,4 +150,5 @@ if Rails.env.development?
   MetricDefinition.create!(code: :merge_time, explanation: 'Time to merge measures the amount of time from pull request open until pull request merge.', name: 'Time to merge')
   MetricDefinition.create!(code: :pull_request_size, explanation: 'Is the average of total lines of code added plus the total lines of code removed.', name: 'PR Size')
   MetricDefinition.create!(code: :development_cycle, explanation: 'It measures how much time the team spends working on a task.', name: 'Development Cycle')
+  MetricDefinition.create!(code: :planned_to_done, explanation: 'The planned-to-done ratio measures what percentage of the tasks you set out for your team were completed satisfactorily.', name: 'Planned to Done Ratio')
 end
