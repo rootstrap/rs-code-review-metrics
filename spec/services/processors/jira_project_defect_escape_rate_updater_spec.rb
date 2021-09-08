@@ -21,6 +21,17 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
         }
       ]
     end
+    let(:bugs) do
+      [
+        {
+          'key': 'TES-4',
+          'fields': {
+            'customfield_10000': [{ 'value': 'production' }],
+            'created': informed_at_date
+          }
+        }
+      ]
+    end
     let(:payload) { { issues: bugs } }
 
     before { stub_get_bugs_ok(payload, project_key) }
@@ -48,6 +59,25 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
       it 'is set the informed at date' do
         subject
         expect(last_issue.informed_at).to eq(informed_at_date)
+      end
+
+      context 'when the environment needs to be parsed' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'QA - In Staging' }],
+                'created': informed_at_date
+              }
+            }
+          ]
+        end
+
+        it 'is set the qa environment' do
+          subject
+          expect(last_issue.environment).to eq('qa')
+        end
       end
     end
 
