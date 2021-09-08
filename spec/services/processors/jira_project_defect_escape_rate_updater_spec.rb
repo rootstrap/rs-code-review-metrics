@@ -21,17 +21,6 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
         }
       ]
     end
-    let(:bugs) do
-      [
-        {
-          'key': 'TES-4',
-          'fields': {
-            'customfield_10000': [{ 'value': 'production' }],
-            'created': informed_at_date
-          }
-        }
-      ]
-    end
     let(:payload) { { issues: bugs } }
 
     before { stub_get_bugs_ok(payload, project_key) }
