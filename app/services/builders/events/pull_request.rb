@@ -20,8 +20,8 @@ module Builders
 
       def assign_attrs(pull_request, pull_request_data)
         pull_request.owner = find_or_create_user(pull_request_data['user'])
-        pull_request.project = Builders::Project.call(@payload['repository'])
-        find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
+        pull_request.repository = Builders::Repository.call(@payload['repository'])
+        find_or_create_user_repository(pull_request.repository.id, pull_request.owner.id)
         pull_request.size = PullRequestSizeCalculator.call(pull_request)
       end
     end

@@ -18,7 +18,8 @@ class MetricDefinition < ApplicationRecord
                open_source_visits: 'open_source_visits',
                defect_escape_rate: 'defect_escape_rate',
                pull_request_size: 'pull_request_size',
-               development_cycle: 'development_cycle' }
+               development_cycle: 'development_cycle',
+               planned_to_done: 'planned_to_done' }
 
   validates :code, uniqueness: true
   validates :name, presence: true, uniqueness: true

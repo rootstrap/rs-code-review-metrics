@@ -9,7 +9,7 @@ class EventsProcessor
       retrieve_entity_records(entity) do |event|
         payload = event.data
         event_name = resolve_event_name(event.name)
-        Builders::Project.call(payload['repository'])
+        Builders::Repository.call(payload['repository'])
         process_event(event, event_name)
       rescue StandardError => exception
         error = error_msg(event, exception)
@@ -71,9 +71,9 @@ class EventsProcessor
       ::Events::PullRequest.find_by!(github_id: payload['pull_request']['id'])
     end
 
-    def find_issue_pull_request(payload, project_id)
+    def find_issue_pull_request(payload, repository_id)
       ::Events::PullRequest.find_by!(number: payload['issue']['number'],
-                                     project_id: project_id)
+                                     repository_id: repository_id)
     end
 
     def find_last_review_request(pull_request, reviewer_id)
@@ -83,8 +83,8 @@ class EventsProcessor
       raise Reviews::NoReviewRequestError
     end
 
-    def find_or_create_user_project(project_id, user_id)
-      UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
+    def find_or_create_user_repository(repository_id, user_id)
+      UsersRepository.find_or_create_by!(repository_id: repository_id, user_id: user_id)
     end
   end
 
@@ -104,8 +104,8 @@ class EventsProcessor
 
     def self.assign_attrs(pull_request, pull_request_data, payload)
       pull_request.owner = find_or_create_user(pull_request_data['user'])
-      pull_request.project = Builders::Project.call(payload['repository'])
-      find_or_create_user_project(pull_request.project.id, pull_request.owner.id)
+      pull_request.repository = Builders::Repository.call(payload['repository'])
+      find_or_create_user_repository(pull_request.repository.id, pull_request.owner.id)
     end
   end
 
@@ -114,7 +114,7 @@ class EventsProcessor
       review_data = payload['review']
       ::Events::Review.find_or_initialize_by(github_id: review_data['id']).tap do |review|
         assign_attrs(review, review_data, payload)
-        assign_user_project(review, payload)
+        assign_user_repository(review, payload)
 
         Builders::Events::Review::ATTR_PAYLOAD_MAP.each do |key, value|
           review.public_send("#{key}=", review_data.fetch(value))
@@ -129,9 +129,9 @@ class EventsProcessor
       review.review_request = find_last_review_request(review.pull_request, review.owner_id)
     end
 
-    def self.assign_user_project(review, payload)
-      review.project = Builders::Project.call(payload['repository'])
-      find_or_create_user_project(review.project_id, review.owner_id)
+    def self.assign_user_repository(review, payload)
+      review.repository = Builders::Repository.call(payload['repository'])
+      find_or_create_user_repository(review.repository_id, review.owner_id)
     end
   end
 
@@ -150,10 +150,10 @@ class EventsProcessor
   class PullRequestCommentBuilder < EventsProcessor
     def self.build(payload)
       comment_data = payload['comment']
-      project = Builders::Project.call(payload['repository'])
+      repository = Builders::Repository.call(payload['repository'])
       ::Events::PullRequestComment.find_or_initialize_by(github_id: comment_data['id']).tap do |prc|
         prc.owner = find_or_create_user(comment_data['user'])
-        prc.pull_request = find_issue_pull_request(payload, project.id)
+        prc.pull_request = find_issue_pull_request(payload, repository.id)
         prc.body = comment_data['body']
         prc.save!
       end

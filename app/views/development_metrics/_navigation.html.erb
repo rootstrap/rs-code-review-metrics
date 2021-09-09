@@ -6,11 +6,11 @@
     <% else %>
       <a href='<%= products_development_metrics_path({product_name: product[:name], metric: { period: 4 }}) %>' class='nav-link active nav-txt-color mx-1' role='button'>General</a>
     <% end %>
-      <% product.projects.each do |project|%>
-        <%if current_page?(projects_development_metrics_path({project_name: project[:name], metric: { period: params&.dig(:metric, :period) }}))%>
-          <a href='<%= projects_development_metrics_path({project_name: project[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color selected mx-1' role='button'><%= project[:name] %></a>
+      <% product.repositories.each do |repository|%>
+        <%if current_page?(repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}))%>
+          <a href='<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color selected mx-1' role='button'><%= repository[:name] %></a>
         <% else %>
-          <a href='<%= projects_development_metrics_path({project_name: project[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color mx-1' role='button'><%= project[:name] %></a>
+          <a href='<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color mx-1' role='button'><%= repository[:name] %></a>
         <% end %>
       <% end %>
     <% end %>

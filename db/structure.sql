@@ -113,7 +113,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'open_source_visits',
     'defect_escape_rate',
     'pull_request_size',
-    'development_cycle'
+    'development_cycle',
+    'planned_to_done'
 );
 
 
@@ -337,12 +338,12 @@ ALTER SEQUENCE public.blog_posts_id_seq OWNED BY public.blog_posts.id;
 
 
 --
--- Name: code_climate_project_metrics; Type: TABLE; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.code_climate_project_metrics (
+CREATE TABLE public.code_climate_repository_metrics (
     id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     code_climate_rate character varying,
     invalid_issues_count integer,
     wont_fix_issues_count integer,
@@ -357,10 +358,10 @@ CREATE TABLE public.code_climate_project_metrics (
 
 
 --
--- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.code_climate_project_metrics_id_seq
+CREATE SEQUENCE public.code_climate_repository_metrics_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -369,19 +370,19 @@ CREATE SEQUENCE public.code_climate_project_metrics_id_seq
 
 
 --
--- Name: code_climate_project_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.code_climate_project_metrics_id_seq OWNED BY public.code_climate_project_metrics.id;
+ALTER SEQUENCE public.code_climate_repository_metrics_id_seq OWNED BY public.code_climate_repository_metrics.id;
 
 
 --
--- Name: code_owner_projects; Type: TABLE; Schema: public; Owner: -
+-- Name: code_owner_repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.code_owner_projects (
+CREATE TABLE public.code_owner_repositories (
     id bigint NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -390,10 +391,10 @@ CREATE TABLE public.code_owner_projects (
 
 
 --
--- Name: code_owner_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: code_owner_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.code_owner_projects_id_seq
+CREATE SEQUENCE public.code_owner_repositories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -402,10 +403,10 @@ CREATE SEQUENCE public.code_owner_projects_id_seq
 
 
 --
--- Name: code_owner_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: code_owner_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.code_owner_projects_id_seq OWNED BY public.code_owner_projects.id;
+ALTER SEQUENCE public.code_owner_repositories_id_seq OWNED BY public.code_owner_repositories.id;
 
 
 --
@@ -485,7 +486,7 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    project_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
     deleted_at timestamp without time zone
 );
 
@@ -507,6 +508,236 @@ CREATE SEQUENCE public.events_id_seq
 --
 
 ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
+
+
+--
+-- Name: events_pull_request_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_pull_request_comments (
+    id bigint NOT NULL,
+    github_id integer,
+    body character varying,
+    opened_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    pull_request_id bigint NOT NULL,
+    owner_id bigint,
+    review_request_id bigint,
+    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state
+);
+
+
+--
+-- Name: events_pull_request_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_pull_request_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_pull_request_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_pull_request_comments_id_seq OWNED BY public.events_pull_request_comments.id;
+
+
+--
+-- Name: events_pull_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_pull_requests (
+    id bigint NOT NULL,
+    github_id bigint NOT NULL,
+    number integer NOT NULL,
+    locked boolean NOT NULL,
+    title text NOT NULL,
+    body text,
+    closed_at timestamp without time zone,
+    merged_at timestamp without time zone,
+    draft boolean NOT NULL,
+    node_id character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    state public.pull_request_state,
+    opened_at timestamp without time zone,
+    repository_id bigint,
+    owner_id bigint,
+    html_url character varying,
+    branch character varying,
+    size integer,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: events_pull_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_pull_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_pull_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_pull_requests_id_seq OWNED BY public.events_pull_requests.id;
+
+
+--
+-- Name: events_pushes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_pushes (
+    id bigint NOT NULL,
+    repository_id bigint NOT NULL,
+    pull_request_id bigint,
+    sender_id bigint NOT NULL,
+    ref character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: events_pushes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_pushes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_pushes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_pushes_id_seq OWNED BY public.events_pushes.id;
+
+
+--
+-- Name: events_repositories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_repositories (
+    id bigint NOT NULL,
+    action character varying,
+    html_url character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    sender_id bigint NOT NULL,
+    repository_id bigint NOT NULL,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: events_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_repositories_id_seq OWNED BY public.events_repositories.id;
+
+
+--
+-- Name: events_review_comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_review_comments (
+    id bigint NOT NULL,
+    github_id integer,
+    body character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    pull_request_id bigint NOT NULL,
+    owner_id bigint,
+    state public.review_comment_state DEFAULT 'active'::public.review_comment_state,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: events_review_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_review_comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_review_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_review_comments_id_seq OWNED BY public.events_review_comments.id;
+
+
+--
+-- Name: events_reviews; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.events_reviews (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    owner_id bigint,
+    github_id integer,
+    body character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    state public.review_state NOT NULL,
+    opened_at timestamp without time zone NOT NULL,
+    review_request_id bigint,
+    repository_id bigint,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: events_reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.events_reviews_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: events_reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.events_reviews_id_seq OWNED BY public.events_reviews.id;
 
 
 --
@@ -582,42 +813,6 @@ ALTER SEQUENCE public.exception_hunter_errors_id_seq OWNED BY public.exception_h
 
 
 --
--- Name: external_projects; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.external_projects (
-    id bigint NOT NULL,
-    description character varying,
-    name character varying,
-    full_name character varying NOT NULL,
-    github_id bigint NOT NULL,
-    language_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    enabled boolean DEFAULT true NOT NULL
-);
-
-
---
--- Name: external_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.external_projects_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: external_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.external_projects_id_seq OWNED BY public.external_projects.id;
-
-
---
 -- Name: external_pull_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -628,12 +823,12 @@ CREATE TABLE public.external_pull_requests (
     title text,
     github_id bigint,
     owner_id bigint,
-    external_project_id bigint NOT NULL,
+    external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -654,6 +849,42 @@ CREATE SEQUENCE public.external_pull_requests_id_seq
 --
 
 ALTER SEQUENCE public.external_pull_requests_id_seq OWNED BY public.external_pull_requests.id;
+
+
+--
+-- Name: external_repositories; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.external_repositories (
+    id bigint NOT NULL,
+    description character varying,
+    name character varying,
+    full_name character varying NOT NULL,
+    github_id bigint NOT NULL,
+    language_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    enabled boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: external_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.external_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: external_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.external_repositories_id_seq OWNED BY public.external_repositories.id;
 
 
 --
@@ -699,7 +930,9 @@ CREATE TABLE public.jira_boards (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     deleted_at timestamp without time zone,
-    product_id bigint
+    product_id bigint,
+    jira_board_id integer,
+    jira_self_url character varying
 );
 
 
@@ -758,6 +991,45 @@ CREATE SEQUENCE public.jira_issues_id_seq
 --
 
 ALTER SEQUENCE public.jira_issues_id_seq OWNED BY public.jira_issues.id;
+
+
+--
+-- Name: jira_sprints; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_sprints (
+    id bigint NOT NULL,
+    jira_id integer NOT NULL,
+    name character varying,
+    points_committed integer,
+    points_completed integer,
+    started_at timestamp without time zone NOT NULL,
+    ended_at timestamp without time zone,
+    active boolean,
+    deleted_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    jira_board_id bigint NOT NULL
+);
+
+
+--
+-- Name: jira_sprints_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_sprints_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_sprints_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_sprints_id_seq OWNED BY public.jira_sprints.id;
 
 
 --
@@ -937,10 +1209,10 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
--- Name: projects; Type: TABLE; Schema: public; Owner: -
+-- Name: repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.projects (
+CREATE TABLE public.repositories (
     id bigint NOT NULL,
     github_id integer NOT NULL,
     name character varying,
@@ -952,161 +1224,6 @@ CREATE TABLE public.projects (
     relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL,
     deleted_at timestamp without time zone,
     product_id bigint
-);
-
-
---
--- Name: projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.projects_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
-
-
---
--- Name: pull_request_comments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pull_request_comments (
-    id bigint NOT NULL,
-    github_id integer,
-    body character varying,
-    opened_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    pull_request_id bigint NOT NULL,
-    owner_id bigint,
-    review_request_id bigint,
-    state public.pull_request_comment_state DEFAULT 'created'::public.pull_request_comment_state
-);
-
-
---
--- Name: pull_request_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pull_request_comments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pull_request_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pull_request_comments_id_seq OWNED BY public.pull_request_comments.id;
-
-
---
--- Name: pull_requests; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pull_requests (
-    id bigint NOT NULL,
-    github_id bigint NOT NULL,
-    number integer NOT NULL,
-    locked boolean NOT NULL,
-    title text NOT NULL,
-    body text,
-    closed_at timestamp without time zone,
-    merged_at timestamp without time zone,
-    draft boolean NOT NULL,
-    node_id character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    state public.pull_request_state,
-    opened_at timestamp without time zone,
-    project_id bigint,
-    owner_id bigint,
-    html_url character varying,
-    branch character varying,
-    size integer,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: pull_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pull_requests_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pull_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pull_requests_id_seq OWNED BY public.pull_requests.id;
-
-
---
--- Name: pushes; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.pushes (
-    id bigint NOT NULL,
-    project_id bigint NOT NULL,
-    pull_request_id bigint,
-    sender_id bigint NOT NULL,
-    ref character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: pushes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.pushes_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: pushes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.pushes_id_seq OWNED BY public.pushes.id;
-
-
---
--- Name: repositories; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.repositories (
-    id bigint NOT NULL,
-    action character varying,
-    html_url character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    sender_id bigint NOT NULL,
-    project_id bigint NOT NULL,
-    deleted_at timestamp without time zone
 );
 
 
@@ -1130,42 +1247,6 @@ ALTER SEQUENCE public.repositories_id_seq OWNED BY public.repositories.id;
 
 
 --
--- Name: review_comments; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.review_comments (
-    id bigint NOT NULL,
-    github_id integer,
-    body character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    pull_request_id bigint NOT NULL,
-    owner_id bigint,
-    state public.review_comment_state DEFAULT 'active'::public.review_comment_state,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: review_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.review_comments_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: review_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.review_comments_id_seq OWNED BY public.review_comments.id;
-
-
---
 -- Name: review_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1177,7 +1258,7 @@ CREATE TABLE public.review_requests (
     pull_request_id bigint NOT NULL,
     reviewer_id bigint NOT NULL,
     state public.review_request_state DEFAULT 'active'::public.review_request_state,
-    project_id bigint,
+    repository_id bigint,
     deleted_at timestamp without time zone
 );
 
@@ -1231,45 +1312,6 @@ CREATE SEQUENCE public.review_turnarounds_id_seq
 --
 
 ALTER SEQUENCE public.review_turnarounds_id_seq OWNED BY public.review_turnarounds.id;
-
-
---
--- Name: reviews; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.reviews (
-    id bigint NOT NULL,
-    pull_request_id bigint NOT NULL,
-    owner_id bigint,
-    github_id integer,
-    body character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    state public.review_state NOT NULL,
-    opened_at timestamp without time zone NOT NULL,
-    review_request_id bigint,
-    project_id bigint,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: reviews_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.reviews_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: reviews_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.reviews_id_seq OWNED BY public.reviews.id;
 
 
 --
@@ -1380,22 +1422,22 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: users_projects; Type: TABLE; Schema: public; Owner: -
+-- Name: users_repositories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.users_projects (
+CREATE TABLE public.users_repositories (
     id bigint NOT NULL,
     user_id bigint,
-    project_id bigint,
+    repository_id bigint,
     deleted_at timestamp without time zone
 );
 
 
 --
--- Name: users_projects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: users_repositories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.users_projects_id_seq
+CREATE SEQUENCE public.users_repositories_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1404,10 +1446,10 @@ CREATE SEQUENCE public.users_projects_id_seq
 
 
 --
--- Name: users_projects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: users_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.users_projects_id_seq OWNED BY public.users_projects.id;
+ALTER SEQUENCE public.users_repositories_id_seq OWNED BY public.users_repositories.id;
 
 
 --
@@ -1439,17 +1481,17 @@ ALTER TABLE ONLY public.blog_posts ALTER COLUMN id SET DEFAULT nextval('public.b
 
 
 --
--- Name: code_climate_project_metrics id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics ALTER COLUMN id SET DEFAULT nextval('public.code_climate_project_metrics_id_seq'::regclass);
+ALTER TABLE ONLY public.code_climate_repository_metrics ALTER COLUMN id SET DEFAULT nextval('public.code_climate_repository_metrics_id_seq'::regclass);
 
 
 --
--- Name: code_owner_projects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: code_owner_repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects ALTER COLUMN id SET DEFAULT nextval('public.code_owner_projects_id_seq'::regclass);
+ALTER TABLE ONLY public.code_owner_repositories ALTER COLUMN id SET DEFAULT nextval('public.code_owner_repositories_id_seq'::regclass);
 
 
 --
@@ -1474,6 +1516,48 @@ ALTER TABLE ONLY public.events ALTER COLUMN id SET DEFAULT nextval('public.event
 
 
 --
+-- Name: events_pull_request_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_request_comments ALTER COLUMN id SET DEFAULT nextval('public.events_pull_request_comments_id_seq'::regclass);
+
+
+--
+-- Name: events_pull_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_requests ALTER COLUMN id SET DEFAULT nextval('public.events_pull_requests_id_seq'::regclass);
+
+
+--
+-- Name: events_pushes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes ALTER COLUMN id SET DEFAULT nextval('public.events_pushes_id_seq'::regclass);
+
+
+--
+-- Name: events_repositories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_repositories ALTER COLUMN id SET DEFAULT nextval('public.events_repositories_id_seq'::regclass);
+
+
+--
+-- Name: events_review_comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_review_comments ALTER COLUMN id SET DEFAULT nextval('public.events_review_comments_id_seq'::regclass);
+
+
+--
+-- Name: events_reviews id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_reviews ALTER COLUMN id SET DEFAULT nextval('public.events_reviews_id_seq'::regclass);
+
+
+--
 -- Name: exception_hunter_error_groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1488,17 +1572,17 @@ ALTER TABLE ONLY public.exception_hunter_errors ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: external_projects id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.external_projects ALTER COLUMN id SET DEFAULT nextval('public.external_projects_id_seq'::regclass);
-
-
---
 -- Name: external_pull_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_pull_requests ALTER COLUMN id SET DEFAULT nextval('public.external_pull_requests_id_seq'::regclass);
+
+
+--
+-- Name: external_repositories id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_repositories ALTER COLUMN id SET DEFAULT nextval('public.external_repositories_id_seq'::regclass);
 
 
 --
@@ -1520,6 +1604,13 @@ ALTER TABLE ONLY public.jira_boards ALTER COLUMN id SET DEFAULT nextval('public.
 --
 
 ALTER TABLE ONLY public.jira_issues ALTER COLUMN id SET DEFAULT nextval('public.jira_issues_id_seq'::regclass);
+
+
+--
+-- Name: jira_sprints id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints ALTER COLUMN id SET DEFAULT nextval('public.jira_sprints_id_seq'::regclass);
 
 
 --
@@ -1558,45 +1649,10 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
--- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects ALTER COLUMN id SET DEFAULT nextval('public.projects_id_seq'::regclass);
-
-
---
--- Name: pull_request_comments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pull_request_comments ALTER COLUMN id SET DEFAULT nextval('public.pull_request_comments_id_seq'::regclass);
-
-
---
--- Name: pull_requests id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pull_requests ALTER COLUMN id SET DEFAULT nextval('public.pull_requests_id_seq'::regclass);
-
-
---
--- Name: pushes id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pushes ALTER COLUMN id SET DEFAULT nextval('public.pushes_id_seq'::regclass);
-
-
---
 -- Name: repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repositories ALTER COLUMN id SET DEFAULT nextval('public.repositories_id_seq'::regclass);
-
-
---
--- Name: review_comments id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.review_comments ALTER COLUMN id SET DEFAULT nextval('public.review_comments_id_seq'::regclass);
 
 
 --
@@ -1611,13 +1667,6 @@ ALTER TABLE ONLY public.review_requests ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.review_turnarounds ALTER COLUMN id SET DEFAULT nextval('public.review_turnarounds_id_seq'::regclass);
-
-
---
--- Name: reviews id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.reviews_id_seq'::regclass);
 
 
 --
@@ -1642,10 +1691,10 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: users_projects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users_repositories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users_projects ALTER COLUMN id SET DEFAULT nextval('public.users_projects_id_seq'::regclass);
+ALTER TABLE ONLY public.users_repositories ALTER COLUMN id SET DEFAULT nextval('public.users_repositories_id_seq'::regclass);
 
 
 --
@@ -1689,19 +1738,19 @@ ALTER TABLE ONLY public.blog_posts
 
 
 --
--- Name: code_climate_project_metrics code_climate_project_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics code_climate_repository_metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics
-    ADD CONSTRAINT code_climate_project_metrics_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.code_climate_repository_metrics
+    ADD CONSTRAINT code_climate_repository_metrics_pkey PRIMARY KEY (id);
 
 
 --
--- Name: code_owner_projects code_owner_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories code_owner_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
-    ADD CONSTRAINT code_owner_projects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.code_owner_repositories
+    ADD CONSTRAINT code_owner_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1729,6 +1778,54 @@ ALTER TABLE ONLY public.events
 
 
 --
+-- Name: events_pull_request_comments events_pull_request_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_request_comments
+    ADD CONSTRAINT events_pull_request_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pull_requests events_pull_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_requests
+    ADD CONSTRAINT events_pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_pushes events_pushes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes
+    ADD CONSTRAINT events_pushes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_repositories events_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_repositories
+    ADD CONSTRAINT events_repositories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_review_comments events_review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_review_comments
+    ADD CONSTRAINT events_review_comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: events_reviews events_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_reviews
+    ADD CONSTRAINT events_reviews_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: exception_hunter_error_groups exception_hunter_error_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1745,19 +1842,19 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 
 --
--- Name: external_projects external_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.external_projects
-    ADD CONSTRAINT external_projects_pkey PRIMARY KEY (id);
-
-
---
 -- Name: external_pull_requests external_pull_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.external_pull_requests
     ADD CONSTRAINT external_pull_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: external_repositories external_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.external_repositories
+    ADD CONSTRAINT external_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1782,6 +1879,14 @@ ALTER TABLE ONLY public.jira_boards
 
 ALTER TABLE ONLY public.jira_issues
     ADD CONSTRAINT jira_issues_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_sprints jira_sprints_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints
+    ADD CONSTRAINT jira_sprints_pkey PRIMARY KEY (id);
 
 
 --
@@ -1825,51 +1930,11 @@ ALTER TABLE ONLY public.products
 
 
 --
--- Name: projects projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
-
-
---
--- Name: pull_request_comments pull_request_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pull_request_comments
-    ADD CONSTRAINT pull_request_comments_pkey PRIMARY KEY (id);
-
-
---
--- Name: pull_requests pull_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pull_requests
-    ADD CONSTRAINT pull_requests_pkey PRIMARY KEY (id);
-
-
---
--- Name: pushes pushes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pushes
-    ADD CONSTRAINT pushes_pkey PRIMARY KEY (id);
-
-
---
 -- Name: repositories repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.repositories
     ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
-
-
---
--- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.review_comments
-    ADD CONSTRAINT review_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -1886,14 +1951,6 @@ ALTER TABLE ONLY public.review_requests
 
 ALTER TABLE ONLY public.review_turnarounds
     ADD CONSTRAINT review_turnarounds_pkey PRIMARY KEY (id);
-
-
---
--- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.reviews
-    ADD CONSTRAINT reviews_pkey PRIMARY KEY (id);
 
 
 --
@@ -1929,11 +1986,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users_projects users_projects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users_repositories users_repositories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.users_projects
-    ADD CONSTRAINT users_projects_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.users_repositories
+    ADD CONSTRAINT users_repositories_pkey PRIMARY KEY (id);
 
 
 --
@@ -1986,24 +2043,24 @@ CREATE INDEX index_blog_post_technologies_on_technology_id ON public.blog_post_t
 
 
 --
--- Name: index_code_climate_project_metrics_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_climate_repository_metrics_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_climate_project_metrics_on_project_id ON public.code_climate_project_metrics USING btree (project_id);
-
-
---
--- Name: index_code_owner_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_code_owner_projects_on_project_id ON public.code_owner_projects USING btree (project_id);
+CREATE INDEX index_code_climate_repository_metrics_on_repository_id ON public.code_climate_repository_metrics USING btree (repository_id);
 
 
 --
--- Name: index_code_owner_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_code_owner_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_code_owner_projects_on_user_id ON public.code_owner_projects USING btree (user_id);
+CREATE INDEX index_code_owner_repositories_on_repository_id ON public.code_owner_repositories USING btree (repository_id);
+
+
+--
+-- Name: index_code_owner_repositories_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_code_owner_repositories_on_user_id ON public.code_owner_repositories USING btree (user_id);
 
 
 --
@@ -2028,10 +2085,164 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 
 
 --
--- Name: index_events_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_events_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_events_on_project_id ON public.events USING btree (project_id);
+CREATE INDEX index_events_on_repository_id ON public.events USING btree (repository_id);
+
+
+--
+-- Name: index_events_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_request_comments_on_deleted_at ON public.events_pull_request_comments USING btree (deleted_at);
+
+
+--
+-- Name: index_events_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_request_comments_on_owner_id ON public.events_pull_request_comments USING btree (owner_id);
+
+
+--
+-- Name: index_events_pull_request_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_request_comments_on_pull_request_id ON public.events_pull_request_comments USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_pull_request_comments_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_request_comments_on_review_request_id ON public.events_pull_request_comments USING btree (review_request_id);
+
+
+--
+-- Name: index_events_pull_request_comments_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_request_comments_on_state ON public.events_pull_request_comments USING btree (state);
+
+
+--
+-- Name: index_events_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_events_pull_requests_on_github_id ON public.events_pull_requests USING btree (github_id);
+
+
+--
+-- Name: index_events_pull_requests_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_requests_on_owner_id ON public.events_pull_requests USING btree (owner_id);
+
+
+--
+-- Name: index_events_pull_requests_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_requests_on_repository_id ON public.events_pull_requests USING btree (repository_id);
+
+
+--
+-- Name: index_events_pull_requests_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pull_requests_on_state ON public.events_pull_requests USING btree (state);
+
+
+--
+-- Name: index_events_pushes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pushes_on_pull_request_id ON public.events_pushes USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_pushes_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pushes_on_repository_id ON public.events_pushes USING btree (repository_id);
+
+
+--
+-- Name: index_events_pushes_on_sender_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_pushes_on_sender_id ON public.events_pushes USING btree (sender_id);
+
+
+--
+-- Name: index_events_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_repositories_on_repository_id ON public.events_repositories USING btree (repository_id);
+
+
+--
+-- Name: index_events_repositories_on_sender_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_repositories_on_sender_id ON public.events_repositories USING btree (sender_id);
+
+
+--
+-- Name: index_events_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_review_comments_on_owner_id ON public.events_review_comments USING btree (owner_id);
+
+
+--
+-- Name: index_events_review_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_review_comments_on_pull_request_id ON public.events_review_comments USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_review_comments_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_review_comments_on_state ON public.events_review_comments USING btree (state);
+
+
+--
+-- Name: index_events_reviews_on_owner_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_owner_id ON public.events_reviews USING btree (owner_id);
+
+
+--
+-- Name: index_events_reviews_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_pull_request_id ON public.events_reviews USING btree (pull_request_id);
+
+
+--
+-- Name: index_events_reviews_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_repository_id ON public.events_reviews USING btree (repository_id);
+
+
+--
+-- Name: index_events_reviews_on_review_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_review_request_id ON public.events_reviews USING btree (review_request_id);
+
+
+--
+-- Name: index_events_reviews_on_state; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_events_reviews_on_state ON public.events_reviews USING btree (state);
 
 
 --
@@ -2056,17 +2267,10 @@ CREATE INDEX index_exception_hunter_errors_on_error_group_id ON public.exception
 
 
 --
--- Name: index_external_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_external_pull_requests_on_external_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_external_projects_on_language_id ON public.external_projects USING btree (language_id);
-
-
---
--- Name: index_external_pull_requests_on_external_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_external_pull_requests_on_external_project_id ON public.external_pull_requests USING btree (external_project_id);
+CREATE INDEX index_external_pull_requests_on_external_repository_id ON public.external_pull_requests USING btree (external_repository_id);
 
 
 --
@@ -2074,6 +2278,13 @@ CREATE INDEX index_external_pull_requests_on_external_project_id ON public.exter
 --
 
 CREATE INDEX index_external_pull_requests_on_owner_id ON public.external_pull_requests USING btree (owner_id);
+
+
+--
+-- Name: index_external_repositories_on_language_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_external_repositories_on_language_id ON public.external_repositories USING btree (language_id);
 
 
 --
@@ -2095,6 +2306,13 @@ CREATE INDEX index_jira_boards_on_product_id ON public.jira_boards USING btree (
 --
 
 CREATE INDEX index_jira_issues_on_jira_board_id ON public.jira_issues USING btree (jira_board_id);
+
+
+--
+-- Name: index_jira_sprints_on_jira_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_sprints_on_jira_board_id ON public.jira_sprints USING btree (jira_board_id);
 
 
 --
@@ -2140,136 +2358,17 @@ CREATE INDEX index_products_on_name ON public.products USING btree (name);
 
 
 --
--- Name: index_projects_on_language_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repositories_on_language_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_projects_on_language_id ON public.projects USING btree (language_id);
-
-
---
--- Name: index_projects_on_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_projects_on_product_id ON public.projects USING btree (product_id);
+CREATE INDEX index_repositories_on_language_id ON public.repositories USING btree (language_id);
 
 
 --
--- Name: index_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
+-- Name: index_repositories_on_product_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_pull_request_comments_on_deleted_at ON public.pull_request_comments USING btree (deleted_at);
-
-
---
--- Name: index_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_request_comments_on_owner_id ON public.pull_request_comments USING btree (owner_id);
-
-
---
--- Name: index_pull_request_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_request_comments_on_pull_request_id ON public.pull_request_comments USING btree (pull_request_id);
-
-
---
--- Name: index_pull_request_comments_on_review_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_request_comments_on_review_request_id ON public.pull_request_comments USING btree (review_request_id);
-
-
---
--- Name: index_pull_request_comments_on_state; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_request_comments_on_state ON public.pull_request_comments USING btree (state);
-
-
---
--- Name: index_pull_requests_on_github_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_pull_requests_on_github_id ON public.pull_requests USING btree (github_id);
-
-
---
--- Name: index_pull_requests_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_requests_on_owner_id ON public.pull_requests USING btree (owner_id);
-
-
---
--- Name: index_pull_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_requests_on_project_id ON public.pull_requests USING btree (project_id);
-
-
---
--- Name: index_pull_requests_on_state; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pull_requests_on_state ON public.pull_requests USING btree (state);
-
-
---
--- Name: index_pushes_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pushes_on_project_id ON public.pushes USING btree (project_id);
-
-
---
--- Name: index_pushes_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pushes_on_pull_request_id ON public.pushes USING btree (pull_request_id);
-
-
---
--- Name: index_pushes_on_sender_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_pushes_on_sender_id ON public.pushes USING btree (sender_id);
-
-
---
--- Name: index_repositories_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_project_id ON public.repositories USING btree (project_id);
-
-
---
--- Name: index_repositories_on_sender_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_repositories_on_sender_id ON public.repositories USING btree (sender_id);
-
-
---
--- Name: index_review_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_review_comments_on_owner_id ON public.review_comments USING btree (owner_id);
-
-
---
--- Name: index_review_comments_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_review_comments_on_pull_request_id ON public.review_comments USING btree (pull_request_id);
-
-
---
--- Name: index_review_comments_on_state; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_review_comments_on_state ON public.review_comments USING btree (state);
+CREATE INDEX index_repositories_on_product_id ON public.repositories USING btree (product_id);
 
 
 --
@@ -2280,17 +2379,17 @@ CREATE INDEX index_review_requests_on_owner_id ON public.review_requests USING b
 
 
 --
--- Name: index_review_requests_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_review_requests_on_project_id ON public.review_requests USING btree (project_id);
-
-
---
 -- Name: index_review_requests_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_review_requests_on_pull_request_id ON public.review_requests USING btree (pull_request_id);
+
+
+--
+-- Name: index_review_requests_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_requests_on_repository_id ON public.review_requests USING btree (repository_id);
 
 
 --
@@ -2315,41 +2414,6 @@ CREATE INDEX index_review_turnarounds_on_review_request_id ON public.review_turn
 
 
 --
--- Name: index_reviews_on_owner_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reviews_on_owner_id ON public.reviews USING btree (owner_id);
-
-
---
--- Name: index_reviews_on_project_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reviews_on_project_id ON public.reviews USING btree (project_id);
-
-
---
--- Name: index_reviews_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reviews_on_pull_request_id ON public.reviews USING btree (pull_request_id);
-
-
---
--- Name: index_reviews_on_review_request_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reviews_on_review_request_id ON public.reviews USING btree (review_request_id);
-
-
---
--- Name: index_reviews_on_state; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_reviews_on_state ON public.reviews USING btree (state);
-
-
---
 -- Name: index_settings_on_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2364,25 +2428,33 @@ CREATE UNIQUE INDEX index_users_on_github_id ON public.users USING btree (github
 
 
 --
--- Name: index_users_projects_on_project_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_users_repositories_on_repository_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_users_projects_on_project_id ON public.users_projects USING btree (project_id);
-
-
---
--- Name: index_users_projects_on_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_users_projects_on_user_id ON public.users_projects USING btree (user_id);
+CREATE INDEX index_users_repositories_on_repository_id ON public.users_repositories USING btree (repository_id);
 
 
 --
--- Name: review_comments fk_rails_04feb57025; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: index_users_repositories_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.review_comments
-    ADD CONSTRAINT fk_rails_04feb57025 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+CREATE INDEX index_users_repositories_on_user_id ON public.users_repositories USING btree (user_id);
+
+
+--
+-- Name: events fk_rails_022a085166; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events
+    ADD CONSTRAINT fk_rails_022a085166 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_review_comments fk_rails_04feb57025; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_review_comments
+    ADD CONSTRAINT fk_rails_04feb57025 FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2402,27 +2474,35 @@ ALTER TABLE ONLY public.jira_issues
 
 
 --
--- Name: pull_request_comments fk_rails_161aa5ffd0; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_pull_request_comments fk_rails_161aa5ffd0; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pull_request_comments
+ALTER TABLE ONLY public.events_pull_request_comments
     ADD CONSTRAINT fk_rails_161aa5ffd0 FOREIGN KEY (owner_id) REFERENCES public.users(id);
 
 
 --
--- Name: projects fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: repositories fk_rails_21e11c2480; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.projects
+ALTER TABLE ONLY public.repositories
     ADD CONSTRAINT fk_rails_21e11c2480 FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
 --
--- Name: pushes fk_rails_2981d8bb5a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories fk_rails_22881d1001; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pushes
-    ADD CONSTRAINT fk_rails_2981d8bb5a FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+ALTER TABLE ONLY public.code_owner_repositories
+    ADD CONSTRAINT fk_rails_22881d1001 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pushes fk_rails_2981d8bb5a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes
+    ADD CONSTRAINT fk_rails_2981d8bb5a FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2438,7 +2518,7 @@ ALTER TABLE ONLY public.blog_post_technologies
 --
 
 ALTER TABLE ONLY public.external_pull_requests
-    ADD CONSTRAINT fk_rails_2c98f94e16 FOREIGN KEY (external_project_id) REFERENCES public.external_projects(id);
+    ADD CONSTRAINT fk_rails_2c98f94e16 FOREIGN KEY (external_repository_id) REFERENCES public.external_repositories(id);
 
 
 --
@@ -2450,19 +2530,35 @@ ALTER TABLE ONLY public.review_turnarounds
 
 
 --
--- Name: repositories fk_rails_36d1823ddd; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_repositories fk_rails_36d1823ddd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repositories
-    ADD CONSTRAINT fk_rails_36d1823ddd FOREIGN KEY (project_id) REFERENCES public.projects(id);
+ALTER TABLE ONLY public.events_repositories
+    ADD CONSTRAINT fk_rails_36d1823ddd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: pushes fk_rails_3f633d82fd; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_pull_requests fk_rails_3c427fd106; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pushes
-    ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (project_id) REFERENCES public.projects(id);
+ALTER TABLE ONLY public.events_pull_requests
+    ADD CONSTRAINT fk_rails_3c427fd106 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pushes fk_rails_3f633d82fd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes
+    ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pushes fk_rails_4767e99b87; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pushes
+    ADD CONSTRAINT fk_rails_4767e99b87 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2474,43 +2570,67 @@ ALTER TABLE ONLY public.blog_post_technologies
 
 
 --
--- Name: reviews fk_rails_4862a15e3a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_reviews fk_rails_4862a15e3a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reviews
-    ADD CONSTRAINT fk_rails_4862a15e3a FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+ALTER TABLE ONLY public.events_reviews
+    ADD CONSTRAINT fk_rails_4862a15e3a FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
--- Name: review_comments fk_rails_4a92157916; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_review_comments fk_rails_4a92157916; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.review_comments
+ALTER TABLE ONLY public.events_review_comments
     ADD CONSTRAINT fk_rails_4a92157916 FOREIGN KEY (owner_id) REFERENCES public.users(id);
 
 
 --
--- Name: code_climate_project_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: review_requests fk_rails_4f74da58c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_climate_project_metrics
-    ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (project_id) REFERENCES public.projects(id);
-
-
---
--- Name: pull_requests fk_rails_5df700b412; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.pull_requests
-    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (project_id) REFERENCES public.projects(id);
+ALTER TABLE ONLY public.review_requests
+    ADD CONSTRAINT fk_rails_4f74da58c1 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: pull_requests fk_rails_658eb0bfb4; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: external_pull_requests fk_rails_51325610fd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pull_requests
+ALTER TABLE ONLY public.external_pull_requests
+    ADD CONSTRAINT fk_rails_51325610fd FOREIGN KEY (external_repository_id) REFERENCES public.external_repositories(id);
+
+
+--
+-- Name: code_climate_repository_metrics fk_rails_58be219c6d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_climate_repository_metrics
+    ADD CONSTRAINT fk_rails_58be219c6d FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pull_requests fk_rails_5df700b412; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_requests
+    ADD CONSTRAINT fk_rails_5df700b412 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_pull_requests fk_rails_658eb0bfb4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_pull_requests
     ADD CONSTRAINT fk_rails_658eb0bfb4 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: events_reviews fk_rails_65b0ea4a71; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_reviews
+    ADD CONSTRAINT fk_rails_65b0ea4a71 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2522,26 +2642,42 @@ ALTER TABLE ONLY public.languages
 
 
 --
--- Name: code_owner_projects fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_climate_repository_metrics fk_rails_8af0265fff; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
+ALTER TABLE ONLY public.code_climate_repository_metrics
+    ADD CONSTRAINT fk_rails_8af0265fff FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: code_owner_repositories fk_rails_8b5e8dfa3f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.code_owner_repositories
     ADD CONSTRAINT fk_rails_8b5e8dfa3f FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
--- Name: code_owner_projects fk_rails_98029d380a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: code_owner_repositories fk_rails_98029d380a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.code_owner_projects
-    ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (project_id) REFERENCES public.projects(id);
+ALTER TABLE ONLY public.code_owner_repositories
+    ADD CONSTRAINT fk_rails_98029d380a FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: repositories fk_rails_9dbb09e26a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: users_repositories fk_rails_9bab11adb3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.repositories
+ALTER TABLE ONLY public.users_repositories
+    ADD CONSTRAINT fk_rails_9bab11adb3 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: events_repositories fk_rails_9dbb09e26a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_repositories
     ADD CONSTRAINT fk_rails_9dbb09e26a FOREIGN KEY (sender_id) REFERENCES public.users(id);
 
 
@@ -2554,19 +2690,27 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
--- Name: pushes fk_rails_bc14f07184; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_pushes fk_rails_bc14f07184; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pushes
+ALTER TABLE ONLY public.events_pushes
     ADD CONSTRAINT fk_rails_bc14f07184 FOREIGN KEY (sender_id) REFERENCES public.users(id);
 
 
 --
--- Name: reviews fk_rails_bcf65590e4; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_reviews fk_rails_bcf65590e4; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.reviews
+ALTER TABLE ONLY public.events_reviews
     ADD CONSTRAINT fk_rails_bcf65590e4 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: events_repositories fk_rails_bd0a1859aa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.events_repositories
+    ADD CONSTRAINT fk_rails_bd0a1859aa FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
@@ -2586,6 +2730,14 @@ ALTER TABLE ONLY public.external_pull_requests
 
 
 --
+-- Name: jira_sprints fk_rails_d195b736d0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_sprints
+    ADD CONSTRAINT fk_rails_d195b736d0 FOREIGN KEY (jira_board_id) REFERENCES public.jira_boards(id);
+
+
+--
 -- Name: review_requests fk_rails_d83bae1089; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2598,15 +2750,15 @@ ALTER TABLE ONLY public.review_requests
 --
 
 ALTER TABLE ONLY public.review_requests
-    ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (project_id) REFERENCES public.projects(id);
+    ADD CONSTRAINT fk_rails_dd17aeab6c FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
 --
--- Name: pull_request_comments fk_rails_e74e223f63; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: events_pull_request_comments fk_rails_e74e223f63; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.pull_request_comments
-    ADD CONSTRAINT fk_rails_e74e223f63 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+ALTER TABLE ONLY public.events_pull_request_comments
+    ADD CONSTRAINT fk_rails_e74e223f63 FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2630,7 +2782,7 @@ ALTER TABLE ONLY public.exception_hunter_errors
 --
 
 ALTER TABLE ONLY public.merge_times
-    ADD CONSTRAINT fk_rails_f002296adb FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+    ADD CONSTRAINT fk_rails_f002296adb FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2638,7 +2790,7 @@ ALTER TABLE ONLY public.merge_times
 --
 
 ALTER TABLE ONLY public.review_requests
-    ADD CONSTRAINT fk_rails_feb865e207 FOREIGN KEY (pull_request_id) REFERENCES public.pull_requests(id);
+    ADD CONSTRAINT fk_rails_feb865e207 FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2779,6 +2931,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210726184449'),
 ('20210810122756'),
 ('20210810123929'),
-('20210810184003');
+('20210810184003'),
+('20210810202705'),
+('20210811165206'),
+('20210827172747'),
+('20210830200109'),
+('20210830200129'),
+('20210830211654'),
+('20210902140638'),
+('20210902182225');
 
 

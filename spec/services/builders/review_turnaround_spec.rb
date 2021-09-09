@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Builders::ReviewTurnaround do
   describe '.call' do
-    let(:project) { create(:project, language: Language.first) }
+    let(:repository) { create(:repository, language: Language.first) }
     let(:vita) { create(:user, login: 'santiagovidal') }
     let(:santib) { create(:user, login: 'santib') }
-    let(:pr) { create(:pull_request, owner: vita, project: project) }
+    let(:pr) { create(:pull_request, owner: vita, repository: repository) }
 
     before do
       allow_any_instance_of(Builders::ReviewOrCommentTurnaround)
@@ -21,7 +21,7 @@ RSpec.describe Builders::ReviewTurnaround do
         create(:review_request,
                owner: vita,
                reviewer: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                created_at: monday)
       end
@@ -43,7 +43,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:action) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: thursday)
@@ -75,7 +75,7 @@ RSpec.describe Builders::ReviewTurnaround do
         create(:review_request,
                owner: vita,
                reviewer: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                created_at: friday)
       end
@@ -93,7 +93,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:action) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: next_monday)
@@ -125,7 +125,7 @@ RSpec.describe Builders::ReviewTurnaround do
         create(:review_request,
                owner: vita,
                reviewer: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                created_at: friday)
       end
@@ -142,7 +142,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:action) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: sunday)
@@ -179,7 +179,7 @@ RSpec.describe Builders::ReviewTurnaround do
         create(:review_request,
                owner: vita,
                reviewer: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                created_at: wednesday_past_week)
       end
@@ -198,7 +198,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:action) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: thursday_next_week)
@@ -235,7 +235,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:review) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: thursday + 1.hour)
@@ -250,7 +250,7 @@ RSpec.describe Builders::ReviewTurnaround do
       let!(:review) do
         create(:review,
                owner: santib,
-               project: project,
+               repository: repository,
                pull_request: pr,
                review_request: review_request,
                opened_at: thursday)

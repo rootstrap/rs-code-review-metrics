@@ -11,12 +11,16 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  handleable_id   :bigint
-#  project_id      :bigint           not null
+#  repository_id   :bigint           not null
 #
 # Indexes
 #
 #  index_events_on_handleable_type_and_handleable_id  (handleable_type,handleable_id)
-#  index_events_on_project_id                         (project_id)
+#  index_events_on_repository_id                      (repository_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (repository_id => repositories.id)
 #
 
 class Event < ApplicationRecord
@@ -25,7 +29,7 @@ class Event < ApplicationRecord
   TYPES = %w[pull_request review review_comment push repository].freeze
 
   belongs_to :handleable, polymorphic: true, optional: true
-  belongs_to :project
+  belongs_to :repository
 
   validates :name, :data, presence: true
 end

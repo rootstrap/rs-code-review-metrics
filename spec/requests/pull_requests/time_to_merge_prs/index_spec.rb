@@ -1,29 +1,29 @@
 require 'rails_helper'
 
 RSpec.describe 'Time To Merge PRs' do
-  let(:ruby_project)  { create(:project, language: Language.find_by(name: 'ruby')) }
-  let(:node_project)  { create(:project, language: Language.find_by(name: 'nodejs')) }
+  let(:ruby_repository)  { create(:repository, language: Language.find_by(name: 'ruby')) }
+  let(:node_repository)  { create(:repository, language: Language.find_by(name: 'nodejs')) }
   let(:subject) do
     get department_time_to_merge_prs_path(department_name: 'backend'), params: params
   end
 
   let!(:first_ruby_pull_request) do
     create(:pull_request,
-           project: ruby_project,
+           repository: ruby_repository,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 6.hours)
   end
 
   let!(:node_pull_request) do
     create(:pull_request,
-           project: node_project,
+           repository: node_repository,
            html_url: 'node_pr_url',
            opened_at: Time.zone.now - 14.hours)
   end
 
   let!(:second_ruby_pull_request) do
     create(:pull_request,
-           project: ruby_project,
+           repository: ruby_repository,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 26.hours)
   end
@@ -56,7 +56,7 @@ RSpec.describe 'Time To Merge PRs' do
       expect(assigns(:pull_requests)).not_to be_empty
     end
 
-    it 'returns data only for projects filtered by the lang parameter' do
+    it 'returns data only for repositories filtered by the lang parameter' do
       assigns(:pull_requests).each do |_, pull_request_url|
         expect(pull_request_url).not_to include(node_pull_request.html_url)
       end
@@ -87,7 +87,7 @@ RSpec.describe 'Time To Merge PRs' do
       expect(assigns(:pull_requests)).not_to be_empty
     end
 
-    it 'returns data only for all projects' do
+    it 'returns data only for all repositories' do
       assigns(:pull_requests).each do |_, pull_request_url|
         expect(all_pull_requests_url).to include(pull_request_url.first)
       end

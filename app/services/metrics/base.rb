@@ -33,8 +33,8 @@ module Metrics
       first..last.end_of_day
     end
 
-    def find_user_project(user_id, project_id)
-      ::UsersProject.find_by(user_id: user_id, project_id: project_id)
+    def find_user_repository(user_id, repository_id)
+      ::UsersRepository.find_by(user_id: user_id, repository_id: repository_id)
     end
   end
 end

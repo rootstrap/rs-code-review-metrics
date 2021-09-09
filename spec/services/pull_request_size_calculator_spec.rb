@@ -4,8 +4,8 @@ RSpec.describe PullRequestSizeCalculator do
   describe '.call' do
     subject(:pull_request_size) { described_class.call(pull_request) }
 
-    let(:project) { create(:project) }
-    let(:pull_request) { create(:pull_request, project: project) }
+    let(:repository) { create(:repository) }
+    let(:pull_request) { create(:pull_request, repository: repository) }
     let(:pr_file_1) { create(:pull_request_file_payload) }
     let(:pr_file_2) { create(:pull_request_file_payload) }
     let(:pr_file_payloads) { [pr_file_1, pr_file_2] }
@@ -19,7 +19,7 @@ RSpec.describe PullRequestSizeCalculator do
 
     context 'when one of the files matches a file ignoring rule' do
       let(:filename) { 'spec/services/pull_request_size_calculator_spec.rb' }
-      let(:pr_language) { pull_request.project.language }
+      let(:pr_language) { pull_request.repository.language }
       let(:pr_file_2) { create(:pull_request_file_payload, filename: filename) }
 
       before { create(:file_ignoring_rule, regex: 'spec/', language: pr_language) }

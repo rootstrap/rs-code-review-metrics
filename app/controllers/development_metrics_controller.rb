@@ -12,14 +12,14 @@ class DevelopmentMetricsController < ApplicationController
     build_product_metrics(product.id, Product.name)
   end
 
-  def projects
+  def repositories
     return if metric_params.blank?
 
-    build_metrics(project.id, Project.name)
+    build_metrics(repository.id, Repository.name)
     build_metrics_definitions
 
-    @code_owners = project.code_owners.pluck(:login)
-    @code_climate = code_climate_project_summary
+    @code_owners = repository.code_owners.pluck(:login)
+    @code_climate = code_climate_repository_summary
   end
 
   def departments
@@ -69,6 +69,7 @@ class DevelopmentMetricsController < ApplicationController
 
     defect_escape_rate(metrics)
     development_cycle(metrics)
+    planned_to_done(metrics)
   end
 
   def build_metrics_definitions
@@ -82,6 +83,7 @@ class DevelopmentMetricsController < ApplicationController
 
     show_defect_escape_rate
     show_development_cycle
+    show_planned_to_done
   end
 
   def metrics_to_show
@@ -90,6 +92,8 @@ class DevelopmentMetricsController < ApplicationController
       @show_defect_escape_rate = true
     when :development_cycle
       @show_development_cycle = true
+    when :planned_to_done
+      @show_planned_to_done = true
     end
   end
 
@@ -107,12 +111,23 @@ class DevelopmentMetricsController < ApplicationController
     @development_cycle_definition = MetricDefinition.find_by(code: :development_cycle)
   end
 
+  def planned_to_done(metrics)
+    return unless @show_planned_to_done
+
+    @planned_to_done = metrics[:planned_to_done]
+    @planned_to_done_definition = MetricDefinition.find_by(code: :planned_to_done)
+  end
+
   def show_defect_escape_rate
     @show_defect_escape_rate ||= product_action
   end
 
   def show_development_cycle
     @show_development_cycle ||= product_action
+  end
+
+  def show_planned_to_done
+    @show_planned_to_done ||= product_action
   end
 
   def product_action
@@ -123,8 +138,8 @@ class DevelopmentMetricsController < ApplicationController
     @product ||= Product.find_by(name: params[:product_name])
   end
 
-  def project
-    @project ||= Project.find_by(name: params[:project_name])
+  def repository
+    @repository ||= Repository.find_by(name: params[:repository_name])
   end
 
   def department
@@ -139,12 +154,12 @@ class DevelopmentMetricsController < ApplicationController
     @action ||= params[:action]
   end
 
-  def code_climate_project_summary
-    CodeClimateSummaryRetriever.call(project.id)
+  def code_climate_repository_summary
+    CodeClimateSummaryRetriever.call(repository.id)
   end
 
   def code_climate_department_summary
-    CodeClimate::ProjectsSummaryService.call(
+    CodeClimate::RepositoriesSummaryService.call(
       department: department,
       from: metric_params[:period],
       technologies: []

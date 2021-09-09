@@ -17,10 +17,10 @@ Rails.application.routes.draw do
         resources :time_to_second_review_prs, only: :index, module: :pull_requests
       end
       resources :users, only: [] do
-        resources :projects, only: :index, controller: 'users/projects'
+        resources :repositories, only: :index, controller: 'users/repositories'
       end
 
-      get 'projects'
+      get 'repositories'
       get 'departments'
       get 'users'
       namespace :code_climate do
@@ -33,7 +33,7 @@ Rails.application.routes.draw do
     get 'products_metrics', on: :collection
   end
   resources :departments, only: [], param: :name do
-    namespace :projects do
+    namespace :repositories do
       resources :by_relevance, only: :index, param: :department_name
     end
   end

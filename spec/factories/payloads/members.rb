@@ -1,4 +1,4 @@
-# Project payload
+# Repository payload
 FactoryBot.define do
   factory :members_payload, class: Hash do
     skip_create

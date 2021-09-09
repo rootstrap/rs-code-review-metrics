@@ -13,11 +13,11 @@ module SettingsService
     Setting.enabled('department_per_tech_graph').first&.value == 'true' || false
   end
 
-  def enabled_project_per_user_graph
-    Setting.enabled('project_per_user_graph').first&.value == 'true' || false
+  def enabled_repository_per_user_graph
+    Setting.enabled('repository_per_user_graph').first&.value == 'true' || false
   end
 
-  def enabled_project_codeowners_section
-    Setting.enabled('project_codeowners_section').first&.value == 'true' || false
+  def enabled_repository_codeowners_section
+    Setting.enabled('repository_codeowners_section').first&.value == 'true' || false
   end
 end

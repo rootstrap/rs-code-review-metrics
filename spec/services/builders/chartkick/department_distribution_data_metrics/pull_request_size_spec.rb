@@ -7,20 +7,20 @@ RSpec.describe Builders::Chartkick::DepartmentDistributionDataMetrics::PullReque
     let(:backend_department) { Department.find_by(name: 'backend') }
     let(:frontend_department) { Department.find_by(name: 'frontend') }
 
-    let(:backend_project) { create(:project, language: backend_department.languages.first) }
-    let(:frontend_project) { create(:project, language: frontend_department.languages.first) }
+    let(:backend_repository) { create(:repository, language: backend_department.languages.first) }
+    let(:frontend_repository) { create(:repository, language: frontend_department.languages.first) }
 
     let!(:frontend_pr) do
-      create(:pull_request, project: frontend_project, opened_at: Time.zone.now)
+      create(:pull_request, repository: frontend_repository, opened_at: Time.zone.now)
     end
     let!(:last_week_backend_pr) do
-      create(:pull_request, project: backend_project, opened_at: old_timestamp)
+      create(:pull_request, repository: backend_repository, opened_at: old_timestamp)
     end
     let!(:this_week_backend_pr) do
-      create(:pull_request, project: backend_project, opened_at: Time.zone.now)
+      create(:pull_request, repository: backend_repository, opened_at: Time.zone.now)
     end
     let!(:null_size_pr) do
-      create(:pull_request, project: backend_project, opened_at: Time.zone.now, size: nil)
+      create(:pull_request, repository: backend_repository, opened_at: Time.zone.now, size: nil)
     end
 
     subject(:records_retrieved) do

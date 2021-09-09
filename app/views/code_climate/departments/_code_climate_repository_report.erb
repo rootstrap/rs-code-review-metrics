@@ -1,0 +1,31 @@
+<tr>
+  <td class="align-middle text-center"><%= "#{code_climate[:name]}"%></td>
+  <td class="align-middle text-center">
+    <span class="h6 text-success">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:code_climate_rate], suffix: '' %>
+    </span>
+  </td>
+  <td class="align-middle text-center">
+    <span class="text-success">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:test_coverage], suffix: '%' %>
+    </span>
+  </td>
+  <td class="align-middle text-center">
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:invalid_issues_count], suffix: 'invalid issues' %>
+    </span>
+  </td>
+  <td class="align-middle text-center">
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:wont_fix_issues_count], suffix: "won't fix issues" %>
+    </span>
+  </td>
+  <td class="align-middle text-center">
+    <span class="text-danger">
+      <%= render 'shared/code_climate_metric', metric: code_climate[:open_issues_count], suffix: 'open issues' %>
+    </span>
+  </td>
+  <td class="align-middle text-center">
+    <a class="btn btn-primary" href="<%= repositories_development_metrics_path({repository_name: code_climate[:name], metric: { period: params&.dig(:metric, :period) }}) %>" role="button">See repository</a>
+  </td>
+</tr>

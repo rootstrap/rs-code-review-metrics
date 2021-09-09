@@ -7,8 +7,8 @@ module Builders
         ::Events::Push.create! do |push|
           push.ref = @payload['ref']
           push.sender = find_or_create_user(@payload['sender'])
-          push.project = project
-          find_or_create_user_project(push.project.id, push.sender.id)
+          push.repository = repository
+          find_or_create_user_repository(push.repository.id, push.sender.id)
           push.pull_request = pull_request
         end
       end
@@ -17,14 +17,14 @@ module Builders
         return if tag_ref?
 
         ::Events::PullRequest.find_by(
-          project: project,
+          repository: repository,
           branch: ref_name,
           state: ::Events::PullRequest.states[:open]
         )
       end
 
-      def project
-        @project ||= Builders::Project.call(@payload['repository'])
+      def repository
+        @repository ||= Builders::Repository.call(@payload['repository'])
       end
 
       def tag_ref?

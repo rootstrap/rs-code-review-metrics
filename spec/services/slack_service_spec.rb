@@ -35,16 +35,16 @@ RSpec.describe SlackService do
   end
 
   describe '#code_climate_error' do
-    let(:project) { create(:project) }
+    let(:repository) { create(:repository) }
     let(:error) { kind_of(Faraday::Error) }
 
     let(:message) do
       I18n.t('services.slack.code_climate_error.message',
-             repository: project.name,
+             repository: repository.name,
              error: error)
     end
 
-    let(:subject) { described_class.code_climate_error(project, error) }
+    let(:subject) { described_class.code_climate_error(repository, error) }
 
     context 'when sent to valid channel' do
       before { stub_notification_webhook }

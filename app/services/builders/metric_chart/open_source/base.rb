@@ -18,11 +18,11 @@ module Builders
         end
 
         def entity_metrics(language)
-          language.projects_metrics
+          language.repositories_metrics
         end
 
         def metric_totals_ownable_type
-          ::Project
+          ::Repository
         end
 
         def metric_interval

@@ -38,7 +38,9 @@ module Builders
           metrics = {}
 
           if product_has_jira_board_associated?(@entity_id)
-            metrics.merge!(defect_escape_rate_entities, development_cycle_entities)
+            metrics.merge!(defect_escape_rate_entities,
+                           development_cycle_entities,
+                           planned_to_done_entities)
           end
           metrics
         end
@@ -51,19 +53,23 @@ module Builders
           { development_cycle: %w[development_cycle_average development_cycle_values] }
         end
 
+        def planned_to_done_entities
+          { planned_to_done: %w[planned_to_done_average planned_to_done_values] }
+        end
+
         def product_has_jira_board_associated?(product_id)
           ::Product.find(product_id).jira_board&.present?
         end
       end
 
-      class Project < DevelopmentMetrics
+      class Repository < DevelopmentMetrics
         private
 
         def entities_by_metric
           metrics = {
-            review_turnaround: %w[project users_project project_distribution],
-            merge_time: %w[project users_project project_distribution],
-            pull_request_size: %w[project_distribution]
+            review_turnaround: %w[repository users_repository repository_distribution],
+            merge_time: %w[repository users_repository repository_distribution],
+            pull_request_size: %w[repository_distribution]
           }
           metrics
         end

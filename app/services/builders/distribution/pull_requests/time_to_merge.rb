@@ -19,9 +19,10 @@ module Builders
 
         def merge_times
           @merge_times ||= ::MergeTime.where(created_at: @from.weeks.ago..Time.zone.now)
-                                      .joins(pull_request: { project: { language: :department } })
+                                      .joins(pull_request:
+                                        { repository: { language: :department } })
                                       .where(departments: { name: @department_name })
-                                      .where.not(pull_requests: { html_url: nil })
+                                      .where.not(events_pull_requests: { html_url: nil })
                                       .includes(:pull_request)
         end
 

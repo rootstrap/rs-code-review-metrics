@@ -1,8 +1,8 @@
 module Processors
   class CodeClimateUpdater < BaseService
     def call
-      Project.find_each do |project|
-        CodeClimate::Link.call(project)
+      Repository.find_each do |repository|
+        CodeClimate::Link.call(repository)
       end
     end
   end

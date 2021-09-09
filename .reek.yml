@@ -20,8 +20,7 @@ detectors:
     enabled: true
     exclude: ['GithubService#handle_event',
               'EventBuilders::Review#assign_attrs',
-              'EventsProcessor::ReviewBuilder#self.assign_attrs',
-              'ProjectsController#user_project_metric']
+              'EventsProcessor::ReviewBuilder#self.assign_attrs']
     max_calls: 1
     allow_calls: []
   FeatureEnvy:
@@ -35,7 +34,7 @@ detectors:
   LongParameterList:
     enabled: true
     exclude: ['WordpressApiMocker#stub_single_blog_post_response',
-              'CodeClimate::ProjectSummary']
+              'CodeClimate::RepositorySummary']
     max_params: 4
     overrides:
       initialize:
@@ -78,7 +77,7 @@ detectors:
     max_instance_variables: 9
   TooManyMethods:
     enabled: true
-    exclude: []
+    exclude: ['DevelopmentMetricsController']
     max_methods: 25
   TooManyStatements:
     enabled: true

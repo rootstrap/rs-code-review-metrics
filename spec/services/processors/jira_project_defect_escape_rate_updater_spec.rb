@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
   describe '#call' do
     let(:product) { create(:product) }
-    let(:project) { create(:project, product: product) }
     let(:project_key) { 'TES' }
     let!(:jira_board) { create(:jira_board, product: product, jira_project_key: project_key) }
     let(:last_issue) { JiraIssue.last }
@@ -49,6 +48,25 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
       it 'is set the informed at date' do
         subject
         expect(last_issue.informed_at).to eq(informed_at_date)
+      end
+
+      context 'when the environment needs to be parsed' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'QA - In Staging' }],
+                'created': informed_at_date
+              }
+            }
+          ]
+        end
+
+        it 'is set the qa environment' do
+          subject
+          expect(last_issue.environment).to eq('qa')
+        end
       end
     end
 

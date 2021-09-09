@@ -29,7 +29,7 @@ RSpec.describe ExternalPullRequestsProcessorJob do
 
     it 'saves the repository' do
       expect { described_class.perform_now('hvilloria') }
-        .to change { ExternalProject.count }.by(1)
+        .to change { ExternalRepository.count }.by(1)
     end
 
     it 'saves the pull request for that user' do
@@ -43,7 +43,7 @@ RSpec.describe ExternalPullRequestsProcessorJob do
       stub_get_pull_requests_events(user.login)
     end
 
-    it 'does not save any project' do
+    it 'does not save any repository' do
       expect { described_class.perform_now('hvilloria') }
         .not_to change { ExternalPullRequest.count }
     end

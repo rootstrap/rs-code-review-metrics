@@ -5,7 +5,9 @@ describe DevelopmentMetricsController, type: :controller do
 
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
   let!(:product) { create(:product) }
-  let(:project) { create(:project, name: 'rs-metrics', language: ruby_lang, product: product) }
+  let(:repository) do
+    create(:repository, name: 'rs-metrics', language: ruby_lang, product: product)
+  end
   let!(:jira_board) { create(:jira_board, product: product) }
   let(:beginning_of_day) { Time.zone.today.beginning_of_day }
   let!(:der_metric_definition) { create(:metric_definition, code: :defect_escape_rate) }
@@ -31,7 +33,7 @@ describe DevelopmentMetricsController, type: :controller do
     context 'when metric type and period are valid' do
       let(:params) do
         {
-          project_name: project.name,
+          repository_name: repository.name,
           metric: {
             metric_name: 'review_turnaround',
             period: 'weekly'
@@ -39,8 +41,8 @@ describe DevelopmentMetricsController, type: :controller do
         }
       end
       let(:code_climate_metric) do
-        create :code_climate_project_metric,
-               project: project, code_climate_rate: 'A',
+        create :code_climate_repository_metric,
+               repository: repository, code_climate_rate: 'A',
                invalid_issues_count: 1,
                wont_fix_issues_count: 2
       end
@@ -132,14 +134,14 @@ describe DevelopmentMetricsController, type: :controller do
         end
       end
 
-      context '#projects' do
+      context '#repositories' do
         render_views
 
-        subject { get :projects, params: params }
+        subject { get :repositories, params: params }
 
         let(:params) do
           {
-            project_name: project.name,
+            repository_name: repository.name,
             metric: {
               period: 'weekly'
             }
@@ -169,10 +171,10 @@ describe DevelopmentMetricsController, type: :controller do
       end
 
       context '#departments' do
-        before { params[:department_name] = project.language.department.name }
+        before { params[:department_name] = repository.language.department.name }
 
         it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimate::ProjectsSummaryService)
+          expect(CodeClimate::RepositoriesSummaryService)
             .to receive(:call).and_return(code_climate_metric)
 
           get :departments, params: params

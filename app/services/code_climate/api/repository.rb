@@ -7,7 +7,7 @@ module CodeClimate
                to: :default_branch_most_recent_test_report
 
       def summary
-        ProjectSummary.new(
+        RepositorySummary.new(
           rate: ratings.first,
           issues: issues_collection,
           snapshot_time: snapshot_time,

@@ -1,0 +1,22 @@
+<div class="summary col-md-#{details ? '4' : '12'}">
+  <div class="container p-4">
+    <h3>Summary</h3>
+    <hr>
+    <% if metric && metric[:average] -%>
+      <div class="item-list">
+        <div>
+          <h5>Overall <%= planned_to_done_definition && planned_to_done_definition[:name] %>:</h5>
+          <span class="text-primary">
+                <h2>
+                  <%= metric[:average] %> %
+                </h2>
+              </span>
+        </div>
+      </div>
+    <% else -%>
+      <div class="col-md-12 text-center mt-2">
+        <span class="text-danger">No sprints completed on this period</span>
+      </div>
+    <% end -%>
+  </div>
+</div>

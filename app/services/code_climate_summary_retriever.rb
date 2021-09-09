@@ -1,11 +1,11 @@
 class CodeClimateSummaryRetriever < BaseService
-  attr_reader :project_id
+  attr_reader :repository_id
 
-  def initialize(project_id)
-    @project_id = project_id
+  def initialize(repository_id)
+    @repository_id = repository_id
   end
 
   def call
-    CodeClimateProjectMetric.joins(:project).find_by(projects: { id: project_id })
+    CodeClimateRepositoryMetric.joins(:repository).find_by(repositories: { id: repository_id })
   end
 end

@@ -15,9 +15,9 @@ module Builders
         ::Events::PullRequest.find_by!(github_id: @payload['pull_request']['id'])
       end
 
-      def find_issue_pull_request(project_id)
+      def find_issue_pull_request(repository_id)
         ::Events::PullRequest.find_by!(number: @payload['issue']['number'],
-                                       project_id: project_id)
+                                       repository_id: repository_id)
       end
 
       def find_last_review_request(pull_request, reviewer_id)
@@ -27,8 +27,8 @@ module Builders
         raise Reviews::NoReviewRequestError
       end
 
-      def find_or_create_user_project(project_id, user_id)
-        UsersProject.find_or_create_by!(project_id: project_id, user_id: user_id)
+      def find_or_create_user_repository(repository_id, user_id)
+        UsersRepository.find_or_create_by!(repository_id: repository_id, user_id: user_id)
       end
     end
   end
