@@ -86,6 +86,7 @@ module Builders
             {
               "label": @label_name,
               "fill": false,
+              "lineTension": 0.4,
               "data": @data.values
             }
           ]

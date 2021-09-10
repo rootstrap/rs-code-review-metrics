@@ -69,6 +69,7 @@ describe Builders::Chartkick::GenerateChartImage do
               {
                 "label": product.name,
                 "fill": false,
+                "lineTension": 0.4,
                 "data": data.values
               }
             ]
