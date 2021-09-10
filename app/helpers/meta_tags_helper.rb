@@ -1,19 +1,5 @@
 module MetaTagsHelper
   def meta_title
-    title_for_metrics
-  end
-
-  def meta_description
-    description_for_metrics
-  end
-
-  def meta_image
-    generate_url_image if current_page?(products_metrics_development_metrics_path)
-  end
-
-  private
-
-  def title_for_metrics
     if current_page?(products_development_metrics_path)
       product_name.present? ? "#{product_name} summary" : default_description
     elsif current_page?(products_metrics_development_metrics_path)
@@ -22,6 +8,24 @@ module MetaTagsHelper
       title_for_pages
     end
   end
+
+  def meta_description
+    if current_page?(products_development_metrics_path)
+      product_name.present? ? product_summary_description : default_description
+    elsif current_page?(products_metrics_development_metrics_path)
+      product_description
+    elsif current_page?(repositories_development_metrics_path)
+      "#{@repository[:name]} summary"
+    else
+      description_for_pages
+    end
+  end
+
+  def meta_image
+    generate_url_image if current_page?(products_metrics_development_metrics_path)
+  end
+
+  private
 
   def title_for_pages
     if current_page?(repositories_development_metrics_path)
@@ -34,18 +38,6 @@ module MetaTagsHelper
       'Tech Blog visits'
     else
       default_description
-    end
-  end
-
-  def description_for_metrics
-    if current_page?(products_development_metrics_path)
-      product_name.present? ? product_summary_description : default_description
-    elsif current_page?(products_metrics_development_metrics_path)
-      product_description
-    elsif current_page?(repositories_development_metrics_path)
-      "#{@repository[:name]} summary"
-    else
-      description_for_pages
     end
   end
 
