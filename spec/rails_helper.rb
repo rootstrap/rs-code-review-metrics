@@ -88,4 +88,5 @@ RSpec.configure do |config|
   config.include JiraApiMock
   config.include CodeClimateApiMocker
   config.include SlackApiMocker
+  config.include QuickchartApiMocker
 end

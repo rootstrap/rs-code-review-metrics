@@ -120,3 +120,7 @@ Style/BlockComments:
 SkipsModelValidations:
   Exclude:
     - app/services/processors/org_users_updater.rb
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - app/helpers/meta_tags_helper.rb
