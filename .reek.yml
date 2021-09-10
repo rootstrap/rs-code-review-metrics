@@ -34,7 +34,8 @@ detectors:
   LongParameterList:
     enabled: true
     exclude: ['WordpressApiMocker#stub_single_blog_post_response',
-              'CodeClimate::RepositorySummary']
+              'CodeClimate::RepositorySummary', 
+              'CodeClimate::RepositoriesSummary']
     max_params: 4
     overrides:
       initialize:

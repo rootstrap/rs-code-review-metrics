@@ -19,6 +19,7 @@ describe CodeClimate::RepositoriesSummaryService do
            invalid_issues_count: 0,
            wont_fix_issues_count: 0,
            open_issues_count: 0,
+           test_coverage: 80,
            code_climate_rate: 'A',
            snapshot_time: 2.weeks.ago
 
@@ -27,6 +28,7 @@ describe CodeClimate::RepositoriesSummaryService do
            invalid_issues_count: 2,
            wont_fix_issues_count: 4,
            open_issues_count: 6,
+           test_coverage: 90,
            code_climate_rate: 'Z',
            snapshot_time: 2.weeks.ago
   end
@@ -50,6 +52,10 @@ describe CodeClimate::RepositoriesSummaryService do
 
     it 'shows the open issues count in the selected department' do
       expect(repositories_summary.open_issues_count_average).to eq(3)
+    end
+
+    it 'shows the test coverage in the selected department' do
+      expect(repositories_summary.test_coverage_average).to eq(85)
     end
 
     it 'shows the total of "A" repositories in the selected department' do
@@ -80,6 +86,10 @@ describe CodeClimate::RepositoriesSummaryService do
       expect(repositories_summary.open_issues_count_average).to be_nil
     end
 
+    it 'shows no test coverage' do
+      expect(repositories_summary.test_coverage_average).to be_nil
+    end
+
     it 'shows no total of "A" repositories' do
       expect(repositories_summary.repositories_rated_with('A')).to eq(0)
     end
@@ -102,6 +112,10 @@ describe CodeClimate::RepositoriesSummaryService do
 
     it 'shows the open issues count in the selected department' do
       expect(repositories_summary.open_issues_count_average).to eq(3)
+    end
+
+    it 'shows the test coverage in the selected department' do
+      expect(repositories_summary.test_coverage_average).to eq(85)
     end
 
     it 'shows the total of "A" repositories in the selected department' do
@@ -132,6 +146,10 @@ describe CodeClimate::RepositoriesSummaryService do
       expect(repositories_summary.open_issues_count_average).to be_nil
     end
 
+    it 'shows no test coverage' do
+      expect(repositories_summary.test_coverage_average).to be_nil
+    end
+
     it 'shows no total of "A" repositories' do
       expect(repositories_summary.repositories_rated_with('A')).to eq(0)
     end
@@ -152,6 +170,10 @@ describe CodeClimate::RepositoriesSummaryService do
 
     it 'shows the open issues count in the selected department' do
       expect(repositories_summary.open_issues_count_average).to eq(3)
+    end
+
+    it 'shows the test coverage in the selected department' do
+      expect(repositories_summary.test_coverage_average).to eq(85)
     end
 
     it 'shows the total of "A" repositories in the selected department' do
@@ -180,6 +202,10 @@ describe CodeClimate::RepositoriesSummaryService do
 
     it 'shows no open issues count' do
       expect(repositories_summary.open_issues_count_average).to be_nil
+    end
+
+    it 'shows no test coverage' do
+      expect(repositories_summary.test_coverage_average).to be_nil
     end
 
     it 'shows no total of "A" repositories' do

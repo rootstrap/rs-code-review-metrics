@@ -27,6 +27,9 @@
             <span>Average of <b><%= code_climate.invalid_issues_count_average %> invalid</b> issues</span>
             <span>Average of <b><%= code_climate.wont_fix_issues_count_average %> won't fix</b> issues</span>
             <span>Average of <b><%= code_climate.open_issues_count_average %> open</b> issues</span>
+            <% if code_climate.test_coverage_average.present? -%>
+              <span>Average of <b><%= code_climate.test_coverage_average %>% </b>code coverage</span>
+            <% end -%>
           </div>
           <div>
             <%= link_to 'See report',
