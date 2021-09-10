@@ -1,8 +1,6 @@
 module Builders
   module Chartkick
     class GenerateChartImage
-      QUICKCHART_URL = 'https://quickchart.io/chart/create'.freeze
-
       def initialize(label_name, data, suffix, type)
         @label_name = label_name
         @data = data
@@ -11,9 +9,7 @@ module Builders
       end
 
       def generate_url
-        response = Faraday.post(QUICKCHART_URL,
-                                request_body.to_json,
-                                'Content-Type': 'application/json')
+        response = get_response(request_body)
 
         response_body = JSON.parse(response.body)
 
@@ -25,9 +21,7 @@ module Builders
       end
 
       def generate_url_mutiple_bar
-        response = Faraday.post(QUICKCHART_URL,
-                                request_body_multiple.to_json,
-                                'Content-Type': 'application/json')
+        response = get_response(request_body_multiple)
 
         response_body = JSON.parse(response.body)
 
@@ -39,6 +33,12 @@ module Builders
       end
 
       private
+
+      def get_response(request_body)
+        Faraday.post(ENV['QUICKCHART_URL'],
+                     request_body.to_json,
+                     'Content-Type': 'application/json')
+      end
 
       def request_body
         {

@@ -1,7 +1,11 @@
 module MetaTagsHelper
   def meta_title
     if current_page?(products_development_metrics_path)
-      product_name.present? ? "#{product_name} summary" : default_description
+      if product_name.present?
+        I18n.t('helpers.meta_tags.products_metrics_title', product_name: product_name)
+      else
+        default_description
+      end
     elsif current_page?(products_metrics_development_metrics_path)
       product_name + ' - ' + MetricDefinition.where(code: @query_metric_name).first&.name
     else
@@ -15,7 +19,7 @@ module MetaTagsHelper
     elsif current_page?(products_metrics_development_metrics_path)
       product_description
     elsif current_page?(repositories_development_metrics_path)
-      "#{@repository[:name]} summary"
+      I18n.t('helpers.meta_tags.repository_metrics_title', repository_name: @repository[:name])
     else
       description_for_pages
     end
@@ -29,13 +33,13 @@ module MetaTagsHelper
 
   def title_for_pages
     if current_page?(repositories_development_metrics_path)
-      "#{@repository[:name]} summary"
+      I18n.t('helpers.meta_tags.repository_metrics_title', repository_name: @repository[:name])
     elsif current_page?(open_source_index_path)
-      'Open Source repositories'
+      I18n.t('helpers.meta_tags.open_source_title')
     elsif current_page?(departments_development_metrics_path)
-      @department.present? ? "#{@department[:name]} department metrics" : 'Departments'
+      department_title
     elsif current_page?(tech_blog_path)
-      'Tech Blog visits'
+      I18n.t('helpers.meta_tags.tech_blog_title')
     else
       default_description
     end
@@ -45,9 +49,13 @@ module MetaTagsHelper
     if current_page?(open_source_index_path)
       "#{@total_repositories} open source #{'repository'.pluralize(@total_repositories)}"
     elsif current_page?(departments_development_metrics_path)
-      @department.present? ? "#{@department[:name]} department metrics" : 'Departments'
+      if @department.present?
+        I18n.t('helpers.meta_tags.departments_title', department_name: @department[:name])
+      else
+        I18n.t('helpers.meta_tags.default_departments_title')
+      end
     elsif current_page?(tech_blog_path)
-      "#{@month_to_date_visits} visits this month"
+      I18n.t('helpers.meta_tags.tech_blog_description', month_to_date_visits: @month_to_date_visits)
     else
       default_description
     end
@@ -58,7 +66,15 @@ module MetaTagsHelper
   end
 
   def default_description
-    'Engineering Metrics'
+    I18n.t('helpers.meta_tags.default_description')
+  end
+
+  def department_title
+    if @department.present?
+      I18n.t('helpers.meta_tags.departments_title', department_name: @department[:name])
+    else
+      I18n.t('helpers.meta_tags.default_departments_title')
+    end
   end
 
   def product_description

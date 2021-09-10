@@ -5,7 +5,7 @@ describe MetaTagsHelper, type: :helper do
   let(:repository) { create(:repository) }
   let(:ruby) { Language.find_or_create_by(name: 'ruby') }
   let(:department) { ruby.department }
-  let(:default_text) { 'Engineering Metrics' }
+  let(:default_text) { I18n.t('helpers.meta_tags.default_description') }
 
   describe '.meta_title' do
     context 'when request to products_development_metrics_path' do
@@ -23,7 +23,8 @@ describe MetaTagsHelper, type: :helper do
       context 'when product has been selected' do
         it 'returns the correct title' do
           assign(:product, product)
-          expect(helper.meta_title).to eq(product.name + ' summary')
+          expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.products_metrics_title',
+                                                 product_name: product.name))
         end
       end
     end
@@ -60,7 +61,8 @@ describe MetaTagsHelper, type: :helper do
 
       it 'returns the correct title' do
         assign(:repository, repository)
-        expect(helper.meta_title).to eq(repository.name + ' summary')
+        expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.repository_metrics_title',
+                                               repository_name: repository.name))
       end
     end
 
@@ -80,7 +82,7 @@ describe MetaTagsHelper, type: :helper do
       end
 
       it 'returns the correct title' do
-        expect(helper.meta_title).to eq('Open Source repositories')
+        expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.open_source_title'))
       end
     end
 
@@ -104,14 +106,15 @@ describe MetaTagsHelper, type: :helper do
 
       context 'when no department has been selected' do
         it 'returns the correct title' do
-          expect(helper.meta_title).to eq('Departments')
+          expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.default_departments_title'))
         end
       end
 
       context 'when department has been selected' do
         it 'returns the correct title' do
           assign(:department, department)
-          expect(helper.meta_title).to eq(department.name + ' department metrics')
+          expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.departments_title',
+                                                 department_name: department.name))
         end
       end
     end
@@ -138,7 +141,7 @@ describe MetaTagsHelper, type: :helper do
       end
 
       it 'returns the correct title' do
-        expect(helper.meta_title).to eq('Tech Blog visits')
+        expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.tech_blog_title'))
       end
     end
   end
@@ -221,7 +224,8 @@ describe MetaTagsHelper, type: :helper do
 
       it 'returns the correct description' do
         assign(:repository, repository)
-        expect(helper.meta_description).to eq(repository.name + ' summary')
+        expect(helper.meta_description).to eq(I18n.t('helpers.meta_tags.repository_metrics_title',
+                                                     repository_name: repository.name))
       end
     end
 
@@ -266,14 +270,15 @@ describe MetaTagsHelper, type: :helper do
 
       context 'when no department has been selected' do
         it 'returns the correct description' do
-          expect(helper.meta_title).to eq('Departments')
+          expect(helper.meta_title).to eq(I18n.t('helpers.meta_tags.default_departments_title'))
         end
       end
 
       context 'when department has been selected' do
         it 'returns the correct description' do
           assign(:department, department)
-          expect(helper.meta_description).to eq(department.name + ' department metrics')
+          expect(helper.meta_description).to eq(I18n.t('helpers.meta_tags.departments_title',
+                                                       department_name: department.name))
         end
       end
     end
@@ -314,7 +319,8 @@ describe MetaTagsHelper, type: :helper do
 
       it 'returns the correct description' do
         assign(:month_to_date_visits, 5)
-        expect(helper.meta_description).to eq('5 visits this month')
+        expect(helper.meta_description).to eq(I18n.t('helpers.meta_tags.tech_blog_description',
+                                                     month_to_date_visits: 5))
       end
     end
   end
