@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-md-12 text-center mt-2">
-    <b><%= @repository.product[:name] %></b>
+    <b><%= @repository.product[:name] if @repository.product.present? %></b>
   </div>
   <%= render 'development_metrics/navigation', product: @repository.product %>
 
