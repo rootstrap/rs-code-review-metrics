@@ -27,6 +27,18 @@ module Builders
         end
         entities_by_interval.sort_by { |key, _| key.slice(/[0-9]*[+-]/).to_i }
       end
+
+      def build_success_rate(entity_name, metric_name, intervals)
+        detail = Builders::Chartkick::Helpers::SuccessRate.call(entity_name,
+                                                                metric_name,
+                                                                intervals)
+        return unless detail
+
+        { rate: detail.rate,
+          successful: detail.successful,
+          total: detail.total,
+          metric_detail: detail.metric_detail }
+      end
     end
   end
 end

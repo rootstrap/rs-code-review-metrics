@@ -2,13 +2,13 @@ module Builders
   module Chartkick
     module Helpers
       class SuccessRate < BaseService
-        attr_reader :department_name, :metric_name, :intervals
+        attr_reader :entity_name, :metric_name, :intervals
 
         RateDetails = Struct.new(:rate, :successful, :total, :metric_detail)
         MetricSetting = Struct.new(:name, :value)
 
-        def initialize(department_name, metric_name, intervals)
-          @department_name = department_name
+        def initialize(entity_name, metric_name, intervals)
+          @entity_name = entity_name
           @metric_name = metric_name.to_s
           @intervals = intervals
         end
@@ -42,11 +42,11 @@ module Builders
         end
 
         def metric_setting
-          @metric_setting ||= SettingsService.success_rate(department_name, metric_name)
+          @metric_setting ||= SettingsService.success_rate(entity_name, metric_name)
         end
 
         def metric_key
-          @metric_key ||= Setting::SUCCESS_PREFIX + '_' + department_name + '_' + metric_name
+          @metric_key ||= Setting::SUCCESS_PREFIX + '_' + entity_name + '_' + metric_name
         end
 
         def rate

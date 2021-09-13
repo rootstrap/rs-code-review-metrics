@@ -1,33 +1,20 @@
 module Builders
   module Chartkick
     class RepositoryDistributionData < Builders::Chartkick::Base
-      REPOSITORY = 'repository'.freeze
-
       def call
-        repository_name = ::Repository.find(@entity_id).name
+        intervals = build_distribution_data(retrieve_records)
 
         [{
           name: repository_name,
-          data: build_distribution_data(retrieve_records),
-          success_rate: build_success_rate(retrieve_records)
+          data: intervals,
+          success_rate: build_success_rate(repository_name, metric_name, intervals)
         }]
       end
 
       private
 
-      def build_success_rate(entities)
-        intervals = build_distribution_data(entities)
-
-        detail = Builders::Chartkick::Helpers::SuccessRate.call(REPOSITORY,
-                                                                metric_name,
-                                                                intervals)
-
-        return unless detail
-
-        { rate: detail.rate,
-          successful: detail.successful,
-          total: detail.total,
-          metric_detail: detail.metric_detail }
+      def repository_name
+        @repository_name ||= ::Repository.find(@entity_id).name
       end
 
       def retrieve_records
