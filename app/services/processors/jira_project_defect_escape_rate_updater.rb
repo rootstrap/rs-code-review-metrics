@@ -33,15 +33,24 @@ module Processors
     end
 
     def issue_update!(issue, bug_fields, histories)
-      environment_field = bug_fields[JIRA_ENVIRONMENT_FIELD]
+      environment_field = parse_by_envirorment(bug_fields[JIRA_ENVIRONMENT_FIELD])
 
       issue.update!(
         informed_at: bug_fields[:created],
         resolved_at: bug_fields[:resolutiondate] || nil,
         in_progress_at: in_progress_at(histories) || issue.in_progress_at,
-        environment: environment_field ? environment_field.first[:value].downcase : nil,
+        environment: environment_field,
         issue_type: 'bug'
       )
+    end
+
+    def parse_by_envirorment(environment)
+      regex = /(qa{1})(\s[-]){1}/
+      env_field = environment ? environment.first[:value].downcase : nil
+
+      return env_field unless env_field.present? && env_field.match?(regex)
+
+      env_field.split(' ').first
     end
 
     def in_progress_at(histories)

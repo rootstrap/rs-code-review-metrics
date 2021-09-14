@@ -24,12 +24,14 @@ RSpec.describe Builders::Chartkick::RepositoryDistributionData do
         let(:metric_name) { :merge_time }
 
         it_behaves_like 'merge time data distribution'
+        it_behaves_like 'success rate'
       end
 
       context 'when name is review turnaround' do
         let(:metric_name) { :review_turnaround }
 
         it_behaves_like 'review turnaround data distribution'
+        it_behaves_like 'success rate'
       end
 
       context 'when name is pull request size' do

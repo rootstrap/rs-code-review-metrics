@@ -15,6 +15,7 @@ module CodeClimate
         invalid_issues_count_average: invalid_issues_count_average.round(2),
         wont_fix_issues_count_average: wont_fix_issues_count_average.round(2),
         open_issues_count_average: open_issues_count_average.round(2),
+        test_coverage_average: test_coverage_average&.round,
         ratings: ratings,
         repositories_without_cc_count: repositories_without_cc_count
       )
@@ -36,6 +37,10 @@ module CodeClimate
 
     def open_issues_count_average
       code_climate_metrics.average(:open_issues_count)
+    end
+
+    def test_coverage_average
+      code_climate_metrics.average(:test_coverage)
     end
 
     def ratings

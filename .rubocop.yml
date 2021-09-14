@@ -80,6 +80,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: true
   Exclude:
     - app/services/code_climate/repository_summary.rb
+    - app/services/code_climate/repositories_summary.rb
 
 Metrics/PerceivedComplexity:
   Max: 12

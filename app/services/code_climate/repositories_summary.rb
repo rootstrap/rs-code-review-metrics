@@ -3,6 +3,7 @@ module CodeClimate
     attr_reader :invalid_issues_count_average,
                 :wont_fix_issues_count_average,
                 :open_issues_count_average,
+                :test_coverage_average,
                 :ratings,
                 :repositories_without_cc_count
 
@@ -10,12 +11,14 @@ module CodeClimate
       invalid_issues_count_average: nil,
       wont_fix_issues_count_average: nil,
       open_issues_count_average: nil,
+      test_coverage_average: nil,
       ratings: {},
       repositories_without_cc_count: 0
     )
       @invalid_issues_count_average = invalid_issues_count_average
       @wont_fix_issues_count_average = wont_fix_issues_count_average
       @open_issues_count_average = open_issues_count_average
+      @test_coverage_average = test_coverage_average
       @ratings = ratings
       @repositories_without_cc_count = repositories_without_cc_count
     end
