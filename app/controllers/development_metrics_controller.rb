@@ -15,8 +15,11 @@ class DevelopmentMetricsController < ApplicationController
   def repositories
     return if metric_params.blank?
 
-    build_metrics(repository.id, Repository.name)
+    entity_name = Repository.name
+
+    build_metrics(repository.id, entity_name)
     build_metrics_definitions
+    build_success_rates(entity_name)
 
     @code_owners = repository.code_owners.pluck(:login)
     @code_climate = code_climate_repository_summary
@@ -25,8 +28,10 @@ class DevelopmentMetricsController < ApplicationController
   def departments
     return if metric_params.blank?
 
-    build_metrics(department.id, Department.name)
-    build_success_rates
+    entity_name = Department.name
+
+    build_metrics(department.id, entity_name)
+    build_success_rates(entity_name)
     @code_climate = code_climate_department_summary
     @overview = department_overview
   end
@@ -41,10 +46,11 @@ class DevelopmentMetricsController < ApplicationController
 
   private
 
-  def build_success_rates
-    @merge_time_success_rate = @merge_time[:per_department_distribution].first[:success_rate]
-    @review_turnaround_success_rate = @review_turnaround[:per_department_distribution]
-                                      .first[:success_rate]
+  def build_success_rates(entity_name)
+    key = "per_#{entity_name.downcase}_distribution".to_sym
+
+    @merge_time_success_rate = @merge_time[key].first[:success_rate]
+    @review_turnaround_success_rate = @review_turnaround[key].first[:success_rate]
   end
 
   def build_metrics(entity_id, entity_name)
