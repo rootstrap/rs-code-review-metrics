@@ -83,9 +83,11 @@ RSpec.configure do |config|
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::IntegrationHelpers, type: :feature
 
+  config.include EnvMock
   config.include WordpressApiMocker
   config.include GithubApiMock
   config.include JiraApiMock
   config.include CodeClimateApiMocker
   config.include SlackApiMocker
+  config.include QuickchartApiMocker
 end
