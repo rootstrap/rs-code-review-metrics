@@ -23,5 +23,5 @@ class ReviewTurnaround < ApplicationRecord
   belongs_to :review_request
 
   validates :value, presence: true
-  validates :review_request_id, uniqueness: true
+  validates :review_request_id, uniqueness: true, strict: Reviews::ReviewRequestUniquenessError
 end
