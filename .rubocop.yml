@@ -125,3 +125,7 @@ SkipsModelValidations:
 Rails/HelperInstanceVariable:
   Exclude:
     - app/helpers/meta_tags_helper.rb
+
+Rails/HasManyOrHasOneDependent:
+  Exclude:
+    - app/models/repository.rb
