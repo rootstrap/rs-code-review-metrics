@@ -168,4 +168,62 @@ describe Repository, type: :model do
       expect(subject.full_name).to eq("#{org_name}/#{subject.name}")
     end
   end
+
+  describe '#destroy' do
+    let(:repository) { build(:repository) }
+    let!(:event_pull_request) { create(:event_pull_request, repository: repository) }
+    let!(:event_push) { create(:push, repository: repository) }
+    let!(:event_repository) { create(:event_repository, repository: repository) }
+    let!(:event_review) { create(:event_review, repository: repository) }
+
+    subject { repository.destroy }
+
+    it 'sets deleted_at to current time' do
+      subject
+
+      expect(repository.deleted_at).to be_within(1.second).of Time.zone.now
+    end
+
+    it 'does not delete the events' do
+      expect {
+        subject
+      }.not_to change { Event.count }
+    end
+
+    it 'does not delete the events_pull_request_comments' do
+      expect {
+        subject
+      }.not_to change { Events::PullRequestComment.count }
+    end
+
+    it 'does not delete the events_pull_requests' do
+      expect {
+        subject
+      }.not_to change { Events::PullRequest.count }
+    end
+
+    it 'does not delete the events_pushes' do
+      expect {
+        subject
+      }.not_to change { Events::Push.count }
+    end
+
+    it 'does not delete the events_repositories' do
+      expect {
+        subject
+      }.not_to change { Events::Repository.count }
+    end
+
+    it 'does not delete the events_review_comments' do
+      expect {
+        subject
+      }.not_to change { Events::ReviewComment.count }
+    end
+
+    it 'does not delete the events_reviews' do
+      expect {
+        subject
+      }.not_to change { Events::Review.count }
+    end
+  end
 end
