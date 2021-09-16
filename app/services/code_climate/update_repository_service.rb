@@ -10,7 +10,7 @@ module CodeClimate
       update_metric
     rescue Faraday::Error => exception
       response = exception.response
-      error = response[:status].to_s + ' - ' + response[:body]
+      error = response[:status].to_s + ' - ' + response[:body] if response
       SlackService.code_climate_error(repository, error)
     end
 
