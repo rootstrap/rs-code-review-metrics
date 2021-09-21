@@ -28,6 +28,60 @@
 
 require 'rails_helper'
 
-RSpec.describe Alert, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe Alert, type: :model do
+  subject { build :alert }
+
+  context 'validations' do
+    context 'with valid attributes' do
+      it 'is valid' do
+        expect(subject).to be_valid
+      end
+
+      it { is_expected.to validate_presence_of(:metric_name) }
+      it { is_expected.to validate_presence_of(:frequency) }
+      it { is_expected.to validate_presence_of(:threshold) }
+      it { is_expected.to validate_presence_of(:emails) }
+
+      it { is_expected.to belong_to(:repository).optional }
+      it { is_expected.to belong_to(:department).optional }
+
+      it 'validates email list separated by comma' do
+        expect(subject.emails).to match(/([^,]+)/)
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'is not valid without name' do
+        subject.metric_name = nil
+        expect(subject).not_to be_valid
+      end
+
+      it 'is not valid without frequency' do
+        subject.frequency = nil
+        expect(subject).not_to be_valid
+      end
+
+      it 'is not valid without threshold' do
+        subject.threshold = nil
+        expect(subject).not_to be_valid
+      end
+
+      it 'is not valid without emails' do
+        subject.emails = nil
+        expect(subject).not_to be_valid
+      end
+
+      describe 'without department nor repository' do
+        it 'returns error message' do
+          subject.department = nil
+          subject.repository = nil
+
+          subject.valid?
+
+          expect(subject.errors[:department_or_repository_presence])
+            .to include I18n.t('alerts.department_or_repository_presence')
+        end
+      end
+    end
+  end
 end

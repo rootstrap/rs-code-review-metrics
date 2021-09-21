@@ -49,3 +49,6 @@ en:
         see_settings: For more information about the success rate of the metric 
         see_alert: To change alert settings 
       subject: Engineering Metrics - Alert metric below threshold
+  alerts:
+    department_or_repository_presence: 'Repository or department must be selected'
+    emails_split_by_comma: 'Emails must be separated by comma'

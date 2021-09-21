@@ -25,7 +25,7 @@
 # Foreign Keys
 #
 #  fk_rails_...  (owner_id => users.id)
-#  fk_rails_...  (pull_request_id => pull_requests.id)
+#  fk_rails_...  (pull_request_id => events_pull_requests.id)
 #
 
 FactoryBot.define do

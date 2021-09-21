@@ -4,6 +4,8 @@ ActiveAdmin.register Alert do
                 :emails, :start_date
 
   form do |f|
+    f.semantic_errors *f.object.errors.keys
+
     f.inputs do
       f.input :name, required: false
       f.input :metric_name,
@@ -20,7 +22,7 @@ ActiveAdmin.register Alert do
                           placeholder: 'Acceptable percentage'
       f.input :frequency, placeholder: 'Week period'
       f.input :active, as: :boolean, input_html: { value: 1 }
-      f.input :emails, required: true
+      f.input :emails, required: true, placeholder: 'List of emails separated by comma'
       f.input :start_date, as: :datepicker, required: true,
                            input_html: { value: Date.tomorrow },
                            datepicker_options:

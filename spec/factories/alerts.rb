@@ -28,6 +28,18 @@
 
 FactoryBot.define do
   factory :alert do
-    
+    name { Faker::Name.name }
+    metric_name do
+      %w[review_turnaround blog_visits merge_time blog_post_count
+        open_source_visits defect_escape_rate pull_request_size].sample
+    end
+    active { [true, false].sample }
+    emails { Faker::Internet.email + ',' + Faker::Internet.email }
+    frequency { Faker::Number.between(from: 0, to: 7) }
+    threshold { Faker::Number.between(from: 0, to: 100) }
+    start_date { Time.zone.now }
+
+    repository
+    department
   end
 end
