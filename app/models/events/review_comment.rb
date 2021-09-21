@@ -4,7 +4,6 @@
 #
 #  id              :bigint           not null, primary key
 #  body            :string
-#  deleted_at      :datetime
 #  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -26,8 +25,6 @@
 
 module Events
   class ReviewComment < ApplicationRecord
-    acts_as_paranoid
-
     enum state: { active: 'active', removed: 'removed' }
 
     has_many :events, as: :handleable, dependent: :destroy

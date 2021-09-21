@@ -52,3 +52,13 @@ en:
   alerts:
     department_or_repository_presence: 'Repository or department must be selected'
     emails_split_by_comma: 'Emails must be separated by comma'
+  helpers:
+    meta_tags:
+      default_description: 'Engineering Metrics'
+      products_metrics_title: '%{product_name} summary'
+      repository_metrics_title: '%{repository_name} summary'
+      open_source_title: 'Open Source repositories'
+      tech_blog_title: 'Tech Blog visits'
+      tech_blog_description: '%{month_to_date_visits} visits this month'
+      default_departments_title: 'Departments'
+      departments_title: '%{department_name} department metrics'

@@ -525,8 +525,7 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    repository_id bigint NOT NULL,
-    deleted_at timestamp without time zone
+    repository_id bigint NOT NULL
 );
 
 
@@ -558,7 +557,6 @@ CREATE TABLE public.events_pull_request_comments (
     github_id integer,
     body character varying,
     opened_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
@@ -610,8 +608,7 @@ CREATE TABLE public.events_pull_requests (
     owner_id bigint,
     html_url character varying,
     branch character varying,
-    size integer,
-    deleted_at timestamp without time zone
+    size integer
 );
 
 
@@ -645,8 +642,7 @@ CREATE TABLE public.events_pushes (
     sender_id bigint NOT NULL,
     ref character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    deleted_at timestamp without time zone
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -680,8 +676,7 @@ CREATE TABLE public.events_repositories (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sender_id bigint NOT NULL,
-    repository_id bigint NOT NULL,
-    deleted_at timestamp without time zone
+    repository_id bigint NOT NULL
 );
 
 
@@ -716,8 +711,7 @@ CREATE TABLE public.events_review_comments (
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    state public.review_comment_state DEFAULT 'active'::public.review_comment_state,
-    deleted_at timestamp without time zone
+    state public.review_comment_state DEFAULT 'active'::public.review_comment_state
 );
 
 
@@ -755,8 +749,7 @@ CREATE TABLE public.events_reviews (
     state public.review_state NOT NULL,
     opened_at timestamp without time zone NOT NULL,
     review_request_id bigint,
-    repository_id bigint,
-    deleted_at timestamp without time zone
+    repository_id bigint
 );
 
 
@@ -865,9 +858,9 @@ CREATE TABLE public.external_pull_requests (
     external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -2160,13 +2153,6 @@ CREATE INDEX index_events_on_repository_id ON public.events USING btree (reposit
 
 
 --
--- Name: index_events_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_pull_request_comments_on_deleted_at ON public.events_pull_request_comments USING btree (deleted_at);
-
-
---
 -- Name: index_events_pull_request_comments_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3024,6 +3010,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210830211654'),
 ('20210902140638'),
 ('20210902182225'),
-('20210915145551');
+('20210915145551'),
+('20210916151310');
 
 

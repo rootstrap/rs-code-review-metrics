@@ -4,7 +4,6 @@
 #
 #  id                :bigint           not null, primary key
 #  body              :string
-#  deleted_at        :datetime
 #  opened_at         :datetime         not null
 #  state             :enum             default("created")
 #  created_at        :datetime         not null
@@ -16,7 +15,6 @@
 #
 # Indexes
 #
-#  index_events_pull_request_comments_on_deleted_at         (deleted_at)
 #  index_events_pull_request_comments_on_owner_id           (owner_id)
 #  index_events_pull_request_comments_on_pull_request_id    (pull_request_id)
 #  index_events_pull_request_comments_on_review_request_id  (review_request_id)
@@ -30,8 +28,6 @@
 
 module Events
   class PullRequestComment < ApplicationRecord
-    acts_as_paranoid
-
     enum state: { created: 'created', edited: 'edited', deleted: 'deleted' }
 
     has_many :events, as: :handleable, dependent: :destroy
