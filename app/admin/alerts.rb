@@ -23,13 +23,6 @@ ActiveAdmin.register Alert do
       f.input :frequency, placeholder: 'Week period'
       f.input :active, as: :boolean, input_html: { value: 1 }
       f.input :emails, required: true, placeholder: 'List of emails separated by comma'
-      f.input :start_date, as: :datepicker, required: true,
-                           input_html: { value: Date.tomorrow },
-                           datepicker_options:
-                            {
-                              min_date: Date.tomorrow,
-                              max_date: '+4W'
-                            }
     end
     f.actions
   end

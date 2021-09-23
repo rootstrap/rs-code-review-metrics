@@ -61,4 +61,7 @@ Rails.application.configure do
   config.logger = ActiveSupport::Logger.new("log/#{Rails.env}.log")
   Rails.logger.level = Logger::DEBUG
   Rails.logger.datetime_format = '%Y-%m-%d %H:%M:%S'
+
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 end

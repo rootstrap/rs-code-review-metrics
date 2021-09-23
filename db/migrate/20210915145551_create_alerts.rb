@@ -6,7 +6,7 @@ class CreateAlerts < ActiveRecord::Migration[6.0]
       t.integer :threshold
       t.string :emails
       t.integer :frequency
-      t.datetime :start_date
+      t.datetime :last_sent_date
       t.boolean :active
 
       t.timestamps

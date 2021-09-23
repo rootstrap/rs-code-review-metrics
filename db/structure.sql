@@ -269,7 +269,7 @@ CREATE TABLE public.alerts (
     threshold integer,
     emails character varying,
     frequency integer,
-    start_date timestamp without time zone,
+    last_sent_date timestamp without time zone,
     active boolean,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,

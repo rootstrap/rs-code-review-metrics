@@ -9,6 +9,8 @@ class AlertsService
 
   def search_active_alerts
     Alert.find_each do |alert|
+      next unless Time.zone.today > alert.last_sent_date + alert.frequency.days
+
       success_rate = alert_metric_entity(alert)
 
       search_below_rate(alert, success_rate) if alert.active & success_rate

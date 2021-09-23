@@ -2,18 +2,18 @@
 #
 # Table name: alerts
 #
-#  id            :bigint           not null, primary key
-#  active        :boolean
-#  emails        :string
-#  frequency     :integer
-#  metric_name   :string
-#  name          :string
-#  start_date    :datetime
-#  threshold     :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  department_id :bigint
-#  repository_id :bigint
+#  id             :bigint           not null, primary key
+#  active         :boolean
+#  emails         :string
+#  frequency      :integer
+#  last_sent_date :datetime
+#  metric_name    :string
+#  name           :string
+#  threshold      :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  department_id  :bigint
+#  repository_id  :bigint
 #
 # Indexes
 #
@@ -36,7 +36,7 @@ FactoryBot.define do
     emails { Faker::Internet.email + ',' + Faker::Internet.email }
     frequency { Faker::Number.between(from: 0, to: 7) }
     threshold { Faker::Number.between(from: 0, to: 100) }
-    start_date { Time.zone.now }
+    last_sent_date { Time.zone.today }
 
     repository
     department

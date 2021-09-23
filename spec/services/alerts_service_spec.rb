@@ -1,14 +1,38 @@
 require 'rails_helper'
 
 describe AlertsService do
+  shared_examples 'a threshold that needs to be alerted' do
+    it 'sends an email' do
+      allow(AlertsService.new).to receive(:call)
+
+      expect {
+        subject
+      }.to change(ActionMailer::Base.deliveries, :count).by(1)
+    end
+  end
+
+  shared_examples 'a threshold that does not needs to be alerted' do
+    it 'does not sends an email' do
+      allow(AlertsService.new).to receive(:call)
+
+      expect {
+        subject
+      }.not_to change(ActionMailer::Base.deliveries, :count)
+    end
+  end
+
   describe '.search_active_alerts' do
     let(:threshold) { 50 }
+    let(:sent_date) { Time.zone.today }
+
     let!(:alert) do
       create(:alert,
              :with_repository,
              metric_name: 'merge_time',
              active: true,
-             threshold: threshold)
+             threshold: threshold,
+             last_sent_date: sent_date,
+             frequency: 3)
     end
 
     let(:range) do
@@ -27,25 +51,23 @@ describe AlertsService do
     subject { AlertsService.new.call }
 
     context 'when success rate is below the threshold' do
-      it 'sends an email' do
-        allow(AlertsService.new).to receive(:call)
+      context 'when execution time is after last sent + frequency' do
+        let(:sent_date) { Time.zone.today - 4 }
 
-        expect {
-          subject
-        }.to change(ActionMailer::Base.deliveries, :count).by(1)
+        it_behaves_like 'a threshold that needs to be alerted'
+      end
+
+      context 'when execution time is before last sent + frequency' do
+        let(:sent_date) { Time.zone.today - 2 }
+
+        it_behaves_like 'a threshold that does not needs to be alerted'
       end
     end
 
     context 'when success rate is not below the threshold' do
       let(:threshold) { 15 }
 
-      it 'does not sends an email' do
-        allow(AlertsService.new).to receive(:call)
-
-        expect {
-          subject
-        }.not_to change(ActionMailer::Base.deliveries, :count)
-      end
+      it_behaves_like 'a threshold that does not needs to be alerted'
     end
   end
 end
