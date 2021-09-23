@@ -21,7 +21,7 @@ ActiveAdmin.register Alert do
               collection: Department.order('name ASC')
       f.input :threshold, required: true,
                           placeholder: 'Acceptable percentage'
-      f.input :frequency, placeholder: 'Week period'
+      f.input :frequency, placeholder: 'Week period', required: true
       f.input :active, as: :boolean, input_html: { value: 1 }
       f.input :emails, required: true, placeholder: 'List of emails separated by comma'
     end
