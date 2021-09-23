@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: ENV['SENDMAIL_USERNAME']
+  default from: 'metrics@rootstrap.com'
   layout 'mailer'
 end

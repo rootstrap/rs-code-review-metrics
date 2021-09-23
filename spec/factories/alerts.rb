@@ -30,8 +30,7 @@ FactoryBot.define do
   factory :alert do
     name { Faker::Name.name }
     metric_name do
-      %w[review_turnaround blog_visits merge_time blog_post_count
-        open_source_visits defect_escape_rate pull_request_size].sample
+      %w[review_turnaround merge_time pull_request_size].sample
     end
     active { [true, false].sample }
     emails { Faker::Internet.email + ',' + Faker::Internet.email }
@@ -41,5 +40,13 @@ FactoryBot.define do
 
     repository
     department
+
+    trait :with_repository do
+      department { nil }
+    end
+
+    trait :with_department do
+      repository { nil }
+    end
   end
 end
