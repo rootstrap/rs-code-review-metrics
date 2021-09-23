@@ -1,7 +1,6 @@
 ActiveAdmin.register Alert do
   permit_params :name, :metric_name, :repository_id, :department_id,
-                :threshold, :frequency, :active,
-                :emails, :start_date
+                :threshold, :frequency, :active, :emails
 
   form do |f|
     f.semantic_errors(*f.object.errors.keys)
@@ -10,7 +9,9 @@ ActiveAdmin.register Alert do
       f.input :name, required: false
       f.input :metric_name,
               as: :select,
-              collection: MetricDefinition.codes.values,
+              collection: { review_turnaround: 'review_turnaround',
+                            merge_time: 'merge_time',
+                            pull_request_size: 'pull_request_size' },
               required: true
       f.input :repository,
               as: :select,

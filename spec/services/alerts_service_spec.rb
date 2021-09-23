@@ -9,6 +9,12 @@ describe AlertsService do
         subject
       }.to change(ActionMailer::Base.deliveries, :count).by(1)
     end
+
+    it 'updates last sent date to current day' do
+      subject
+
+      expect(alert.reload.last_sent_date). to eq(Time.zone.today)
+    end
   end
 
   shared_examples 'a threshold that does not needs to be alerted' do

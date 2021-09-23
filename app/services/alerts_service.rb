@@ -9,7 +9,9 @@ class AlertsService
 
   def search_active_alerts
     Alert.find_each do |alert|
-      next unless Time.zone.today > alert.last_sent_date + alert.frequency.days
+      last_sent_date = alert.last_sent_date
+
+      next unless last_sent_date.nil? || Time.zone.today > last_sent_date + alert.frequency.days
 
       success_rate = alert_metric_entity(alert)
 
@@ -50,6 +52,8 @@ class AlertsService
 
   def send_alerts_below(alert)
     AdminMailer.notify_below_rate(alert).deliver_now
+
+    alert.update!(last_sent_date: Time.zone.today)
   end
 
   def parse_entity(entity_name)
