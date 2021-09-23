@@ -16,20 +16,28 @@ class AlertsService
   end
 
   def alert_metric_entity(alert)
-    entity_is_repo = alert.repository.present?
+    repository = alert.repository
+    department = alert.department
 
-    return unless entity_is_repo || alert.department.present?
+    entity_is_repo = repository.present?
+
+    return unless entity_is_repo || department.present?
 
     entity_name = entity_is_repo ? Repository.name : Department.name
-    entity_id = entity_is_repo ? alert.repository.id : alert.department.id
+    entity_id = entity_is_repo ? repository.id : department.id
 
     build_success_rates(alert.metric_name, entity_id, entity_name)
   end
 
   def build_success_rates(metric_name, entity_id, entity_name)
-    data = Builders::Chartkick::RepositoryDistributionData.call(entity_id, query(metric_name))
+    distribution_data = Builders::Chartkick.const_get(parse_entity(entity_name))
+                                           .call(entity_id, query(metric_name))
 
-    data.first[:success_rate][:rate] if data.first.present? & data.first[:success_rate]
+    data = distribution_data.first
+
+    success_rate = data[:success_rate] if data.present?
+
+    success_rate[:rate] if success_rate
   end
 
   def search_below_rate(alert, success_rate)
@@ -40,6 +48,10 @@ class AlertsService
 
   def send_alerts_below(alert)
     AdminMailer.notify_below_rate(alert).deliver_now
+  end
+
+  def parse_entity(entity_name)
+    "#{entity_name.classify}DistributionData"
   end
 
   def query(metric_name)

@@ -31,13 +31,14 @@ class Alert < ApplicationRecord
   belongs_to :department, optional: true
 
   validates :metric_name, :frequency, :threshold, :emails, presence: true
-  validates :emails, format: { with: /([^,]+)/, message: I18n.t('alerts.emails_split_by_comma')}
+  validates :emails, format: { with: /([^,]+)/, message: I18n.t('alerts.emails_split_by_comma') }
 
   validate :department_or_repository_presence
 
   def department_or_repository_presence
     return unless repository.blank? && department.blank?
 
-    errors.add(:department_or_repository_presence, I18n.t('alerts.department_or_repository_presence'))
+    errors.add(:department_or_repository_presence,
+               I18n.t('alerts.department_or_repository_presence'))
   end
 end

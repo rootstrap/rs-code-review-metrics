@@ -7,7 +7,7 @@
     <% end -%>
     <%= t('mailer.notify_below_rate.body.threshold', threshold: @alert.threshold) %>.</p>
 <br>
-<p> <%= t('mailer.notify_below_rate.body.see_metric') %> 
+<p> <%= t('mailer.notify_below_rate.body.see_metric') %>
     <% if @entity_is_repo -%>
         <%= link_to t('mailer.notify_below_rate.body.click_here'),
         repositories_development_metrics_url({repository_name: @entity_name, metric: { period: @alert.frequency }}),
@@ -19,11 +19,11 @@
     <% end -%>
 <p> <%= t('mailer.notify_below_rate.body.see_settings') %>
     <% if @entity_is_repo -%>
-        <%= link_to t('mailer.notify_below_rate.body.click_here'), 
+        <%= link_to t('mailer.notify_below_rate.body.click_here'),
         admin_settings_url(q: { key_eq: 'success_rate_' + @entity_name + '_' + @metric_name }),
         method: :post %>.</p>
     <% else -%>
-        <%= link_to t('mailer.notify_below_rate.body.click_here'), 
+        <%= link_to t('mailer.notify_below_rate.body.click_here'),
         admin_settings_url(q: { key_eq: 'success_rate_' + @entity_name + '_' + @metric_name }),
         method: :post %>.</p>
     <% end -%>

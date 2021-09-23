@@ -4,7 +4,7 @@ ActiveAdmin.register Alert do
                 :emails, :start_date
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors(*f.object.errors.keys)
 
     f.inputs do
       f.input :name, required: false
