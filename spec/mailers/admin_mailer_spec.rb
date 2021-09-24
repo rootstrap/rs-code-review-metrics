@@ -6,7 +6,7 @@ describe AdminMailer, type: :mailer do
     let(:mail) { AdminMailer.notify_below_rate(alert) }
 
     before do
-      stub_env('SENDMAIL_USERNAME', 'metrics@rootstrap.com')
+      stub_env('SENDGRID_USERNAME', 'metrics@example.com')
     end
 
     it 'renders the subject' do
@@ -19,7 +19,7 @@ describe AdminMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(mail.from).to eq([ENV['SENDMAIL_USERNAME']])
+      expect(mail.from).to eq([ENV['SENDGRID_USERNAME']])
     end
 
     it 'renders the metric name' do

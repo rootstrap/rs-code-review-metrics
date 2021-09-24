@@ -63,6 +63,8 @@ gem 'slack-notifier', '~> 2.3', '>= 2.3.2'
 
 gem 'acts_as_paranoid', '~> 0.7.0'
 
+gem 'sendgrid-ruby', '~> 6.5.1'
+
 group :development, :test do
   gem 'brakeman', '~> 5.0.0'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

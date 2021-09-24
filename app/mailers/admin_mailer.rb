@@ -9,18 +9,15 @@ class AdminMailer < ApplicationMailer
 
     return unless @entity_is_repo || department.present?
 
-    from = ENV['SENDMAIL_USERNAME']
+    from = ENV['SENDGRID_USERNAME']
     @entity_name = @entity_is_repo ? repository.name : department.name
-    mail(fron: from,
+
+    mail(from: from,
          to: notify_below_rate_emails,
          subject: I18n.t('mailer.notify_below_rate.subject'))
   end
 
   def notify_below_rate_emails
-    @alert.emails.split(',') || self.class.admin_emails
-  end
-
-  def self.admin_emails
-    AdminUser.pluck(:email)
+    @alert.emails.split(',').collect(&:strip)
   end
 end
