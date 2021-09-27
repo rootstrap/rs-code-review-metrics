@@ -11,7 +11,8 @@ class AlertsService
     Alert.find_each do |alert|
       last_sent_date = alert.last_sent_date
 
-      next unless last_sent_date.nil? || Time.zone.today > last_sent_date + alert.frequency.days
+      next unless last_sent_date.nil? ||
+                  Time.zone.today > alert.frequency.days.from_now(last_sent_date)
 
       success_rate = alert_metric_entity(alert)
 
@@ -69,7 +70,7 @@ class AlertsService
   end
 
   def value_timestamp
-    (current_time - 4.weeks).beginning_of_week..current_time.end_of_week
+    4.weeks.ago.beginning_of_week..current_time.end_of_week
   end
 
   def current_time

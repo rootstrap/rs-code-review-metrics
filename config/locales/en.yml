@@ -51,7 +51,7 @@ en:
       subject: Engineering Metrics - Alert metric below threshold
   alerts:
     department_or_repository_presence: 'Repository or department must be selected'
-    emails_split_by_comma: 'Emails must be separated by comma'
+    emails_not_an_array: 'is not an array of emails'
   helpers:
     meta_tags:
       default_description: 'Engineering Metrics'

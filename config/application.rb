@@ -21,23 +21,6 @@ module GithubAnalyzer
     # Autoload lib folder
     config.autoload_paths << "#{Rails.root}/lib"
 
-    config.action_mailer.smtp_settings = {
-      address: 'smtp.gmail.com',
-      port: '587',
-      domain: ENV['ENGINEERING_METRICS_URL'],
-      authentication: :plain,
-      user_name: ENV['SENDGRID_USERNAME'],
-      password: ENV['SENDGRID_PASSWORD'],
-      enable_starttls_auto: true
-    }
-
-    config.action_mailer.perform_caching = false
-    config.action_mailer.perform_deliveries = true
-    config.action_mailer.raise_delivery_errors = true
     config.action_mailer.default_url_options = { host: ENV['ENGINEERING_METRICS_URL'] }
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.default_options = {
-      from: "Engineering Metrics <#{ENV['SENDGRID_USERNAME']}>"
-    }
   end
 end

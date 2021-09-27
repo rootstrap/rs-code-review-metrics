@@ -13,11 +13,7 @@ class AdminMailer < ApplicationMailer
     @entity_name = @entity_is_repo ? repository.name : department.name
 
     mail(from: from,
-         to: notify_below_rate_emails,
+         to: @alert.emails,
          subject: I18n.t('mailer.notify_below_rate.subject'))
-  end
-
-  def notify_below_rate_emails
-    @alert.emails.split(',').collect(&:strip)
   end
 end

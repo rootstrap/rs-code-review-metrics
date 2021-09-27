@@ -1,6 +1,6 @@
 <h1> <%= t('mailer.notify_below_rate.body.notify') %></h1>
 <p> <%= t('mailer.notify_below_rate.body.metric', metric: @metric_name) %>
-    <% if @entity_is_repo-%>
+    <% if @entity_is_repo -%>
         <%= t('mailer.notify_below_rate.body.repository', repository: @entity_name) %>
     <% else -%>
         <%= t('mailer.notify_below_rate.body.department', department: @entity_name) %>
@@ -20,11 +20,10 @@
 <p> <%= t('mailer.notify_below_rate.body.see_settings') %>
     <% if @entity_is_repo -%>
         <%= link_to t('mailer.notify_below_rate.body.click_here'),
-        admin_settings_url(q: { key_eq: 'success_rate_' + @entity_name + '_' + @metric_name }),
+        admin_settings_url(q: { key_eq: "success_rate_#{@entity_name}_#{@metric_name}" }),
         method: :post %>.</p>
     <% else -%>
         <%= link_to t('mailer.notify_below_rate.body.click_here'),
-        admin_settings_url(q: { key_eq: 'success_rate_' + @entity_name + '_' + @metric_name }),
+        admin_settings_url(q: { key_eq: "success_rate_#{@entity_name}_#{@metric_name}"}),
         method: :post %>.</p>
     <% end -%>
-

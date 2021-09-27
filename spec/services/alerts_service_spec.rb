@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe AlertsService do
-  shared_examples 'a threshold that needs to be alerted' do
+  shared_examples 'an alert that needs to be triggered' do
     it 'sends an email' do
       allow(AlertsService.new).to receive(:call)
 
@@ -17,7 +17,7 @@ describe AlertsService do
     end
   end
 
-  shared_examples 'a threshold that does not needs to be alerted' do
+  shared_examples 'an alert that does not need to be triggered' do
     it 'does not sends an email' do
       allow(AlertsService.new).to receive(:call)
 
@@ -60,20 +60,20 @@ describe AlertsService do
       context 'when execution time is after last sent + frequency' do
         let(:sent_date) { Time.zone.today - 4 }
 
-        it_behaves_like 'a threshold that needs to be alerted'
+        it_behaves_like 'an alert that needs to be triggered'
       end
 
       context 'when execution time is before last sent + frequency' do
         let(:sent_date) { Time.zone.today - 2 }
 
-        it_behaves_like 'a threshold that does not needs to be alerted'
+        it_behaves_like 'an alert that does not need to be triggered'
       end
     end
 
     context 'when success rate is not below the threshold' do
       let(:threshold) { 15 }
 
-      it_behaves_like 'a threshold that does not needs to be alerted'
+      it_behaves_like 'an alert that does not need to be triggered'
     end
   end
 end

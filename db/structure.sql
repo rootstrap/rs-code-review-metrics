@@ -265,10 +265,10 @@ ALTER SEQUENCE public.admin_users_id_seq OWNED BY public.admin_users.id;
 CREATE TABLE public.alerts (
     id bigint NOT NULL,
     name character varying,
-    metric_name character varying,
-    threshold integer,
-    emails character varying,
-    frequency integer,
+    metric_name character varying NOT NULL,
+    threshold integer NOT NULL,
+    emails character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    frequency integer NOT NULL,
     last_sent_date timestamp without time zone,
     active boolean,
     created_at timestamp(6) without time zone NOT NULL,
@@ -858,9 +858,9 @@ CREATE TABLE public.external_pull_requests (
     external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 

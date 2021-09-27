@@ -4,12 +4,12 @@
 #
 #  id             :bigint           not null, primary key
 #  active         :boolean
-#  emails         :string
-#  frequency      :integer
+#  emails         :string           default([]), not null, is an Array
+#  frequency      :integer          not null
 #  last_sent_date :datetime
-#  metric_name    :string
+#  metric_name    :string           not null
 #  name           :string
-#  threshold      :integer
+#  threshold      :integer          not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  department_id  :bigint
@@ -44,10 +44,6 @@ describe Alert, type: :model do
 
       it { is_expected.to belong_to(:repository).optional }
       it { is_expected.to belong_to(:department).optional }
-
-      it 'validates email list separated by comma' do
-        expect(subject.emails).to match(/([^,]+)/)
-      end
     end
 
     context 'with invalid attributes' do

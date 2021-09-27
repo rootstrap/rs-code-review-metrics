@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe AdminMailer, type: :mailer do
   describe '#notify_below_rate' do
-    let(:alert) { build(:alert) }
+    let(:emails) { ['mail1@example.com', 'mail2@example.com'] }
+    let(:alert) { create(:alert, :with_repository, emails: emails) }
     let(:mail) { AdminMailer.notify_below_rate(alert) }
 
     before do
@@ -14,8 +15,8 @@ describe AdminMailer, type: :mailer do
     end
 
     it 'renders the receiver email' do
-      admins = alert.emails || AdminUser.pluck(:email)
-      expect(mail.to).to eql(admins.split(','))
+      emails = alert.emails
+      expect(mail.to).to eq(emails)
     end
 
     it 'renders the sender email' do

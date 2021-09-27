@@ -3,8 +3,6 @@ ActiveAdmin.register Alert do
                 :threshold, :frequency, :active, :emails
 
   form do |f|
-    f.semantic_errors(*f.object.errors.keys)
-
     f.inputs do
       f.input :name, required: false
       f.input :metric_name,
