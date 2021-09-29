@@ -19,5 +19,7 @@ class Department < ApplicationRecord
   has_many :languages, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
 
+  has_many :alerts, dependent: :destroy
+
   validates :name, inclusion: { in: names.keys }, uniqueness: true
 end

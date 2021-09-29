@@ -61,6 +61,8 @@ class Repository < ApplicationRecord
 
   has_one :code_climate_repository_metric, dependent: :destroy
 
+  has_many :alerts, dependent: :destroy
+
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
 
