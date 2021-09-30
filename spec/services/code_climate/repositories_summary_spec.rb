@@ -7,6 +7,7 @@ describe CodeClimate::RepositoriesSummary do
         invalid_issues_count_average
         wont_fix_issues_count_average
         open_issues_count_average
+        test_coverage_average
         ratings
       ]
     end
@@ -16,6 +17,7 @@ describe CodeClimate::RepositoriesSummary do
         invalid_issues_count_average: 1,
         wont_fix_issues_count_average: 3,
         open_issues_count_average: 0,
+        test_coverage_average: 90,
         ratings: { 'A': 1, 'B': 2 }
       )
     end

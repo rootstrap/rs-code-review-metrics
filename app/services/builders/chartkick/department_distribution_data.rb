@@ -2,25 +2,14 @@ module Builders
   module Chartkick
     class DepartmentDistributionData < Builders::Chartkick::Base
       def call
+        intervals = build_distribution_data(records)
+
         [{ name: department_name,
-           data: build_distribution_data(records),
-           success_rate: build_success_rate(records) }]
+           data: intervals,
+           success_rate: build_success_rate(department_name, metric_name, intervals) }]
       end
 
       private
-
-      def build_success_rate(entities)
-        intervals = build_distribution_data(entities)
-        detail = Builders::Chartkick::Helpers::SuccessRate.call(department_name,
-                                                                metric_name,
-                                                                intervals)
-        return unless detail
-
-        { rate: detail.rate,
-          successful: detail.successful,
-          total: detail.total,
-          metric_detail: detail.metric_detail }
-      end
 
       def department_name
         @department_name ||= ::Department.find(@entity_id).name

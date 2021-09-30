@@ -36,3 +36,29 @@ en:
         message: 'Hey! check this out: [Open Source metrics](%{url}) 🚀'
       code_climate_error:
         message: 'Hey! Check this out: [Code Climate error] Repository: %{repository} - Error: %{error}'
+  mailer:
+    notify_below_rate:
+      body:
+        notify: Notification metric below threshold
+        metric: 'The metric %{metric} '
+        repository: 'for the repository %{repository} '
+        department: 'for the department %{department} '
+        threshold: is below the configurable threshold %{threshold}
+        see_metric: For more information about the metric 
+        click_here: click here
+        see_settings: For more information about the success rate of the metric 
+        see_alert: To change alert settings 
+      subject: Engineering Metrics - Alert metric below threshold
+  alerts:
+    department_or_repository_presence: 'Repository or department must be selected'
+    emails_not_an_array: 'is not an array of emails'
+  helpers:
+    meta_tags:
+      default_description: 'Engineering Metrics'
+      products_metrics_title: '%{product_name} summary'
+      repository_metrics_title: '%{repository_name} summary'
+      open_source_title: 'Open Source repositories'
+      tech_blog_title: 'Tech Blog visits'
+      tech_blog_description: '%{month_to_date_visits} visits this month'
+      default_departments_title: 'Departments'
+      departments_title: '%{department_name} department metrics'

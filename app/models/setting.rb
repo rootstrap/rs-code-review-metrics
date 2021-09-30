@@ -18,8 +18,8 @@ class Setting < ApplicationRecord
 
   validates :key, uniqueness: true, presence: true
 
-  scope :success_rate, lambda { |department_name, metric_name|
-    where(key: "#{SUCCESS_PREFIX}_#{department_name}_#{metric_name}")
+  scope :success_rate, lambda { |entity_name, metric_name|
+    where(key: "#{SUCCESS_PREFIX}_#{entity_name}_#{metric_name}")
   }
 
   scope :enabled, lambda { |feature_name|

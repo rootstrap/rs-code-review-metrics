@@ -32,7 +32,19 @@ RSpec.describe ReviewTurnaround, type: :model do
       expect(subject).to_not be_valid
     end
 
-    it { is_expected.to validate_uniqueness_of(:review_request_id) }
     it { is_expected.to belong_to(:review_request) }
+
+    context 'when review request id is already been taken' do
+      let(:review_request) { create(:review_request, id: 100) }
+      let!(:review_turnaround) { create(:review_turnaround, review_request: review_request) }
+
+      it 'raise uniqueness exception' do
+        subject.review_request_id = 100
+
+        expect {
+          subject.save!
+        }.to raise_error(Reviews::ReviewRequestUniquenessError)
+      end
+    end
   end
 end

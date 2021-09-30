@@ -20,5 +20,7 @@ module GithubAnalyzer
     config.active_record.schema_format = :sql
     # Autoload lib folder
     config.autoload_paths << "#{Rails.root}/lib"
+
+    config.action_mailer.default_url_options = { host: ENV['ENGINEERING_METRICS_URL'] }
   end
 end

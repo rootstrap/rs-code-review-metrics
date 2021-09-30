@@ -4,7 +4,6 @@
 #
 #  id                :bigint           not null, primary key
 #  body              :string
-#  deleted_at        :datetime
 #  opened_at         :datetime         not null
 #  state             :enum             not null
 #  created_at        :datetime         not null

@@ -4,7 +4,6 @@
 #
 #  id              :bigint           not null, primary key
 #  data            :jsonb
-#  deleted_at      :datetime
 #  handleable_type :string
 #  name            :string
 #  type            :string

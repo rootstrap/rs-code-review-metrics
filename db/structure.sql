@@ -259,6 +259,45 @@ ALTER SEQUENCE public.admin_users_id_seq OWNED BY public.admin_users.id;
 
 
 --
+-- Name: alerts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.alerts (
+    id bigint NOT NULL,
+    name character varying,
+    metric_name character varying NOT NULL,
+    threshold integer NOT NULL,
+    emails character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    frequency integer NOT NULL,
+    last_sent_date timestamp without time zone,
+    active boolean,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    repository_id bigint,
+    department_id bigint
+);
+
+
+--
+-- Name: alerts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.alerts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: alerts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.alerts_id_seq OWNED BY public.alerts.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -486,8 +525,7 @@ CREATE TABLE public.events (
     data jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    repository_id bigint NOT NULL,
-    deleted_at timestamp without time zone
+    repository_id bigint NOT NULL
 );
 
 
@@ -519,7 +557,6 @@ CREATE TABLE public.events_pull_request_comments (
     github_id integer,
     body character varying,
     opened_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
@@ -571,8 +608,7 @@ CREATE TABLE public.events_pull_requests (
     owner_id bigint,
     html_url character varying,
     branch character varying,
-    size integer,
-    deleted_at timestamp without time zone
+    size integer
 );
 
 
@@ -606,8 +642,7 @@ CREATE TABLE public.events_pushes (
     sender_id bigint NOT NULL,
     ref character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    deleted_at timestamp without time zone
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -641,8 +676,7 @@ CREATE TABLE public.events_repositories (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     sender_id bigint NOT NULL,
-    repository_id bigint NOT NULL,
-    deleted_at timestamp without time zone
+    repository_id bigint NOT NULL
 );
 
 
@@ -677,8 +711,7 @@ CREATE TABLE public.events_review_comments (
     updated_at timestamp(6) without time zone NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    state public.review_comment_state DEFAULT 'active'::public.review_comment_state,
-    deleted_at timestamp without time zone
+    state public.review_comment_state DEFAULT 'active'::public.review_comment_state
 );
 
 
@@ -716,8 +749,7 @@ CREATE TABLE public.events_reviews (
     state public.review_state NOT NULL,
     opened_at timestamp without time zone NOT NULL,
     review_request_id bigint,
-    repository_id bigint,
-    deleted_at timestamp without time zone
+    repository_id bigint
 );
 
 
@@ -826,9 +858,9 @@ CREATE TABLE public.external_pull_requests (
     external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 
@@ -1467,6 +1499,13 @@ ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: alerts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alerts ALTER COLUMN id SET DEFAULT nextval('public.alerts_id_seq'::regclass);
+
+
+--
 -- Name: blog_post_technologies id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1711,6 +1750,14 @@ ALTER TABLE ONLY public.active_admin_comments
 
 ALTER TABLE ONLY public.admin_users
     ADD CONSTRAINT admin_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: alerts alerts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alerts
+    ADD CONSTRAINT alerts_pkey PRIMARY KEY (id);
 
 
 --
@@ -2029,6 +2076,20 @@ CREATE UNIQUE INDEX index_admin_users_on_reset_password_token ON public.admin_us
 
 
 --
+-- Name: index_alerts_on_department_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_alerts_on_department_id ON public.alerts USING btree (department_id);
+
+
+--
+-- Name: index_alerts_on_repository_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_alerts_on_repository_id ON public.alerts USING btree (repository_id);
+
+
+--
 -- Name: index_blog_post_technologies_on_blog_post_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2089,13 +2150,6 @@ CREATE INDEX index_events_on_handleable_type_and_handleable_id ON public.events 
 --
 
 CREATE INDEX index_events_on_repository_id ON public.events USING btree (repository_id);
-
-
---
--- Name: index_events_pull_request_comments_on_deleted_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_events_pull_request_comments_on_deleted_at ON public.events_pull_request_comments USING btree (deleted_at);
 
 
 --
@@ -2690,6 +2744,14 @@ ALTER TABLE ONLY public.review_requests
 
 
 --
+-- Name: alerts fk_rails_b50bec0cc6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alerts
+    ADD CONSTRAINT fk_rails_b50bec0cc6 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
 -- Name: events_pushes fk_rails_bc14f07184; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2783,6 +2845,14 @@ ALTER TABLE ONLY public.exception_hunter_errors
 
 ALTER TABLE ONLY public.merge_times
     ADD CONSTRAINT fk_rails_f002296adb FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
+
+
+--
+-- Name: alerts fk_rails_f5c2609558; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.alerts
+    ADD CONSTRAINT fk_rails_f5c2609558 FOREIGN KEY (department_id) REFERENCES public.departments(id);
 
 
 --
@@ -2939,6 +3009,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210830200129'),
 ('20210830211654'),
 ('20210902140638'),
-('20210902182225');
-
+('20210902182225'),
+('20210915145551'),
+('20210916151310');
 

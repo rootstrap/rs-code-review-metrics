@@ -37,18 +37,15 @@ class Repository < ApplicationRecord
   belongs_to :language
   belongs_to :product, optional: true
 
-  has_many :events, dependent: :destroy
+  has_many :events
   has_many :repositories,
            class_name: 'Events::Repository',
-           dependent: :destroy,
            inverse_of: :repository
   has_many :pull_requests,
            class_name: 'Events::PullRequest',
-           dependent: :destroy,
            inverse_of: :repository
   has_many :reviews,
            class_name: 'Events::Review',
-           dependent: :destroy,
            inverse_of: :repository
   has_many :review_requests,
            dependent: :destroy,
@@ -63,6 +60,8 @@ class Repository < ApplicationRecord
            source: :user
 
   has_one :code_climate_repository_metric, dependent: :destroy
+
+  has_many :alerts, dependent: :destroy
 
   validates :github_id, presence: true, uniqueness: true
   validates :relevance, inclusion: { in: relevances.keys }
