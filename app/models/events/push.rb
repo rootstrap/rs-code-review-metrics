@@ -3,7 +3,6 @@
 # Table name: events_pushes
 #
 #  id              :bigint           not null, primary key
-#  deleted_at      :datetime
 #  ref             :string
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -27,8 +26,6 @@
 
 module Events
   class Push < ApplicationRecord
-    acts_as_paranoid
-
     belongs_to :repository
     belongs_to :pull_request, class_name: 'Events::PullRequest', optional: true
     belongs_to :sender, class_name: 'User', foreign_key: :sender_id, inverse_of: :pushes

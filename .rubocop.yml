@@ -80,6 +80,7 @@ Metrics/ParameterLists:
   CountKeywordArgs: true
   Exclude:
     - app/services/code_climate/repository_summary.rb
+    - app/services/code_climate/repositories_summary.rb
 
 Metrics/PerceivedComplexity:
   Max: 12
@@ -120,3 +121,11 @@ Style/BlockComments:
 SkipsModelValidations:
   Exclude:
     - app/services/processors/org_users_updater.rb
+
+Rails/HelperInstanceVariable:
+  Exclude:
+    - app/helpers/meta_tags_helper.rb
+
+Rails/HasManyOrHasOneDependent:
+  Exclude:
+    - app/models/repository.rb

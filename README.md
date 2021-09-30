@@ -51,11 +51,15 @@ Either assign superuser permissions to `postgres` or update the env vars: `GITHU
 
 ## Settings
 
-### Success Rates Department Settings
-
-- In order to change Department Success Rates time limit setting, create a new `Setting` with key prefix `success_rate`, followed by the department name and the metric name.
-- Example: `Setting.create!(key: 'success_rate_backend_merge_time', value: '12')`
-Possible values: 12 | 24 (default) | 36 | 48 | 60 | 72
+### Success Rates Settings
+- Department
+  - In order to change Department Success Rates time limit setting, create a new `Setting` with key prefix `success_rate`, followed by the department name and the metric name.
+  - Example: `Setting.create!(key: 'success_rate_backend_merge_time', value: '12')`
+  Possible values: 12 | 24 (default) | 36 | 48 | 60 | 72
+- Repository
+  - In order to change Repository Success Rates time limit setting, create a new `Setting` with key prefix `success_rate_`, followed by the repository name and the metric name.
+  - Example: `Setting.create!(key: 'success_rate_rs-code-review-metrics_merge_time', value: '12')`
+  Possible values: 12 | 24 (default) | 36 | 48 | 60 | 72
 
 ### Enabled Features Settings
 Possible values: true | false (default)

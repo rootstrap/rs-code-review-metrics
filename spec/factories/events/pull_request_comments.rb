@@ -4,7 +4,6 @@
 #
 #  id                :bigint           not null, primary key
 #  body              :string
-#  deleted_at        :datetime
 #  opened_at         :datetime         not null
 #  state             :enum             default("created")
 #  created_at        :datetime         not null
@@ -16,7 +15,7 @@
 #
 # Indexes
 #
-#  index_events_pull_request_comments_on_deleted_at         (deleted_at)
+
 #  index_events_pull_request_comments_on_owner_id           (owner_id)
 #  index_events_pull_request_comments_on_pull_request_id    (pull_request_id)
 #  index_events_pull_request_comments_on_review_request_id  (review_request_id)
@@ -25,7 +24,7 @@
 # Foreign Keys
 #
 #  fk_rails_...  (owner_id => users.id)
-#  fk_rails_...  (pull_request_id => pull_requests.id)
+#  fk_rails_...  (pull_request_id => events_pull_requests.id)
 #
 
 FactoryBot.define do

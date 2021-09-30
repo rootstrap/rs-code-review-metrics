@@ -36,6 +36,10 @@ describe CodeClimate::RepositoriesSummaryService do
       code_climate_metrics.map(&:open_issues_count).sum / code_climate_metrics.size.to_f
     end
 
+    let(:test_coverage_average) do
+      (code_climate_metrics.map(&:test_coverage).sum / code_climate_metrics.size.to_f).round
+    end
+
     let(:ratings) do
       code_climate_metrics.each_with_object(Hash.new(0)) do |code_climate_metric, ratings|
         ratings[code_climate_metric.code_climate_rate] += 1
@@ -59,6 +63,10 @@ describe CodeClimate::RepositoriesSummaryService do
       expect(subject.open_issues_count_average).to eq(open_issues_count_average)
     end
 
+    it 'returns the correct test coverage average' do
+      expect(subject.test_coverage_average).to eq(test_coverage_average)
+    end
+
     it 'returns the correct ratings' do
       expect(subject.ratings).to eq(ratings)
     end
@@ -76,6 +84,7 @@ describe CodeClimate::RepositoriesSummaryService do
           invalid_issues_count: nil,
           open_issues_count: nil,
           wont_fix_issues_count: nil,
+          test_coverage: nil,
           snapshot_time: nil,
           repository: third_repository
         )
@@ -97,6 +106,10 @@ describe CodeClimate::RepositoriesSummaryService do
         code_climate_metrics_with_data.map(&:open_issues_count).sum / 2.0
       end
 
+      let(:test_coverage_average) do
+        (code_climate_metrics_with_data.map(&:test_coverage).sum / 2.to_f).round
+      end
+
       let(:ratings) do
         ratings = Hash.new(0)
         ratings[first_code_climate_repository.code_climate_rate] += 1
@@ -114,6 +127,10 @@ describe CodeClimate::RepositoriesSummaryService do
 
       it 'does not count it for the open issues average' do
         expect(subject.open_issues_count_average).to eq(open_issues_count_average)
+      end
+
+      it 'does not count it for the test coverage average' do
+        expect(subject.test_coverage_average).to eq(test_coverage_average)
       end
 
       it 'does not count it for the ratings' do
