@@ -1,17 +1,13 @@
-<%= render 'development_metrics/products_dropdown' %>
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
+  <div class="metrics-container container col-md-12">
 
 <div class="row">
-  <% if @product %>
-    <div class="col-md-12 text-center mt-2">
-      <b><%= @product[:name] %></b>
+
+    <div class="row title_sidebar">
+      <div class="col-md-6">
+          <b class="rute_title"><%= @product[:name] %></b>
+        </div>
     </div>
-    <%= render 'development_metrics/navigation', product: @product %>
-  <% end %>
-  <div class="metrics-container container col-md-12">
-    <%= render 'shared/product/nav-filter' do |f| %>
-        <%= hidden_field_tag 'metric[period]', '4'  %>
-    <% end %>
 
     <% if @product %>
         <%if current_page?(products_development_metrics_path)%>

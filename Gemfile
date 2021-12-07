@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.6.3'
+ruby '~> 2.7.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3.7'
@@ -17,7 +17,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
-gem 'pg', '~> 1.1'
+gem 'pg', '~> 1.2.3'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -40,7 +40,7 @@ gem 'devise', '~> 4.7.1'
 
 gem 'dotenv-rails', '~> 2.7.5'
 
-gem 'bootstrap', '~> 4.4.1'
+gem 'bootstrap', '~> 5.1', '>= 5.1.3'
 gem 'jquery-rails', '~> 4.3', '>= 4.3.5'
 gem 'simple_form', '~> 5.0', '>= 5.0.2'
 

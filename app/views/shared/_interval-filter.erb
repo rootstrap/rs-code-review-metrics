@@ -1,8 +1,8 @@
 <%= form.input :period,
   label: 'Weeks Period',
-  wrapper_html: { class: 'period-selection mb-0' },
-  input_html: { class: 'margin-left', value: chosen_period },
+  wrapper_html: { class: 'period-selection rute_title' },
+  input_html: { class: 'margin-left', value: chosen_period, style:"width: 70px;" },
   required: false,
   as: :numeric
 %>
-<%= form.button :submit, 'Submit',class: 'btn-secondary ml-1', id: 'submitButton' %>
+<%= form.button :submit, 'Submit',class: 'ml-1', id: 'submitButton' %>
