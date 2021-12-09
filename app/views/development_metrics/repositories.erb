@@ -33,6 +33,12 @@
               </span>
             <% end %>
           </h4>
+          <div class="distribution-report-button mr-5 mb-2">
+            <%= link_to 'See report',
+                        repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
+                        class: 'btn btn-secondary'
+            %>
+           </div>
           <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>?</span>
         </div>
         <div class="graph">
@@ -55,7 +61,13 @@
               </span>
             <% end %>
           </h4>
-          <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>?</span>
+           <div class="distribution-report-button mr-5 mb-2">
+              <%= link_to 'See report',
+                          repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
+                          class: 'btn btn-secondary'
+              %>
+            </div>
+          <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>!</span>
         </div>
         <div class="graph">
           <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
