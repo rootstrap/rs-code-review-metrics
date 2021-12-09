@@ -33,7 +33,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'annotate', '~> 3.0'
 
 # Use Sidekiq to enqueue job in the background
-gem 'sidekiq', '~> 6.0.2'
+gem 'sidekiq', '~> 6.2.1'
 
 gem 'activeadmin', '~> 2.7'
 gem 'devise', '~> 4.7.1'
