@@ -5,7 +5,7 @@ import '@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css';
 
 let elementSelector = (className) => {
   return document.querySelector(`.${className}`);
-}
+};
 
 export const disablePeriod = () => {
   const button = document.getElementById('submitButton');
@@ -14,17 +14,17 @@ export const disablePeriod = () => {
   if (sidebarSelectionInput && sidebarSelectionInput.selectedIndex === 0){
     button.disabled = true;
   }
-}
+};
 
 export const handleChangeSidebar = () => {
   const sidebarSelectionInput = elementSelector('repository-selection') || elementSelector('department-selection')
     || elementSelector('product-selection');
   if (sidebarSelectionInput != null) {
     sidebarSelectionInput.onchange = () => {
-      submitNavForm()
-    }
+      submitNavForm();
+    };
   }
-}
+};
 
 const submitNavForm = () => {
   let navFilterForm = elementSelector('nav-filter');
@@ -33,26 +33,26 @@ const submitNavForm = () => {
     periodSelected.selectedIndex = 1;
   }
   navFilterForm.submit();
-}
+};
 
 
 export const handleChangeUser = () => {
-  const userSelect = document.querySelector('.user-selection')
+  const userSelect = document.querySelector('.user-selection');
   if (userSelect != null) {
     const current_base_url = window.location.origin;
     userSelect.onchange = function() {
       const optionSelected = userSelect.options.selectedIndex;
-      const resource = `development_metrics/users/` +
+      const resource = 'development_metrics/users/' +
       `${userSelect.options[optionSelected].value}/repositories`;
-      window.location.href = `${current_base_url}/${resource}`
-    }
+      window.location.href = `${current_base_url}/${resource}`;
+    };
   }
-}
+};
 
 export const initializeSelect2 = () => {
   if (!elementSelector('select2')) {
     $('.repository-selection, .product-selection, .department-selection, .user-selection').select2({
       theme: 'bootstrap4',
-    })
+    });
   }
-}
+};
