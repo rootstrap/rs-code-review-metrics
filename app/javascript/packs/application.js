@@ -20,6 +20,6 @@ require('turbolinks').start();
 require('chartkick');
 require('chart.js');
 
-import './bootstrap.bundle.min';
+import './bootstrap.bundle';
 import './graphApplication';
 import './toggleDetailsMetric';
