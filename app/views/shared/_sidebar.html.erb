@@ -1,9 +1,11 @@
 
-<div class="sidebar-container col-md-2">
   <div class="logo-container">
-    <%= image_tag('logo-nav.svg')%>
-    <span class="txt-logo">Engineering Metrics</span>
+    <div class="d-flex align-items-center logo">
+      <%= image_tag('logo-nav.svg')%>
+    </div>
+    <span class="d-flex justify-content-center align-items-center txt-logo">Engineering Metrics</span>
   </div>
+
+
   <%= yield(:development_metrics_sidebar) %>
-  <%= yield(:open_source_sidebar) %>
-</div>
+  <% # yield(:open_source_sidebar) %>

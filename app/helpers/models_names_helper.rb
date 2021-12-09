@@ -11,7 +11,7 @@ module ModelsNamesHelper
     department.languages.pluck(:name)
   end
 
-  def all_products_names
-    Product.pluck(:name).sort
+  def all_products
+    Product.all.includes(:repositories)
   end
 end
