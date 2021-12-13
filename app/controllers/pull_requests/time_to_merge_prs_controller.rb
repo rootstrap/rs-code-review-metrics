@@ -4,7 +4,7 @@ module PullRequests
     include LoadSettings
 
     def index
-      @pull_requests = Builders::Distribution::PullRequests::TimeToMerge.call(
+      @pull_requests_department = Builders::Distribution::PullRequests::TimeToMerge.call(
         department_name: params[:department_name],
         from: metric_params[:period],
         languages: metric_params[:lang] || []

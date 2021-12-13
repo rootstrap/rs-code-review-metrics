@@ -32,7 +32,7 @@
       <div class="metrics-container container col-md-12">
         <div class="metrics shadow-box p-3">
 
-        <% @pull_requests.each do |k,v| %>
+        <% @pull_requests_repository.each do |k,v| %>
           <h6><%= k %> hours:</h6>
           <ul>
             <% v.each do |pr_link| %>
