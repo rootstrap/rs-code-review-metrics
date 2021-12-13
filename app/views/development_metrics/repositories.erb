@@ -1,20 +1,22 @@
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
 
-<div class="row">
-  <div class="col-md-12 text-center mt-2">
-    <b><%= @repository.product[:name] if @repository.product.present? %></b>
-  </div>
-  <%= render 'development_metrics/navigation', product: @repository.product %>
-
   <div class="metrics-container container col-md-12">
-    <%= render 'shared/repository/nav-filter' do |f| %>
-      <%= hidden_field_tag 'repository_name', @repository.name  %>
-      <div class="row">
-        <div class="col-md-5 period-input">
-          <%= render 'shared/interval-filter', form: f %>
+
+    <div class="row title_sidebar">
+
+        <div class="col-md-6">
+          <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
+          <b class="rute_title"><%= @repository.name  if @repository.product.present? %></b>
         </div>
-      </div>
-    <% end %>
+
+        <div class="col-md-6 interval d-flex flex-row-reverse">
+          <%= render 'shared/repository/nav-filter' do |f| %>
+              <%= hidden_field_tag 'repository_name', @repository.name  %>
+              <%= render 'shared/interval-filter', form: f %>
+          <% end %>
+        </div>
+
+    </div>
 
     <% if @enabled_repository_codeowners_section %>
       <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>

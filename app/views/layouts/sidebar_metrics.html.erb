@@ -14,16 +14,15 @@
   </head>
 
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <%= render 'shared/sidebar'%>
-        <div class='main-container col-md-10 offset-md-2'>
-          <div class="row">
-            <%= render 'layouts/navigation' %>
-          </div>
-          <%= yield %>
+    <div class="sidebar span4 hidden-phone sticky-top">
+          <%= render 'shared/sidebar'%>
+    </div>
+    <div class="main">
+        <div class="container-fluid pb-2">
+            <div class="row-fluid">
+            <%= yield %>
+            </div>
         </div>
-      </div>
     </div>
   </body>
 </html>

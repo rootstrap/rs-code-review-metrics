@@ -14,11 +14,12 @@
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
-require('bootstrap');
+
 require('@rails/ujs').start();
 require('turbolinks').start();
 require('chartkick');
 require('chart.js');
 
+import './bootstrap.bundle.min';
 import './graphApplication';
 import './toggleDetailsMetric';

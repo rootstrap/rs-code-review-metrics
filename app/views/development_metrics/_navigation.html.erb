@@ -1,18 +1,1 @@
-<nav class="nav nav-style nav-txt-color p-2 nav-items-container col-md-12 d-flex justify-content-between">
-  <div class="d-flex flex-row">
-  <% if product.present? %>
-    <%if current_page?(products_development_metrics_path) || current_page?(products_metrics_development_metrics_path)%>
-      <a href='<%= products_development_metrics_path({product_name: product[:name], metric: { period: 4 }}) %>' class='nav-link active nav-txt-color selected mx-1' role='button'>General</a>
-    <% else %>
-      <a href='<%= products_development_metrics_path({product_name: product[:name], metric: { period: 4 }}) %>' class='nav-link active nav-txt-color mx-1' role='button'>General</a>
-    <% end %>
-      <% product.repositories.each do |repository|%>
-        <%if current_page?(repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}))%>
-          <a href='<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color selected mx-1' role='button'><%= repository[:name] %></a>
-        <% else %>
-          <a href='<%= repositories_development_metrics_path({repository_name: repository[:name], metric: { period: params&.dig(:metric, :period) }}) %>' class='nav-link active nav-txt-color mx-1' role='button'><%= repository[:name] %></a>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
-</nav>
+

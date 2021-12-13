@@ -1,0 +1,25 @@
+<div class="list-group">
+  <ul class="list-unstyled ps-0">
+
+    <% all_products.each do |product| %>
+      <li class="mb-1" data-turbolinks-permanent>
+
+        <%= link_to products_development_metrics_path({product_name: product.name, metric: { period: 4 }}) do %>
+          <button class="btn btn-toggle align-items-center sidebar_font rounded collapsed" data-bs-toggle="collapse" data-bs-target="#<%= product.name %>-collapse" aria-expanded="true">
+            <%= product.name %>
+          </button>
+        <% end %>
+
+        <div data-turbolinks-permanent class="collapse" id="<%= product.name %>-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
+              <% product.repositories.each do |repository|%>
+                <a href='<%= (repositories_development_metrics_path({repository_name: repository.name, metric: { period: params&.dig(:metric, :period) }})) %>' class='btn btn-toggle sidebar_font' role='button'><%= repository.name %></a>
+                <% end %>
+            </ul>
+        </div>
+
+      </li>
+    <% end %>
+
+  </ul>
+</div>
