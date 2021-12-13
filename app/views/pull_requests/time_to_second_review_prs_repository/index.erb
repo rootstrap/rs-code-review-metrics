@@ -1,38 +1,48 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-10 offset-1">
-      <%= simple_form_for :metric, url: repository_time_to_second_review_prs_repository_index_path, method: 'GET', html: {
-                                                        class: 'nav-filter p-3 shadow-box', id: 'nav-filter-form' } do |f|%>
-            <h4 class="text-center">Time to second review distribution report for <%= params[:repository_name]  %> repository</h4>
-            <div class="row justify-content-center mt-3">
-              <%= f.input :period,
-                label: 'Last Updated (Weeks)',
-                wrapper_html: { class: 'period-selection d-flex flex-column mb-0 col-md-4' },
-                input_html: { class: 'margin-left input-height', value: chosen_period },
-                required: false,
-                as: :numeric
-              %>
-            </div>
-            <div class="row">
-              <div class="col-md-12 d-flex justify-content-center">
-                <%= f.button :submit, 'Submit', class: 'btn-secondary ml-1', id: 'submitButton' %>
-              </div>
-            </div>
-      <% end %>
+
+
+<%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
+
+  <div class="metrics-container container col-md-12">
+
+    <div class="row title_sidebar">
+
+        <div class="col-md-6">
+          <b class="rute_title_grey"><%= params[:repository_name] +'/'%></b>
+          <b class="rute_title">Time to second review</b>
+        </div>
+
+        <div class="col-md-6 interval d-flex flex-row-reverse">
+          <%= simple_form_for :metric, url: repository_time_to_second_review_prs_repository_index_path, method: 'GET', html: {
+                                                          id: 'nav-filter-form', style:"display: flex;"} do |f|%>
+
+
+              <%= hidden_field_tag 'repository_name', params[:repository_name] %>
+              <%= render 'shared/interval-filter', form: f %>
+
+            <% end %>
+        </div>
+
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-10 offset-1 mt-5">
-      <% @pull_requests.each do |k,v| %>
-        <h6><%= k %> hours:</h6>
-        <ul>
-          <% v.each do |pr_link| %>
-            <li>
-              <%= link_to nil, pr_link, target: '_blank' %>
-              </li>
+
+  <div class="container-fluid">
+    <div class="row p-3">
+
+        <div class="row p-3">
+        <div class="metrics-container container col-md-12">
+          <div class="metrics shadow-box p-3">
+
+          <% @pull_requests.each do |k,v| %>
+            <h6><%= k %> hours:</h6>
+            <ul>
+              <% v.each do |pr_link| %>
+                <li>
+                  <%= link_to nil, pr_link, target: '_blank' %>
+                  </li>
+              <% end %>
+            </ul>
           <% end %>
-        </ul>
-      <% end %>
+          </div>
+      </div>
     </div>
   </div>
-</div>
+  </div>

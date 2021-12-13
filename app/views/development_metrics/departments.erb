@@ -38,7 +38,7 @@
             </h4>
             <%= render 'development_metrics/review_turnaround/success_rate_detail', review_turnaround_success_rate: @review_turnaround_success_rate %>
             <div class="distribution-report-button mr-5 mb-2">
-              <%= link_to 'See report1',
+              <%= link_to 'See details',
                           department_time_to_second_review_prs_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
                           class: 'btn btn-secondary'
               %>
@@ -63,7 +63,7 @@
             </h4>
             <%= render 'development_metrics/merge_time/success_rate_detail', merge_time_success_rate: @merge_time_success_rate %>
             <div class="distribution-report-button mr-5 mb-2">
-              <%= link_to 'See report22',
+              <%= link_to 'See details',
                           department_time_to_merge_prs_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
                           class: 'btn btn-secondary'
               %>

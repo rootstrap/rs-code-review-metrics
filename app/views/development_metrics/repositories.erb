@@ -26,23 +26,29 @@
     </div>
     <% if @repository %>
       <div class="metrics shadow-box">
-        <div class='row'>
-          <h4 class="p-3" style='margin-left:10px;'>
-            <%= @review_turnaround_definition && @review_turnaround_definition[:name] %>
-            <% if @review_turnaround_success_rate.present? %>
-              <span class="badge badge-info success_rate_btn">
-                <%= @review_turnaround_success_rate[:rate] %>% success rate
-              </span>
-            <% end %>
-          </h4>
-          <div class="distribution-report-button mr-5 mb-2">
-            <%= link_to 'See report',
-                        repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
-                        class: 'btn btn-secondary'
-            %>
+        <div class='row p-3'>
+          <div class="col-md-6">
+            <div class="box-title" >
+              <%= @review_turnaround_definition && @review_turnaround_definition[:name] %>
+              <% if @review_turnaround_success_rate.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  <%= @review_turnaround_success_rate[:rate] %>% success rate
+                </span>
+              <% end %>
+
+            </div>
            </div>
-          <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>?</span>
+          <div class="col-md-6">
+            <div class="distribution-report-button mr-5">
+              <%= link_to 'See details',
+                          repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
+                          class: 'btn btn-detail'
+              %>
+             </div>
+         </div>
+         <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>!</span>
         </div>
+
         <div class="graph">
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
         </div>
@@ -54,22 +60,26 @@
       </div>
 
       <div class="metrics shadow-box">
-        <div class='row'>
-          <h4 class="p-3" style='margin-left:10px;'>
+        <div class='row p-3'>
+                <div class="col-md-6">
+              <div class="box-title" >
             <%= @merge_time_definition && @merge_time_definition[:name] %>
             <% if @merge_time_success_rate.present? %>
               <span class="badge badge-info success_rate_btn">
                 <%= @merge_time_success_rate[:rate] %>% success rate
               </span>
             <% end %>
-          </h4>
-           <div class="distribution-report-button mr-5 mb-2">
-              <%= link_to 'See report',
+          </div>
+            </div>
+            <div class="col-md-6">
+           <div class="distribution-report-button mr-5">
+              <%= link_to 'See details',
                           repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
-                          class: 'btn btn-secondary'
+                          class: 'btn btn-detail'
               %>
             </div>
-          <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>!</span>
+            </div>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>!</span>
         </div>
         <div class="graph">
           <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
@@ -82,9 +92,13 @@
       </div>
 
       <div class="metrics shadow-box">
-        <div class='row'>
-          <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
-          <span data-placement='right' class='metric_tooltip' style='margin-top: 1.5%;' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>?</span>
+        <div class='row p-3'>
+          <div class="col-md-12">
+            <div class="box-title" >
+              <%= @pull_request_size_definition && @pull_request_size_definition[:name] %>
+              </div>
+          </div>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>!</span>
         </div>
         <div class="graph">
           <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>

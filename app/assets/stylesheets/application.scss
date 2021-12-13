@@ -50,17 +50,17 @@ canvas[style] {
 }
 
 .metric_tooltip {
+  top: 20px;
   font-size: x-large;
-      color: white;
-      background: black;
-      border-radius: 50%;
-      height: 26px;
-      width: 26px;
-      line-height: 26px;
-      position: absolute;
-      right: 10px;
-      padding-left: 7px;
-
+  color: white;
+  background: #455A64;
+  border-radius: 50%;
+  height: 26px;
+  width: 26px;
+  line-height: 26px;
+  position: absolute;
+  right: 140px;
+  padding-left: 9px;
 }
 
 .main {padding-left:366px;}
@@ -182,4 +182,17 @@ main {
   position: absolute;
   bottom: 10px;
   right: 10px;
+}
+
+.btn-detail {
+  position: absolute;
+  font-size: 18px;
+  line-height: 21px;
+}
+
+.box-title {
+  margin-left: 10px;
+  font-weight: normal;
+  font-size: 26px;
+  line-height: 36px;
 }
