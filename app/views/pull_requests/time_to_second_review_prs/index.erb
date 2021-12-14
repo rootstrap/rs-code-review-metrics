@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-md-10 offset-1">
       <%= simple_form_for :metric, url: department_time_to_second_review_prs_path, method: 'GET', html: {
-                                                        class: 'nav-filter p-3 shadow-box', id: 'nav-filter-form' } do |f|%>
+                                                        class: 'nav-filter p-3', id: 'nav-filter-form' } do |f|%>
             <h4 class="text-center">Time to second review distribution report for <%= params[:department_name] %> department</h4>
             <div class="row justify-content-center mt-3">
               <%= f.input :period,

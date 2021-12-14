@@ -22,18 +22,18 @@
   flex: 6;
 }
 
-
 canvas[style] {
   width: 100% !important;
 }
 
 .metrics {
-  display: flex;
-  flex-direction: column;
   background: #FFFFFF;
   border-radius: 10px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
+  position: relative;
+
 
   .graph {
     display: flex;
@@ -50,17 +50,21 @@ canvas[style] {
 }
 
 .metric_tooltip {
+  color: white;
+  background: black;
+  border-radius: 50%;
   font-size: x-large;
-      color: white;
-      background: black;
-      border-radius: 50%;
-      height: 26px;
-      width: 26px;
-      line-height: 26px;
-      position: absolute;
-      right: 10px;
-      padding-left: 7px;
+  height: 26px;
+  line-height: 26px;
+  padding-left: 7px;
+  position: absolute;
+  right: 10px;
+  width: 26px;
+}
 
+.metrics-container {
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 .main {padding-left:366px;}
@@ -95,8 +99,6 @@ main {
   overflow-y: hidden;
 }
 
-
-
 .btn-toggle {
   align-items: center;
   padding-left: 5px;
@@ -117,7 +119,6 @@ main {
   color: $primary-color;
   line-height: 0;
   content: image-url("polygon.svg");
-
   transition: transform .35s ease;
   transform-origin: .5em 50%;
 }
@@ -140,7 +141,6 @@ main {
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {
   background-color: #d2f4ea;
-
 }
 
 .list-group{
@@ -169,17 +169,22 @@ main {
   line-height: 21px;
 }
 
-
 .title_sidebar{
   padding-top: 48px;
   padding-bottom: 10px;
 }
 
 .btn-secondary {
-  color: #fff;
   background-color: #6c757d;
   border-color: #6c757d;
-  position: absolute;
   bottom: 10px;
+  color: #fff;
+  position: absolute;
   right: 10px;
+}
+
+.calendar-icon {
+  content: image-url("calendar.svg");
+  filter: brightness(0) saturate(100%) invert(46%) sepia(82%) saturate(1952%) hue-rotate(207deg) brightness(101%) contrast(101%);
+  width: 1.25em;
 }
