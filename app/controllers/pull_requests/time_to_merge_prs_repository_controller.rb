@@ -1,10 +1,7 @@
 module PullRequests
-  class TimeToMergePrsRepositoryController < ApplicationController
-    layout 'sidebar_metrics'
-    include LoadSettings
-
+  class TimeToMergePrsRepositoryController < PullRequestsController
     def index
-      @pull_requests_repository = Builders::Distribution::PullRequests::TimeToMergeRepository.call(
+      @pull_requests = Builders::Distribution::PullRequests::TimeToMergeRepository.call(
         from: metric_params[:period],
         repository_name: params[:repository_name]
       )

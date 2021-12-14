@@ -1,14 +1,11 @@
 module PullRequests
-  class TimeToSecondReviewPrsRepositoryController < ApplicationController
-    layout 'sidebar_metrics'
-    include LoadSettings
-
+  class TimeToSecondReviewPrsRepositoryController < PullRequestsController
     def index
-      @pull_requests_repository = Builders::Distribution::PullRequests::TimeToSecondReviewRepository
-                                  .call(
-                                    from: metric_params[:period],
-                                    repository_name: params[:repository_name]
-                                  )
+      @pull_requests = Builders::Distribution::PullRequests::TimeToSecondReviewRepository
+                       .call(
+                         from: metric_params[:period],
+                         repository_name: params[:repository_name]
+                       )
     end
 
     def metric_params

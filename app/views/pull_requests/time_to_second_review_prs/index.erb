@@ -30,18 +30,5 @@
       <% end %>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-10 offset-1 mt-5">
-      <% @pull_requests_deparment.each do |k,v| %>
-        <h6><%= k %> hours:</h6>
-        <ul>
-          <% v.each do |pr_link| %>
-            <li>
-              <%= link_to nil, pr_link, target: '_blank' %>
-              </li>
-          <% end %>
-        </ul>
-      <% end %>
-    </div>
-  </div>
+  <%= render 'shared/pull_request_list' %>
 </div>

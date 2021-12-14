@@ -1,5 +1,3 @@
-
-
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
 
   <div class="metrics-container container col-md-12">
@@ -18,32 +16,8 @@
 
               <%= hidden_field_tag 'repository_name', params[:repository_name] %>
               <%= render 'shared/interval-filter', form: f %>
-
             <% end %>
         </div>
-
     </div>
-
-
-<div class="container-fluid">
-  <div class="row p-3">
-
-      <div class="row p-3">
-      <div class="metrics-container container col-md-12">
-        <div class="metrics shadow-box p-3">
-
-        <% @pull_requests_repository.each do |k,v| %>
-          <h6><%= k %> hours:</h6>
-          <ul>
-            <% v.each do |pr_link| %>
-              <li>
-                <%= link_to nil, pr_link, target: '_blank' %>
-                </li>
-            <% end %>
-          </ul>
-        <% end %>
-        </div>
-    </div>
-  </div>
-</div>
+    <%= render 'shared/pull_request_list' %>
 </div>
