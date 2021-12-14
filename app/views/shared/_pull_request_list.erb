@@ -5,7 +5,7 @@
       <div class="metrics-container container col-md-12">
         <div class="metrics shadow-box p-3">
 
-        <% @pull_requests.each do |range,pr| %>
+        <% pull_requests.each do |range,pr| %>
           <h6><%= range %> hours:</h6>
           <ul>
             <% pr.each do |pr_link| %>

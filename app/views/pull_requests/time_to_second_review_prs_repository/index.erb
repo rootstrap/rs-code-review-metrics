@@ -16,9 +16,8 @@
 
               <%= hidden_field_tag 'repository_name', params[:repository_name] %>
               <%= render 'shared/interval-filter', form: f %>
-
             <% end %>
         </div>
     </div>
-    <%= render 'shared/pull_request_list' %>
+    <%= render partial: 'shared/pull_request_list' , locals: { pull_requests: @pull_requests} %>
   </div>
