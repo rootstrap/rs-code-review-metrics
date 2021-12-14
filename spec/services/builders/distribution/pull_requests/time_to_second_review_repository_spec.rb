@@ -44,7 +44,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
       end
     end
 
-    context 'when distribution is filtered by language' do
+    context 'with correct params' do
       subject do
         described_class.call(
           repository_name: repository_ok.name,

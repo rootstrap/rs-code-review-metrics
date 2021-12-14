@@ -28,7 +28,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMergeRepository do
              opened_at: 26.hours.ago)
     end
 
-    context 'when distribution is filtered by language' do
+    context 'with correct params' do
       subject do
         described_class.call(
           repository_name: repository_ok.name,
