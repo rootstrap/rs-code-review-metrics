@@ -3,7 +3,7 @@
 
 <div class="container-fluid">
   <div class="row">
-      <div class="metrics-container col-md-12">
+      <div class="metrics-container">
         <div class="row">
           <div class="col-md-12">
             <%= render 'shared/department/nav-filter' do |f|%>
@@ -27,7 +27,7 @@
           department: @department, code_climate: @code_climate %>
         </div>
         <% if @department %>
-          <div class="container metrics shadow-box">
+          <div class="container metrics">
             <h4 class="p-3">
               Time to second review
               <% if @review_turnaround_success_rate.present? %>
@@ -52,7 +52,7 @@
               </div>
             <% end %>
           </div>
-          <div class="container metrics shadow-box">
+          <div class="container metrics">
             <h4 class="p-3">
               Time to merge
               <% if @merge_time_success_rate.present? %>
@@ -72,7 +72,7 @@
               <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
             </div>
           </div>
-          <div class="container metrics shadow-box">
+          <div class="container metrics">
             <h4 class="p-3">PR Size</h4>
             <div class="graph">
               <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>

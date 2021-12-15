@@ -1,37 +1,40 @@
-<div class="summary col-md-12">
-  <div class="code-climate">
-    <div class="container p-3">
-      <div class="title">
-        <b>CodeClimate summary</b>
+<div class="metrics">
+  <div class="row">
+    <div class="col-4 p-3" style="margin-left:10px;">
+    <h4>CodeClimate summary</h4>
       </div>
-
-      <% if code_climate -%>
-        <div class="info">
-          <div class="item-list">
-            <div>
-              Rate:
-              <span class="text-primary">
-                <b>
-                  <%= render 'shared/code_climate_metric', metric: code_climate.code_climate_rate, suffix: '' %>
-                </b>
-              </span>
-            </div>
+          <div class="col-7 p-4">
+            <div class="summary">
+              <div class="code-climate">
+            <% if code_climate -%>
+              <div class="info">
+                <div class="item-list">
+                  <div>
+                    Rate:
+                    <span class="text-primary">
+                      <b>
+                        <%= render 'shared/code_climate_metric', metric: code_climate.code_climate_rate, suffix: '' %>
+                      </b>
+                    </span>
+                  </div>
+                </div>
+                <div class="item-list">
+                  <%= render 'shared/code_climate_summary', metric: code_climate.invalid_issues_count, suffix: 'invalid' %>
+                </div>
+                <div class="item-list">
+                <%= render 'shared/code_climate_summary', metric: code_climate.wont_fix_issues_count, suffix: "won't fix" %>
+                </div>
+                <div class="item-list">
+                  <%= render 'shared/code_climate_summary', metric: code_climate.open_issues_count, suffix: 'open' %>
+                </div>
+              </div>
+            <% else -%>
+              <div class="col-md-12 text-center mt-2">
+                <span class="text-danger">No information available</span>
+              </div>
+            <% end -%>
           </div>
-          <div class="item-list">
-            <%= render 'shared/code_climate_summary', metric: code_climate.invalid_issues_count, suffix: 'invalid' %>
-          </div>
-          <div class="item-list">
-          <%= render 'shared/code_climate_summary', metric: code_climate.wont_fix_issues_count, suffix: "won't fix" %>
-          </div>
-          <div class="item-list">
-            <%= render 'shared/code_climate_summary', metric: code_climate.open_issues_count, suffix: 'open' %>
-          </div>
-        </div>
-      <% else -%>
-        <div class="col-md-12 text-center mt-2">
-          <span class="text-danger">No information available</span>
-        </div>
-      <% end -%>
+      </div>
     </div>
   </div>
 </div>
