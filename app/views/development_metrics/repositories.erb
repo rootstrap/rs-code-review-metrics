@@ -1,23 +1,17 @@
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-
   <div class="metrics-container container col-md-12">
-
     <div class="row title_sidebar">
-
         <div class="col-md-6">
           <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
           <b class="rute_title"><%= @repository.name  if @repository.product.present? %></b>
         </div>
-
         <div class="col-md-6 interval d-flex flex-row-reverse">
           <%= render 'shared/repository/nav-filter' do |f| %>
               <%= hidden_field_tag 'repository_name', @repository.name  %>
               <%= render 'shared/interval-filter', form: f %>
           <% end %>
         </div>
-
     </div>
-
     <% if @enabled_repository_codeowners_section %>
       <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
     <% end %>
@@ -35,7 +29,6 @@
                   <%= @review_turnaround_success_rate[:rate] %>% success rate
                 </span>
               <% end %>
-
             </div>
            </div>
           <div class="col-md-6">
@@ -58,7 +51,6 @@
           </div>
         <% end %>
       </div>
-
       <div class="metrics shadow-box">
         <div class='row p-3'>
                 <div class="col-md-6">
@@ -90,7 +82,6 @@
           </div>
         <% end %>
       </div>
-
       <div class="metrics shadow-box">
         <div class='row p-3'>
           <div class="col-md-12">
@@ -111,5 +102,4 @@
         </div>
       </div>
     <% end %>
-  </div>
 </div>
