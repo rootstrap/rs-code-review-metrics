@@ -45,9 +45,7 @@ RSpec.describe 'Time To Merge PRs Repository' do
       }
     end
 
-    before do
-      subject
-    end
+    before { subject }
 
     it 'renders pull requests index view' do
       expect(response).to render_template(:index)
@@ -57,9 +55,10 @@ RSpec.describe 'Time To Merge PRs Repository' do
       expect(assigns(:pull_requests)).not_to be_empty
     end
 
-    it 'returns correct repositories' do
-      expect(assigns(:pull_requests)['1-12'].count).to eq(2)
+    it 'returns ony one PR from each range' do
+      expect(assigns(:pull_requests)['1-12'].count).to eq(1)
       expect(assigns(:pull_requests)['12-24'].count).to eq(1)
+      expect(assigns(:pull_requests)['24-36'].count).to eq(1)
     end
   end
 end

@@ -6,26 +6,26 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
     let(:user2) { create(:user, login: 'user2') }
     let(:user3) { create(:user, login: 'user3') }
 
-    let(:repository_ok) { create(:repository) }
-    let(:repository_not_ok) { create(:repository) }
+    let(:repository_one) { create(:repository) }
+    let(:repository_two) { create(:repository) }
 
     let!(:first_pull_request) do
       create(:pull_request,
-             repository: repository_ok,
+             repository: repository_one,
              html_url: 'test_pr_url_one',
              opened_at: 6.hours.ago)
     end
 
     let!(:second_pull_request) do
       create(:pull_request,
-             repository: repository_not_ok,
+             repository: repository_two,
              html_url: 'test_pr_url_two',
              opened_at: 14.hours.ago)
     end
 
     let!(:third_pull_request) do
       create(:pull_request,
-             repository: repository_ok,
+             repository: repository_one,
              html_url: 'test_pr_url_three',
              opened_at: 26.hours.ago)
     end
@@ -47,7 +47,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
     context 'with correct params' do
       subject do
         described_class.call(
-          repository_name: repository_ok.name,
+          repository_name: repository_one.name,
           from: 4
         )
       end
@@ -68,7 +68,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
     context 'when pull request has html_url attribute nil' do
       let!(:pr) do
         create(:pull_request,
-               repository: repository_ok,
+               repository: repository_one,
                html_url: nil,
                owner: user1,
                opened_at: 40.hours.ago)
@@ -87,7 +87,7 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
 
       subject do
         described_class.call(
-          repository_name: repository_ok.name,
+          repository_name: repository_one.name,
           from: 4
         )
       end
