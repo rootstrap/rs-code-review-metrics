@@ -5,8 +5,10 @@
           <% if show_defect_escape_rate %>
               <div class="metrics">
                 <div class='row'>
-                  <h4 class="p-3" style='margin-left:10px;'><%= defect_escape_rate_definition && defect_escape_rate_definition[:name] %></h4>
-                  <span data-placement='right' class='metric_tooltip' style=<% if current_page?(products_development_metrics_path) %> 'margin-top: 4%;' <% else %> 'margin-top: 1.5%;' <% end %> aria-hidden='true' data-toggle='tooltip' title='<%= defect_escape_rate_definition && defect_escape_rate_definition[:explanation] %>'>?</span>
+                  <div class="box-title" >
+                    <%= defect_escape_rate_definition && defect_escape_rate_definition[:name] %>
+                  </div>
+                  <span data-placement='right' class='metric_tooltip' style="right:10px" aria-hidden='true' data-toggle='tooltip' title='<%= defect_escape_rate_definition && defect_escape_rate_definition[:explanation] %>'>!</span>
                 </div>
                 <%if current_page?(products_metrics_development_metrics_path)%>
                   <div class="metrics">
@@ -32,8 +34,8 @@
           <% if show_development_cycle %>
               <div class="metrics" style="margin-left:5%">
                 <div class='row'>
-                  <h4 class="p-3" style='margin-left:10px;'><%= development_cycle_definition && development_cycle_definition[:name] %></h4>
-                  <span data-placement='right' class='metric_tooltip' style=<% if current_page?(products_development_metrics_path) %> 'margin-top: 4%;' <% else %> 'margin-top: 1.5%;' <% end %> aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>?</span>
+                  <div class="box-title" ><%= development_cycle_definition && development_cycle_definition[:name] %></div>
+                  <span data-placement='right' class='metric_tooltip' style= "right:10px" aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>!</span>
                 </div>
                 <%if current_page?(products_metrics_development_metrics_path)%>
                   <div class="metrics">
@@ -60,8 +62,8 @@
           <% if show_planned_to_done %>
               <div class="metrics" style="margin-left:5%">
                 <div class='row'>
-                  <h4 class="p-3" style='margin-left:10px;'><%= planned_to_done_definition && planned_to_done_definition[:name] %></h4>
-                  <span data-placement='right' class='metric_tooltip' style=<% if current_page?(products_development_metrics_path) %> 'margin-top: 4%;' <% else %> 'margin-top: 1.5%;' <% end %> aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>?</span>
+                  <div class="box-title" ><%= planned_to_done_definition && planned_to_done_definition[:name] %></div>
+                  <span data-placement='right' class='metric_tooltip' style="right:10px"  aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>!</span>
                 </div>
                 <%if current_page?(products_metrics_development_metrics_path)%>
                   <div class="metrics">

@@ -1,5 +1,4 @@
 <%=  render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-10 offset-1">
@@ -30,18 +29,5 @@
       <% end %>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-10 offset-1 mt-5">
-      <% @pull_requests.each do |k,v| %>
-        <h6><%= k %> hours:</h6>
-        <ul>
-          <% v.each do |pr_link| %>
-            <li>
-              <%= link_to nil, pr_link, target: '_blank' %>
-              </li>
-          <% end %>
-        </ul>
-      <% end %>
-    </div>
-  </div>
+    <%= render partial: 'shared/pull_request_list' , locals: { pull_requests: @pull_requests} %>
 </div>
