@@ -1,5 +1,5 @@
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-  <div class="metrics-container container col-md-12">
+  <div class="metrics-container">
     <div class="row title_sidebar">
         <div class="col-md-6">
           <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
@@ -15,12 +15,12 @@
     <% if @enabled_repository_codeowners_section %>
       <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
     <% end %>
-    <div class="row">
-      <%= render 'development_metrics/code_climate/code_climate_repository_summary', code_climate: @code_climate %>
-    </div>
+
+    <%= render 'development_metrics/code_climate/code_climate_repository_summary', code_climate: @code_climate %>
+
     <% if @repository %>
-      <div class="metrics shadow-box">
-        <div class='row p-3'>
+      <div class="metrics">
+        <div class='row'>
           <div class="col-md-6">
             <div class="box-title" >
               <%= @review_turnaround_definition && @review_turnaround_definition[:name] %>
@@ -39,7 +39,7 @@
               %>
              </div>
          </div>
-         <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>!</span>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>!</span>
         </div>
 
         <div class="graph">
@@ -51,10 +51,12 @@
           </div>
         <% end %>
       </div>
-      <div class="metrics shadow-box">
-        <div class='row p-3'>
-                <div class="col-md-6">
-              <div class="box-title" >
+
+
+      <div class="metrics">
+        <div class='row'>
+          <div class="col-md-6">
+        <div class="box-title" >
             <%= @merge_time_definition && @merge_time_definition[:name] %>
             <% if @merge_time_success_rate.present? %>
               <span class="badge badge-info success_rate_btn">
@@ -82,13 +84,10 @@
           </div>
         <% end %>
       </div>
-      <div class="metrics shadow-box">
-        <div class='row p-3'>
-          <div class="col-md-12">
-            <div class="box-title" >
-              <%= @pull_request_size_definition && @pull_request_size_definition[:name] %>
-              </div>
-          </div>
+
+      <div class="metrics">
+        <div class='row'>
+          <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
           <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>!</span>
         </div>
         <div class="graph">
