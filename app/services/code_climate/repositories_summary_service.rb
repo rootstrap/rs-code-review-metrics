@@ -1,10 +1,11 @@
 module CodeClimate
   class RepositoriesSummaryService < BaseService
-    attr_reader :department, :from, :technologies
+    attr_reader :department, :from, :to, :technologies
 
-    def initialize(department:, from:, technologies: [])
+    def initialize(department:, from:, to:, technologies: [])
       @department = department
-      @from = from.to_i
+      @from = from
+      @to = to
       @technologies = technologies
     end
 
@@ -76,11 +77,8 @@ module CodeClimate
     end
 
     def metrics_in_time_period
-      if from.positive?
-        metrics_in_department.with_activity_after(from.weeks.ago)
-      else
-        metrics_in_department
-      end
+        metrics_in_department.with_activity_by_dates(from, to)
+        byebug
     end
 
     def metrics_in_department
@@ -100,9 +98,9 @@ module CodeClimate
                                           .where(language: department.languages)
                                           .distinct
                                           .relevant
-      if from.positive?
-        repositories_without_cc = repositories_without_cc.with_activity_after(from.weeks.ago)
-      end
+
+      repositories_without_cc = repositories_without_cc.with_activity_by_dates(from, to)
+
       repositories_without_cc.pluck(:id)
     end
 

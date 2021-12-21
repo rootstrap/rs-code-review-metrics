@@ -55,7 +55,7 @@ class DevelopmentMetricsController < ApplicationController
 
   def build_metrics(entity_id, entity_name)
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
-                                                     .call(entity_id, metric_params[:period])
+                                                     .call(entity_id, metric_params[:from], metric_params[:to])
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
@@ -71,7 +71,7 @@ class DevelopmentMetricsController < ApplicationController
     set_metrics_to_show
 
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
-                                                     .call(entity_id, metric_params[:period])
+                                                     .call(entity_id, metric_params[:from], metric_params[:to])
 
     defect_escape_rate(metrics)
     development_cycle(metrics)
@@ -167,7 +167,8 @@ class DevelopmentMetricsController < ApplicationController
   def code_climate_department_summary
     CodeClimate::RepositoriesSummaryService.call(
       department: department,
-      from: metric_params[:period],
+      from: metric_params[:from],
+      to: metric_params[:to],
       technologies: []
     )
   end

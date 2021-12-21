@@ -1,9 +1,10 @@
 module Builders
   module Chartkick
     class DevelopmentMetrics < BaseService
-      def initialize(entity_id, period)
+      def initialize(entity_id, from, to)
         @entity_id = entity_id
-        @period = period
+        @from = from
+        @to = to
       end
 
       def call
@@ -27,7 +28,8 @@ module Builders
           @entity_id,
           entities_by_metric[metric_name],
           metric_name,
-          @period
+          @from,
+          @to
         )
       end
 
