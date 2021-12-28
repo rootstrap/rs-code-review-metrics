@@ -17,7 +17,7 @@ module Builders
             metric_name: @metric_name,
             from: @from,
             to: @to
-            #prev: (@to.to_date - @from.to_date).to_i / 7
+            # prev: (@to.to_date - @from.to_date).to_i / 7
           )
         end
       end

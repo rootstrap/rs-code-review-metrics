@@ -36,7 +36,8 @@ describe DevelopmentMetricsController, type: :controller do
           repository_name: repository.name,
           metric: {
             metric_name: 'review_turnaround',
-            period: 'weekly'
+            from: 4.weeks.ago,
+            to: Time.zone.now
           }
         }
       end
@@ -65,7 +66,8 @@ describe DevelopmentMetricsController, type: :controller do
             product_name: product.name,
             metric: {
               metric_name: 'defect_escape_rate',
-              period: 'weekly'
+              from: 4.weeks.ago,
+              to: Time.zone.now
             }
           }
         end
@@ -143,7 +145,8 @@ describe DevelopmentMetricsController, type: :controller do
           {
             repository_name: repository.name,
             metric: {
-              period: 'weekly'
+              from: 4.weeks.ago,
+              to: Time.zone.now
             }
           }
         end

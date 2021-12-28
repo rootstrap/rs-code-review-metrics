@@ -1,8 +1,5 @@
 module PullRequests
-  class TimeToSecondReviewPrsController < ApplicationController
-    layout 'sidebar_metrics'
-    include LoadSettings
-
+  class TimeToSecondReviewPrsController < PullRequestsController
     def index
       @pull_requests = Builders::Distribution::PullRequests::TimeToSecondReview.call(
         department_name: params[:department_name],

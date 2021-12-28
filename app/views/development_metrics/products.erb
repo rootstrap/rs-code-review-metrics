@@ -1,35 +1,33 @@
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-  <div class="metrics-container container col-md-12">
 
-<div class="row">
-
+<div class="metrics-container">
+  <div class="row">
     <div class="row title_sidebar">
       <div class="col-md-6">
           <b class="rute_title"><%= @product[:name] %></b>
         </div>
     </div>
-
     <% if @product %>
-        <%if current_page?(products_development_metrics_path)%>
-          <%= render 'development_metrics/products/general',
-            product: @product,
-            defect_escape_rate: @defect_escape_rate,
-            development_cycle: @development_cycle,
-            planned_to_done: @planned_to_done,
-            development_cycle_definition: @development_cycle_definition,
-            defect_escape_rate_definition: @defect_escape_rate_definition,
-            planned_to_done_definition: @planned_to_done_definition,
-            has_jira_project: @has_jira_project,
-            show_defect_escape_rate: @show_defect_escape_rate,
-            show_development_cycle: @show_development_cycle,
-            show_planned_to_done: @show_planned_to_done %>
-        <% end %>
+      <%if current_page?(products_development_metrics_path)%>
+        <%= render 'development_metrics/products/general',
+          product: @product,
+          defect_escape_rate: @defect_escape_rate,
+          development_cycle: @development_cycle,
+          planned_to_done: @planned_to_done,
+          development_cycle_definition: @development_cycle_definition,
+          defect_escape_rate_definition: @defect_escape_rate_definition,
+          planned_to_done_definition: @planned_to_done_definition,
+          has_jira_project: @has_jira_project,
+          show_defect_escape_rate: @show_defect_escape_rate,
+          show_development_cycle: @show_development_cycle,
+          show_planned_to_done: @show_planned_to_done %>
+      <% end %>
     <% else %>
-      <div class="row">
-        <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
-          <span>Please select a repository to see its metrics</span>
-        </div>
+    <div class="row">
+      <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">
+        <span>Please select a repository to see its metrics</span>
       </div>
+    </div>
     <% end %>
   </div>
 </div>

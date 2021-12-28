@@ -11,10 +11,11 @@ RSpec.describe Builders::DepartmentOverview do
     let(:python) { Language.find_or_create_by(name: 'python') }
     let!(:nodejs) { Language.find_or_create_by(name: 'nodejs') }
 
-    let(:outdated_date) { date.yesterday }
-    let(:in_effect_date) { date.tomorrow }
+    let(:from) { 4.weeks.ago }
+    let(:to) { Time.zone.now }
 
-    let(:date) { 4.weeks.ago }
+    let(:outdated_date) { from.yesterday }
+    let(:in_effect_date) { from.tomorrow }
 
     let(:department) { ruby.department }
 
@@ -35,7 +36,7 @@ RSpec.describe Builders::DepartmentOverview do
 
     describe 'count by relevance' do
       it 'returns the amount of repositories by language and relevance' do
-        overview = described_class.call(department, from: date)
+        overview = described_class.call(department, from: from, to: to)
 
         expect(overview[:ruby][:per_relevance][:internal]).to eq 1
         expect(overview[:ruby][:per_relevance][:commercial]).to eq 1
@@ -46,7 +47,7 @@ RSpec.describe Builders::DepartmentOverview do
       end
 
       it 'does not count any ignored or unassigned repository' do
-        overview = described_class.call(department, from: date)
+        overview = described_class.call(department, from: from, to: to)
 
         expect(overview[:ruby][:per_relevance][:unassigned]).not_to be_present
         expect(overview[:python][:per_relevance][:ignored]).not_to be_present
@@ -55,7 +56,7 @@ RSpec.describe Builders::DepartmentOverview do
 
     describe 'total count' do
       it 'returns the totals for each language' do
-        overview = described_class.call(department, from: date)
+        overview = described_class.call(department, from: from, to: to)
 
         expect(overview[:ruby][:totals]).to eq 2
         expect(overview[:python][:totals]).to eq 2
@@ -71,7 +72,7 @@ RSpec.describe Builders::DepartmentOverview do
         end
 
         it 'does not repeat repositories while counting' do
-          overview = described_class.call(department, from: date)
+          overview = described_class.call(department, from: from, to: to)
 
           expect(overview[:ruby][:totals]).to eq 3
         end

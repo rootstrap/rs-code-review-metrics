@@ -22,7 +22,10 @@ describe CodeClimate::RepositoriesSummaryService do
     end
     let(:code_climate_metrics) { CodeClimateRepositoryMetric.all }
 
-    subject { described_class.call(department: department, from: nil, technologies: technologies) }
+    subject do
+      described_class.call(department: department, from: nil, to: nil,
+                           technologies: technologies)
+    end
 
     let(:invalid_issues_count_average) do
       code_climate_metrics.map(&:invalid_issues_count).sum / code_climate_metrics.size.to_f

@@ -54,14 +54,16 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_metrics(entity_id, entity_name)
+    validate_dates
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
-                                                     .call(entity_id, metric_params[:from], metric_params[:to])
+                                                     .call(entity_id, @from, @to)
     @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
   end
 
   def build_product_metrics(entity_id, entity_name)
+    validate_dates
     @has_jira_project = product.jira_board&.present?
 
     return unless @has_jira_project
@@ -69,9 +71,8 @@ class DevelopmentMetricsController < ApplicationController
     @query_metric_name = metric_params[:name]
 
     set_metrics_to_show
-
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
-                                                     .call(entity_id, metric_params[:from], metric_params[:to])
+                                                     .call(entity_id, @from, @to)
 
     defect_escape_rate(metrics)
     development_cycle(metrics)
@@ -174,6 +175,16 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def department_overview
-    Builders::DepartmentOverview.call(department, from: metric_params[:period].to_i.weeks.ago)
+    Builders::DepartmentOverview.call(department, from: @from, to: @to)
+  end
+
+  def validate_dates
+    @from = metric_params[:from]
+    @to = metric_params[:to]
+    return if @to.blank? || @from.blank?
+    return if @to > @from
+
+    flash.now[:notice] = 'From Date Should Be Less Than To Date'
+    @from = @to
   end
 end

@@ -90,17 +90,16 @@ class Repository < ApplicationRecord
     with_a_pr_merged_after(date).or(with_a_pr_opened_after(date))
   }
 
-  scope :with_activity_by_dates, lambda { |from, to|
-    (with_a_pr_merged_after(from).or(with_a_pr_opened_after(from))).
-    and(with_a_pr_merged_before(to).or(with_a_pr_opened_before(to)))
-  }
-
   scope :with_a_pr_opened_after, lambda { |date|
     joins(:pull_requests).where('events_pull_requests.opened_at > ?', date)
   }
 
   scope :with_a_pr_merged_after, lambda { |date|
     joins(:pull_requests).where('events_pull_requests.merged_at > ?', date)
+  }
+
+  scope :with_activity_before, lambda { |date|
+    with_a_pr_merged_before(date).or(with_a_pr_opened_before(date))
   }
 
   scope :with_a_pr_opened_before, lambda { |date|

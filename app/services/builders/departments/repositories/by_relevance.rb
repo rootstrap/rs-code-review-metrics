@@ -30,7 +30,7 @@ module Builders
         def relevances_overview(language)
           repository_relevances.index_with do |relevance|
             ::Repository.joins(:language)
-                        .relevant.with_activity_after(from)
+                        .relevant.with_activity_after(@from)
                         .where(relevance: relevance)
                         .where('languages.name = ?', language)
                         .distinct

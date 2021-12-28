@@ -77,8 +77,11 @@ module CodeClimate
     end
 
     def metrics_in_time_period
-        metrics_in_department.with_activity_by_dates(from, to)
-        byebug
+      if from.present?
+        metrics_in_department.with_activity_after(from)
+      else
+        metrics_in_department
+      end
     end
 
     def metrics_in_department
@@ -99,7 +102,7 @@ module CodeClimate
                                           .distinct
                                           .relevant
 
-      repositories_without_cc = repositories_without_cc.with_activity_by_dates(from, to)
+      repositories_without_cc = repositories_without_cc.with_activity_after(from) if from.present?
 
       repositories_without_cc.pluck(:id)
     end

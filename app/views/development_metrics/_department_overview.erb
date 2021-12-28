@@ -16,7 +16,7 @@
           </div>
         <% end %>
         <div>
-          <%= link_to 'See report',
+          <%= link_to 'See details',
                       department_repositories_by_relevance_index_path(params[:department_name], { metric: { period: params&.dig(:metric, :period) } }),
                       class: 'btn btn-secondary'
           %>

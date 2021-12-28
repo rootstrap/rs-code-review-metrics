@@ -22,19 +22,18 @@
   flex: 6;
 }
 
-
 canvas[style] {
   width: 100% !important;
 }
 
 .metrics {
-  display: flex;
-  flex-direction: column;
   background: #FFFFFF;
   border-radius: 10px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 15px;
-
+  position: relative;
+  padding: 1rem !important;
   .graph {
     display: flex;
     flex: 1;
@@ -50,29 +49,34 @@ canvas[style] {
 }
 
 .metric_tooltip {
-  font-size: x-large;
-      color: white;
-      background: black;
-      border-radius: 50%;
-      height: 26px;
-      width: 26px;
-      line-height: 26px;
-      position: absolute;
-      right: 10px;
-      padding-left: 7px;
-
+  background: #455A64;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  height: 26px;
+  line-height: 26px;
+  right: 140px;
+  padding-left: 10px;
+  position: absolute;
+  top: 20px;
+  width: 26px;
 }
 
+.metrics-container {
+  padding-left: 25px;
+  padding-right: 25px;
+}
 .main {padding-left:366px;}
 
 .sidebar {
+  background-color: $primary-color;
+  width:366px;
+  float:left;
+  height: 100vh;
   padding-left: 50px;
   padding-right: 50px;
   padding-top: 53px;
-  width:366px;
-  float:left;
-  background-color: $primary-color;
-  height: 100vh;
+
 }
 
 body {
@@ -95,16 +99,14 @@ main {
   overflow-y: hidden;
 }
 
-
-
 .btn-toggle {
   align-items: center;
-  padding-left: 5px;
-  font-weight: 600;
-  margin-left: -5px;
-  color: white;
   background-color: transparent;
   border: 0;
+  color: white;
+  font-weight: 600;
+  margin-left: -5px;
+  padding-left: 5px;
 }
 .btn-toggle:hover,
 .btn-toggle:focus {
@@ -113,13 +115,12 @@ main {
 }
 
 .btn-toggle::before {
-  width: 1.25em;
   color: $primary-color;
-  line-height: 0;
   content: image-url("polygon.svg");
-
+  line-height: 0;
   transition: transform .35s ease;
   transform-origin: .5em 50%;
+  width: 1.25em;
 }
 
 .btn-toggle[aria-expanded="true"] {
@@ -140,7 +141,6 @@ main {
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {
   background-color: #d2f4ea;
-
 }
 
 .list-group{
@@ -169,17 +169,44 @@ main {
   line-height: 21px;
 }
 
-
 .title_sidebar{
   padding-top: 48px;
   padding-bottom: 10px;
 }
 
 .btn-secondary {
-  color: #fff;
   background-color: #6c757d;
   border-color: #6c757d;
-  position: absolute;
   bottom: 10px;
+  color: #fff;
+  position: absolute;
   right: 10px;
+}
+
+.btn-detail {
+  font-size: 18px;
+  line-height: 21px;
+  position: absolute;
+}
+
+.box-title {
+  font-weight: normal;
+  font-size: 26px;
+  line-height: 36px;
+  margin-left: 10px;
+}
+
+.calendar-icon {
+  content: image-url("calendar.svg");
+  filter: brightness(0) saturate(100%) invert(46%) sepia(82%) saturate(1952%) hue-rotate(207deg) brightness(101%) contrast(101%);
+  width: 1.25em;
+}
+
+.metrics-alert {
+  position: fixed;
+  bottom: 0px;
+  right: 5px;
+  width: 500px;
+  z-index: 9999;
+  border-radius: 0px;
 }

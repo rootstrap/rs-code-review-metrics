@@ -1,18 +1,18 @@
 <% content_for :open_source_sidebar do %>
-  <div class="btn-group btn-entity-group">
-    <div class='custom-list d-flex flex-row align-items-center'>
-      <div class='circle'></div>
-      <%= link_to open_source_index_path do %>
-        <span class='font-size-1'>General metrics</span>
-      <% end %>
-    </div>
+<div class="btn-group btn-entity-group">
+  <div class='custom-list d-flex flex-row align-items-center'>
+    <div class='circle'></div>
+    <%= link_to open_source_index_path do %>
+      <span class='font-size-1'>General metrics</span>
+    <% end %>
   </div>
-  <div class="btn-group btn-entity-group">
-    <div class='custom-list d-flex flex-row align-items-center'>
-      <div class='circle'></div>
-      <%= link_to external_pull_requests_path do %>
-        <span class='font-size-1'>External Contributions</span>
-      <% end %>
-    </div>
+</div>
+<div class="btn-group btn-entity-group">
+  <div class='custom-list d-flex flex-row align-items-center'>
+    <div class='circle'></div>
+    <%= link_to external_pull_requests_path do %>
+      <span class='font-size-1'>External Contributions</span>
+    <% end %>
   </div>
+</div>
 <% end %>
