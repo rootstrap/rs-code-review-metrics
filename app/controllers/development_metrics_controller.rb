@@ -1,7 +1,7 @@
 class DevelopmentMetricsController < ApplicationController
   layout 'sidebar_metrics'
   include LoadSettings
-
+  include DateValidator
   PRODUCTS_ACTION = 'products'.freeze
 
   def index; end
@@ -54,7 +54,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_metrics(entity_id, entity_name)
-    validate_dates
+    validate_from_to(from: metric_params[:from], to: metric_params[:to])
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
                                                      .call(entity_id, @from, @to)
     @review_turnaround = metrics[:review_turnaround]
@@ -63,7 +63,7 @@ class DevelopmentMetricsController < ApplicationController
   end
 
   def build_product_metrics(entity_id, entity_name)
-    validate_dates
+    validate_from_to(from: metric_params[:from], to: metric_params[:to])
     @has_jira_project = product.jira_board&.present?
 
     return unless @has_jira_project
@@ -176,15 +176,5 @@ class DevelopmentMetricsController < ApplicationController
 
   def department_overview
     Builders::DepartmentOverview.call(department, from: @from, to: @to)
-  end
-
-  def validate_dates
-    @from = metric_params[:from]
-    @to = metric_params[:to]
-    return if @to.blank? || @from.blank?
-    return if @to > @from
-
-    flash.now[:notice] = 'From Date Should Be Less Than To Date'
-    @from = @to
   end
 end

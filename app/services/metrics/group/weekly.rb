@@ -16,9 +16,8 @@ module Metrics
       end
 
       def value_timestamp
-        now = Time.zone.now
-        from = @from || (now - 28.days).strftime('%Y-%m-%d')
-        to = @to || now.strftime('%Y-%m-%d')
+        from = @from || 4.weeks.ago.strftime('%Y-%m-%d')
+        to = @to || Time.zone.now.strftime('%Y-%m-%d')
         from.to_date..to.to_date
       end
     end

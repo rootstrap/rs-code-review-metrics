@@ -30,7 +30,7 @@ describe DevelopmentMetricsController, type: :controller do
       end
     end
 
-    context 'when metric type and period are valid' do
+    context 'when metric type and dates are valid' do
       let(:params) do
         {
           repository_name: repository.name,
@@ -41,6 +41,7 @@ describe DevelopmentMetricsController, type: :controller do
           }
         }
       end
+
       let(:code_climate_metric) do
         create :code_climate_repository_metric,
                repository: repository, code_climate_rate: 'A',
@@ -61,77 +62,103 @@ describe DevelopmentMetricsController, type: :controller do
 
         subject { get :products, params: params }
 
-        let(:params) do
-          {
-            product_name: product.name,
-            metric: {
-              metric_name: 'defect_escape_rate',
-              from: 4.weeks.ago,
-              to: Time.zone.now
+        context 'when date from is greater than date to' do
+          let(:params) do
+            {
+              product_name: product.name,
+              metric: {
+                metric_name: 'defect_escape_rate',
+                from: 4.weeks.ago,
+                to: 5.weeks.ago
+              }
             }
-          }
+          end
+
+          it 'returns status ok' do
+            get :index, params: params
+
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'render alert' do
+            subject
+            expect(response.body).to include('From Date Should Be Less Than To Date')
+          end
         end
 
-        context 'when it has issues from different environments' do
-          let!(:production_jira_bugs) do
-            create_list(:jira_issue, 2,
-                        :bug,
-                        :production,
-                        jira_board: jira_board,
-                        informed_at: beginning_of_day)
-          end
-          let!(:staging_jira_bugs) do
-            create_list(:jira_issue, 1,
-                        :bug,
-                        :staging,
-                        jira_board: jira_board,
-                        informed_at: beginning_of_day)
-          end
-          let!(:qa_jira_bugs) do
-            create_list(:jira_issue, 3,
-                        :bug,
-                        :qa,
-                        jira_board: jira_board,
-                        informed_at: beginning_of_day)
-          end
-          let!(:no_env_jira_bugs) do
-            create_list(:jira_issue, 2,
-                        :bug,
-                        :no_environment,
-                        jira_board: jira_board,
-                        informed_at: beginning_of_day)
+        context 'when dates are ok' do
+          let(:params) do
+            {
+              product_name: product.name,
+              metric: {
+                metric_name: 'defect_escape_rate',
+                from: 4.weeks.ago,
+                to: Time.zone.now
+              }
+            }
           end
 
-          before do
-            subject
-          end
+          context 'when it has issues from different environments' do
+            let!(:production_jira_bugs) do
+              create_list(:jira_issue, 2,
+                          :bug,
+                          :production,
+                          jira_board: jira_board,
+                          informed_at: beginning_of_day)
+            end
+            let!(:staging_jira_bugs) do
+              create_list(:jira_issue, 1,
+                          :bug,
+                          :staging,
+                          jira_board: jira_board,
+                          informed_at: beginning_of_day)
+            end
+            let!(:qa_jira_bugs) do
+              create_list(:jira_issue, 3,
+                          :bug,
+                          :qa,
+                          jira_board: jira_board,
+                          informed_at: beginning_of_day)
+            end
+            let!(:no_env_jira_bugs) do
+              create_list(:jira_issue, 2,
+                          :bug,
+                          :no_environment,
+                          jira_board: jira_board,
+                          informed_at: beginning_of_day)
+            end
 
-          it 'has a successful response' do
-            expect(response).to be_successful
-          end
+            before do
+              subject
+            end
 
-          it 'render EDR metric with correct production issues' do
-            expect(response.body).to include("Production: #{production_jira_bugs.count}")
-          end
+            it 'has a successful response' do
+              expect(response).to be_successful
+            end
 
-          it 'render EDR metric with correct staging issues' do
-            expect(response.body).to include("Staging: #{staging_jira_bugs.count}")
-          end
+            it 'render EDR metric with correct production issues' do
+              expect(response.body).to include("Production: #{production_jira_bugs.count}")
+            end
 
-          it 'render EDR metric with correct QA issues' do
-            expect(response.body).to include("Qa: #{qa_jira_bugs.count}")
-          end
+            it 'render EDR metric with correct staging issues' do
+              expect(response.body).to include("Staging: #{staging_jira_bugs.count}")
+            end
 
-          it 'render EDR metric with correct issues when no environment defined' do
-            expect(response.body).to include("None: #{no_env_jira_bugs.count}")
-          end
+            it 'render EDR metric with correct QA issues' do
+              expect(response.body).to include("Qa: #{qa_jira_bugs.count}")
+            end
 
-          it 'render metric name' do
-            expect(response.body).to include(der_metric_definition.name)
-          end
+            it 'render EDR metric with correct issues when no environment defined' do
+              expect(response.body).to include("None: #{no_env_jira_bugs.count}")
+            end
 
-          it 'render metric tooltip' do
-            expect(response.body).to include(der_metric_definition.explanation)
+            it 'render metric name' do
+              expect(response.body).to include(der_metric_definition.name)
+            end
+
+            it 'render metric tooltip' do
+              expect(response.body).to include(der_metric_definition.explanation)
+            end
           end
         end
       end
@@ -141,35 +168,59 @@ describe DevelopmentMetricsController, type: :controller do
 
         subject { get :repositories, params: params }
 
-        let(:params) do
-          {
-            repository_name: repository.name,
-            metric: {
-              from: 4.weeks.ago,
-              to: Time.zone.now
+        context 'when date from is greater than date to' do
+          let(:params) do
+            {
+              repository_name: repository.name,
+              metric: {
+                from: 4.weeks.ago,
+                to: 5.weeks.ago
+              }
             }
-          }
+          end
+
+          it 'returns status ok' do
+            get :index, params: params
+
+            expect(response).to have_http_status(:ok)
+          end
+
+          it 'render alert' do
+            subject
+            expect(response.body).to include('From Date Should Be Less Than To Date')
+          end
         end
 
-        it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+        context 'when dates are ok' do
+          let(:params) do
+            {
+              repository_name: repository.name,
+              metric: {
+                from: 4.weeks.ago,
+                to: Time.zone.now
+              }
+            }
+          end
 
-          subject
-        end
+          it 'calls CodeClimate summary retriever class' do
+            expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
+            subject
+          end
 
-        it 'render review turnaround metric tooltip' do
-          subject
-          expect(response.body).to include(review_turnaround_metric_definition.explanation)
-        end
+          it 'render review turnaround metric tooltip' do
+            subject
+            expect(response.body).to include(review_turnaround_metric_definition.explanation)
+          end
 
-        it 'render merge time metric tooltip' do
-          subject
-          expect(response.body).to include(merge_time_metric_metric_definition.explanation)
-        end
+          it 'render merge time metric tooltip' do
+            subject
+            expect(response.body).to include(merge_time_metric_metric_definition.explanation)
+          end
 
-        it 'render pull request size metric tooltip' do
-          subject
-          expect(response.body).to include(pull_request_size_metric_definition.explanation)
+          it 'render pull request size metric tooltip' do
+            subject
+            expect(response.body).to include(pull_request_size_metric_definition.explanation)
+          end
         end
       end
 
