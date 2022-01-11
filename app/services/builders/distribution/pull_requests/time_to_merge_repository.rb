@@ -2,9 +2,10 @@ module Builders
   module Distribution
     module PullRequests
       class TimeToMergeRepository < BaseService
-        def initialize(repository_name:, from:)
+        def initialize(repository_name:, from:, to:)
           @repository_name = repository_name
-          @from = from.to_i
+          @from = from
+          @to = to
         end
 
         def call
@@ -17,7 +18,7 @@ module Builders
         private
 
         def merge_times
-          @merge_times ||= ::MergeTime.where(created_at: @from.weeks.ago..Time.zone.now)
+          @merge_times ||= ::MergeTime.where(created_at: @from..@to)
                                       .joins(pull_request: :repository)
                                       .where(repositories: { name: @repository_name })
                                       .where.not(events_pull_requests: { html_url: nil })

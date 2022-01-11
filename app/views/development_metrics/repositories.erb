@@ -34,7 +34,7 @@
           <div class="col-md-6">
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
-                          repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
+                          repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
                           class: 'btn btn-detail'
               %>
              </div>
@@ -68,7 +68,7 @@
             <div class="col-md-6">
            <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
-                          repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { period: params&.dig(:metric, :period) } }),
+                          repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
                           class: 'btn btn-detail'
               %>
             </div>

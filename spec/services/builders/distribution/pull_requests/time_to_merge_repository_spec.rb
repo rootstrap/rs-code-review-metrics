@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Builders::Distribution::PullRequests::TimeToMergeRepository do
   describe '.call' do
     before { travel_to Time.zone.parse('2020-08-20') }
-
+    let(:from) { 4.weeks.ago }
+    let(:to) { Time.zone.now }
     let(:repository_one) { create(:repository) }
     let(:repository_two) { create(:repository) }
 
@@ -38,7 +39,8 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMergeRepository do
       subject do
         described_class.call(
           repository_name: repository_one.name,
-          from: 4
+          from: from,
+          to: to
         )
       end
 
@@ -67,7 +69,8 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMergeRepository do
       subject do
         described_class.call(
           repository_name: repository_one.name,
-          from: 4
+          from: from,
+          to: to
         )
       end
 

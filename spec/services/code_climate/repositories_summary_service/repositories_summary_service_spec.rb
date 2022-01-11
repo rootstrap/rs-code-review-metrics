@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe CodeClimate::RepositoriesSummaryService do
   subject { CodeClimate::RepositoriesSummaryService }
-
-  let(:from) { 4 }
+  let(:from) { 4.weeks.ago }
+  let(:to) { Time.zone.now }
   let(:technologies) { %w[] }
   let(:department) { repository_1.language.department }
   let(:ruby_lang) { Language.find_by(name: 'ruby') }
@@ -37,6 +37,7 @@ describe CodeClimate::RepositoriesSummaryService do
     CodeClimate::RepositoriesSummaryService.call(
       department: department,
       from: from,
+      to: to,
       technologies: technologies
     )
   end
@@ -101,7 +102,6 @@ describe CodeClimate::RepositoriesSummaryService do
 
   context 'with no from date' do
     let(:from) { nil }
-
     it 'shows the invalid issues count in the selected department' do
       expect(repositories_summary.invalid_issues_count_average).to eq(1)
     end
@@ -132,7 +132,8 @@ describe CodeClimate::RepositoriesSummaryService do
   end
 
   context 'with a from date after the repositories date' do
-    let(:from) { 1 }
+    let(:from) { 1.week.ago }
+    let(:to) { Time.zone.now }
 
     it 'shows no invalid issues count' do
       expect(repositories_summary.invalid_issues_count_average).to be_nil

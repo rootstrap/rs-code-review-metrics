@@ -2,9 +2,10 @@ module Builders
   module Distribution
     module PullRequests
       class TimeToSecondReviewRepository < BaseService
-        def initialize(repository_name:, from:)
+        def initialize(repository_name:, from:, to:)
           @repository_name = repository_name
-          @from = from.to_i
+          @from = from
+          @to = to
         end
 
         def call
@@ -17,9 +18,8 @@ module Builders
         private
 
         def completed_rt
-          period = @from.weeks.ago..Time.zone.now
           @completed_rt ||= begin
-            ::CompletedReviewTurnaround.where(created_at: period)
+            ::CompletedReviewTurnaround.where(created_at: @from..@to)
                                        .joins(review_request:
                                          { pull_request: :repository })
                                        .where(repositories: { name: @repository_name })

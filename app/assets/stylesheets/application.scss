@@ -201,3 +201,12 @@ main {
   filter: brightness(0) saturate(100%) invert(46%) sepia(82%) saturate(1952%) hue-rotate(207deg) brightness(101%) contrast(101%);
   width: 1.25em;
 }
+
+.metrics-alert {
+  position: fixed;
+  bottom: 0px;
+  right: 5px;
+  width: 500px;
+  z-index: 9999;
+  border-radius: 0px;
+}

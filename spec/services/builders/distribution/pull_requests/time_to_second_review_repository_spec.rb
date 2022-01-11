@@ -9,6 +9,9 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
     let(:repository_one) { create(:repository) }
     let(:repository_two) { create(:repository) }
 
+    let(:from) { 4.weeks.ago }
+    let(:to) { Time.zone.now }
+
     let!(:first_pull_request) do
       create(:pull_request,
              repository: repository_one,
@@ -48,7 +51,8 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
       subject do
         described_class.call(
           repository_name: repository_one.name,
-          from: 4
+          from: from,
+          to: to
         )
       end
 
@@ -88,7 +92,8 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
       subject do
         described_class.call(
           repository_name: repository_one.name,
-          from: 4
+          from: from,
+          to: to
         )
       end
 

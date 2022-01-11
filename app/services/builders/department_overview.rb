@@ -2,9 +2,10 @@ module Builders
   class DepartmentOverview < BaseService
     include ModelsNamesHelper
 
-    def initialize(department, from:)
+    def initialize(department, from:, to:)
       @department = department
       @from = from
+      @to = to
     end
 
     def call
@@ -20,7 +21,8 @@ module Builders
     def repositories_by_language_and_relevance
       @repositories_by_language_and_relevance ||=
         ::Repository.joins(:language)
-                    .relevant.with_activity_after(from)
+                    .relevant.with_activity_after(@from)
+                    .relevant.with_activity_before(@to)
                     .where(language: department.languages)
                     .distinct
                     .group('languages.name', 'repositories.relevance')
