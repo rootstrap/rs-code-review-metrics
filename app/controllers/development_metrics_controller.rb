@@ -109,6 +109,7 @@ class DevelopmentMetricsController < ApplicationController
 
     @defect_escape_rate = metrics[:defect_escape_rate]
     @defect_escape_rate_definition = MetricDefinition.find_by(code: :defect_escape_rate)
+    @metric_tittle = @defect_escape_rate_definition
   end
 
   def development_cycle(metrics)
@@ -116,6 +117,7 @@ class DevelopmentMetricsController < ApplicationController
 
     @development_cycle = metrics[:development_cycle]
     @development_cycle_definition = MetricDefinition.find_by(code: :development_cycle)
+    @metric_tittle = @development_cycle_definition
   end
 
   def planned_to_done(metrics)
@@ -123,6 +125,7 @@ class DevelopmentMetricsController < ApplicationController
 
     @planned_to_done = metrics[:planned_to_done]
     @planned_to_done_definition = MetricDefinition.find_by(code: :planned_to_done)
+    @metric_tittle = @planned_to_done_definition
   end
 
   def show_defect_escape_rate
