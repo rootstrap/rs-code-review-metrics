@@ -10,7 +10,7 @@
               </div>
               <span data-placement='right' class='metric_tooltip' style="right:10px" aria-hidden='true' data-toggle='tooltip' title='<%= defect_escape_rate_definition && defect_escape_rate_definition[:explanation] %>'>!</span>
             </div>
-            <%if current_page?(products_metrics_development_metrics_path)%>
+            <% if current_page?(products_metrics_development_metrics_path) %>
               <div class="metrics">
                 <div class="graph">
                   <%= render 'development_metrics/defect_escape_rate/main_metric', defect_escape_rate: defect_escape_rate, details: true, defect_escape_rate_definition: defect_escape_rate_definition %>
