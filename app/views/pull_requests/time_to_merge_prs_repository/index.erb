@@ -1,0 +1,19 @@
+<%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
+  <div class="metrics-container">
+    <div class="row title_sidebar">
+        <div class="col-md-6">
+          <b class="rute_title_grey"><%= params[:repository_name] +'/'%></b>
+          <b class="rute_title">Merge Time</b>
+        </div>
+          <div class="col-md-6 interval d-flex flex-row-reverse">
+            <%= simple_form_for :metric, url: repository_time_to_merge_prs_repository_index_path, method: 'GET', html: {
+                                                            id: 'nav-filter-form', style:"display: flex;"} do |f|%>
+
+
+                <%= hidden_field_tag 'repository_name', params[:repository_name] %>
+                <%= render 'shared/interval-filter', form: f %>
+            <% end %>
+          </div>
+    </div>
+    <%= render partial: 'shared/pull_request_list' , locals: { pull_requests: @pull_requests} %>
+</div>

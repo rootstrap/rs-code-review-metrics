@@ -1,47 +1,26 @@
 <%=  render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-
-<div class="container-fluid">
-  <div class="row">
+<div class="metrics-container">
+  <div class="row title_sidebar">
     <div class="col-md-10 offset-1">
       <%= simple_form_for :metric, url: department_time_to_second_review_prs_path, method: 'GET', html: {
-                                                        class: 'nav-filter p-3 shadow-box', id: 'nav-filter-form' } do |f|%>
-            <h4 class="text-center">Time to second review distribution report for <%= params[:department_name] %> department</h4>
-            <div class="row justify-content-center mt-3">
-              <%= f.input :period,
-                label: 'Last Updated (Weeks)',
-                wrapper_html: { class: 'period-selection d-flex flex-column mb-0 col-md-4' },
-                input_html: { class: 'margin-left input-height', value: chosen_period },
-                required: false,
-                as: :numeric
-              %>
-              <%= f.input :lang,
-                label: 'Technology',
-                wrapper_html: { class: 'col-md-4' },
-                input_html: { class: 'input-height', multiple: true },
-                required: false,
-                collection: all_languages_names(current_department)
-              %>
+                                                        class: 'nav-filter p-3', id: 'nav-filter-form' } do |f|%>
+          <h4 class="text-center">Time to second review distribution report for <%= params[:department_name] %> department</h4>
+          <div class="row justify-content-center mt-3">
+            <%= f.input :lang,
+              label: 'Technology',
+              wrapper_html: { class: 'col-md-4' },
+              input_html: { class: 'input-height', multiple: true },
+              required: false,
+              collection: all_languages_names(current_department)
+            %>
+          </div>
+          <div class="row">
+            <div class="col-md-12 d-flex justify-content-center">
+              <%= f.button :submit, 'Submit', class: 'btn-secondary ml-1', id: 'submitButton' %>
             </div>
-            <div class="row">
-              <div class="col-md-12 d-flex justify-content-center">
-                <%= f.button :submit, 'Submit', class: 'btn-secondary ml-1', id: 'submitButton' %>
-              </div>
-            </div>
+          </div>
       <% end %>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-10 offset-1 mt-5">
-      <% @pull_requests.each do |k,v| %>
-        <h6><%= k %> hours:</h6>
-        <ul>
-          <% v.each do |pr_link| %>
-            <li>
-              <%= link_to nil, pr_link, target: '_blank' %>
-              </li>
-          <% end %>
-        </ul>
-      <% end %>
-    </div>
-  </div>
+  <%= render partial: 'shared/pull_request_list' , locals: { pull_requests: @pull_requests} %>
 </div>

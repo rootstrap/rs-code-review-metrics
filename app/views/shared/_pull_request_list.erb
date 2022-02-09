@@ -1,0 +1,22 @@
+<div class="metrics">
+  <div class="row">
+      <div class="accordion" id="accordionPullRequests">
+        <% pull_requests.each.each_with_index do |(range,pr),index| %>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="heading<%= index %>" >
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapse<%= index %>" aria-controls="collapse<%= index %>">
+                <%= range %> hours
+              </button>
+            </h2>
+            <div id="collapse<%= index %>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionPullRequests">
+              <% pr.each do |pr_link| %>
+                <div class="accordion-body pt-2 pb-1">
+                  <%= link_to nil, pr_link, target: '_blank' %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+    </div>
+  </div>
+</div>

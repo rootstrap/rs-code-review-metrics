@@ -1,39 +1,33 @@
-<%= render 'development_metrics/products_dropdown' %>
 <%= render 'development_metrics/development_metrics_sidebar', enabled_users_section: @enabled_users_section %>
-
-<% if @product %>
-  <div class="row">
-    <div class="col-md-12 text-center mt-2">
-      <b><%= @product[:name] %></b>
+<div class="metrics-container">
+  <div class="row title_sidebar">
+    <div class="col-md-6">
+      <b class="rute_title_grey"><%= @product[:name] +'/'%></b>
+      <b class="rute_title"><%= @metric_title[:name]%></b>
     </div>
-    <%= render 'development_metrics/navigation', product: @product %>
-  </div>
-<% end %>
-<div class="metrics-container container col-md-12">
-  <%= render 'shared/products_metrics/nav-filter' do |f| %>
-    <%= hidden_field_tag 'metric[name]', @query_metric_name  %>
-    <div class="row">
-      <div class="col-md-5 period-input">
-        <%= render 'shared/interval-filter', form: f %>
-      </div>
-    </div>
-  <% end %>
-
-  <% if @product %>
-      <%if current_page?(products_metrics_development_metrics_path)%>
-        <%= render 'development_metrics/products/general',
-          product: @product,
-          defect_escape_rate: @defect_escape_rate,
-          development_cycle: @development_cycle,
-          planned_to_done: @planned_to_done,
-          development_cycle_definition: @development_cycle_definition,
-          defect_escape_rate_definition: @defect_escape_rate_definition,
-          planned_to_done_definition: @planned_to_done_definition,
-          has_jira_project: @has_jira_project,
-          show_defect_escape_rate: @show_defect_escape_rate,
-          show_development_cycle: @show_development_cycle,
-          show_planned_to_done: @show_planned_to_done %>
+    <div class="col-md-6 interval d-flex flex-row-reverse">
+      <%= render 'shared/products_metrics/nav-filter' do |f| %>
+      <%= hidden_field_tag 'metric[name]', @query_metric_name  %>
+      <%= hidden_field_tag 'product_name', @product[:name]  %>
+          <%= render 'shared/interval-filter', form: f %>
       <% end %>
+    </div>
+  </div>
+  <% if @product %>
+    <%if current_page?(products_metrics_development_metrics_path)%>
+      <%= render 'development_metrics/products/general',
+        product: @product,
+        defect_escape_rate: @defect_escape_rate,
+        development_cycle: @development_cycle,
+        planned_to_done: @planned_to_done,
+        development_cycle_definition: @development_cycle_definition,
+        defect_escape_rate_definition: @defect_escape_rate_definition,
+        planned_to_done_definition: @planned_to_done_definition,
+        has_jira_project: @has_jira_project,
+        show_defect_escape_rate: @show_defect_escape_rate,
+        show_development_cycle: @show_development_cycle,
+        show_planned_to_done: @show_planned_to_done %>
+    <% end %>
   <% else %>
     <div class="row">
       <div class="body-empty-container col-md-12 d-flex justify-content-center align-items-center">

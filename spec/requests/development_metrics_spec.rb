@@ -14,19 +14,19 @@ RSpec.describe 'Development Metrics', type: :request do
       end
 
       let(:department) { ruby.department.name }
-      let(:number_of_weeks) { 4 }
+      let(:from) { 4.weeks.ago }
+      let(:to) { Time.zone.now }
 
       before do
-        opened_date = number_of_weeks.weeks.ago.tomorrow
-        create(:pull_request, repository: ruby_internal_repository_1, opened_at: opened_date)
-        create(:pull_request, repository: ruby_internal_repository_2, opened_at: opened_date)
-        create(:pull_request, repository: ruby_commercial_repository, opened_at: opened_date)
+        create(:pull_request, repository: ruby_internal_repository_1, opened_at: 3.weeks.ago)
+        create(:pull_request, repository: ruby_internal_repository_2, opened_at: 3.weeks.ago)
+        create(:pull_request, repository: ruby_commercial_repository, opened_at: 3.weeks.ago)
       end
 
       describe 'language count' do
         it 'renders the total repository count for the language' do
           get departments_development_metrics_url,
-              params: { department_name: department, metric: { period: number_of_weeks } }
+              params: { department_name: department, metric: { from: from, to: to } }
 
           expect(response.body)
             .to include("3 <b>#{ruby.name.titleize}</b> repositories")
@@ -36,7 +36,7 @@ RSpec.describe 'Development Metrics', type: :request do
       describe 'relevance count' do
         it 'renders the each relevance repository count' do
           get departments_development_metrics_url,
-              params: { department_name: department, metric: { period: number_of_weeks } }
+              params: { department_name: department, metric: { from: from, to: to } }
 
           expect(response.body)
             .to include("<b>1</b> #{commercial}", "<b>2</b> #{internal}")

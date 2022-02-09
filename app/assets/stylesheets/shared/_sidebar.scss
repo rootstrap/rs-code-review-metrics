@@ -35,14 +35,18 @@
 }
 
 .logo-container{
-  margin: 0.5rem 0 2rem 0px;
-  img{
-    height: 3rem;
-  }
+  position: relative;
+  width: 100%;
+}
+
+.logo{
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .txt-logo{
-  margin: 0;
-  font-size: 1rem;
-  color: $white;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 19px;
 }

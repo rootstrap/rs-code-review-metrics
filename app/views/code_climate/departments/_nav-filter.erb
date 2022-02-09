@@ -1,16 +1,9 @@
 <%= simple_form_for :metric, url: code_climate_department_path,
   method: 'GET', html: {
-    class: 'nav-filter p-3 shadow-box',
+    class: 'nav-filter p-3',
     id: 'nav-filter-form' } do |f|%>
       <h4 class="text-center">CodeClimate report for <%= department.name.capitalize %> department repositories</h4>
       <div class="row justify-content-center mt-3">
-        <%= f.input :period,
-          label: 'Last Updated (Weeks)',
-          wrapper_html: { class: 'period-selection d-flex flex-column mb-0 col-md-4' },
-          input_html: { class: 'margin-left input-height', value: chosen_period },
-          required: false,
-          as: :numeric
-        %>
         <%= f.input :lang,
           label: 'Technology',
           wrapper_html: { class: 'col-md-4' },
@@ -22,7 +15,7 @@
       </div>
       <div class="row">
         <div class="col-md-12 d-flex justify-content-center">
-          <%= f.button :submit, 'Submit', class: 'btn-secondary ml-1', id: 'submitButton' %>
+          <%= f.button :submit, 'Submit', class: 'btn-secondary', id: 'submitButton' %>
         </div>
       </div>
 <% end %>

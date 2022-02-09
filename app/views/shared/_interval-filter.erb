@@ -1,8 +1,20 @@
-<%= form.input :period,
-  label: 'Weeks Period',
-  wrapper_html: { class: 'period-selection mb-0' },
-  input_html: { class: 'margin-left', value: chosen_period },
+
+<%= form.input :from,
+  label: 'From',
+  wrapper_html: { class: 'period-selection rute_title' },
+  input_html: { class: 'margin-left', value: chosen_from },
+  as: :date,
   required: false,
-  as: :numeric
+  html5: true
 %>
-<%= form.button :submit, 'Submit',class: 'btn-secondary ml-1', id: 'submitButton' %>
+
+<%= form.input :to,
+  label: 'To',
+  wrapper_html: { class: 'period-selection rute_title' },
+  input_html: { class: 'margin-left', value: chosen_to },
+  as: :date,
+  required: false,
+  html5: true
+%>
+
+<%= form.button :submit, 'Submit', class: 'ml-1', id: 'submitButton' %>
