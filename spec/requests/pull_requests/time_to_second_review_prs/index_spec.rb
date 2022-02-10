@@ -120,7 +120,7 @@ RSpec.describe 'Time To Second Review PRs' do
 
     it 'returns data only for all repositories' do
       assigns(:pull_requests).each do |_, pull_request_url|
-        expect(all_pull_requests_url).to include(pull_request_url.first)
+        expect(all_pull_requests_url).to include(pull_request_url.first[:html_url])
       end
     end
   end
