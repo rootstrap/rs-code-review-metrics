@@ -83,7 +83,7 @@ jobs:
       JIRA_ENVIRONMENT_FIELD: customfield_10000
       SENDGRID_USERNAME: metrics@example.com
       ENGINEERING_METRICS_URL: http://engineering-metrics.com/
-      SONAR_PROJECT: rs-code-review-metrics
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
       SONAR_URL: ${{ secrets.SONAR_URL }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
@@ -148,7 +148,7 @@ jobs:
             -Dsonar.qualitygate.wait=true \
             -Dsonar.host.url=$SONAR_URL \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.projectKey=$SONAR_PROJECT \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
             -Dsonar.scm.provider=git \
             -Dsonar.java.binaries=/tmp \
             -Dsonar.nodejs.executable=$(which node) \
