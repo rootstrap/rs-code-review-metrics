@@ -145,14 +145,6 @@ jobs:
       - name: Run Sonarqube analysis
         run: |
           sonar-scanner \
-            -Dsonar.qualitygate.wait=true \
             -Dsonar.host.url=$SONAR_URL \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-            -Dsonar.scm.provider=git \
-            -Dsonar.java.binaries=/tmp \
-            -Dsonar.nodejs.executable=$(which node) \
-            -Dsonar.projectVersion=$(echo $GITHUB_SHA | cut -c1-8) \
-            -Dsonar.sources=. \
-            -Dsonar.projectBaseDir=. \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
