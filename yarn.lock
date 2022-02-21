@@ -5460,7 +5460,7 @@ pnp-webpack-plugin@^1.6.4:
   integrity sha512-7Wjy+9E3WwLOEL30D+m8TSTF7qJJUJLONBnwQp0518siuMxUQUbgZwssaFX+QKlZkjHZcw/IpZCt/H0srrntSg==
   dependencies:
     ts-pnp "^1.1.6"
-    
+
 popper.js@^2.9.3:
   version "2.0.0-next.4"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-2.0.0-next.4.tgz#8476d4b21407751a3a5069fa0e20f5cae9326c4b"
