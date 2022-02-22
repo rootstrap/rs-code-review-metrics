@@ -92,7 +92,7 @@ describe DevelopmentMetricsController, type: :controller do
               product_name: product.name,
               metric: {
                 metric_name: 'defect_escape_rate',
-                from: 4.weeks.ago,
+                from: 2.years.ago,
                 to: Time.zone.now
               }
             }
@@ -105,6 +105,13 @@ describe DevelopmentMetricsController, type: :controller do
                           :production,
                           jira_board: jira_board,
                           informed_at: beginning_of_day)
+            end
+            let!(:production_jira_bugs_year_ago) do
+              create_list(:jira_issue, 2,
+                          :bug,
+                          :production,
+                          jira_board: jira_board,
+                          informed_at: 1.year.ago)
             end
             let!(:staging_jira_bugs) do
               create_list(:jira_issue, 1,
@@ -137,7 +144,8 @@ describe DevelopmentMetricsController, type: :controller do
             end
 
             it 'render EDR metric with correct production issues' do
-              expect(response.body).to include("Production: #{production_jira_bugs.count}")
+              expect(response.body).to include("Production: #{production_jira_bugs.count +
+                          production_jira_bugs_year_ago.count}")
             end
 
             it 'render EDR metric with correct staging issues' do
