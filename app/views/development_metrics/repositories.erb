@@ -39,7 +39,7 @@
               %>
              </div>
          </div>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>!</span>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>¡</span>
         </div>
 
         <div class="graph">
@@ -73,7 +73,7 @@
               %>
             </div>
             </div>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>!</span>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>¡</span>
         </div>
         <div class="graph">
           <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
@@ -88,7 +88,7 @@
       <div class="metrics">
         <div class='row'>
           <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>!</span>
+          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
         </div>
         <div class="graph">
           <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
