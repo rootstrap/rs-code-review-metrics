@@ -16,7 +16,7 @@ module Metrics
     def week_intervals
       from = metric_interval.first.to_date
       to = metric_interval.last.to_date
-      (from..to).group_by(&:cweek)
+      (from..to).group_by { |date| date.strftime('%W/%Y') }
     end
 
     def metric_interval
