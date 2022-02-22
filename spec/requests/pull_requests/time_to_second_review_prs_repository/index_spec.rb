@@ -4,7 +4,8 @@ RSpec.describe 'Time To Second Review PRs' do
   let(:user1) { create(:user, login: 'user1') }
   let(:user2) { create(:user, login: 'user2') }
   let(:user3) { create(:user, login: 'user3') }
-
+  let(:from) { 4.weeks.ago }
+  let(:to) { Time.zone.now }
   let(:repository) { create(:repository) }
 
   let(:subject) do
@@ -68,7 +69,8 @@ RSpec.describe 'Time To Second Review PRs' do
     let(:params) do
       {
         metric: {
-          period: 4
+          from: from,
+          to: to
         }
       }
     end
