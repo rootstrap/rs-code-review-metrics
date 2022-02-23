@@ -9,9 +9,10 @@
               </button>
             </h2>
             <div id="collapse<%= index %>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionPullRequests">
-              <% pr.each do |pr_link| %>
+              <% pr.each do |pr_values| %>
                 <div class="accordion-body pt-2 pb-1">
-                  <%= link_to nil, pr_link, target: '_blank' %>
+                  <%= link_to nil, pr_values[:html_url], target: '_blank' %>
+                    <span class="hours-pr">  (<%= pr_values[:value] %> hours)  </span>
                 </div>
               <% end %>
             </div>
