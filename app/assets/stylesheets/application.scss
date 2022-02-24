@@ -54,7 +54,7 @@ canvas[style] {
   color: white;
   font-size: 18px;
   height: 26px;
-  line-height: 26px;
+  line-height: 21px;
   right: 140px;
   padding-left: 10px;
   position: absolute;
@@ -141,6 +141,10 @@ main {
 .btn-toggle-nav a:hover,
 .btn-toggle-nav a:focus {
   background-color: #d2f4ea;
+}
+
+.hours-pr{
+  color: grey;
 }
 
 .list-group{
