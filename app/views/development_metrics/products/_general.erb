@@ -7,8 +7,9 @@
             <div class='row'>
               <div class="box-title" >
                 <%= defect_escape_rate_definition && defect_escape_rate_definition[:name] %>
+                  <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= defect_escape_rate_definition && defect_escape_rate_definition[:explanation] %>'>¡</span>
               </div>
-              <span data-placement='right' class='metric_tooltip' style="right:10px" aria-hidden='true' data-toggle='tooltip' title='<%= defect_escape_rate_definition && defect_escape_rate_definition[:explanation] %>'>¡</span>
+
             </div>
             <% if current_page?(products_metrics_development_metrics_path) %>
               <div class="metrics">
@@ -36,8 +37,9 @@
         <div class="col">
           <div class="metrics" style="margin-right: 10px;">
             <div class='row'>
-              <div class="box-title" ><%= development_cycle_definition && development_cycle_definition[:name] %></div>
-              <span data-placement='right' class='metric_tooltip' style= "right:10px" aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>¡</span>
+              <div class="box-title" ><%= development_cycle_definition && development_cycle_definition[:name] %>
+                <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>¡</span>
+              </div>
             </div>
             <%if current_page?(products_metrics_development_metrics_path)%>
               <div class="metrics">
@@ -66,9 +68,9 @@
         <div class="col">
           <div class="metrics" style="margin-right: 10px;">
             <div class='row'>
-              <div class="box-title" ><%= planned_to_done_definition && planned_to_done_definition[:name] %></div>
-              <span data-placement='right' class='metric_tooltip' style="right:10px"  aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>¡</span>
-            </div>
+              <div class="box-title" ><%= planned_to_done_definition && planned_to_done_definition[:name] %>
+                <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>¡</span>
+              </div>
             <%if current_page?(products_metrics_development_metrics_path)%>
               <div class="metrics">
                 <div class="graph">

@@ -53,12 +53,13 @@ canvas[style] {
   border-radius: 50%;
   color: white;
   font-size: 18px;
+  font-weight: 600;
   height: 26px;
   line-height: 21px;
-  right: 140px;
+  margin-left: 10px;
+  margin-top: 5px;
   padding-left: 10px;
   position: absolute;
-  top: 20px;
   width: 26px;
 }
 
@@ -73,6 +74,7 @@ canvas[style] {
   width:366px;
   float:left;
   height: 100vh;
+  overflow: scroll;
   padding-left: 50px;
   padding-right: 50px;
   padding-top: 53px;
