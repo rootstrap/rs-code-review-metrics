@@ -64,6 +64,7 @@ canvas[style] {
 }
 
 .metrics-container {
+  padding-bottom: 25px;
   padding-left: 25px;
   padding-right: 25px;
 }
@@ -74,7 +75,7 @@ canvas[style] {
   width:366px;
   float:left;
   height: 100vh;
-  overflow: scroll;
+  overflow-y: auto;
   padding-left: 50px;
   padding-right: 50px;
   padding-top: 53px;
