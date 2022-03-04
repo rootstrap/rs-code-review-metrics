@@ -3,7 +3,7 @@
     <% if has_jira_project %>
       <% if show_defect_escape_rate %>
         <div class="col">
-          <div class="metrics" style="margin-right: 10px;" >
+          <div class="metrics me-1">
             <div class='row'>
               <div class="box-title" >
                 <%= defect_escape_rate_definition && defect_escape_rate_definition[:name] %>
@@ -35,7 +35,7 @@
 
       <% if show_development_cycle %>
         <div class="col">
-          <div class="metrics" style="margin-right: 10px;">
+          <div class="metrics me-1">
             <div class='row'>
               <div class="box-title" ><%= development_cycle_definition && development_cycle_definition[:name] %>
                 <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= development_cycle_definition && development_cycle_definition[:explanation] %>'>¡</span>
@@ -66,7 +66,7 @@
       <% end %>
       <% if show_planned_to_done %>
         <div class="col">
-          <div class="metrics" style="margin-right: 10px;">
+          <div class="metrics me-1">
             <div class='row'>
               <div class="box-title" ><%= planned_to_done_definition && planned_to_done_definition[:name] %>
                 <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= planned_to_done_definition && planned_to_done_definition[:explanation] %>'>¡</span>
