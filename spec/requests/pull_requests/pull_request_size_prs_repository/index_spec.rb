@@ -15,6 +15,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_one',
+           size: Faker::Number.within(range: 1000..5000),
            opened_at: wednesday - 6.hours)
   end
 
@@ -22,6 +23,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_two',
+           size: Faker::Number.within(range: 1000..5000),
            opened_at: wednesday - 14.hours)
   end
 
@@ -29,6 +31,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_three',
+           size: Faker::Number.within(range: 1000..5000),
            opened_at: wednesday - 26.hours)
   end
 
