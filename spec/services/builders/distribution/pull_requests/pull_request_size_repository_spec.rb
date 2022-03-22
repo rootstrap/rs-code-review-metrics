@@ -31,18 +31,18 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
 
     let!(:fourth_pull_request) do
       create(:pull_request,
-            repository: repository_one,
-            size: Faker::Number.within(range: 0..100),
-            html_url: 'test_pr_url_four',
-            opened_at: 26.hours.ago)
+             repository: repository_one,
+             size: Faker::Number.within(range: 0..100),
+             html_url: 'test_pr_url_four',
+             opened_at: 26.hours.ago)
     end
 
     let!(:fifth_pull_request) do
       create(:pull_request,
-            repository: repository_two,
-            size: Faker::Number.within(range: 100..200),
-            html_url: 'test_pr_url_five',
-            opened_at: 15.hours.ago)
+             repository: repository_two,
+             size: Faker::Number.within(range: 100..200),
+             html_url: 'test_pr_url_five',
+             opened_at: 15.hours.ago)
     end
 
     before do
