@@ -79,7 +79,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
       expect(assigns(:pull_requests)).not_to be_empty
     end
 
-    it 'returns ony one PR from each range' do
+    it 'returns only one PR from each range' do
       expect(assigns(:pull_requests)['100-199'].count).to eq(1)
       expect(assigns(:pull_requests)['500-599'].count).to eq(1)
       expect(assigns(:pull_requests)['1000+'].count).to eq(3)
