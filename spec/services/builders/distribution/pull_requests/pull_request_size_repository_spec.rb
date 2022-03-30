@@ -75,6 +75,24 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
       end
     end
 
+    context 'without date params' do
+      subject do
+        described_class.call(
+          repository_name: repository_one.name,
+          from: nil,
+          to: nil
+        )
+      end
+
+      it 'returns data for pull request with 1000+ lines' do
+        expect(subject).to have_key('1000+')
+      end
+
+      it 'returns data for pull request with 1-99 lines' do
+        expect(subject).to have_key('1-99')
+      end
+    end
+
     context 'when pull request has html_url attribute nil' do
       let!(:pull_request_html_url_nil) do
         create(:pull_request,

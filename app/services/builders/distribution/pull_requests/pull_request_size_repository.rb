@@ -4,8 +4,8 @@ module Builders
       class PullRequestSizeRepository < BaseService
         def initialize(repository_name:, from:, to:)
           @repository_name = repository_name
-          @from = from.to_datetime.beginning_of_day
-          @to = to.to_datetime.end_of_day
+          @from = from&.to_datetime&.beginning_of_day
+          @to = to&.to_datetime&.end_of_day
         end
 
         def call
