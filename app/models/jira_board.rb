@@ -2,15 +2,16 @@
 #
 # Table name: jira_boards
 #
-#  id               :bigint           not null, primary key
-#  deleted_at       :datetime
-#  jira_project_key :string           not null
-#  jira_self_url    :string
-#  project_name     :string
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  jira_board_id    :integer
-#  product_id       :bigint
+#  id                :bigint           not null, primary key
+#  deleted_at        :datetime
+#  environment_field :string
+#  jira_project_key  :string           not null
+#  jira_self_url     :string
+#  project_name      :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  jira_board_id     :integer
+#  product_id        :bigint
 #
 # Indexes
 #
@@ -28,6 +29,7 @@ class JiraBoard < ApplicationRecord
 
   has_many :jira_issues, dependent: :destroy
   has_many :jira_sprints, dependent: :destroy
+  has_many :jira_environments, dependent: :destroy
 
   validates :jira_project_key, presence: true, uniqueness: true, allow_blank: true
   validates :jira_board_id, uniqueness: true, allow_blank: true
