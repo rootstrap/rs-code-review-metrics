@@ -2,14 +2,14 @@
   <div class="metrics-container">
     <div class="row title_sidebar">
         <div class="col-md-6">
-          <b class="rute_title_grey"><%= params[:repository_name] +'/'%></b>
+          <b class="rute_title_grey"><%= @repository_name %>/</b>
           <b class="rute_title">Pull Request Size</b>
         </div>
           <div class="col-md-6 interval d-flex flex-row-reverse">
             <%= simple_form_for :metric, url: repository_pull_request_size_prs_repository_index_path, method: 'GET', html: {
                                                             id: 'nav-filter-form', style:"display: flex;"} do |f|%>
 
-                <%= hidden_field_tag 'repository_name', params[:repository_name] %>
+                <%= hidden_field_tag 'repository_name', @repository_name %>
                 <%= render 'shared/interval-filter', form: f %>
             <% end %>
           </div>
