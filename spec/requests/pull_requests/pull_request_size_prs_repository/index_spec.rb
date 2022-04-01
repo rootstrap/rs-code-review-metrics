@@ -85,4 +85,28 @@ RSpec.describe 'Pull Request Size PRs Repository' do
       expect(assigns(:pull_requests)['1000+'].count).to eq(3)
     end
   end
+
+  context 'With correct params to json' do
+    let(:params) do
+      {
+        metric: {
+          from: from,
+          to: to
+        },
+        format: 'json'
+      }
+    end
+
+    before { subject }
+
+    it 'return json response' do
+      expect(response.content_type).to include('application/json')
+    end
+
+    it 'returns data with the correct keys' do
+      data = JSON.parse(response.body)
+
+      expect(data.keys).to match_array(['100-199', '1000+', '500-599'])
+    end
+  end
 end

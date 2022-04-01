@@ -14,6 +14,10 @@ module PullRequests
         to: @to,
         repository_name: @repository_name
       )
+      respond_to do |format|
+        format.html { render :index }
+        format.json { render json: @pull_requests.to_json }
+      end
     end
 
     private
