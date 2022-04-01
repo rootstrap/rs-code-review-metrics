@@ -109,3 +109,5 @@
       </div>
     <% end %>
 </div>
+
+<%= build_bar_chart_modal(@repository.name, params&.dig(:metric, :from), params&.dig(:metric, :to)) %>
