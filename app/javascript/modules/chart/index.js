@@ -39,9 +39,14 @@ const getDetailObjects = (selectedRange, chartId) => {
 
       $('#modal-title').html(`Current Range [ ${selectedRange} ${dataMetric} ]`);
       $('#modal-popup').modal('show');
+      $('.close').click(closePopup);
     },
     error: function () {
       console.log('failure');
     }
   });
 };
+
+export const closePopup = () => {
+  $('#modal-popup').modal('hide');
+}
