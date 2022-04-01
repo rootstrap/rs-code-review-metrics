@@ -30,7 +30,7 @@ const getDetailObjects = (selectedRange, chartId) => {
   const detailsUrl = chartData.url;
   const dataMetric = chartData.metric;
 
-  jQuery.ajax({
+  $.ajax({
     url: detailsUrl,
     type: 'get',
     dataType: 'json',
@@ -42,7 +42,7 @@ const getDetailObjects = (selectedRange, chartId) => {
       $('.close').click(closePopup);
     },
     error: function () {
-      console.log('failure');
+      console.log('Cannot return values for the selected range');
     }
   });
 };

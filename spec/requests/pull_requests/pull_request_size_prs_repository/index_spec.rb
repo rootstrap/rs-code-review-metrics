@@ -86,7 +86,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
     end
   end
 
-  context 'With correct params to json' do
+  context 'With correct json params' do
     let(:params) do
       {
         metric: {
@@ -99,7 +99,7 @@ RSpec.describe 'Pull Request Size PRs Repository' do
 
     before { subject }
 
-    it 'return json response' do
+    it 'returns json response' do
       expect(response.content_type).to include('application/json')
     end
 
