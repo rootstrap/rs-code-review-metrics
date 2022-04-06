@@ -27,4 +27,5 @@ class Product < ApplicationRecord
 
   accepts_nested_attributes_for :jira_board
   accepts_nested_attributes_for :repositories
+
 end

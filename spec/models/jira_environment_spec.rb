@@ -2,10 +2,11 @@
 #
 # Table name: jira_environments
 #
-#  id                   :bigint           not null, primary key
-#  custom_environment   :string           not null
-#  standard_environment :integer          not null
-#  jira_board_id        :bigint           not null
+#  id                 :bigint           not null, primary key
+#  custom_environment :string
+#  deleted_at         :datetime
+#  environment        :enum             not null
+#  jira_board_id      :bigint
 #
 # Indexes
 #
@@ -26,18 +27,12 @@ RSpec.describe JiraEnvironment, type: :model do
       expect(subject).to be_valid
     end
 
-    it { is_expected.to validate_presence_of(:standard_environment) }
     it { is_expected.to validate_presence_of(:custom_environment) }
-    it { is_expected.to belong_to(:jira_boards) }
+    it { is_expected.to belong_to(:jira_board) }
 
     it do
-      is_expected.to define_enum_for(:environment).with_values(JiraIssue.environments)
+      is_expected.to define_enum_for(:environment).with_values(JiraEnvironment.environments)
                                                   .backed_by_column_of_type(:enum)
-    end
-
-    it do
-      is_expected.to define_enum_for(:issue_type).with_values(JiraIssue.issue_types)
-                                                 .backed_by_column_of_type(:enum)
     end
 
     describe 'standard environment' do
@@ -47,10 +42,10 @@ RSpec.describe JiraEnvironment, type: :model do
       let(:jira_production) { build(:jira_environment, :production) }
 
       it 'returns the correct environment' do
-        expect(jira_development.jira_environment).to eq('Development')
-        expect(jira_qa.jira_environment).to eq('QA')
-        expect(jira_staging.jira_environment).to eq('Staging')
-        expect(jira_production.jira_environment).to eq('Production')
+        expect(jira_development.environment).to eq('development')
+        expect(jira_qa.environment).to eq('qa')
+        expect(jira_staging.environment).to eq('staging')
+        expect(jira_production.environment).to eq('production')
       end
     end
   end

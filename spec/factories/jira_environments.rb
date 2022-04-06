@@ -2,10 +2,11 @@
 #
 # Table name: jira_environments
 #
-#  id                   :bigint           not null, primary key
-#  custom_environment   :string           not null
-#  standard_environment :integer          not null
-#  jira_board_id        :bigint           not null
+#  id                 :bigint           not null, primary key
+#  custom_environment :string
+#  deleted_at         :datetime
+#  environment        :enum             not null
+#  jira_board_id      :bigint
 #
 # Indexes
 #
@@ -18,22 +19,26 @@
 
 FactoryBot.define do
   factory :jira_environment do
-    custom_environment { Faker::App.unique.name }
+    custom_environment { Faker::Name.name }
+    sequence(:environment) { |n| %w[development qa staging production][n % 4] }
+    
+    association :jira_board
 
     trait :qa do
-      standard_environment { :qa }
+      environment { :qa }
     end
 
     trait :development do
-      standard_environment { :development }
+      environment { :development }
     end
 
     trait :staging do
-      standard_environment { :staging }
+      environment { :staging }
     end
 
     trait :production do
-      standard_environment { :production }
+      environment { :production }
     end
+
   end
 end

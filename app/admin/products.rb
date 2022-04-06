@@ -32,19 +32,27 @@ ActiveAdmin.register Product do
   filter :description
 
   form do |f|
-    f.inputs do
+
+    f.inputs 'Product' do
       f.input :name
       f.input :description, required: false
+    end
+
+    f.inputs 'Jira' do
       if object.jira_board
         f.inputs for: [:jira_board, f.object.jira_board] do |s|
           s.input :jira_project_key
+          s.input :environment_field
         end
       else
         f.inputs for: [:jira_board, f.object.jira_board || JiraBoard.new] do |s|
           s.input :jira_project_key, required: false
+          s.input :environment_field, required: false
         end
       end
+    end
 
+    f.inputs do
       f.input :repositories,
               as: :check_boxes,
               collection: Repository.order(:name)

@@ -1,6 +1,6 @@
 module JiraClient
   class Repository < JiraClient::Base
-    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD']
+    #JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD']
 
     def initialize(jira_board)
       @jira_board = jira_board

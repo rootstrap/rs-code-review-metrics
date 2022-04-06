@@ -995,8 +995,9 @@ ALTER SEQUENCE public.jira_boards_id_seq OWNED BY public.jira_boards.id;
 CREATE TABLE public.jira_environments (
     id bigint NOT NULL,
     custom_environment character varying,
-    standard_environment integer,
-    jira_board_id bigint NOT NULL
+    jira_board_id bigint,
+    deleted_at timestamp without time zone,
+    environment public.environment NOT NULL
 );
 
 

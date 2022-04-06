@@ -2,10 +2,11 @@
 #
 # Table name: jira_environments
 #
-#  id                   :bigint           not null, primary key
-#  custom_environment   :string           not null
-#  standard_environment :integer          not null
-#  jira_board_id        :bigint           not null
+#  id                 :bigint           not null, primary key
+#  custom_environment :string
+#  deleted_at         :datetime
+#  environment        :enum             not null
+#  jira_board_id      :bigint
 #
 # Indexes
 #
@@ -17,7 +18,15 @@
 #
 
 class JiraEnvironment < ApplicationRecord
+
+
   belongs_to :jira_board
-  validates :custom_environment,:standard_environment, presence: true
-  enum standar_environment: { qa: 0, development: 1, staging: 2, production: 3 }
+  validates :custom_environment, presence: true
+  enum environment: {
+    local: 'local',
+    development: 'development',
+    qa: 'qa',
+    staging: 'staging',
+    production: 'production'
+  }
 end
