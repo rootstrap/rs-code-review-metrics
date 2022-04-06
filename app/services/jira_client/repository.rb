@@ -1,9 +1,9 @@
 module JiraClient
   class Repository < JiraClient::Base
-    #JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD']
 
     def initialize(jira_board)
-      @jira_board = jira_board
+      #@jira_board = jira_board
+      @jira_board = JiraBoard.find_by(jira_project_key:['HAR'])
     end
 
     def board
@@ -46,9 +46,14 @@ module JiraClient
     def create_request(issue_type)
       @request_params = {
         jql: "project='#{@jira_board.jira_project_key}' AND #{issue_type}",
-        fields: "#{JIRA_ENVIRONMENT_FIELD},created,resolutiondate,issuetype",
+        fields: "#{enviroment_fields.join(',')},created,resolutiondate,issuetype",
         expand: 'changelog'
       }
+    end
+
+    def enviroment_fields
+       JSON.parse(root_connection.get('field').body).map(&:deep_symbolize_keys)
+                            .map { |field| field[:id] if field[:name] == @jira_board.environment_field }.compact
     end
 
     def fetch_board_response
