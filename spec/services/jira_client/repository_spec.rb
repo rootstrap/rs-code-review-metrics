@@ -6,6 +6,22 @@ describe JiraClient::Repository do
   let(:jira_board) { create(:jira_board, jira_project_key: repository_key) }
   let(:payload) { { issues: bugs } }
 
+  let(:fields) do
+    [
+      {
+        'id': 'customfield_10000',
+        'name': 'env_test'
+      },
+      {
+        'id': 'customfield_2000',
+        'name': 'other_env_test'
+      }
+    ]
+  end
+
+  let(:payload_field) { { fields: fields } }
+  before { stub_get_field_ok(payload_field) }
+
   describe 'board' do
     let(:payload) { { values: board } }
     let(:board) do

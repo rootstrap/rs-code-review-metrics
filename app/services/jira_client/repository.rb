@@ -1,9 +1,7 @@
 module JiraClient
   class Repository < JiraClient::Base
-
     def initialize(jira_board)
-      #@jira_board = jira_board
-      @jira_board = JiraBoard.find_by(jira_project_key:['HAR'])
+      @jira_board = jira_board
     end
 
     def board
@@ -24,20 +22,29 @@ module JiraClient
 
     def issues
       create_request('issuetype!=Bug')
-
       JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
     rescue Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
     def sprints
+      # @board = JSON.parse(fetch_sprint_response.body)['values'].map(&:deep_symbolize_keys)
       @sprints = JSON.parse(fetch_sprint_response.body)['values'].map(&:deep_symbolize_keys)
       @sprints.each do |sprint|
         sprint_report = JSON.parse(fetch_report_response(sprint[:id]).body)['contents']
         sprint.merge!(report: sprint_report)
       end
+    rescue Faraday::BadRequestError => exception
+      raised_exception(exception)
       @sprints
-    rescue Faraday::ForbiddenError => exception
+    end
+
+    def enviroment_fields
+      JSON.parse(root_connection.get('field').body).map(&:deep_symbolize_keys)
+          .map { |field|
+        field[:id] if field[:name] == @jira_board.environment_field
+      } .compact
+    rescue Faraday::BadRequestError => exception
       raised_exception(exception)
     end
 
@@ -49,11 +56,6 @@ module JiraClient
         fields: "#{enviroment_fields.join(',')},created,resolutiondate,issuetype",
         expand: 'changelog'
       }
-    end
-
-    def enviroment_fields
-       JSON.parse(root_connection.get('field').body).map(&:deep_symbolize_keys)
-                            .map { |field| field[:id] if field[:name] == @jira_board.environment_field }.compact
     end
 
     def fetch_board_response

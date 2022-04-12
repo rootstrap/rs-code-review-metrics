@@ -18,8 +18,6 @@
 #
 
 class JiraEnvironment < ApplicationRecord
-
-
   belongs_to :jira_board
   validates :custom_environment, presence: true
   enum environment: {

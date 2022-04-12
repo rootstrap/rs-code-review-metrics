@@ -32,7 +32,6 @@ ActiveAdmin.register Product do
   filter :description
 
   form do |f|
-
     f.inputs 'Product' do
       f.input :name
       f.input :description, required: false

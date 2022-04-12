@@ -21,24 +21,27 @@ FactoryBot.define do
   factory :jira_environment do
     custom_environment { Faker::Name.name }
     sequence(:environment) { |n| %w[development qa staging production][n % 4] }
-    
+
     association :jira_board
 
     trait :qa do
+      custom_environment { 'custom_qa' }
       environment { :qa }
     end
 
     trait :development do
+      custom_environment { 'custom_development' }
       environment { :development }
     end
 
     trait :staging do
+      custom_environment { 'custom_staging' }
       environment { :staging }
     end
 
     trait :production do
+      custom_environment { 'custom_production' }
       environment { :production }
     end
-
   end
 end

@@ -24,7 +24,7 @@ FactoryBot.define do
   factory :jira_board do
     project_name { Faker::Lorem.sentence }
     jira_project_key { Faker::Name.name }
-    environment_field { Faker::Name.name }
+    environment_field { 'env_test' }
     product
 
     trait :with_board_id do

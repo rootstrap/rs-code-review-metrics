@@ -31,5 +31,5 @@ class JiraSprint < ApplicationRecord
 
   validates :started_at, presence: true
   validates :jira_id, presence: true, uniqueness: true
-  validates :name, presence: true, uniqueness: { scope: :jira_board_id }
+  validates :name, presence: true
 end

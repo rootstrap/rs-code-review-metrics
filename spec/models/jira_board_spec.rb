@@ -31,7 +31,6 @@ RSpec.describe JiraBoard, type: :model do
       expect(subject).to be_valid
     end
 
-    it { is_expected.to validate_uniqueness_of(:jira_project_key) }
     it { is_expected.to validate_uniqueness_of(:jira_board_id).allow_blank }
 
     it { is_expected.to have_many(:jira_issues) }

@@ -31,24 +31,24 @@ class JiraBoard < ApplicationRecord
   has_many :jira_sprints, dependent: :destroy
   has_many :jira_environments, dependent: :destroy
 
-  validates :jira_project_key, presence: true, uniqueness: true, allow_blank: true
+  validates :jira_project_key, presence: true, allow_blank: true
   validates :jira_board_id, uniqueness: true, allow_blank: true
 
   accepts_nested_attributes_for :jira_environments
 
   def jira_environments_development
-    jira_environments.where(environment: "development").map(&:custom_environment)
+    jira_environments.where(environment: 'development').map(&:custom_environment)
   end
 
   def jira_environments_staging
-    jira_environments.where(environment: "staging").map(&:custom_environment)
+    jira_environments.where(environment: 'staging').map(&:custom_environment)
   end
 
   def jira_environments_qa
-    jira_environments.where(environment: "qa").map(&:custom_environment)
+    jira_environments.where(environment: 'qa').map(&:custom_environment)
   end
 
   def jira_environments_production
-    jira_environments.where(environment: "production").map(&:custom_environment)
+    jira_environments.where(environment: 'production').map(&:custom_environment)
   end
 end

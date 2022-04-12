@@ -1,4 +1,13 @@
 module JiraApiMock
+  def stub_get_field_ok(payload)
+    stub_envs
+    stub_request(:get, "#{ENV['JIRA_ROOT_URL']}field")
+      .to_return(
+        body: JSON.generate(payload[:fields]),
+        status: 200
+      )
+  end
+
   def stub_get_bugs_ok(payload, jira_project_key)
     stub_envs
 

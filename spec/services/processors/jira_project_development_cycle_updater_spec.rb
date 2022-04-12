@@ -5,17 +5,35 @@ describe Processors::JiraProjectDevelopmentCycleUpdater do
     let(:product) { create(:product) }
     let(:project_key) { 'TES' }
     let!(:jira_board) { create(:jira_board, product: product, jira_project_key: project_key) }
+    let!(:jira_environment) { create(:jira_environment, :production, jira_board: jira_board) }
+
     let(:last_issue) { JiraIssue.last }
     let(:informed_at_date) { '2021-03-14T15:48:04.000-0300' }
     let(:in_progress_date) { '2021-03-17T15:48:04.000-0300' }
     let(:resolved_at_date) { '2021-03-19T17:30:04.000-0300' }
     let(:subject) { described_class.call(jira_board) }
+    let(:fields) do
+      [
+        {
+          'id': 'customfield_10000',
+          'name': 'env_test'
+        },
+        {
+          'id': 'customfield_2000',
+          'name': 'other_env_test'
+        }
+      ]
+    end
+
+    let(:payload_field) { { fields: fields } }
+    before { stub_get_field_ok(payload_field) }
+
     let(:bugs) do
       [
         {
           'key': 'TES-4',
           'fields': {
-            'customfield_10000': [{ 'value': 'production' }],
+            'customfield_10000': [{ 'value': 'custom_production' }],
             'created': informed_at_date,
             'issuetype': {
               'name': 'Task'

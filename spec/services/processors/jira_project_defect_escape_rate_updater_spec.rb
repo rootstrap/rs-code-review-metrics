@@ -5,17 +5,43 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
     let(:product) { create(:product) }
     let(:project_key) { 'TES' }
     let!(:jira_board) { create(:jira_board, product: product, jira_project_key: project_key) }
+    let!(:jira_environment_prod) { create(:jira_environment, :production, jira_board: jira_board) }
+    let!(:jira_environment_qa) { create(:jira_environment, :qa, jira_board: jira_board) }
+    let!(:jira_environment_development) do
+      create(:jira_environment, :development,
+             jira_board: jira_board)
+    end
+    let!(:jira_environment_staging) { create(:jira_environment, :staging, jira_board: jira_board) }
+
     let(:last_issue) { JiraIssue.last }
     let(:informed_at_date) { '22021-03-14T15:48:04.000-0300' }
     let(:in_progress_date) { '2021-03-17T15:48:04.000-0300' }
     let(:resolved_at_date) { '2021-03-19T17:30:04.000-0300' }
     let(:subject) { described_class.call(jira_board) }
+
+    let(:fields) do
+      [
+        {
+          'id': 'customfield_10000',
+          'name': 'env_test'
+        },
+        {
+          'id': 'customfield_2000',
+          'name': 'other_env_test'
+        }
+      ]
+    end
+
+    let(:payload_field) { { fields: fields } }
+
+    before { stub_get_field_ok(payload_field) }
+
     let(:bugs) do
       [
         {
           'key': 'TES-4',
           'fields': {
-            'customfield_10000': [{ 'value': 'production' }],
+            'customfield_10000': [{ 'value': 'custom_production' }],
             'created': informed_at_date
           }
         }
@@ -50,22 +76,75 @@ RSpec.describe Processors::JiraProjectDefectEscapeRateUpdater do
         expect(last_issue.informed_at).to eq(informed_at_date)
       end
 
-      context 'when the environment needs to be parsed' do
+      context 'when the environment needs to be parsed from QA' do
         let(:bugs) do
           [
             {
               'key': 'TES-4',
               'fields': {
-                'customfield_10000': [{ 'value': 'QA - In Staging' }],
+                'customfield_10000': [{ 'value': 'custom_qa' }],
                 'created': informed_at_date
               }
             }
           ]
         end
-
         it 'is set the qa environment' do
           subject
           expect(last_issue.environment).to eq('qa')
+        end
+      end
+
+      context 'when the environment needs to be parsed from development' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'custom_development' }],
+                'created': informed_at_date
+              }
+            }
+          ]
+        end
+        it 'is set the development environment' do
+          subject
+          expect(last_issue.environment).to eq('development')
+        end
+      end
+
+      context 'when the environment needs to be parsed from staging' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'custom_staging' }],
+                'created': informed_at_date
+              }
+            }
+          ]
+        end
+        it 'is set the staging environment' do
+          subject
+          expect(last_issue.environment).to eq('staging')
+        end
+      end
+
+      context 'when the environment needs to be parsed from production' do
+        let(:bugs) do
+          [
+            {
+              'key': 'TES-4',
+              'fields': {
+                'customfield_10000': [{ 'value': 'custom_production' }],
+                'created': informed_at_date
+              }
+            }
+          ]
+        end
+        it 'is set the production environment' do
+          subject
+          expect(last_issue.environment).to eq('production')
         end
       end
     end

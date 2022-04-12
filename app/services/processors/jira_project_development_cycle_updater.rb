@@ -3,7 +3,6 @@ module Processors
     IN_PROGRESS = 'In Progress'.freeze
     TO_DO = 'To Do'.freeze
     STATUS = 'status'.freeze
-    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
 
     def initialize(jira_board)
       @jira_board = jira_board
@@ -28,13 +27,22 @@ module Processors
 
     private
 
+    def standar_environment(issue_fields)
+      JiraClient::Repository.new(@jira_board).enviroment_fields.each do |field|
+        issue_field = issue_fields[field.to_sym]
+        custom_environment = issue_field ? issue_field.first[:value].downcase : nil
+        environment = @jira_board.jira_environments
+                                 .where('LOWER(custom_environment) = ?', custom_environment).first
+        return environment[:environment] unless environment.nil?
+      end
+      nil
+    end
+
     def issues_to_update
       JiraClient::Repository.new(@jira_board).issues
     end
 
     def issue_update!(issue, issue_fields, histories)
-      environment_field = issue_fields[JIRA_ENVIRONMENT_FIELD]
-
       issue_type = issue_type_field(issue_fields)&.downcase
 
       return unless handleable_issue?(issue_type)
@@ -43,7 +51,7 @@ module Processors
         informed_at: issue_fields[:created],
         resolved_at: issue_fields[:resolutiondate] || nil,
         in_progress_at: in_progress_at(histories) || issue.in_progress_at,
-        environment: environment_field ? environment_field.first[:value]&.downcase : nil,
+        environment: standar_environment(issue_fields),
         issue_type: issue_type
       )
     end

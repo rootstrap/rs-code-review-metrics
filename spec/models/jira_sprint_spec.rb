@@ -37,10 +37,7 @@ describe JiraSprint, type: :model do
     it { is_expected.to validate_presence_of(:started_at) }
     it { is_expected.to validate_presence_of(:jira_id) }
     it { is_expected.to validate_uniqueness_of(:jira_id) }
-
     it { is_expected.to validate_presence_of(:name) }
-    it { is_expected.to validate_uniqueness_of(:name).scoped_to(:jira_board_id) }
-
     it { is_expected.to belong_to(:jira_board) }
   end
 end

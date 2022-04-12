@@ -3,7 +3,6 @@ module Processors
     IN_PROGRESS = 'In Progress'.freeze
     TO_DO = 'To Do'.freeze
     STATUS = 'status'.freeze
-    JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD'].to_sym
 
     def initialize(jira_board)
       @jira_board = jira_board
@@ -21,36 +20,36 @@ module Processors
           key: bug[:key],
           jira_board_id: @jira_board.id
         )
-
         issue_update!(issue, bug_fields, histories)
       end
     end
 
     private
 
+    def standar_environment(bug_fields)
+      JiraClient::Repository.new(@jira_board).enviroment_fields.each do |field|
+        bug_field = bug_fields[field.to_sym]
+        custom_environment = bug_field ? bug_field.first[:value].downcase : nil
+        environment = @jira_board.jira_environments
+                                 .where('LOWER(custom_environment) = ?',
+                                        custom_environment).first
+        return environment[:environment] unless environment.nil?
+      end
+      nil
+    end
+
     def bugs_to_update
       JiraClient::Repository.new(@jira_board).bugs
     end
 
     def issue_update!(issue, bug_fields, histories)
-      environment_field = parse_by_envirorment(bug_fields[JIRA_ENVIRONMENT_FIELD])
-
       issue.update!(
         informed_at: bug_fields[:created],
         resolved_at: bug_fields[:resolutiondate] || nil,
         in_progress_at: in_progress_at(histories) || issue.in_progress_at,
-        environment: environment_field,
+        environment: standar_environment(bug_fields),
         issue_type: 'bug'
       )
-    end
-
-    def parse_by_envirorment(environment)
-      regex = /(qa{1})(\s[-]){1}/
-      env_field = environment ? environment.first[:value].downcase : nil
-
-      return env_field unless env_field.present? && env_field.match?(regex)
-
-      env_field.split(' ').first
     end
 
     def in_progress_at(histories)
