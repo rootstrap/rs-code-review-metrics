@@ -2,16 +2,15 @@
 #
 # Table name: jira_boards
 #
-#  id                :bigint           not null, primary key
-#  deleted_at        :datetime
-#  environment_field :string
-#  jira_project_key  :string           not null
-#  jira_self_url     :string
-#  project_name      :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  jira_board_id     :integer
-#  product_id        :bigint
+#  id               :bigint           not null, primary key
+#  deleted_at       :datetime
+#  jira_project_key :string           not null
+#  jira_self_url    :string
+#  project_name     :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  jira_board_id    :integer
+#  product_id       :bigint
 #
 # Indexes
 #
