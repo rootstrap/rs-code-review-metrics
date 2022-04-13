@@ -3,7 +3,7 @@
 # Table name: alerts
 #
 #  id             :bigint           not null, primary key
-#  active         :boolean
+#  active         :boolean          default(FALSE), not null
 #  emails         :string           default([]), not null, is an Array
 #  frequency      :integer          not null
 #  last_sent_date :datetime

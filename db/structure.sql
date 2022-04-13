@@ -270,7 +270,7 @@ CREATE TABLE public.alerts (
     emails character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     frequency integer NOT NULL,
     last_sent_date timestamp without time zone,
-    active boolean,
+    active boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     repository_id bigint,
@@ -964,7 +964,8 @@ CREATE TABLE public.jira_boards (
     deleted_at timestamp without time zone,
     product_id bigint,
     jira_board_id integer,
-    jira_self_url character varying
+    jira_self_url character varying,
+    environment_field character varying
 );
 
 
@@ -985,6 +986,38 @@ CREATE SEQUENCE public.jira_boards_id_seq
 --
 
 ALTER SEQUENCE public.jira_boards_id_seq OWNED BY public.jira_boards.id;
+
+
+--
+-- Name: jira_environments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.jira_environments (
+    id bigint NOT NULL,
+    custom_environment character varying,
+    jira_board_id bigint,
+    deleted_at timestamp without time zone,
+    environment public.environment NOT NULL
+);
+
+
+--
+-- Name: jira_environments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.jira_environments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: jira_environments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.jira_environments_id_seq OWNED BY public.jira_environments.id;
 
 
 --
@@ -1217,7 +1250,8 @@ CREATE TABLE public.products (
     description character varying,
     created_at timestamp(6) without time zone,
     updated_at timestamp(6) without time zone,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -1639,6 +1673,13 @@ ALTER TABLE ONLY public.jira_boards ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: jira_environments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_environments ALTER COLUMN id SET DEFAULT nextval('public.jira_environments_id_seq'::regclass);
+
+
+--
 -- Name: jira_issues id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1918,6 +1959,14 @@ ALTER TABLE ONLY public.file_ignoring_rules
 
 ALTER TABLE ONLY public.jira_boards
     ADD CONSTRAINT jira_boards_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: jira_environments jira_environments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_environments
+    ADD CONSTRAINT jira_environments_pkey PRIMARY KEY (id);
 
 
 --
@@ -2353,6 +2402,13 @@ CREATE INDEX index_file_ignoring_rules_on_language_id ON public.file_ignoring_ru
 --
 
 CREATE INDEX index_jira_boards_on_product_id ON public.jira_boards USING btree (product_id);
+
+
+--
+-- Name: index_jira_environments_on_jira_board_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_jira_environments_on_jira_board_id ON public.jira_environments USING btree (jira_board_id);
 
 
 --
@@ -2856,6 +2912,14 @@ ALTER TABLE ONLY public.alerts
 
 
 --
+-- Name: jira_environments fk_rails_fa31a59190; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.jira_environments
+    ADD CONSTRAINT fk_rails_fa31a59190 FOREIGN KEY (jira_board_id) REFERENCES public.jira_boards(id);
+
+
+--
 -- Name: review_requests fk_rails_feb865e207; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3011,5 +3075,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210902140638'),
 ('20210902182225'),
 ('20210915145551'),
-('20210916151310');
+('20210916151310'),
+('20220329124055'),
+('20220329125051'),
+('20220412181602');
+
 

@@ -12,6 +12,6 @@ module ModelsNamesHelper
   end
 
   def all_products
-    Product.all.includes(:repositories)
+    Product.all.where(enabled: true).includes(:repositories)
   end
 end

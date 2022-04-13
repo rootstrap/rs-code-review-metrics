@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  deleted_at  :datetime
 #  description :string
+#  enabled     :boolean          default(TRUE), not null
 #  name        :string           not null
 #  created_at  :datetime
 #  updated_at  :datetime
@@ -24,7 +25,7 @@ class Product < ApplicationRecord
   has_many :metrics, as: :ownable, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
-
+  validates :enabled, presence: true
   accepts_nested_attributes_for :jira_board
   accepts_nested_attributes_for :repositories
 end
