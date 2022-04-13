@@ -1,5 +1,6 @@
 ActiveAdmin.register Repository do
-  permit_params :language_id, :description, :name, :github_id, :relevance, :jira_key, :new_jira_key,
+  permit_params :language_id, :description, :name, :github_id, :relevance, :jira_key,
+                :new_jira_key, :friendly_name,
                 jira_project_attributes: %i[id jira_project_key]
 
   index do
@@ -7,6 +8,7 @@ ActiveAdmin.register Repository do
     id_column
     column :github_id
     column :name
+    column :friendly_name
     column :description
     column :language_id do |r|
       r.language.name
@@ -16,6 +18,7 @@ ActiveAdmin.register Repository do
   end
 
   filter :name
+  filter :friendly_name
   filter :is_private
   filter :github_id, label: 'GITHUB ID'
   filter :relevance, as: :select, collection: Repository.relevances.values
@@ -29,6 +32,7 @@ ActiveAdmin.register Repository do
     f.inputs do
       f.input :github_id
       f.input :name
+      f.input :friendly_name
       f.input :description, required: false
       f.input :language
       f.input :relevance, as: :radio, collection: Repository.relevances.values
