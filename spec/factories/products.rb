@@ -13,6 +13,7 @@
 # Indexes
 #
 #  index_products_on_deleted_at  (deleted_at)
+#  index_products_on_enabled     (enabled)
 #  index_products_on_name        (name)
 #
 

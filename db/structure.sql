@@ -2406,6 +2406,13 @@ CREATE INDEX index_products_on_deleted_at ON public.products USING btree (delete
 
 
 --
+-- Name: index_products_on_enabled; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_on_enabled ON public.products USING btree (enabled);
+
+
+--
 -- Name: index_products_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
