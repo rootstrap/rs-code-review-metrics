@@ -1,7 +1,8 @@
 module JiraClient
   class Repository < JiraClient::Base
     JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD']
-
+    JIRA_BOARD_TYPE = "scrum"
+    
     def initialize(jira_board)
       @jira_board = jira_board
     end
@@ -54,6 +55,7 @@ module JiraClient
     def fetch_board_response
       agile_connection.get('board') do |request|
         request.params['projectKeyOrId'] = @jira_board.jira_project_key
+        request.params['type'] = JIRA_BOARD_TYPE
       end
     end
 
