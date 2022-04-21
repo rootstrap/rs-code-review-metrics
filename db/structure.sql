@@ -270,7 +270,7 @@ CREATE TABLE public.alerts (
     emails character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     frequency integer NOT NULL,
     last_sent_date timestamp without time zone,
-    active boolean,
+    active boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     repository_id bigint,
@@ -3014,7 +3014,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210902182225'),
 ('20210915145551'),
 ('20210916151310'),
-('20220413161203'),
 ('20220420123000');
 
 
