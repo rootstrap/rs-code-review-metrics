@@ -24,7 +24,7 @@ FactoryBot.define do
   factory :jira_board do
     project_name { Faker::Lorem.sentence }
     jira_project_key { Faker::App.unique.name }
-
+    board_type { 'scrum' }
     product
 
     trait :with_board_id do
@@ -35,6 +35,10 @@ FactoryBot.define do
     trait :no_board_id do
       jira_board_id { nil }
       jira_self_url { nil }
+    end
+
+    trait :kanban do
+      board_type { 'kanban' }
     end
   end
 end

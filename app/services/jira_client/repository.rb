@@ -1,15 +1,11 @@
 module JiraClient
   class Repository < JiraClient::Base
     JIRA_ENVIRONMENT_FIELD = ENV['JIRA_ENVIRONMENT_FIELD']
-    JIRA_BOARD_TYPE = "scrum"
-    
     def initialize(jira_board)
       @jira_board = jira_board
     end
 
     def board
-      return if @jira_board.jira_board_id.present?
-
       JSON.parse(fetch_board_response.body)['values'].map(&:deep_symbolize_keys)
     rescue Faraday::ForbiddenError => exception
       raised_exception(exception)
@@ -32,6 +28,8 @@ module JiraClient
     end
 
     def sprints
+      return if @jira_board.board_type != 'scrum'
+
       @sprints = JSON.parse(fetch_sprint_response.body)['values'].map(&:deep_symbolize_keys)
       @sprints.each do |sprint|
         sprint_report = JSON.parse(fetch_report_response(sprint[:id]).body)['contents']
@@ -55,7 +53,6 @@ module JiraClient
     def fetch_board_response
       agile_connection.get('board') do |request|
         request.params['projectKeyOrId'] = @jira_board.jira_project_key
-        request.params['type'] = JIRA_BOARD_TYPE
       end
     end
 

@@ -17,7 +17,7 @@ describe Processors::JiraProjectBoardUpdater do
           'id': 1,
           'self': 'https://name.atlassian.net/rest/agile/1.0/board/1',
           'name': 'TestEM (TES)',
-          'type': 'simple',
+          'type': 'scrum',
           'location': {
             'projectId': 10_068,
             'displayName': 'TestEM (TES)',
@@ -43,18 +43,6 @@ describe Processors::JiraProjectBoardUpdater do
         subject
         expect(jira_project.jira_self_url)
           .to eq('https://name.atlassian.net/rest/agile/1.0/board/1')
-      end
-    end
-
-    context 'when there is board id' do
-      let!(:jira_project) do
-        create(:jira_board,
-               :with_board_id,
-               product: product,
-               jira_project_key: project_key)
-      end
-      it 'do nothing' do
-        expect(subject).to be_falsey
       end
     end
   end

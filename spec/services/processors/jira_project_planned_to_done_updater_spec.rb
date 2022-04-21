@@ -158,5 +158,22 @@ describe Processors::JiraProjectPlannedToDoneUpdater do
         expect { subject }.not_to change { JiraSprint.count }
       end
     end
+
+    context 'when the board is not scrum' do
+      let!(:jira_project_simple) do
+        create(:jira_board,
+               :with_board_id,
+               board_type: 'simple',
+               product: product,
+               jira_project_key: 'TES2',
+               jira_board_id: 2)
+      end
+
+      let(:subject) { described_class.call(jira_project_simple) }
+
+      it 'has no result' do
+        expect(subject).to be_nil
+      end
+    end
   end
 end

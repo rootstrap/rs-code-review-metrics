@@ -964,7 +964,8 @@ CREATE TABLE public.jira_boards (
     deleted_at timestamp without time zone,
     product_id bigint,
     jira_board_id integer,
-    jira_self_url character varying
+    jira_self_url character varying,
+    board_type character varying
 );
 
 
@@ -1255,7 +1256,8 @@ CREATE TABLE public.repositories (
     is_private boolean,
     relevance public.project_relevance DEFAULT 'unassigned'::public.project_relevance NOT NULL,
     deleted_at timestamp without time zone,
-    product_id bigint
+    product_id bigint,
+    friendly_name character varying
 );
 
 
@@ -3011,5 +3013,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210902140638'),
 ('20210902182225'),
 ('20210915145551'),
-('20210916151310');
+('20210916151310'),
+('20220413161203'),
+('20220420123000');
+
 

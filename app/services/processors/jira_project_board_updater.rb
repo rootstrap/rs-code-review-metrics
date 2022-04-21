@@ -19,7 +19,8 @@ module Processors
     def board_update!(board, board_fields)
       board.update!(
         jira_board_id: board_fields[:id],
-        jira_self_url: board_fields[:self]
+        jira_self_url: board_fields[:self],
+        board_type: board_fields[:type]
       )
     end
   end

@@ -7,6 +7,8 @@ module Processors
     end
 
     def call
+      return if sprints_to_update.nil?
+
       sprints_to_update.each do |sprint|
         sprint.deep_symbolize_keys!
 

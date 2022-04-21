@@ -14,7 +14,7 @@ describe JiraClient::Repository do
           'id': 1,
           'self': 'https://name.atlassian.net/rest/agile/1.0/board/1',
           'name': 'TestEM (TES)',
-          'type': 'simple',
+          'type': 'scrum',
           'location': {
             'projectId': 10_068,
             'displayName': 'TestEM (TES)',
@@ -31,19 +31,7 @@ describe JiraClient::Repository do
 
     before { stub_get_board_ok(payload, repository_key) }
 
-    context 'when board id is already present' do
-      let!(:jira_board) do
-        create(:jira_board,
-               jira_project_key: repository_key,
-               jira_board_id: jira_board_id)
-      end
-
-      it 'returns an empty array' do
-        expect(subject).to be_falsey
-      end
-    end
-
-    context 'when there is no board id yet' do
+    context 'when update board' do
       let!(:jira_board) do
         create(:jira_board,
                :no_board_id,
