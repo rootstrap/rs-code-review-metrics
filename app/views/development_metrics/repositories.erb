@@ -29,6 +29,7 @@
                   <%= @review_turnaround_success_rate[:rate] %>% success rate
                 </span>
               <% end %>
+              <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>¡</span>
             </div>
            </div>
           <div class="col-md-6">
@@ -38,10 +39,8 @@
                           class: 'btn btn-detail'
               %>
              </div>
-         </div>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @review_turnaround_definition && @review_turnaround_definition[:explanation] %>'>¡</span>
+           </div>
         </div>
-
         <div class="graph">
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
         </div>
@@ -51,29 +50,27 @@
           </div>
         <% end %>
       </div>
-
-
       <div class="metrics">
         <div class='row'>
           <div class="col-md-6">
-        <div class="box-title" >
-            <%= @merge_time_definition && @merge_time_definition[:name] %>
-            <% if @merge_time_success_rate.present? %>
-              <span class="badge badge-info success_rate_btn">
-                <%= @merge_time_success_rate[:rate] %>% success rate
-              </span>
-            <% end %>
-          </div>
+            <div class="box-title" >
+                <%= @merge_time_definition && @merge_time_definition[:name] %>
+                <% if @merge_time_success_rate.present? %>
+                  <span class="badge badge-info success_rate_btn">
+                    <%= @merge_time_success_rate[:rate] %>% success rate
+                  </span>
+                <% end %>
+               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>¡</span>
             </div>
-            <div class="col-md-6">
-           <div class="distribution-report-button mr-5">
+          </div>
+          <div class="col-md-6">
+            <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
                           repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
                           class: 'btn btn-detail'
               %>
             </div>
-            </div>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @merge_time_definition && @merge_time_definition[:explanation] %>'>¡</span>
+          </div>
         </div>
         <div class="graph">
           <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
@@ -84,14 +81,24 @@
           </div>
         <% end %>
       </div>
-
       <div class="metrics">
         <div class='row'>
-          <h4 class="p-3" style='margin-left:10px;'><%= @pull_request_size_definition && @pull_request_size_definition[:name] %></h4>
-          <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
-        </div>
-        <div class="graph">
-          <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+          <div class="col-md-11">
+            <div class="box-title" >
+              <%= @pull_request_size_definition && @pull_request_size_definition[:name] %>
+              <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
+            </div>
+            <div class="graph">
+              <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+            </div>
+          </div>
+        <div class="col-md-1">
+          <div class="distribution-report-button mr-5">
+            <%= link_to 'See details',
+                        repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
+                        class: 'btn btn-detail'
+            %>
+            </div>
         </div>
       </div>
     <% else %>
@@ -102,3 +109,5 @@
       </div>
     <% end %>
 </div>
+
+<%= build_bar_chart_modal(@repository.name, params&.dig(:metric, :from), params&.dig(:metric, :to)) %>
