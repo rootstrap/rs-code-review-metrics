@@ -28,6 +28,7 @@ describe Product, type: :model do
         expect(subject).to be_valid
       end
 
+      it { is_expected.to validate_presence_of(:enabled) }
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_uniqueness_of(:name) }
       it { is_expected.to have_many(:repositories) }

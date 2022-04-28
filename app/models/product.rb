@@ -26,6 +26,7 @@ class Product < ApplicationRecord
   has_many :repositories, dependent: :destroy
   has_many :metrics, as: :ownable, dependent: :destroy
 
+  validates :enabled, presence: true
   validates :name, presence: true, uniqueness: true
   accepts_nested_attributes_for :jira_board
   accepts_nested_attributes_for :repositories
