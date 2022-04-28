@@ -3,7 +3,7 @@
     <div class="row title_sidebar">
         <div class="col-md-6">
           <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
-          <b class="rute_title"><%= @repository.friendly_name ? @repository.friendly_name : @repository.name  if @repository.product.present? %></b>
+          <b class="rute_title"><%= (@repository.friendly_name.presence || @repository.name)  if @repository.product.present? %></b>
         </div>
         <div class="col-md-6 interval d-flex flex-row-reverse">
           <%= render 'shared/repository/nav-filter' do |f| %>

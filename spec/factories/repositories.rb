@@ -2,17 +2,18 @@
 #
 # Table name: repositories
 #
-#  id          :bigint           not null, primary key
-#  deleted_at  :datetime
-#  description :string
-#  is_private  :boolean
-#  name        :string
-#  relevance   :enum             default("unassigned"), not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  github_id   :integer          not null
-#  language_id :bigint
-#  product_id  :bigint
+#  id            :bigint           not null, primary key
+#  deleted_at    :datetime
+#  description   :string
+#  friendly_name :string
+#  is_private    :boolean
+#  name          :string
+#  relevance     :enum             default("unassigned"), not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  github_id     :integer          not null
+#  language_id   :bigint
+#  product_id    :bigint
 #
 # Indexes
 #

@@ -3,6 +3,7 @@
 # Table name: jira_boards
 #
 #  id               :bigint           not null, primary key
+#  board_type       :string
 #  deleted_at       :datetime
 #  jira_project_key :string           not null
 #  jira_self_url    :string
