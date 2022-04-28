@@ -83,13 +83,22 @@
       </div>
       <div class="metrics">
         <div class='row'>
-          <div class="box-title" >
-            <%= @pull_request_size_definition && @pull_request_size_definition[:name] %>
-            <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
+          <div class="col-md-11">
+            <div class="box-title" >
+              <%= @pull_request_size_definition && @pull_request_size_definition[:name] %>
+              <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
+            </div>
+            <div class="graph">
+              <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+            </div>
           </div>
-        </div>
-        <div class="graph">
-          <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+        <div class="col-md-1">
+          <div class="distribution-report-button mr-5">
+            <%= link_to 'See details',
+                        repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
+                        class: 'btn btn-detail'
+            %>
+            </div>
         </div>
       </div>
     <% else %>
@@ -100,3 +109,5 @@
       </div>
     <% end %>
 </div>
+
+<%= build_bar_chart_modal(@repository.name, params&.dig(:metric, :from), params&.dig(:metric, :to)) %>

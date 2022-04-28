@@ -1,5 +1,6 @@
 <%= render partial: 'shared/column-chart',
            locals: {
+               chart_id: 'pull-request-size',
                metric_name: 'Distribution',
                suffix: " pull requests",
                metric: pull_request_size[:per_repository_distribution] || pull_request_size[:per_department_distribution]
