@@ -23,7 +23,10 @@ module Builders
           @pr_sizes ||= ::Events::PullRequest.where(created_at: @from..@to)
                                              .joins(:repository)
                                              .where(repositories: { name: @repository_name })
-                                             .where.not(events_pull_requests: { html_url: nil })
+                                             .where.not(
+                                               events_pull_requests: { html_url: nil },
+                                               size: nil
+                                             )
                                              .order(:size)
         end
 
