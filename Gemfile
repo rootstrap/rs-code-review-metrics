@@ -103,3 +103,5 @@ group :test do
   gem 'webdrivers'
   gem 'webmock', '~> 3.8'
 end
+
+# Adding a minimal comment just for test the Github API
