@@ -1,13 +1,14 @@
 ActiveAdmin.register Product do
   permit_params :id, :description, :name, :jira_key, :new_jira_key,
-                jira_board_attributes: %i[id jira_project_key],
-                repository_ids: []
+                :enabled, jira_board_attributes: %i[id jira_project_key],
+                          repository_ids: []
 
   index do
     selectable_column
     id_column
     column :name
     column :description
+    column :enabled
     column :jira_project_key do |product|
       product.jira_board&.jira_project_key
     end
@@ -30,11 +31,13 @@ ActiveAdmin.register Product do
 
   filter :name
   filter :description
+  filter :enabled
 
   form do |f|
     f.inputs do
       f.input :name
       f.input :description, required: false
+      f.input :enabled
       if object.jira_board
         f.inputs for: [:jira_board, f.object.jira_board] do |s|
           s.input :jira_project_key

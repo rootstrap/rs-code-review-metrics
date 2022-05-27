@@ -115,5 +115,27 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
         expect(subject).not_to have_key('700-799')
       end
     end
+
+    context 'when pull request has size attribute nil' do
+      let!(:pull_request_html_url_nil) do
+        create(:pull_request,
+               repository: repository_one,
+               size: nil,
+               opened_at: 40.hours.ago,
+               merged_at: Time.zone.now)
+      end
+
+      subject do
+        described_class.call(
+          repository_name: repository_one.name,
+          from: from,
+          to: to
+        )
+      end
+
+      it 'does not add the pull request to the data' do
+        expect(subject).not_to have_key('700-799')
+      end
+    end
   end
 end

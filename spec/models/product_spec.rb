@@ -5,6 +5,7 @@
 #  id          :bigint           not null, primary key
 #  deleted_at  :datetime
 #  description :string
+#  enabled     :boolean          default(TRUE), not null
 #  name        :string           not null
 #  created_at  :datetime
 #  updated_at  :datetime
@@ -12,6 +13,7 @@
 # Indexes
 #
 #  index_products_on_deleted_at  (deleted_at)
+#  index_products_on_enabled     (enabled)
 #  index_products_on_name        (name)
 #
 
@@ -26,6 +28,7 @@ describe Product, type: :model do
         expect(subject).to be_valid
       end
 
+      it { is_expected.to validate_presence_of(:enabled) }
       it { is_expected.to validate_presence_of(:name) }
       it { is_expected.to validate_uniqueness_of(:name) }
       it { is_expected.to have_many(:repositories) }
