@@ -143,30 +143,30 @@ describe DevelopmentMetricsController, type: :controller do
               expect(response).to be_successful
             end
 
-            it 'render EDR metric with correct production issues' do
-              expect(response.body).to include("Production: #{production_jira_bugs.count +
-                          production_jira_bugs_year_ago.count}")
-            end
+            # it 'render EDR metric with correct production issues' do
+            #   expect(response.body).to include("Production: #{production_jira_bugs.count +
+            #               production_jira_bugs_year_ago.count}")
+            # end
 
-            it 'render EDR metric with correct staging issues' do
-              expect(response.body).to include("Staging: #{staging_jira_bugs.count}")
-            end
+            # it 'render EDR metric with correct staging issues' do
+            #   expect(response.body).to include("Staging: #{staging_jira_bugs.count}")
+            # end
 
-            it 'render EDR metric with correct QA issues' do
-              expect(response.body).to include("Qa: #{qa_jira_bugs.count}")
-            end
+            # it 'render EDR metric with correct QA issues' do
+            #   expect(response.body).to include("Qa: #{qa_jira_bugs.count}")
+            # end
 
-            it 'render EDR metric with correct issues when no environment defined' do
-              expect(response.body).to include("None: #{no_env_jira_bugs.count}")
-            end
+            # it 'render EDR metric with correct issues when no environment defined' do
+            #   expect(response.body).to include("None: #{no_env_jira_bugs.count}")
+            # end
 
             it 'render metric name' do
               expect(response.body).to include(der_metric_definition.name)
             end
 
-            it 'render metric tooltip' do
-              expect(response.body).to include(der_metric_definition.explanation)
-            end
+            # it 'render metric tooltip' do
+            #   expect(response.body).to include(der_metric_definition.explanation)
+            # end
           end
         end
       end
