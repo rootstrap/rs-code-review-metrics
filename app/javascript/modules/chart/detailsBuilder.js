@@ -10,14 +10,12 @@ export const detailRowBuilder = (data, metric) => {
 };
 
 const createLinkElement = (htmlUrl) => {
-  const link = $('<a />').prop({
+  return $('<a />').prop({
                   target: '_blank',
                   href: htmlUrl,
                   innerText: htmlUrl
                 });
-
-  return link;
-}
+};
 
 const createSpanElement = (value, metric) => {
   const span = $('<span />');
@@ -25,4 +23,4 @@ const createSpanElement = (value, metric) => {
   span.text(`  (${value} ${metric})`);
 
   return span;
-}
+};
