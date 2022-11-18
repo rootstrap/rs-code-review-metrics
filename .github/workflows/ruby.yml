@@ -83,6 +83,9 @@ jobs:
       JIRA_ENVIRONMENT_FIELD: customfield_10000
       SENDGRID_USERNAME: metrics@example.com
       ENGINEERING_METRICS_URL: http://engineering-metrics.com/
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      SONAR_URL: ${{ secrets.SONAR_URL }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -137,3 +140,14 @@ jobs:
       - name: Report to CodeClimate
         run: |
           ./cc-test-reporter after-build --exit-code 0
+      - name: Setup sonar scanner
+        uses: warchant/setup-sonar-scanner@v3
+      - name: Run Sonarqube analysis
+        run: |
+          sonar-scanner \
+            -Dsonar.host.url=$SONAR_URL \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.nodejs.executable=$(which node) \
+            -Dsonar.projectVersion=$(echo $GITHUB_SHA | cut -c1-8) \
+            -Dsonar.qualitygate.wait=true \

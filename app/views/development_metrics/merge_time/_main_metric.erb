@@ -5,6 +5,7 @@
             } if merge_time && (merge_time[:per_repository] || merge_time[:per_department]) %>
 <%= render partial: 'shared/column-chart',
             locals: {
+              chart_id: 'time-to-merge',
               metric_name: 'Distribution',
               suffix: " pull requests",
               metric: merge_time[:per_repository_distribution] || merge_time[:per_department_distribution]

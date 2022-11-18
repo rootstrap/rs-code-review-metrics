@@ -146,9 +146,9 @@ if Rails.env.development?
   end
 
   MetricDefinition.create!(code: :defect_escape_rate, explanation: 'Is the ratio of defects filed by customer or end user, for a particular release to the total number of defects for that release.', name: 'Defect Escape Rate')
-  MetricDefinition.create!(code: :review_turnaround, explanation: 'The time it takes for the PR to have two approvals.', name: 'Time to second review')
+  MetricDefinition.create!(code: :review_turnaround, explanation: 'The time it takes for the PR to have feedback from two reviewers. Feedback includes the approval of the PR, but also a change suggestion or other comments.', name: 'Time to second review')
   MetricDefinition.create!(code: :merge_time, explanation: 'Time to merge measures the amount of time from pull request open until pull request merge.', name: 'Time to merge')
-  MetricDefinition.create!(code: :pull_request_size, explanation: 'Is the average of total lines of code added plus the total lines of code removed.', name: 'PR Size')
+  MetricDefinition.create!(code: :pull_request_size, explanation: 'Measures the lines of code added by each PR. The smaller the PR, the easier it is to review, which speeds up the review process..', name: 'PR Size')
   MetricDefinition.create!(code: :development_cycle, explanation: 'It measures how much time the team spends working on a task.', name: 'Development Cycle')
   MetricDefinition.create!(code: :planned_to_done, explanation: 'The planned-to-done ratio measures what percentage of the tasks you set out for your team were completed satisfactorily.', name: 'Planned to Done Ratio')
 end

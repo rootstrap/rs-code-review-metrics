@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       resources :repositories, only: [], param: :name do
         resources :time_to_merge_prs_repository, only: :index, module: :pull_requests
         resources :time_to_second_review_prs_repository, only: :index, module: :pull_requests
+        resources :pull_request_size_prs_repository, only: :index, module: :pull_requests
       end
       resources :users, only: [] do
         resources :repositories, only: :index, controller: 'users/repositories'

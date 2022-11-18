@@ -2,6 +2,8 @@
   <span class='metric-title'><%= metric_name %></span>
   <div class='chart'>
     <%= column_chart metric,
+        id: chart_id,
+        empty: 'No data',
         suffix: suffix,
         library: { spanGaps: true } %>
   </div>
