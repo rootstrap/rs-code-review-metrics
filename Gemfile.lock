@@ -505,7 +505,7 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webdrivers
   webmock (~> 3.8)
-  webpacker (~> 5.1, >= 5.1.1)
+  webpacker (~> 5.4, >= 5.4.3)
 
 RUBY VERSION
    ruby 2.7.2p137
