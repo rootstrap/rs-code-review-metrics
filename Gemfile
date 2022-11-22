@@ -81,9 +81,10 @@ end
 group :development do
   gem 'rails_best_practices', '~> 1.19.4'
   gem 'reek', '~> 5.5'
+  gem 'rubocop', '~> 0.79.0'
   gem 'rubocop-rails', '~> 2.3', '>= 2.3.2'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen', '~> 3.7', '>= 3.7.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
