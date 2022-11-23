@@ -34,6 +34,7 @@ Metrics/AbcSize:
   Max: 17
   Exclude:
     - app/services/code_climate/update_repository_service.rb
+    - app/controllers/development_metrics_controller.rb
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?

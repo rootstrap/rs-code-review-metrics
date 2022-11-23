@@ -98,6 +98,13 @@
         </div>
       </div>
     <% end %>
+    <% unless has_repositories %>
+    <div class="metrics">
+      <div class="text-center">
+        <span class="text-danger extra-padding"><h5>No GitHub repositories associated. Contact an administrator</h5></span>
+      </div>
+    </div>
+    <% end %>
       </div>
   </div>
 </div>
