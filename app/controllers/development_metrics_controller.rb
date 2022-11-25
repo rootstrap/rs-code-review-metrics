@@ -65,6 +65,7 @@ class DevelopmentMetricsController < ApplicationController
   def build_product_metrics(entity_id, entity_name)
     validate_from_to(from: metric_params[:from], to: metric_params[:to])
     @has_jira_project = product.jira_board&.present?
+    @has_repositories = product.repositories.any?
 
     return unless @has_jira_project
 

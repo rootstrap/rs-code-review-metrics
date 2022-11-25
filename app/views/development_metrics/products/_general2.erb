@@ -1,0 +1,21 @@
+<div class="summary">
+  <div class='chart-container <%if current_page?(products_development_metrics_path) && has_jira_project%>col-md-12 info'<% else %>'<% end %> >
+    <% # This view partial is meant to comply with https://rootstrap.atlassian.net/browse/EM-346 where the dashboard is disabled until the dashboard metrics are fixed%>
+    <% # please render the proper partial general.erb in products.erb once this is fixed %>
+    <% unless has_jira_project %>
+    <div class="metrics">
+      <div class="text-center">
+        <span class="text-danger extra-padding"><h5>No Jira project associated. Contact an administrator</h5></span>
+      </div>
+    </div>
+    <% end %>
+    <% unless has_repositories %>
+    <div class="metrics">
+      <div class="text-center">
+        <span class="text-danger extra-padding"><h5>No GitHub repositories associated. Contact an administrator</h5></span>
+      </div>
+    </div>
+    <% end %>
+    </div>
+  </div>
+
