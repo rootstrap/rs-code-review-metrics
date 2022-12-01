@@ -2,8 +2,8 @@
   <div class="metrics-container">
     <div class="row title_sidebar">
         <div class="col-md-6">
-          <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
-          <b class="rute_title"><%= @repository.name  if @repository.product.present? %></b>
+          <strong class="rute_title_grey"><%= @repository.product[:name] +'/'%></strong>
+          <strong class="rute_title"><%= @repository.name  if @repository.product.present? %></strong>
         </div>
         <div class="col-md-6 interval d-flex flex-row-reverse">
           <%= render 'shared/repository/nav-filter' do |f| %>
@@ -42,7 +42,11 @@
            </div>
         </div>
         <div class="graph">
+          <% if !@review_turnaround[:per_repository][0][:data].empty? %>
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
+          <% else %>
+          <p>No data in this time period</p>
+          <% end %>
         </div>
         <% if @enabled_repository_per_user_graph %>
           <div class="graph details">
