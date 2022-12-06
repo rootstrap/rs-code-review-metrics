@@ -45,7 +45,9 @@
           <% if !@review_turnaround[:per_repository][0][:data].empty? && !@review_turnaround[:per_repository_distribution][0][:data].empty? %>
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
           <% else %>
-          <p>No data in this time period</p>
+            <div class='p-3 text-center'>
+              <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+            </div>
           <% end %>
         </div>
         <% if @enabled_repository_per_user_graph %>
@@ -80,7 +82,9 @@
         <% if !@merge_time[:per_repository][0][:data].empty? && !@merge_time[:per_repository_distribution][0][:data].empty? %>
         <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
         <% else %>
-        <p>No data in this time period</p>
+            <div class="p-3 text-center">
+              <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+            </div>
         <% end %>
         </div>
         <% if @enabled_repository_per_user_graph %>
@@ -100,7 +104,9 @@
               <% if !@pull_request_size[:per_repository_distribution][0][:data].empty? %>
               <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
                 <% else %>
-              <p>No data in this time period</p>
+                <div class="p-3 text-center">
+                  <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+                </div>
               <% end %>
             </div>
           </div>
