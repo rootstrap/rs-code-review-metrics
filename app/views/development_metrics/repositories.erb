@@ -2,8 +2,8 @@
   <div class="metrics-container">
     <div class="row title_sidebar">
         <div class="col-md-6">
-          <b class="rute_title_grey"><%= @repository.product[:name] +'/'%></b>
-          <b class="rute_title"><%= @repository.name  if @repository.product.present? %></b>
+          <strong class="rute_title_grey"><%= @repository.product[:name] +'/'%></strong>
+          <strong class="rute_title"><%= @repository.name  if @repository.product.present? %></strong>
         </div>
         <div class="col-md-6 interval d-flex flex-row-reverse">
           <%= render 'shared/repository/nav-filter' do |f| %>
@@ -36,13 +36,19 @@
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
                           repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                          class: 'btn btn-detail'
+                          class: 'btn btn-detail' unless @review_turnaround[:per_repository_distribution][0][:data].empty?
               %>
              </div>
            </div>
         </div>
         <div class="graph">
+          <% if !@review_turnaround[:per_repository][0][:data].empty? && !@review_turnaround[:per_repository_distribution][0][:data].empty? %>
           <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: @review_turnaround %>
+          <% else %>
+            <div class='p-3 text-center'>
+              <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+            </div>
+          <% end %>
         </div>
         <% if @enabled_repository_per_user_graph %>
           <div class="graph details">
@@ -67,13 +73,19 @@
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
                           repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                          class: 'btn btn-detail'
+                          class: 'btn btn-detail' unless @merge_time[:per_repository_distribution][0][:data].empty?
               %>
             </div>
           </div>
         </div>
         <div class="graph">
-          <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+        <% if !@merge_time[:per_repository][0][:data].empty? && !@merge_time[:per_repository_distribution][0][:data].empty? %>
+            <%= render 'development_metrics/merge_time/main_metric', merge_time: @merge_time %>
+        <% else %>
+            <div class="p-3 text-center">
+              <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+            </div>
+        <% end %>
         </div>
         <% if @enabled_repository_per_user_graph %>
           <div class="graph details">
@@ -89,14 +101,20 @@
               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= @pull_request_size_definition && @pull_request_size_definition[:explanation] %>'>¡</span>
             </div>
             <div class="graph">
+              <% if !@pull_request_size[:per_repository_distribution][0][:data].empty? %>
               <%= render 'development_metrics/pull_request_size/main_metric', pull_request_size: @pull_request_size %>
+                <% else %>
+                <div class="p-3 text-center">
+                  <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
+                </div>
+              <% end %>
             </div>
           </div>
         <div class="col-md-1">
           <div class="distribution-report-button mr-5">
             <%= link_to 'See details',
                         repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                        class: 'btn btn-detail'
+                        class: 'btn btn-detail' unless @pull_request_size[:per_repository_distribution][0][:data].empty?
             %>
             </div>
         </div>
