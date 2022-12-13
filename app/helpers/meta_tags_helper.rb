@@ -1,4 +1,5 @@
 module MetaTagsHelper
+
   def meta_title
     if current_page?(products_development_metrics_path)
       if product_name.present?
@@ -112,7 +113,7 @@ module MetaTagsHelper
 
     return unless @show_defect_escape_rate && data.present?
 
-    desc = 'Overall ' + @defect_escape_rate_definition.name + ': ' + data[:rate].to_s + '%'
+    desc = description_to_s @defect_escape_rate_definition.name, data[:rate].to_s
     desc += ' -' if @separator
     desc
   end
@@ -124,7 +125,7 @@ module MetaTagsHelper
 
     return if average.blank?
 
-    desc = 'Overall ' + @development_cycle_definition.name + ': ' + average.to_s + '%'
+    desc = description_to_s @development_cycle_definition.name, average.to_s
     desc += ' -' if @separator
     desc
   end
@@ -136,7 +137,11 @@ module MetaTagsHelper
 
     return if data.blank?
 
-    'Overall ' + @planned_to_done_definition.name + ': ' + data[:average].to_s + '%'
+    description_to_s @planned_to_done_definition.name, data[:average].to_s
+  end
+
+  def description_to_s(definition, data)
+    'Overall ' + definition + ': ' + data + '%'
   end
 
   def separator?(separator)
