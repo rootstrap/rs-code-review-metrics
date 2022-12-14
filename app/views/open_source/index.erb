@@ -1,9 +1,9 @@
 <%= render 'open_source/sidebar' %>
 <div class="metrics-container">
   <div class="p-5">
-    <span><b><%= @total_repositories %></b> open source <%= 'repository'.pluralize(@total_repositories) %>:</span>
+    <span><strong><%= @total_repositories %></strong> open source <%= 'repository'.pluralize(@total_repositories) %>:</span>
     <% @repositories_per_language.each do |language, repository_count| %>
-      <li><b><%= repository_count %></b> <%= language.titleize %> <%= 'repository'.pluralize(repository_count) %></li>
+      <li><strong><%= repository_count %></strong> <%= language.titleize %> <%= 'repository'.pluralize(repository_count) %></li>
     <% end %>
   </div>
   <div class="main-container">

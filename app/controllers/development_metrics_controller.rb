@@ -102,6 +102,8 @@ class DevelopmentMetricsController < ApplicationController
       @show_development_cycle = true
     when :planned_to_done
       @show_planned_to_done = true
+    else
+      raise 'Unexpected metric name'
     end
   end
 
