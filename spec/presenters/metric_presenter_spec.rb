@@ -33,5 +33,4 @@ RSpec.describe RepositoryMetricPresenter do
       end
     end
   end
-
 end
