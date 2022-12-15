@@ -1,14 +1,12 @@
 class RepositoryMetricPresenter
 
-  METRIC_FILTERS = [:per_repository,
-                    :per_users_repository,
-                    :per_repository_distribution]
+  METRIC_FILTERS = %i[per_repository per_users_repository per_repository_distribution].freeze
 
 
   METRIC_FILTERS.each do |filter|
-    define_method("#{filter.to_s}_has_data_to_display?") do
+    define_method("#{filter}_has_data_to_display?") do
       content = @metric.dig(filter, 0, :data)
-      !(content.nil? || content.empty?)
+      content.present?
     end
   end
 
@@ -19,5 +17,4 @@ class RepositoryMetricPresenter
     @metric_explanation = metric_definition.explanation
     @metric = metric_hash
   end
-
 end
