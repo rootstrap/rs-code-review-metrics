@@ -1,8 +1,5 @@
 class RepositoryMetricPresenter
-
   METRIC_FILTERS = %i[per_repository per_users_repository per_repository_distribution].freeze
-
-
   METRIC_FILTERS.each do |filter|
     define_method("#{filter}_has_data_to_display?") do
       content = @metric.dig(filter, 0, :data)
