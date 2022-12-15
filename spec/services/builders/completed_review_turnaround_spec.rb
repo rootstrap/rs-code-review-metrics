@@ -16,7 +16,9 @@ RSpec.describe Builders::CompletedReviewTurnaround do
     end
 
     let(:correct_value) do
-      review.opened_at.to_i - pr.opened_at.to_i
+      weekend_in_seconds = WeekendSecondsInterval.call(start_date: review.opened_at,
+                                                       end_date: pr.opened_at)
+      (review.opened_at.to_i - pr.opened_at.to_i) - weekend_in_seconds
     end
 
     shared_examples 'the corresponding completed review turnaround is created' do
