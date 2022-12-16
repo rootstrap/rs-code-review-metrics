@@ -42,7 +42,7 @@
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
                           repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                          class: 'btn btn-detail' unless review_turnaround_presenter.per_repository_distribution_has_data_to_display?
+                          class: 'btn btn-detail' if review_turnaround_presenter.per_repository_distribution_has_data_to_display?
               %>
              </div>
            </div>
@@ -79,7 +79,7 @@
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
                           repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                          class: 'btn btn-detail' unless merge_time_presenter.per_repository_distribution_has_data_to_display?
+                          class: 'btn btn-detail' if merge_time_presenter.per_repository_distribution_has_data_to_display?
               %>
             </div>
           </div>
@@ -120,7 +120,7 @@
           <div class="distribution-report-button mr-5">
             <%= link_to 'See details',
                         repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                        class: 'btn btn-detail' unless pull_request_size_presenter.per_repository_distribution_has_data_to_display?
+                        class: 'btn btn-detail' if pull_request_size_presenter.per_repository_distribution_has_data_to_display?
             %>
             </div>
         </div>
