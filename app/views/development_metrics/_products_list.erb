@@ -5,12 +5,12 @@
       <li class="mb-1" data-turbolinks-permanent>
 
         <%= link_to products_development_metrics_path({product_name: product.name, metric: { from: initial_from, to: initial_to }}) do %>
-          <button class="btn btn-toggle align-items-center sidebar_font rounded collapsed" data-bs-toggle="collapse" data-bs-target="#<%= product.name %>-collapse" aria-expanded="true">
+          <button class="btn btn-toggle align-items-center sidebar_font rounded collapsed" data-bs-toggle="collapse" data-bs-target="#<%= product.name.parameterize %>-collapse" aria-expanded="true">
             <%= product.name %>
           </button>
         <% end %>
 
-        <div data-turbolinks-permanent class="collapse" id="<%= product.name %>-collapse">
+        <div data-turbolinks-permanent class="collapse" id="<%= product.name.parameterize %>-collapse">
             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1">
               <% product.repositories.sort_by(&:name).each do |repository|%>
                 <a href='<%= (repositories_development_metrics_path({repository_name: repository.name, metric: { from: initial_from, to: initial_to, }})) %>' class='btn btn-toggle sidebar_font' role='button'><%= repository.name %></a>
