@@ -4,7 +4,9 @@ class DevelopmentMetricsController < ApplicationController
   include DateValidator
   PRODUCTS_ACTION = 'products'.freeze
 
-  def index; end
+  def index
+    # no body necessary
+  end
 
   def products
     return if metric_params.blank?
@@ -36,7 +38,9 @@ class DevelopmentMetricsController < ApplicationController
     @overview = department_overview
   end
 
-  def users; end
+  def users
+    # no body necessary
+  end
 
   def products_metrics
     return if metric_params.blank?
