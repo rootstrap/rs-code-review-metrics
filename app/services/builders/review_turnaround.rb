@@ -5,7 +5,9 @@ module Builders
     end
 
     def call
-      ::ReviewTurnaround.create!(review_request: @review_request, value: calculate_turnaround)
+      ::ReviewTurnaround.create!(review_request: @review_request,
+                                 value: calculate_turnaround,
+                                 pull_request: @review_request.pull_request)
     end
 
     private
