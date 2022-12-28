@@ -27,7 +27,7 @@ class CompletedReviewTurnaround < ApplicationRecord
   include EntityTimeRepresentation
 
   belongs_to :review_request
-  belongs_to :pull_request, :class_name => 'Events::PullRequest'
+  belongs_to :pull_request, class_name: 'Events::PullRequest'
 
   validates :value, presence: true
   validates :review_request_id, uniqueness: true
