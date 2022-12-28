@@ -6,10 +6,12 @@ RSpec.describe Processors::ReviewTurnaroundPullRequestBackfiller do
     let(:department) { Department.find_by(name: 'backend') }
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let!(:repository) { create(:repository, language: ruby_lang) }
-    let!(:review_request) { create(:review_request, repository: repository)}
-    let(:review_turnaround) { build(:review_turnaround,
-                                              review_request: review_request,
-                                              pull_request: nil) }
+    let!(:review_request) { create(:review_request, repository: repository) }
+    let(:review_turnaround) do
+      build(:review_turnaround,
+            review_request: review_request,
+            pull_request: nil)
+    end
 
     before { review_turnaround.save!(validate: false) }
     it 'updates pull_request foreign_key in the completed review turnaround records' do
