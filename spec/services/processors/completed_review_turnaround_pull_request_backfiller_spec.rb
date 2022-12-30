@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Processors::CompletedReviewTurnaroundPullRequestBackfiller do
   describe '.call' do
 
-    let(:department) { Department.find_by(name: 'backend') }
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let!(:repository) { create(:repository, language: ruby_lang) }
     let!(:review_request) { create(:review_request, repository: repository) }
