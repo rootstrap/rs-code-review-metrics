@@ -15,7 +15,9 @@ RSpec.describe Builders::Chartkick::UsersRepositoryData do
 
       let(:review_request) { create(:review_request) }
       let!(:completed_review_turnaround) do
-        create(:completed_review_turnaround, review_request: review_request)
+        create(:completed_review_turnaround,
+               review_request: review_request,
+               pull_request: review_request.pull_request)
       end
       let!(:users_repository) do
         create(:users_repository, repository_id: review_request.repository_id,
