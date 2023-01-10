@@ -458,7 +458,8 @@ CREATE TABLE public.completed_review_turnarounds (
     value integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    pull_request_id bigint
 );
 
 
@@ -858,9 +859,9 @@ CREATE TABLE public.external_pull_requests (
     external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
+    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state,
-    number integer
+    state public.external_pull_request_state
 );
 
 
@@ -1324,7 +1325,8 @@ CREATE TABLE public.review_turnarounds (
     review_request_id bigint NOT NULL,
     value integer,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    pull_request_id bigint
 );
 
 
@@ -2126,6 +2128,13 @@ CREATE INDEX index_code_owner_repositories_on_user_id ON public.code_owner_repos
 
 
 --
+-- Name: index_completed_review_turnarounds_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_completed_review_turnarounds_on_pull_request_id ON public.completed_review_turnarounds USING btree (pull_request_id);
+
+
+--
 -- Name: index_completed_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2469,6 +2478,13 @@ CREATE INDEX index_review_requests_on_state ON public.review_requests USING btre
 
 
 --
+-- Name: index_review_turnarounds_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_turnarounds_on_pull_request_id ON public.review_turnarounds USING btree (pull_request_id);
+
+
+--
 -- Name: index_review_turnarounds_on_review_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2541,6 +2557,14 @@ ALTER TABLE ONLY public.jira_issues
 
 ALTER TABLE ONLY public.events_pull_request_comments
     ADD CONSTRAINT fk_rails_161aa5ffd0 FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: completed_review_turnarounds fk_rails_200ab21dcf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.completed_review_turnarounds
+    ADD CONSTRAINT fk_rails_200ab21dcf FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2693,6 +2717,14 @@ ALTER TABLE ONLY public.events_pull_requests
 
 ALTER TABLE ONLY public.events_reviews
     ADD CONSTRAINT fk_rails_65b0ea4a71 FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
+
+
+--
+-- Name: review_turnarounds fk_rails_7bc2fb6ebc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_turnarounds
+    ADD CONSTRAINT fk_rails_7bc2fb6ebc FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -3020,6 +3052,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210902182225'),
 ('20210915145551'),
 ('20210916151310'),
-('20220412181602');
+('20220412181602'),
+('20221228101900'),
+('20221228121949');
 
 

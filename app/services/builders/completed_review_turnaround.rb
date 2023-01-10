@@ -7,7 +7,8 @@ module Builders
     def call
       ::CompletedReviewTurnaround.create!(
         review_request_id: @review.review_request_id,
-        value: calculate_completed_turnaround
+        value: calculate_completed_turnaround,
+        pull_request: @review.pull_request
       )
     end
 
