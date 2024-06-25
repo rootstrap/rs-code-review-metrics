@@ -6,8 +6,8 @@ class BaseService
 
   private_class_method :new
 
-  def self.call(*args)
-    new(*args).call
+  def self.call(*args, **kwargs)
+    new(*args, **kwargs).call
   end
 
   private

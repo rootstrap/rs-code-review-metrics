@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '~> 2.7.2'
+ruby '~> 3.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3.7'
@@ -81,8 +81,8 @@ end
 group :development do
   gem 'rails_best_practices', '~> 1.19.4'
   gem 'reek', '~> 5.5'
-  gem 'rubocop', '~> 0.79.0'
-  gem 'rubocop-rails', '~> 2.3', '>= 2.3.2'
+  gem 'rubocop', '~> 1.0'
+  gem 'rubocop-rails', '~> 2.9'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'listen', '~> 3.7', '>= 3.7.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
