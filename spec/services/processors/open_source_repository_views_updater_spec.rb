@@ -61,16 +61,6 @@ RSpec.describe Processors::OpenSourceRepositoryViewsUpdater do
           described_class.call(repository)
         end
       end
-
-      context 'when the request to get the repository views fails' do
-        before { stub_failed_repository_views(repository) }
-
-        xit 'notifies the error to exception hunter' do
-          expect(ExceptionHunter).to receive(:track).with(kind_of(Faraday::Error), anything)
-
-          described_class.call(repository)
-        end
-      end
     end
   end
 end

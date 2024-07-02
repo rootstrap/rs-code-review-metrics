@@ -21,16 +21,6 @@ describe Builders::Chartkick::GenerateChartImage do
         expect(subject).to be_nil
       end
     end
-
-    context 'when request is not successful' do
-      before { stub_exception_url_generation(payload) }
-
-      xit 'notifies the error to exception hunter' do
-        expect(ExceptionHunter).to receive(:track).with(Faraday::ServerError)
-
-        subject
-      end
-    end
   end
 
   context '.generate_url' do
