@@ -33,6 +33,9 @@ class Alert < ApplicationRecord
   validates :metric_name, :frequency, :threshold, :emails, presence: true
   validate :department_or_repository_presence
 
+  RANSACK_ATTRIBUTES = %w[active created_at department_id emails frequency id id_value
+                          last_sent_date metric_name name repository_id threshold updated_at].freeze
+
   def department_or_repository_presence
     return unless repository.blank? && department.blank?
 

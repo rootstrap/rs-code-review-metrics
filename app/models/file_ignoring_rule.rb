@@ -25,4 +25,6 @@ class FileIgnoringRule < ApplicationRecord
   def matches?(filename)
     filename.match?(regex)
   end
+
+  RANSACK_ATTRIBUTES = %w[created_at id id_value language_id regex updated_at].freeze
 end

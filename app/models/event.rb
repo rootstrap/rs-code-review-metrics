@@ -29,4 +29,6 @@ class Event < ApplicationRecord
   belongs_to :repository
 
   validates :name, :data, presence: true
+
+  RANSACK_ATTRIBUTES = %w[created_at data handleable_id handleable_type id id_value name repository_id type updated_at].freeze
 end

@@ -49,7 +49,7 @@ gem 'rails_performance', '~> 0.9.9'
 gem 'honeybadger', '~> 4.12', '>= 4.12.2'
 
 # TODO: Remove this gem if it's not maintained anymore
-gem 'exception_hunter', '~> 0.4.1'
+# gem 'exception_hunter', '~> 0.4.1'
 
 gem 'faraday', '~> 2.9', '>= 2.9.2'
 
@@ -87,6 +87,8 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.1'
   gem 'web-console', '~> 4.2', '>= 4.2.1'
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 group :test do

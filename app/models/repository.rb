@@ -131,6 +131,14 @@ class Repository < ApplicationRecord
     without_cc.or(without_cc_rate)
   }
 
+  RANSACK_ATTRIBUTES = %w[
+    created_at deleted_at description github_id id id_value is_private language_id name product_id relevance updated_at
+  ].freeze
+
+  RANSACK_ASSOCIATIONS = %w[
+    alerts code_climate_repository_metric code_owner_repositories code_owners events language metrics product pull_requests repositories review_requests reviews users users_repositories
+  ].freeze
+
   def full_name
     "#{organization_name}/#{name}"
   end

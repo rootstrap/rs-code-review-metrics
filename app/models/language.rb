@@ -25,4 +25,6 @@ class Language < ApplicationRecord
   def self.unassigned
     find_by(name: 'unassigned')
   end
+
+  RANSACK_ATTRIBUTES = %w[department_id id id_value name].freeze
 end

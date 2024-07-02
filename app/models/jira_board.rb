@@ -31,4 +31,6 @@ class JiraBoard < ApplicationRecord
 
   validates :jira_project_key, presence: true, uniqueness: true, allow_blank: true
   validates :jira_board_id, uniqueness: true, allow_blank: true
+
+  RANSACK_ATTRIBUTES = %w[created_at deleted_at id id_value jira_board_id jira_project_key jira_self_url product_id project_name updated_at].freeze
 end
