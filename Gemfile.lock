@@ -610,6 +610,7 @@ DEPENDENCIES
   sidekiq-cron (~> 1.12)
   simple_form (~> 5.3, >= 5.3.1)
   simplecov
+  simplecov_json_formatter (~> 0.1.4)
   slack-notifier (~> 2.4)
   spring
   spring-watcher-listen (~> 2.1)

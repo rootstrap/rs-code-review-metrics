@@ -100,6 +100,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'shoulda-matchers', '~> 6.2', require: false
   gem 'simplecov', require: false
+  gem 'simplecov_json_formatter', '~> 0.1.4'
   gem 'stub_env', '~> 1.0', '>= 1.0.4'
   gem 'webdrivers'
   gem 'webmock', '~> 3.23', '>= 3.23.1'

@@ -1,6 +1,22 @@
 require 'simplecov'
-require 'simplecov_default_profile'
-SimpleCov.start 'default'
+require 'simplecov_json_formatter'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+  [
+    SimpleCov::Formatter::JSONFormatter,
+    SimpleCov::Formatter::HTMLFormatter
+  ]
+)
+
+SimpleCov.start 'rails' do
+  add_group 'Presenters', 'app/presenters'
+  add_group 'Services', 'app/services'
+  add_filter 'app/admin'
+  add_filter 'config'
+  add_filter 'spec.rb'
+  add_filter 'lib/tasks/code_analysis.rake'
+end
+
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)

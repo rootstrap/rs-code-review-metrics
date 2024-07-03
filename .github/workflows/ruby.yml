@@ -145,9 +145,16 @@ jobs:
       - name: Run Sonarqube analysis
         run: |
           sonar-scanner \
+            -Dsonar.qualitygate.wait=true \
             -Dsonar.host.url=$SONAR_URL \
             -Dsonar.login=$SONAR_TOKEN \
             -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+            -Dsonar.scm.provider=git \
             -Dsonar.nodejs.executable=$(which node) \
             -Dsonar.projectVersion=$(echo $GITHUB_SHA | cut -c1-8) \
-            -Dsonar.qualitygate.wait=true \
+            -Dsonar.sources=app/controllers,app/jobs,app/mailers,app/models,app/views \
+            -Dsonar.tests=spec \
+            -Dsonar.test.inclusions=**/*_spec.rb \
+            -Dsonar.test.exclusions=bin,config,db,app/javascript,app/assets \
+            -Dsonar.projectBaseDir=. \
+            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json \
