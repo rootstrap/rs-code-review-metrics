@@ -2,12 +2,10 @@
 
 # Base class for service classes
 class BaseService
-  include RequestErrorTrackingHelper
-
   private_class_method :new
 
-  def self.call(*args)
-    new(*args).call
+  def self.call(*args, **kwargs)
+    new(*args, **kwargs).call
   end
 
   private

@@ -58,7 +58,7 @@ class WordpressService
 
   def connection
     Faraday.new("#{BASE_API_URL}/rest/v1.1/") do |conn|
-      conn.authorization(:Bearer, access_token)
+      conn.request(:authorization, 'Bearer', access_token)
       conn.response(:raise_error)
     end
   end

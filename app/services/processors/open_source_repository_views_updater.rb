@@ -12,7 +12,8 @@ module Processors
         )
       end
     rescue Faraday::Error => exception
-      track_request_error(exception)
+      Honeybadger.notify(exception)
+      Rails.logger.error(exception)
     end
 
     private

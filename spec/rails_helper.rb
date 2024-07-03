@@ -1,6 +1,22 @@
 require 'simplecov'
-require 'simplecov_default_profile'
-SimpleCov.start 'default'
+require 'simplecov_json_formatter'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
+  [
+    SimpleCov::Formatter::JSONFormatter,
+    SimpleCov::Formatter::HTMLFormatter
+  ]
+)
+
+SimpleCov.start 'rails' do
+  add_group 'Presenters', 'app/presenters'
+  add_group 'Services', 'app/services'
+  add_filter 'app/admin'
+  add_filter 'config'
+  add_filter 'spec.rb'
+  add_filter 'lib/tasks/code_analysis.rake'
+end
+
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
@@ -43,7 +59,7 @@ RSpec.configure do |config|
   include ActiveJob::TestHelper
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
