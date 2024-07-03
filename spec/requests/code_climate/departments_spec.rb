@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'CodeClimate department repositories report page ', type: :request do
+describe 'CodeClimate::DepartmentsController', type: :request do
   describe '#index' do
     let(:ruby_lang) { Language.find_by(name: 'ruby') }
     let(:department) { repository.language.department }

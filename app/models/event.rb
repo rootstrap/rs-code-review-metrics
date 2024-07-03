@@ -30,5 +30,6 @@ class Event < ApplicationRecord
 
   validates :name, :data, presence: true
 
-  RANSACK_ATTRIBUTES = %w[created_at data handleable_id handleable_type id id_value name repository_id type updated_at].freeze
+  RANSACK_ATTRIBUTES = %w[created_at data handleable_id handleable_type id id_value name
+                          repository_id type updated_at].freeze
 end

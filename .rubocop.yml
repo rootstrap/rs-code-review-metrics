@@ -1,18 +1,26 @@
-require: rubocop-rails
+inherit_from: 
+  - .rubocop_todo.yml
+
+require:
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-rails
+  - rubocop-rspec_rails
+  - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
   Exclude:
     - db/schema.rb
-    - 'node_modules/**/*'
-    - 'bin/bundle'
-    - 'bin/webpack'
-    - 'bin/yarn'
-    - 'bin/webpack-dev-server'
-    - 'lib/tasks/auto_annotate_models.rake'
+    - node_modules/**/*
+    - bin/bundle
+    - bin/webpack
+    - bin/yarn
+    - bin/webpack-dev-server
+    - lib/tasks/auto_annotate_models.rake
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
 Layout/ClassStructure:
@@ -37,6 +45,7 @@ Metrics/AbcSize:
   Exclude:
     - app/services/code_climate/update_repository_service.rb
     - app/controllers/development_metrics_controller.rb
+    - db/**/*
 
 Metrics/BlockLength:
   CountComments: false  # count full line comments?
@@ -45,6 +54,7 @@ Metrics/BlockLength:
     - config/**/*
     - spec/**/*
     - app/admin/**/*
+    - db/**/*
 
 Metrics/BlockNesting:
   Max: 4
@@ -70,13 +80,14 @@ Layout/LineLength:
   # To make it possible to copy or click on URIs in the code, we allow lines
   # containing a URI to be longer than Max.
   AllowURI: true
-  IgnoredPatterns: ['stub_request']
+  AllowedPatterns: ['stub_request']
   URISchemes:
     - http
     - https
   Exclude:
     - config/environments/*
     - config/initializers/*
+    - db/**/*
 
 Metrics/ParameterLists:
   Max: 5
@@ -124,6 +135,7 @@ Style/BlockComments:
 SkipsModelValidations:
   Exclude:
     - app/services/processors/org_users_updater.rb
+    - db/migrate/*.rb
 
 Rails/HelperInstanceVariable:
   Exclude:

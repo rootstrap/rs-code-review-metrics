@@ -83,7 +83,6 @@ class User < ApplicationRecord
                   .or(where(company_member_until: date..Time.current))
   }
 
-  RANSACK_ATTRIBUTES = %w[
-    company_member_since company_member_until created_at github_id id id_value login node_id updated_at
-  ].freeze
+  RANSACK_ATTRIBUTES = %w[company_member_since company_member_until created_at github_id id
+                          id_value login node_id updated_at].freeze
 end

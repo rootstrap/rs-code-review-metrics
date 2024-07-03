@@ -48,9 +48,6 @@ gem 'rails_performance', '~> 0.9.9'
 
 gem 'honeybadger', '~> 4.12', '>= 4.12.2'
 
-# TODO: Remove this gem if it's not maintained anymore
-# gem 'exception_hunter', '~> 0.4.1'
-
 gem 'faraday', '~> 2.9', '>= 2.9.2'
 
 gem 'rack-mini-profiler', '~> 2.3', '>= 2.3.4'
@@ -81,14 +78,17 @@ group :development do
   gem 'reek', '~> 6.3'
   gem 'rubocop', '~> 1.64', '>= 1.64.1'
   gem 'rubocop-rails', '~> 2.9'
+  gem 'rubocop-capybara', '~> 2.21'
+  gem 'rubocop-factory_bot', '~> 2.26', '>= 2.26.1'
+  gem 'rubocop-rspec_rails', '~> 2.30'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'listen', '~> 3.9'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.1'
   gem 'web-console', '~> 4.2', '>= 4.2.1'
-  gem "better_errors"
-  gem "binding_of_caller"
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do

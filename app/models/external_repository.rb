@@ -35,5 +35,6 @@ class ExternalRepository < ApplicationRecord
     self.language = Language.unassigned
   end
 
-  RANSACK_ATTRIBUTES = %w[created_at description enabled full_name github_id id id_value language_id name updated_at].freeze
+  RANSACK_ATTRIBUTES = %w[created_at description enabled full_name github_id id id_value
+                          language_id name updated_at].freeze
 end

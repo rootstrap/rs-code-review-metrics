@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'By Relevance' do
+RSpec.describe 'Repositories::ByRelevanceController' do
   let(:ruby_repository_1) do
     create(:repository, relevance: 'internal', language: Language.find_by(name: 'ruby'))
   end
