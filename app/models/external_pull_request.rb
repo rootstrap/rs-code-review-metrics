@@ -36,5 +36,6 @@ class ExternalPullRequest < ApplicationRecord
 
   enum state: { open: 'open', closed: 'closed', merged: 'merged' }
 
-  RANSACK_ATTRIBUTES = %w[body created_at external_repository_id github_id html_url id id_value number opened_at owner_id state title updated_at].freeze
+  RANSACK_ATTRIBUTES = %w[body created_at external_repository_id github_id html_url id id_value
+                          number opened_at owner_id state title updated_at].freeze
 end

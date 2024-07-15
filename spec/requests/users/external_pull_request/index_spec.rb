@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'External Pull Requests' do
+RSpec.describe 'User::ExternalPullRequestsController' do
   let!(:non_org_user) { create(:user) }
   let!(:current_org_user) { create(:user, company_member_since: 1.week.ago) }
   let!(:former_org_user) do

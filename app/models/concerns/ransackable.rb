@@ -11,7 +11,11 @@ module Ransackable
     end
 
     def ransackable_associations(auth_object = nil)
-      return reflect_on_all_associations.map { |association| association.name.to_s } if auth_object == :admin
+      if auth_object == :admin
+        return reflect_on_all_associations.map do |association|
+                 association.name.to_s
+               end
+      end
 
       const_defined?(:RANSACK_ASSOCIATIONS) ? self::RANSACK_ASSOCIATIONS : []
     end
