@@ -17,7 +17,8 @@ module Builders
 
         response_body['url']
       rescue Faraday::ServerError => exception
-        ExceptionHunter.track(exception)
+        Honeybadger.notify(exception)
+        Rails.logger.error(exception)
       end
 
       def generate_url_mutiple_bar
@@ -29,7 +30,8 @@ module Builders
 
         response_body['url']
       rescue Faraday::ServerError => exception
-        ExceptionHunter.track(exception)
+        Honeybadger.notify(exception)
+        Rails.logger.error(exception)
       end
 
       private
