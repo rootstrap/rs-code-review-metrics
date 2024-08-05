@@ -10,7 +10,7 @@ module JiraClient
       return if @jira_board.jira_board_id.present?
 
       JSON.parse(fetch_board_response.body)['values'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
@@ -18,7 +18,7 @@ module JiraClient
       create_request('issuetype=Bug')
 
       JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
@@ -26,7 +26,7 @@ module JiraClient
       create_request('issuetype!=Bug')
 
       JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
@@ -37,7 +37,7 @@ module JiraClient
         sprint.merge!(report: sprint_report)
       end
       @sprints
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
@@ -77,8 +77,8 @@ module JiraClient
     end
 
     def raised_exception(exception)
-      ExceptionHunter.track(JiraBoards::NoProjectKeyError.new(@jira_board.jira_project_key),
-                            custom_data: exception)
+      Honeybadger.notify(exception)
+      Rails.logger.error("#{exception.message} - Jira Project Key: #{@jira_board.jira_project_key}")
     end
   end
 end
