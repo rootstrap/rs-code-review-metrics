@@ -15,19 +15,11 @@ module JiraClient
     end
 
     def bugs
-      create_request('issuetype=Bug')
-
-      JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
-      raised_exception(exception)
+      fetch_issues('issuetype=Bug')
     end
 
     def issues
-      create_request('issuetype!=Bug')
-
-      JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
-      raised_exception(exception)
+      fetch_issues('issuetype!=Bug')
     end
 
     def sprints
@@ -43,12 +35,20 @@ module JiraClient
 
     private
 
-    def create_request(issue_type)
-      @request_params = {
+    def fetch_issues(issue_type)
+      request_params = {
         jql: "project='#{@jira_board.jira_project_key}' AND #{issue_type}",
         fields: "#{JIRA_ENVIRONMENT_FIELD},created,resolutiondate,issuetype",
         expand: 'changelog'
       }
+
+      response = root_connection.get('search') do |request|
+        request.params = request_params
+      end
+
+      JSON.parse(response.body)['issues'].map(&:deep_symbolize_keys)
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
+      raised_exception(exception)
     end
 
     def fetch_board_response
