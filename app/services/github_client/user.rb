@@ -10,9 +10,8 @@ module GithubClient
       events = retrieve_events
 
       events.flatten.select { |event| event[:type] == 'PullRequestEvent' }
-    rescue URI::InvalidURIError => exception
-      ExceptionHunter.track(exception)
-      []
+    rescue URI::InvalidURIError, Faraday::ResourceNotFound => exception
+      handle_exception(exception)
     end
 
     private
@@ -34,6 +33,11 @@ module GithubClient
           break collected_results
         end
       end
+    end
+
+    def handle_exception(exception)
+      Honeybadger.notify(exception)
+      Rails.logger.error(exception)
     end
   end
 end

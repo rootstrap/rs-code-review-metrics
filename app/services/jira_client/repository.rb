@@ -10,24 +10,16 @@ module JiraClient
       return if @jira_board.jira_board_id.present?
 
       JSON.parse(fetch_board_response.body)['values'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
     def bugs
-      create_request('issuetype=Bug')
-
-      JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
-      raised_exception(exception)
+      fetch_issues('issuetype=Bug')
     end
 
     def issues
-      create_request('issuetype!=Bug')
-
-      JSON.parse(fetch_response.body)['issues'].map(&:deep_symbolize_keys)
-    rescue Faraday::ForbiddenError => exception
-      raised_exception(exception)
+      fetch_issues('issuetype!=Bug')
     end
 
     def sprints
@@ -37,18 +29,26 @@ module JiraClient
         sprint.merge!(report: sprint_report)
       end
       @sprints
-    rescue Faraday::ForbiddenError => exception
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
     end
 
     private
 
-    def create_request(issue_type)
-      @request_params = {
+    def fetch_issues(issue_type)
+      request_params = {
         jql: "project='#{@jira_board.jira_project_key}' AND #{issue_type}",
         fields: "#{JIRA_ENVIRONMENT_FIELD},created,resolutiondate,issuetype",
         expand: 'changelog'
       }
+
+      response = root_connection.get('search') do |request|
+        request.params = request_params
+      end
+
+      JSON.parse(response.body)['issues'].map(&:deep_symbolize_keys)
+    rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
+      raised_exception(exception)
     end
 
     def fetch_board_response
@@ -77,8 +77,8 @@ module JiraClient
     end
 
     def raised_exception(exception)
-      ExceptionHunter.track(JiraBoards::NoProjectKeyError.new(@jira_board.jira_project_key),
-                            custom_data: exception)
+      Honeybadger.notify(exception)
+      Rails.logger.error("#{exception.message} - Jira Project Key: #{@jira_board.jira_project_key}")
     end
   end
 end
