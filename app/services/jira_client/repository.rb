@@ -31,6 +31,7 @@ module JiraClient
       @sprints
     rescue Faraday::ResourceNotFound, Faraday::ForbiddenError => exception
       raised_exception(exception)
+      []
     end
 
     private
