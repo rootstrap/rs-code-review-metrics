@@ -6,6 +6,7 @@ module Processors
       end
 
       def call
+        # #byebug
         external_pull_requests_events = CompanyMemberEventsDiscriminator.call(events)
 
         external_pull_requests_events.each do |pull_request_event|
