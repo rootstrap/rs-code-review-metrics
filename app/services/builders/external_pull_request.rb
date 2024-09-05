@@ -79,13 +79,22 @@ module Builders
       end
 
       def call
-        Builders::ExternalPullRequest.call(pull_request_data)
+        Builders::ExternalPullRequest.call(pull_request_data) if pull_request_data.present?
       end
 
       private
 
       def pull_request_data
         GithubClient::PullRequest.new(pull_request).get
+      rescue Faraday::ResourceNotFound => exception
+        Rails.logger.error("Failed to fetch pull request data: #{exception.message}")
+
+        Honeybadger.notify(exception, context: {
+                             repository_full_name: @repository_full_name,
+                             pull_request_number: @pull_request_number
+                           })
+
+        nil
       end
 
       def pull_request
