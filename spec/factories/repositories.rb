@@ -16,6 +16,7 @@
 #
 # Indexes
 #
+#  index_repositories_on_github_id    (github_id) UNIQUE
 #  index_repositories_on_language_id  (language_id)
 #  index_repositories_on_product_id   (product_id)
 #
