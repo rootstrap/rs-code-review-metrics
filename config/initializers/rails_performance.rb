@@ -1,8 +1,12 @@
 if defined?(RailsPerformance)
   RailsPerformance.setup do |config|
-    config.redis    = Redis.new(url: ENV.fetch('REDIS_PERFORMANCE_URL') { 'redis://localhost:6379/1' })
+    config.redis = Redis.new(
+      url: ENV.fetch('REDIS_PERFORMANCE_URL') { 'redis://localhost:6379/1' },
+      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    )
     config.duration = 4.hours
-    config.enabled  = true
+    config.enabled = true
+
     if Rails.env.production?
       config.http_basic_authentication_enabled = true
       config.http_basic_authentication_user_name = ENV.fetch('PERFORMANCE_USERNAME')
