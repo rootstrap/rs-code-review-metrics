@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Code Owner Repositories' do
+RSpec.describe 'CodeOwnersRepositoriesController' do
   describe '#index' do
     let(:user) { create(:user) }
     subject { get "/development_metrics/users/#{user.id}/repositories" }

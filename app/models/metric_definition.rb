@@ -24,4 +24,6 @@ class MetricDefinition < ApplicationRecord
   validates :code, uniqueness: true
   validates :name, presence: true, uniqueness: true
   validates :explanation, presence: true
+
+  RANSACK_ATTRIBUTES = %w[code created_at id id_value name updated_at].freeze
 end

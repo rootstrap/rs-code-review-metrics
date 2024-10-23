@@ -4,7 +4,7 @@ module JiraClient
 
     def connection(path)
       Faraday.new(path) do |conn|
-        conn.basic_auth(ENV.fetch('JIRA_ADMIN_USER'), ENV.fetch('JIRA_ADMIN_TOKEN'))
+        conn.request(:authorization, :basic, ENV['JIRA_ADMIN_USER'], ENV['JIRA_ADMIN_TOKEN'])
         conn.headers['Content-Type'] = 'application/json'
         conn.response :raise_error
       end

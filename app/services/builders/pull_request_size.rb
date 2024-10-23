@@ -8,7 +8,8 @@ module Builders
       value = PullRequestSizeCalculator.call(pull_request)
       pull_request.update!(size: value)
     rescue Faraday::Error => exception
-      track_request_error(exception)
+      Honeybadger.notify(exception)
+      Rails.logger.error(exception)
     end
 
     private

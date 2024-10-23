@@ -51,4 +51,7 @@ class ReviewRequest < ApplicationRecord
                                    dependent: :destroy
 
   validates :state, inclusion: { in: states.keys }
+
+  RANSACK_ATTRIBUTES = %w[created_at deleted_at id id_value owner_id pull_request_id repository_id
+                          reviewer_id state updated_at].freeze
 end

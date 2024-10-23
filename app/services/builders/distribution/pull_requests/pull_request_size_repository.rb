@@ -24,9 +24,9 @@ module Builders
                                              .joins(:repository)
                                              .where(repositories: { name: @repository_name })
                                              .where.not(
-                                               events_pull_requests: { html_url: nil },
-                                               size: nil
+                                               events_pull_requests: { html_url: nil }
                                              )
+                                             .where.not(size: nil)
                                              .order(:size)
         end
 

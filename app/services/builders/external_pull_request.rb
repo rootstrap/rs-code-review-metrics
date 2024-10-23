@@ -21,12 +21,40 @@ module Builders
     attr_reader :pull_request_data
 
     def assign_attributes(pull_request)
+      assign_html_url(pull_request)
+      assign_body(pull_request)
+      assign_title(pull_request)
+      assign_opened_at(pull_request)
+      assign_number(pull_request)
+      assign_owner(pull_request)
+      assign_external_repository(pull_request)
+    end
+
+    def assign_html_url(pull_request)
       pull_request.html_url = pull_request_data[:html_url]
+    end
+
+    def assign_body(pull_request)
       pull_request.body = pull_request_data[:body]
+    end
+
+    def assign_title(pull_request)
       pull_request.title = pull_request_data[:title]
+    end
+
+    def assign_opened_at(pull_request)
       pull_request.opened_at = pull_request_data[:created_at]
+    end
+
+    def assign_number(pull_request)
       pull_request.number = pull_request_data[:number]
+    end
+
+    def assign_owner(pull_request)
       pull_request.owner = owner
+    end
+
+    def assign_external_repository(pull_request)
       pull_request.external_repository = external_repository
     end
 
@@ -51,13 +79,22 @@ module Builders
       end
 
       def call
-        Builders::ExternalPullRequest.call(pull_request_data)
+        Builders::ExternalPullRequest.call(pull_request_data) if pull_request_data.present?
       end
 
       private
 
       def pull_request_data
         GithubClient::PullRequest.new(pull_request).get
+      rescue Faraday::ResourceNotFound => exception
+        Rails.logger.error("Failed to fetch pull request data: #{exception.message}")
+
+        Honeybadger.notify(exception, context: {
+                             repository_full_name: @repository_full_name,
+                             pull_request_number: @pull_request_number
+                           })
+
+        nil
       end
 
       def pull_request
