@@ -9,30 +9,26 @@ module Builders
       end
 
       def generate_url
-        response = get_response(request_body)
-
-        response_body = JSON.parse(response.body)
-
-        return unless response.status == 200 && response_body['success']
-
-        response_body['url']
-      rescue Faraday::ServerError => exception
-        ExceptionHunter.track(exception)
+        fetch_url(request_body)
       end
 
       def generate_url_mutiple_bar
-        response = get_response(request_body_multiple)
+        fetch_url(request_body_multiple)
+      end
 
+      private
+
+      def fetch_url(body)
+        response = get_response(body)
         response_body = JSON.parse(response.body)
 
         return unless response.status == 200 && response_body['success']
 
         response_body['url']
       rescue Faraday::ServerError => exception
-        ExceptionHunter.track(exception)
+        Honeybadger.notify(exception)
+        Rails.logger.error(exception)
       end
-
-      private
 
       def get_response(request_body)
         Faraday.post(ENV['QUICKCHART_URL'],

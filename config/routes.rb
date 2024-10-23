@@ -4,9 +4,10 @@ require 'sidekiq/cron/web'
 Rails.application.routes.draw do
   root to: 'development_metrics#index'
   devise_for :admin_users, ActiveAdmin::Devise.config
-  authenticate :admin_user do
-    ExceptionHunter.routes(self)
-  end
+  # TODO: Remove or update ExceptionHunter
+  # authenticate :admin_user do
+  #   ExceptionHunter.routes(self)
+  # end
   ActiveAdmin.routes(self)
   mount Sidekiq::Web => '/sidekiq'
   post '/github_event_handler', to: 'webhook#handle'

@@ -1,16 +1,14 @@
 module MetaTagsHelper
   def meta_title
     if current_page?(products_development_metrics_path)
-      if product_name.present?
-        I18n.t('helpers.meta_tags.products_metrics_title', product_name: product_name)
-      else
-        default_description
-      end
-    elsif current_page?(products_metrics_development_metrics_path)
-      product_name + ' - ' + MetricDefinition.where(code: @query_metric_name).first&.name
-    else
-      title_for_pages
+      return product_name.present? ? product_metrics_title : default_description
     end
+
+    if current_page?(products_metrics_development_metrics_path)
+      return product_name + ' - ' + metric_definition_name
+    end
+
+    title_for_pages
   end
 
   def meta_description
@@ -30,6 +28,14 @@ module MetaTagsHelper
   end
 
   private
+
+  def product_metrics_title
+    I18n.t('helpers.meta_tags.products_metrics_title', product_name: product_name)
+  end
+
+  def metric_definition_name
+    MetricDefinition.where(code: @query_metric_name).first&.name
+  end
 
   def title_for_pages
     if current_page?(repositories_development_metrics_path)

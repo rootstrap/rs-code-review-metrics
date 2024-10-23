@@ -25,4 +25,8 @@ class Setting < ApplicationRecord
   scope :enabled, lambda { |feature_name|
     where(key: "#{ENABLED_PREFIX}_#{feature_name}")
   }
+
+  RANSACK_ATTRIBUTES = %w[
+    description id id_value key value
+  ].freeze
 end

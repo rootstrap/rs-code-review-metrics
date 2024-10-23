@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Time To Second Review PRs' do
+RSpec.describe 'PullRequests::TimeToSecondReviewPrsRepositoryController' do
   let(:user1) { create(:user, login: 'user1') }
   let(:user2) { create(:user, login: 'user2') }
   let(:user3) { create(:user, login: 'user3') }

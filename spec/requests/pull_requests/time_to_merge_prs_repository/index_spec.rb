@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Time To Merge PRs Repository' do
+RSpec.describe 'PullRequests::TimeToMergePrsRepositoryController' do
   let(:repository) { create(:repository) }
   let(:from) { 4.weeks.ago }
   let(:to) { Time.zone.now }

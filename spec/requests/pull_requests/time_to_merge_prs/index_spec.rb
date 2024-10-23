@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Time To Merge PRs' do
+RSpec.describe 'PullRequests::TimeToMergePrsController' do
   let(:ruby_repository)  { create(:repository, language: Language.find_by(name: 'ruby')) }
   let(:node_repository)  { create(:repository, language: Language.find_by(name: 'nodejs')) }
   let(:subject) do

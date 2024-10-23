@@ -16,6 +16,7 @@
 #
 # Indexes
 #
+#  index_repositories_on_github_id    (github_id) UNIQUE
 #  index_repositories_on_language_id  (language_id)
 #  index_repositories_on_product_id   (product_id)
 #
@@ -130,6 +131,13 @@ class Repository < ApplicationRecord
   scope :without_cc_or_cc_rate, lambda {
     without_cc.or(without_cc_rate)
   }
+
+  RANSACK_ATTRIBUTES = %w[created_at deleted_at description github_id id id_value is_private
+                          language_id name product_id relevance updated_at].freeze
+
+  RANSACK_ASSOCIATIONS = %w[alerts code_climate_repository_metric code_owner_repositories
+                            code_owners events language metrics product pull_requests repositories
+                            review_requests reviews users users_repositories].freeze
 
   def full_name
     "#{organization_name}/#{name}"

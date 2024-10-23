@@ -30,4 +30,7 @@ class Product < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   accepts_nested_attributes_for :jira_board
   accepts_nested_attributes_for :repositories
+
+  RANSACK_ATTRIBUTES = %w[created_at deleted_at description enabled id id_value name
+                          updated_at].freeze
 end
