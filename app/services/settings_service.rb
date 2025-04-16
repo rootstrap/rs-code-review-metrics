@@ -20,4 +20,12 @@ module SettingsService
   def enabled_repository_codeowners_section
     Setting.enabled('repository_codeowners_section').first&.value == 'true' || false
   end
+
+  def ignored_users
+    ignored_users_setting = Setting.find_by(key: 'ignored_users')&.value
+
+    return [] if ignored_users_setting.blank?
+
+    ignored_users_setting.split(',').map(&:strip).compact_blank
+  end
 end

@@ -7,6 +7,7 @@ module Builders
             .joins(pull_request: :repository)
             .where(repositories: { id: entity_id })
             .where(events_pull_requests: { merged_at: time_range })
+            .where.not(events_pull_requests: { owner: User.ignored_users })
         end
 
         def resolve_interval(entity)

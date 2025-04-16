@@ -50,7 +50,6 @@ class DevelopmentMetricsController < ApplicationController
 
     @merge_time_success_rate = @merge_time[key].first[:success_rate]
     @merge_time_avg = @merge_time[key].first[:avg]
-    # @review_turnaround_success_rate = @review_turnaround[key].first[:success_rate]
     @pull_request_size_avg = @pull_request_size[key].first[:avg]
   end
 
@@ -58,7 +57,6 @@ class DevelopmentMetricsController < ApplicationController
     validate_from_to(from: metric_params[:from], to: metric_params[:to])
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
                                                      .call(entity_id, @from, @to)
-    # @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
   end

@@ -30,23 +30,6 @@
               <%= merge_time_presenter.metric_name %>
               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= merge_time_presenter.metric_explanation %>'>¡</span>
             </div>
-            <div class="box-title" >
-              <% if @merge_time_avg.present? %>
-                <span class="badge badge-info success_rate_btn">
-                  Average: <%= @merge_time_avg[:avg] %> hours
-                </span>
-              <% end %>
-              <% if @merge_time_success_rate.present? %>
-                <span class="badge badge-info success_rate_btn">
-                  Success rate: <%= @merge_time_success_rate[:rate] %>%
-                </span>
-              <% end %>
-              <% if @merge_time_avg.present? %>
-                <span class="badge badge-info success_rate_btn">
-                  Total: <%= @merge_time_avg[:total] %> PRs
-                </span>
-              <% end %>
-            </div>
           </div>
           <div class="col-md-6">
             <div class="distribution-report-button mr-5">
@@ -57,7 +40,27 @@
             </div>
           </div>
         </div>
-        
+        <div class='row'>
+          <div class="col-md-12">
+            <div class="box-title" >
+              <% if @merge_time_avg.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Average: <%= @merge_time_avg[:avg_number] %> hours
+                </span>
+              <% end %>
+              <% if @merge_time_success_rate.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Success rate: <%= @merge_time_success_rate[:rate] %>%
+                </span>
+              <% end %>
+              <% if @merge_time_avg.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Total: <%= @merge_time_avg[:total] %> PRs (bots excluded)
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
         <div class="graph">
         <% if merge_time_presenter.per_repository_has_data_to_display? && merge_time_presenter.per_repository_distribution_has_data_to_display? %>
             <%= render 'development_metrics/merge_time/main_metric', merge_time: merge_time_presenter.metric %>
@@ -83,12 +86,12 @@
             <div class="box-title" >
               <% if @pull_request_size_avg.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Average: <%= @pull_request_size_avg[:avg].round %> lines
+                  Average: <%= @pull_request_size_avg[:avg_number].round %> lines
                 </span>
               <% end %>
               <% if @pull_request_size_avg.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Total: <%= @pull_request_size_avg[:total] %> PRs
+                  Total: <%= @pull_request_size_avg[:total] %> PRs (bots excluded)
                 </span>
               <% end %>
             </div>

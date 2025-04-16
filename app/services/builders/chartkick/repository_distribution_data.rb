@@ -44,7 +44,7 @@ module Builders
         total_records = retrieve_records.count
 
         {
-          avg: (total_value.to_f / total_records).round(1),
+          avg_number: (total_value.to_f / total_records).round(1),
           total: total_records
         }
       end

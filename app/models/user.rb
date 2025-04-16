@@ -83,6 +83,9 @@ class User < ApplicationRecord
                   .or(where(company_member_until: date..Time.current))
   }
 
+  scope :bot_users, -> { where('login ILIKE ?', '%[bot]%') }
+  scope :ignored_users, -> { bot_users.or(where(login: SettingsService.ignored_users)) }
+
   RANSACK_ATTRIBUTES = %w[company_member_since company_member_until created_at github_id id
                           id_value login node_id updated_at].freeze
 end

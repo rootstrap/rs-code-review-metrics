@@ -7,6 +7,7 @@ module Builders
             .where(repository_id: entity_id)
             .where(opened_at: time_range)
             .where.not(size: nil)
+            .where.not(owner: User.ignored_users)
         end
 
         def resolve_interval(entity)
