@@ -48,8 +48,9 @@ class DevelopmentMetricsController < ApplicationController
   def build_overall_calculations(entity_name)
     key = "per_#{entity_name.downcase}_distribution".to_sym
 
-    @merge_time_success_rate = @merge_time[key].first[:success_rate]
-    @merge_time_avg = @merge_time[key].first[:avg]
+    merge_time = @merge_time[key].first
+    @merge_time_success_rate = merge_time[:success_rate]
+    @merge_time_avg = merge_time[:avg]
     @pull_request_size_avg = @pull_request_size[key].first[:avg]
   end
 
@@ -162,10 +163,6 @@ class DevelopmentMetricsController < ApplicationController
 
   def action
     @action ||= params[:action]
-  end
-
-  def code_climate_repository_summary
-    CodeClimateSummaryRetriever.call(repository.id)
   end
 
   def code_climate_department_summary
