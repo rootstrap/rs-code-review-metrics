@@ -12,6 +12,10 @@ module Builders
         def resolve_interval(entity)
           Metrics::IntervalResolver::PrSize.call(entity.size)
         end
+
+        def value_for_average(entity)
+          entity.size
+        end
       end
     end
   end

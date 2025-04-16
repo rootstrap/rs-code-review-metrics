@@ -22,57 +22,30 @@
       <%= render('code_owners', code_owners: @code_owners) unless @code_owners.nil? %>
     <% end %>
 
-    <%= render 'development_metrics/code_climate/code_climate_repository_summary', code_climate: @code_climate %>
-
     <% if @repository %>
       <div class="metrics">
         <div class='row'>
           <div class="col-md-6">
             <div class="box-title" >
-              <%= review_turnaround_presenter.metric_name %>
-              <% if @review_turnaround_success_rate.present? %>
+              <%= merge_time_presenter.metric_name %>
+              <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= merge_time_presenter.metric_explanation %>'>¡</span>
+            </div>
+            <div class="box-title" >
+              <% if @merge_time_avg.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  <%= @review_turnaround_success_rate[:rate] %>% success rate
+                  Average: <%= @merge_time_avg[:avg] %> hours
                 </span>
               <% end %>
-              <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= review_turnaround_presenter.metric_explanation %>'>¡</span>
-            </div>
-           </div>
-          <div class="col-md-6">
-            <div class="distribution-report-button mr-5">
-              <%= link_to 'See details',
-                          repository_time_to_second_review_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
-                          class: 'btn btn-detail' if review_turnaround_presenter.per_repository_distribution_has_data_to_display?
-              %>
-             </div>
-           </div>
-        </div>
-        <div class="graph">
-          <% if review_turnaround_presenter.per_repository_has_data_to_display? && review_turnaround_presenter.per_repository_distribution_has_data_to_display? %>
-            <%= render 'development_metrics/review_turnaround/main_metric', review_turnaround: review_turnaround_presenter.metric %>
-          <% else %>
-            <div class='p-3 text-center'>
-              <span class="text-danger extra-padding"><h5>No data to display for the selected period</h5></span>
-            </div>
-          <% end %>
-        </div>
-        <% if @enabled_repository_per_user_graph %>
-          <div class="graph details">
-            <%= render 'development_metrics/review_turnaround/details_metric', review_turnaround: review_turnaround_presenter.metric %>
-          </div>
-        <% end %>
-      </div>
-      <div class="metrics">
-        <div class='row'>
-          <div class="col-md-6">
-            <div class="box-title" >
-                <%= merge_time_presenter.metric_name %>
-                <% if @merge_time_success_rate.present? %>
-                  <span class="badge badge-info success_rate_btn">
-                    <%= @merge_time_success_rate[:rate] %>% success rate
-                  </span>
-                <% end %>
-               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= merge_time_presenter.metric_explanation %>'>¡</span>
+              <% if @merge_time_success_rate.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Success rate: <%= @merge_time_success_rate[:rate] %>%
+                </span>
+              <% end %>
+              <% if @merge_time_avg.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Total: <%= @merge_time_avg[:total] %> PRs
+                </span>
+              <% end %>
             </div>
           </div>
           <div class="col-md-6">
@@ -84,6 +57,7 @@
             </div>
           </div>
         </div>
+        
         <div class="graph">
         <% if merge_time_presenter.per_repository_has_data_to_display? && merge_time_presenter.per_repository_distribution_has_data_to_display? %>
             <%= render 'development_metrics/merge_time/main_metric', merge_time: merge_time_presenter.metric %>
@@ -105,6 +79,18 @@
             <div class="box-title" >
               <%= pull_request_size_presenter.metric_name %>
               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= pull_request_size_presenter.metric_explanation %>'>¡</span>
+            </div>
+            <div class="box-title" >
+              <% if @pull_request_size_avg.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Average: <%= @pull_request_size_avg[:avg].round %> lines
+                </span>
+              <% end %>
+              <% if @pull_request_size_avg.present? %>
+                <span class="badge badge-info success_rate_btn">
+                  Total: <%= @pull_request_size_avg[:total] %> PRs
+                </span>
+              <% end %>
             </div>
             <div class="graph">
               <% if pull_request_size_presenter.per_repository_distribution_has_data_to_display? %>

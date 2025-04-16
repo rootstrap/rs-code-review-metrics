@@ -19,10 +19,9 @@ class DevelopmentMetricsController < ApplicationController
 
     build_metrics(repository.id, entity_name)
     build_metrics_definitions
-    build_success_rates(entity_name)
+    build_overall_calculations(entity_name)
 
     @code_owners = repository.code_owners.pluck(:login)
-    @code_climate = code_climate_repository_summary
   end
 
   def departments
@@ -31,7 +30,7 @@ class DevelopmentMetricsController < ApplicationController
     entity_name = Department.name
 
     build_metrics(department.id, entity_name)
-    build_success_rates(entity_name)
+    build_overall_calculations(entity_name)
     @code_climate = code_climate_department_summary
     @overview = department_overview
   end
@@ -46,18 +45,20 @@ class DevelopmentMetricsController < ApplicationController
 
   private
 
-  def build_success_rates(entity_name)
+  def build_overall_calculations(entity_name)
     key = "per_#{entity_name.downcase}_distribution".to_sym
 
     @merge_time_success_rate = @merge_time[key].first[:success_rate]
-    @review_turnaround_success_rate = @review_turnaround[key].first[:success_rate]
+    @merge_time_avg = @merge_time[key].first[:avg]
+    # @review_turnaround_success_rate = @review_turnaround[key].first[:success_rate]
+    @pull_request_size_avg = @pull_request_size[key].first[:avg]
   end
 
   def build_metrics(entity_id, entity_name)
     validate_from_to(from: metric_params[:from], to: metric_params[:to])
     metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
                                                      .call(entity_id, @from, @to)
-    @review_turnaround = metrics[:review_turnaround]
+    # @review_turnaround = metrics[:review_turnaround]
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
   end
