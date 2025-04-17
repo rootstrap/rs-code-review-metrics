@@ -88,8 +88,6 @@
                 <span class="badge badge-info success_rate_btn">
                   Average: <%= @pull_request_size_avg[:avg_number].round %> lines
                 </span>
-              <% end %>
-              <% if @pull_request_size_avg.present? %>
                 <span class="badge badge-info success_rate_btn">
                   Total: <%= @pull_request_size_avg[:total] %> PRs (bots excluded)
                 </span>
