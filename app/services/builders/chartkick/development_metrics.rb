@@ -3,8 +3,8 @@ module Builders
     class DevelopmentMetrics < BaseService
       def initialize(entity_id, from, to)
         @entity_id = entity_id
-        @from = from
-        @to = to
+        @from = from&.to_datetime&.beginning_of_day
+        @to = to&.to_datetime&.end_of_day
       end
 
       def call

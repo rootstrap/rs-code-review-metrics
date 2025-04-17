@@ -78,5 +78,29 @@ RSpec.describe User, type: :model do
         end
       end
     end
+
+    describe '.bot_users' do
+      let!(:bot_user) { create(:user, login: 'test[bot]') }
+      let!(:regular_user) { create(:user, login: 'regular-user') }
+
+      it 'returns only users with [bot] in their login' do
+        expect(User.bot_users).to include(bot_user)
+        expect(User.bot_users).not_to include(regular_user)
+      end
+    end
+
+    describe '.ignored_users' do
+      let!(:bot_user) { create(:user, login: 'test-[bot]') }
+      let!(:ignored_user) { create(:user, login: 'ignored-user') }
+      let!(:regular_user) { create(:user, login: 'regular-user') }
+      let!(:ignored_users_setting) do
+        create(:setting, key: 'ignored_users', value: ignored_user.login)
+      end
+
+      it 'returns bot users and users in the ignored list' do
+        expect(User.ignored_users).to include(bot_user, ignored_user)
+        expect(User.ignored_users).not_to include(regular_user)
+      end
+    end
   end
 end
