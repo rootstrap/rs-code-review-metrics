@@ -9,21 +9,21 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReview do
     let(:ruby_repository) { create(:repository, language: Language.find_by(name: 'ruby')) }
     let(:node_repository) { create(:repository, language: Language.find_by(name: 'nodejs')) }
 
-    let!(:first_ruby_pull_request) do
+    let(:first_ruby_pull_request) do
       create(:pull_request,
              repository: ruby_repository,
              owner: user1,
              opened_at: 6.hours.ago)
     end
 
-    let!(:node_pull_request) do
+    let(:node_pull_request) do
       create(:pull_request,
              repository: node_repository,
              owner: user1,
              opened_at: 14.hours.ago)
     end
 
-    let!(:second_ruby_pull_request) do
+    let(:second_ruby_pull_request) do
       create(:pull_request,
              repository: ruby_repository,
              owner: user1,
@@ -33,6 +33,8 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReview do
     let(:prs) { [first_ruby_pull_request, node_pull_request, second_ruby_pull_request] }
 
     before do
+      travel_to Time.zone.parse('2020-08-20')
+
       prs.each do |pr|
         create(:review_request, owner: user1, reviewer: user2, repository: pr.repository,
                                 pull_request: pr)

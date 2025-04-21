@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'PullRequests::TimeToSecondReviewPrsRepositoryController' do
+  subject do
+    get repository_time_to_second_review_prs_repository_index_path(
+      repository_name: repository.name
+    ), params: params
+  end
+
   let(:user1) { create(:user, login: 'user1') }
   let(:user2) { create(:user, login: 'user2') }
   let(:user3) { create(:user, login: 'user3') }
@@ -8,27 +14,21 @@ RSpec.describe 'PullRequests::TimeToSecondReviewPrsRepositoryController' do
   let(:to) { Time.zone.now }
   let(:repository) { create(:repository) }
 
-  let(:subject) do
-    get repository_time_to_second_review_prs_repository_index_path(
-      repository_name: repository.name
-    ), params: params
-  end
-
-  let!(:first_pull_request) do
+  let(:first_pull_request) do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_one',
            opened_at: Time.zone.now - 6.hours)
   end
 
-  let!(:second_pull_request) do
+  let(:second_pull_request) do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_two',
            opened_at: Time.zone.now - 14.hours)
   end
 
-  let!(:third_pull_request) do
+  let(:third_pull_request) do
     create(:pull_request,
            repository: repository,
            html_url: 'test_pr_url_three',
@@ -38,6 +38,8 @@ RSpec.describe 'PullRequests::TimeToSecondReviewPrsRepositoryController' do
   let(:prs) { [first_pull_request, second_pull_request, third_pull_request] }
 
   before do
+    travel_to Time.zone.parse('2020-08-20')
+
     prs.each do |pr|
       create(:review_request,
              owner: user1,
