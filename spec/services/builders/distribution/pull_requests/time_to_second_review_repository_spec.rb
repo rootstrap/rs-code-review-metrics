@@ -12,29 +12,32 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToSecondReviewRepositor
     let(:from) { 4.weeks.ago }
     let(:to) { Time.zone.now }
 
-    let!(:first_pull_request) do
+    let(:first_pull_request) do
       create(:pull_request,
              repository: repository_one,
              html_url: 'test_pr_url_one',
              opened_at: 6.hours.ago)
     end
 
-    let!(:second_pull_request) do
+    let(:second_pull_request) do
       create(:pull_request,
              repository: repository_two,
              html_url: 'test_pr_url_two',
              opened_at: 14.hours.ago)
     end
 
-    let!(:third_pull_request) do
+    let(:third_pull_request) do
       create(:pull_request,
              repository: repository_one,
              html_url: 'test_pr_url_three',
              opened_at: 26.hours.ago)
     end
+
     let(:prs) { [first_pull_request, second_pull_request, third_pull_request] }
 
     before do
+      travel_to Time.zone.parse('2020-08-20')
+
       prs.each do |pr|
         create(:review_request, owner: user1, reviewer: user2, repository: pr.repository,
                                 pull_request: pr)

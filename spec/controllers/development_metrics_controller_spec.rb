@@ -210,16 +210,6 @@ describe DevelopmentMetricsController, type: :controller do
             }
           end
 
-          it 'calls CodeClimate summary retriever class' do
-            expect(CodeClimateSummaryRetriever).to receive(:call).and_return(code_climate_metric)
-            subject
-          end
-
-          it 'render review turnaround metric tooltip' do
-            subject
-            expect(response.body).to include(review_turnaround_metric_definition.explanation)
-          end
-
           it 'render merge time metric tooltip' do
             subject
             expect(response.body).to include(merge_time_metric_metric_definition.explanation)

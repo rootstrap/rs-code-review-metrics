@@ -8,16 +8,6 @@ external_contributions_processor:
   class: 'ExternalContributionsProcessorJob'
   active_job: true
 
-jira_defect_metrics_updater:
-  cron: '00 6 * * 1-5'
-  class: 'JiraDefectMetricsUpdaterJob'
-  active_job: true
-
-open_source_metrics_update:
-  cron: '00 6 * * *'
-  class: 'OpenSourceMetricsUpdaterJob'
-  active_job: true
-
 organization_members_updater:
   cron: '00 5 * * 1-5'
   class: 'OrgUsersUpdaterJob'

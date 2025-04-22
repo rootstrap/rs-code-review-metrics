@@ -40,3 +40,4 @@ coverage
 dump.rdb
 package-lock.json
 .DS_Store
+.cursor/
