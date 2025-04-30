@@ -14,6 +14,10 @@ module ModalSeeDetailHelper
       'pull-request-size': {
         url: repository_pull_request_size_prs_repository_index_path(repository_name, metrics),
         metric: 'lines'
+      },
+      'review-coverage': {
+        url: repository_review_coverage_prs_repository_index_path(repository_name, metrics),
+        metric: '%'
       }
     }
 
