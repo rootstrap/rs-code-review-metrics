@@ -8,7 +8,7 @@
 #  state             :enum             default("created")
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  github_id         :integer
+#  github_id         :bigint
 #  owner_id          :bigint
 #  pull_request_id   :bigint           not null
 #  review_request_id :bigint

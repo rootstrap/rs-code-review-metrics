@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -576,7 +569,7 @@ ALTER SEQUENCE public.events_id_seq OWNED BY public.events.id;
 
 CREATE TABLE public.events_pull_request_comments (
     id bigint NOT NULL,
-    github_id integer,
+    github_id bigint,
     body character varying,
     opened_at timestamp without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -727,7 +720,7 @@ ALTER SEQUENCE public.events_repositories_id_seq OWNED BY public.events_reposito
 
 CREATE TABLE public.events_review_comments (
     id bigint NOT NULL,
-    github_id integer,
+    github_id bigint,
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -764,7 +757,7 @@ CREATE TABLE public.events_reviews (
     id bigint NOT NULL,
     pull_request_id bigint NOT NULL,
     owner_id bigint,
-    github_id integer,
+    github_id bigint,
     body character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -880,9 +873,9 @@ CREATE TABLE public.external_pull_requests (
     external_repository_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    number integer,
     opened_at timestamp without time zone,
-    state public.external_pull_request_state
+    state public.external_pull_request_state,
+    number integer
 );
 
 
@@ -1269,7 +1262,7 @@ ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 CREATE TABLE public.repositories (
     id bigint NOT NULL,
-    github_id integer NOT NULL,
+    github_id bigint NOT NULL,
     name character varying,
     description character varying,
     created_at timestamp(6) without time zone NOT NULL,
@@ -2667,6 +2660,7 @@ ALTER TABLE ONLY public.events_pushes
     ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
 
+
 --
 -- Name: events_pushes fk_rails_4767e99b87; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
@@ -2938,6 +2932,10 @@ ALTER TABLE ONLY public.review_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250430195706'),
+('20250430195700'),
+('20250430195657'),
+('20250430195652'),
 ('20240829142623'),
 ('20240627133952'),
 ('20221228121949'),
