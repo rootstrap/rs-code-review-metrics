@@ -7,7 +7,7 @@
 #  state           :enum             default("active")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  github_id       :integer
+#  github_id       :bigint
 #  owner_id        :bigint
 #  pull_request_id :bigint           not null
 #
