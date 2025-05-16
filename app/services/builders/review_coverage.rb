@@ -26,4 +26,4 @@ module Builders
       @github_client ||= GithubClient::PullRequest.new(@pull_request)
     end
   end
-end 
+end

@@ -48,19 +48,19 @@ RSpec.describe ReviewCoverage, type: :model do
 
   describe 'callbacks' do
     describe '#calculate_coverage_percentage' do
-        let(:total_files) { 10 }
-        let(:files_with_comments) { 5 }
-        let(:expected_percentage) { 0.5 }
+      let(:total_files) { 10 }
+      let(:files_with_comments) { 5 }
+      let(:expected_percentage) { 0.5 }
 
-        before do
+      before do
         subject.total_files_changed = total_files
         subject.files_with_comments_count = files_with_comments
-        end
+      end
 
-        it 'calculates the coverage percentage correctly' do
-            subject.save!
-            expect(subject.coverage_percentage).to eq(expected_percentage)
-        end
+      it 'calculates the coverage percentage correctly' do
+        subject.save!
+        expect(subject.coverage_percentage).to eq(expected_percentage)
+      end
     end
   end
-end 
+end

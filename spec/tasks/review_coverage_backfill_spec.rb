@@ -14,8 +14,7 @@ RSpec.describe 'review_coverage:backfill' do
     load 'lib/tasks/review_coverage_backfill.rake'
 
     allow(GithubClient::PullRequest).to receive(:new).with(merged_pr).and_return(github_client)
-    allow(github_client).to receive(:files).and_return(["file1.rb"])
-    allow(github_client).to receive(:comments).and_return([{ path: "file1.rb" }])
+    allow(github_client).to receive_messages(files: ['file1.rb'], comments: [{ path: 'file1.rb' }])
   end
 
   it 'processes merged pull requests' do
@@ -29,4 +28,4 @@ RSpec.describe 'review_coverage:backfill' do
       expect { subject }.to change { ReviewCoverage.count }.by(1)
     end
   end
-end 
+end

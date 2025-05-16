@@ -9,9 +9,9 @@ RSpec.describe Builders::ReviewCoverage do
 
     before do
       allow(GithubClient::PullRequest).to receive(:new).with(pull_request).and_return(github_client)
-      allow(github_client).to receive(:files).and_return(Array.new(total_files))
-      allow(github_client).to receive(:comments).and_return(
-        Array.new(files_with_comments) { { path: "file#{_1}.rb" } }
+      allow(github_client).to receive_messages(
+        files: Array.new(total_files),
+        comments: Array.new(files_with_comments) { { path: "file#{_1}.rb" } }
       )
     end
 
@@ -39,4 +39,4 @@ RSpec.describe Builders::ReviewCoverage do
       end
     end
   end
-end 
+end

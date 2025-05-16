@@ -26,4 +26,4 @@ FactoryBot.define do
     files_with_comments_count { Faker::Number.between(from: 0, to: total_files_changed) }
     pull_request
   end
-end 
+end
