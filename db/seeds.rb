@@ -151,4 +151,5 @@ if Rails.env.development?
   MetricDefinition.create!(code: :pull_request_size, explanation: 'Measures the lines of code added by each PR. The smaller the PR, the easier it is to review, which speeds up the review process..', name: 'PR Size')
   MetricDefinition.create!(code: :development_cycle, explanation: 'It measures how much time the team spends working on a task.', name: 'Development Cycle')
   MetricDefinition.create!(code: :planned_to_done, explanation: 'The planned-to-done ratio measures what percentage of the tasks you set out for your team were completed satisfactorily.', name: 'Planned to Done Ratio')
+  MetricDefinition.create!(code: :review_coverage, explanation: 'Measures the percentage of files in a pull request that have received review comments.', name: 'Review Coverage')
 end

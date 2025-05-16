@@ -52,6 +52,7 @@ module Events
                                      dependent: :destroy, inverse_of: :pull_request
     has_many :events, as: :handleable, dependent: :destroy
     has_one :merge_time, dependent: :destroy
+    has_one :review_coverage, dependent: :destroy
 
     validates :state, inclusion: { in: states.keys }
     validates :github_id,
@@ -66,12 +67,13 @@ module Events
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true, strict: PullRequests::GithubUniquenessError
 
-    after_validation :build_merge_time, on: :update, if: :merged_at_changed?
+    after_validation :build_metrics, on: :update, if: :merged_at_changed?
 
     private
 
-    def build_merge_time
+    def build_metrics
       Builders::MergeTime.call(self)
+      Builders::ReviewCoverage.call(self)
     end
   end
 end

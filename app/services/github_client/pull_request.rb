@@ -18,6 +18,11 @@ module GithubClient
       get_all_paginated_items(url, MAX_FILES_PER_PAGE)
     end
 
+    def comments
+      url = "repos/#{repository.full_name}/pulls/#{pull_request.number}/comments"
+      get_all_paginated_items(url, MAX_FILES_PER_PAGE)
+    end
+
     private
 
     attr_reader :pull_request
