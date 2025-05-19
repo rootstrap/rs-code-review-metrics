@@ -66,14 +66,5 @@ module Events
               :locked,
               inclusion: { in: [true, false] }
     validates :github_id, uniqueness: true, strict: PullRequests::GithubUniquenessError
-
-    after_validation :build_metrics, on: :update, if: :merged_at_changed?
-
-    private
-
-    def build_metrics
-      Builders::MergeTime.call(self)
-      Builders::ReviewCoverage.call(self)
-    end
   end
 end

@@ -1,6 +1,7 @@
 require 'rails_helper'
 require 'rake'
 
+# rubocop:disable RSpec/DescribeClass
 RSpec.describe 'review_coverage:backfill' do
   subject { rake['review_coverage:backfill'].invoke }
 
@@ -29,3 +30,4 @@ RSpec.describe 'review_coverage:backfill' do
     end
   end
 end
+# rubocop:enable RSpec/DescribeClass

@@ -9,28 +9,28 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
     let(:repository_two) { create(:repository) }
 
     let!(:first_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: repository_one,
              html_url: 'test_pr_url_one',
              opened_at: 6.hours.ago)
     end
 
     let!(:second_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: repository_two,
              html_url: 'test_pr_url_two',
              opened_at: 14.hours.ago)
     end
 
     let!(:third_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: repository_one,
              html_url: 'test_pr_url_three',
              opened_at: 26.hours.ago)
     end
 
     let!(:fourth_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: repository_one,
              size: Faker::Number.within(range: 0..100),
              html_url: 'test_pr_url_four',
@@ -38,19 +38,11 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
     end
 
     let!(:fifth_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: repository_two,
              size: Faker::Number.within(range: 100..200),
              html_url: 'test_pr_url_five',
              opened_at: 15.hours.ago)
-    end
-
-    before do
-      first_pull_request.update!(merged_at: Time.zone.now)
-      second_pull_request.update!(merged_at: Time.zone.now)
-      third_pull_request.update!(merged_at: Time.zone.now)
-      fourth_pull_request.update!(merged_at: Time.zone.now)
-      fifth_pull_request.update!(merged_at: Time.zone.now)
     end
 
     context 'with correct params' do
@@ -95,12 +87,11 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
 
     context 'when pull request has html_url attribute nil' do
       let!(:pull_request_html_url_nil) do
-        create(:pull_request,
+        create(:pull_request, :merged,
                repository: repository_one,
                size: Faker::Number.within(range: 700..800),
                html_url: nil,
-               opened_at: 40.hours.ago,
-               merged_at: Time.zone.now)
+               opened_at: 40.hours.ago)
       end
 
       subject do
@@ -118,11 +109,10 @@ RSpec.describe Builders::Distribution::PullRequests::PullRequestSizeRepository d
 
     context 'when pull request has size attribute nil' do
       let!(:pull_request_html_url_nil) do
-        create(:pull_request,
+        create(:pull_request, :merged,
                repository: repository_one,
                size: nil,
-               opened_at: 40.hours.ago,
-               merged_at: Time.zone.now)
+               opened_at: 40.hours.ago)
       end
 
       subject do

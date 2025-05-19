@@ -16,7 +16,11 @@ module ActionHandlers
     end
 
     def merged
-      @entity.update!(merged_at: Time.current)
+      ActiveRecord::Base.transaction do
+        @entity.update!(merged_at: Time.current)
+        Builders::MergeTime.call(@entity)
+        Builders::ReviewCoverage.call(@entity)
+      end
     end
 
     def closed
