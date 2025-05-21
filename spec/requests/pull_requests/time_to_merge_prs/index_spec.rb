@@ -8,30 +8,24 @@ RSpec.describe 'PullRequests::TimeToMergePrsController' do
   end
 
   let!(:first_ruby_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: ruby_repository,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 6.hours)
   end
 
   let!(:node_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: node_repository,
            html_url: 'node_pr_url',
            opened_at: Time.zone.now - 14.hours)
   end
 
   let!(:second_ruby_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: ruby_repository,
            html_url: 'ruby_pr_url',
            opened_at: Time.zone.now - 26.hours)
-  end
-
-  before do
-    first_ruby_pull_request.update!(merged_at: Time.zone.now)
-    node_pull_request.update!(merged_at: Time.zone.now)
-    second_ruby_pull_request.update!(merged_at: Time.zone.now)
   end
 
   context 'when lang param is present' do

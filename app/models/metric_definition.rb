@@ -19,7 +19,8 @@ class MetricDefinition < ApplicationRecord
                defect_escape_rate: 'defect_escape_rate',
                pull_request_size: 'pull_request_size',
                development_cycle: 'development_cycle',
-               planned_to_done: 'planned_to_done' }
+               planned_to_done: 'planned_to_done',
+               review_coverage: 'review_coverage' }
 
   validates :code, uniqueness: true
   validates :name, presence: true, uniqueness: true

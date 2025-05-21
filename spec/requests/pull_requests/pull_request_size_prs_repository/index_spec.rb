@@ -4,7 +4,6 @@ RSpec.describe 'PullRequests::PullRequestSizePrsRepositoryController' do
   let(:repository) { create(:repository) }
   let(:from) { 4.weeks.ago }
   let(:to) { Time.zone.now }
-  let(:wednesday) { Time.zone.today.last_week(:thursday) }
   let(:subject) do
     get repository_pull_request_size_prs_repository_index_path(
       repository_name: repository.name
@@ -12,51 +11,43 @@ RSpec.describe 'PullRequests::PullRequestSizePrsRepositoryController' do
   end
 
   let!(:first_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: repository,
            html_url: 'test_pr_url_one',
            size: Faker::Number.within(range: 1000..5000),
-           opened_at: wednesday - 6.hours)
+           opened_at: 6.hours.ago)
   end
 
   let!(:second_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: repository,
            html_url: 'test_pr_url_two',
            size: Faker::Number.within(range: 1000..5000),
-           opened_at: wednesday - 14.hours)
+           opened_at: 14.hours.ago)
   end
 
   let!(:third_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: repository,
            html_url: 'test_pr_url_three',
            size: Faker::Number.within(range: 1000..5000),
-           opened_at: wednesday - 26.hours)
+           opened_at: 26.hours.ago)
   end
 
   let!(:fourth_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: repository,
            size: Faker::Number.within(range: 100..200),
            html_url: 'test_pr_url_four',
-           opened_at: wednesday - 14.hours)
+           opened_at: 14.hours.ago)
   end
 
   let!(:fifth_pull_request) do
-    create(:pull_request,
+    create(:pull_request, :merged,
            repository: repository,
            size: Faker::Number.within(range: 500..600),
            html_url: 'test_pr_url_five',
-           opened_at: wednesday - 26.hours)
-  end
-
-  before do
-    first_pull_request.update!(merged_at: wednesday)
-    second_pull_request.update!(merged_at: wednesday)
-    third_pull_request.update!(merged_at: wednesday)
-    fourth_pull_request.update!(merged_at: wednesday)
-    fifth_pull_request.update!(merged_at: wednesday)
+           opened_at: 26.hours.ago)
   end
 
   context 'With correct params' do

@@ -128,7 +128,8 @@ CREATE TYPE public.metric_name AS ENUM (
     'defect_escape_rate',
     'pull_request_size',
     'development_cycle',
-    'planned_to_done'
+    'planned_to_done',
+    'review_coverage'
 );
 
 
@@ -1295,6 +1296,41 @@ ALTER SEQUENCE public.repositories_id_seq OWNED BY public.repositories.id;
 
 
 --
+-- Name: review_coverages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.review_coverages (
+    id bigint NOT NULL,
+    pull_request_id bigint NOT NULL,
+    total_files_changed integer NOT NULL,
+    files_with_comments_count integer NOT NULL,
+    coverage_percentage numeric NOT NULL,
+    deleted_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: review_coverages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.review_coverages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: review_coverages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.review_coverages_id_seq OWNED BY public.review_coverages.id;
+
+
+--
 -- Name: review_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1712,6 +1748,13 @@ ALTER TABLE ONLY public.repositories ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: review_coverages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_coverages ALTER COLUMN id SET DEFAULT nextval('public.review_coverages_id_seq'::regclass);
+
+
+--
 -- Name: review_requests id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1999,6 +2042,14 @@ ALTER TABLE ONLY public.products
 
 ALTER TABLE ONLY public.repositories
     ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: review_coverages review_coverages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_coverages
+    ADD CONSTRAINT review_coverages_pkey PRIMARY KEY (id);
 
 
 --
@@ -2464,6 +2515,13 @@ CREATE INDEX index_repositories_on_product_id ON public.repositories USING btree
 
 
 --
+-- Name: index_review_coverages_on_pull_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_review_coverages_on_pull_request_id ON public.review_coverages USING btree (pull_request_id);
+
+
+--
 -- Name: index_review_requests_on_owner_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2659,6 +2717,13 @@ ALTER TABLE ONLY public.events_pull_requests
 ALTER TABLE ONLY public.events_pushes
     ADD CONSTRAINT fk_rails_3f633d82fd FOREIGN KEY (repository_id) REFERENCES public.repositories(id);
 
+
+--
+-- Name: review_coverages fk_rails_40af85f049; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.review_coverages
+    ADD CONSTRAINT fk_rails_40af85f049 FOREIGN KEY (pull_request_id) REFERENCES public.events_pull_requests(id);
 
 
 --
@@ -2936,6 +3001,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250430195700'),
 ('20250430195657'),
 ('20250430195652'),
+('20250430151601'),
+('20250429002929'),
 ('20240829142623'),
 ('20240627133952'),
 ('20221228121949'),

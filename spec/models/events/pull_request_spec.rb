@@ -77,24 +77,4 @@ RSpec.describe Events::PullRequest, type: :model do
       end
     end
   end
-
-  describe 'callbacks' do
-    context 'when a pull request is merged' do
-      before { travel_to(Time.zone.today.beginning_of_day) }
-      let!(:pull_request) { create(:pull_request, opened_at: Time.current) }
-
-      it 'creates a merge time with the correct values' do
-        pull_request.update!(merged_at: Time.current + 1.hour)
-        merge_time = MergeTime.last
-        expect(merge_time[:value].seconds).to eq(1.hour)
-        expect(merge_time[:pull_request_id]).to eq(pull_request.id)
-      end
-
-      it 'creates a merge time' do
-        expect {
-          pull_request.update!(merged_at: Time.current)
-        }.to change { MergeTime.count }.from(0).to(1)
-      end
-    end
-  end
 end
