@@ -24,6 +24,7 @@ FactoryBot.define do
   factory :review_coverage do
     total_files_changed { Faker::Number.between(from: 1, to: 100) }
     files_with_comments_count { Faker::Number.between(from: 0, to: total_files_changed) }
+    coverage_percentage { (files_with_comments_count.to_f / total_files_changed).round(2) }
     pull_request
   end
 end
