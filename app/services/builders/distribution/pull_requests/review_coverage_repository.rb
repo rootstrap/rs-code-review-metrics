@@ -24,6 +24,7 @@ module Builders
                                 .joins(pull_request: :repository)
                                 .where(repositories: { name: @repository_name })
                                 .where(pull_request: { merged_at: @from..@to })
+                                .where.not(pull_request: { owner: User.ignored_users })
                                 .order(:coverage_percentage)
         end
 

@@ -52,7 +52,7 @@ class DevelopmentMetricsController < ApplicationController
     @merge_time_success_rate = merge_time[:success_rate]
     @merge_time_avg = merge_time[:avg]
     @pull_request_size_avg = @pull_request_size[key].first[:avg]
-    @review_coverage_avg = @review_coverage[key].first[:avg]
+    @review_coverage_avg = @review_coverage[key].first[:avg] if @review_coverage.present?
   end
 
   def build_metrics(entity_id, entity_name)

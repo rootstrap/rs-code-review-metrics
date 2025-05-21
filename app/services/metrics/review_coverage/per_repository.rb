@@ -13,7 +13,7 @@ module Metrics
       end
 
       def query(interval)
-        Repository.joins(pull_requests: :review_requests)
+        Repository.joins(pull_requests: :review_coverage)
                   .where(events_pull_requests: { merged_at: interval })
                   .where(id: @entity_id)
                   .group(:id)

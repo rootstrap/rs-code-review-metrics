@@ -18,6 +18,9 @@ describe DevelopmentMetricsController, type: :controller do
   let!(:pull_request_size_metric_definition) do
     create(:metric_definition, code: :pull_request_size)
   end
+  let!(:review_coverage_metric_definition) do
+    create(:metric_definition, code: :review_coverage)
+  end
 
   describe '#index' do
     context 'when metric params are empty' do
@@ -219,17 +222,11 @@ describe DevelopmentMetricsController, type: :controller do
             subject
             expect(response.body).to include(pull_request_size_metric_definition.explanation)
           end
-        end
-      end
 
-      context '#departments' do
-        before { params[:department_name] = repository.language.department.name }
-
-        it 'calls CodeClimate summary retriever class' do
-          expect(CodeClimate::RepositoriesSummaryService)
-            .to receive(:call).and_return(code_climate_metric)
-
-          get :departments, params: params
+          it 'render review coverage metric tooltip' do
+            subject
+            expect(response.body).to include(review_coverage_metric_definition.explanation)
+          end
         end
       end
     end
