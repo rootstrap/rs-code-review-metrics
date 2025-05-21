@@ -29,12 +29,4 @@ class ReviewCoverage < ApplicationRecord
   validates :pull_request_id, uniqueness: true
   validates :total_files_changed, :files_with_comments_count,
             numericality: { greater_than_or_equal_to: 0 }
-
-  before_save :calculate_coverage_percentage
-
-  private
-
-  def calculate_coverage_percentage
-    self.coverage_percentage = (files_with_comments_count.to_f / total_files_changed).round(2)
-  end
 end
