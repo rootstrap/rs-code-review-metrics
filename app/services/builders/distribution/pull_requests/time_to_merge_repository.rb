@@ -24,6 +24,9 @@ module Builders
                                       .joins(pull_request: :repository)
                                       .where(repositories: { name: @repository_name })
                                       .where.not(events_pull_requests: { html_url: nil })
+                                      .where.not(
+                                        events_pull_requests: { owner: User.ignored_users }
+                                      )
                                       .includes(:pull_request)
                                       .order(:value)
         end

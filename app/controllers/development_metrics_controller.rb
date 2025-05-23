@@ -52,6 +52,7 @@ class DevelopmentMetricsController < ApplicationController
     @merge_time_success_rate = merge_time[:success_rate]
     @merge_time_avg = merge_time[:avg]
     @pull_request_size_avg = @pull_request_size[key].first[:avg]
+    @review_coverage_avg = @review_coverage[key].first[:avg] if @review_coverage.present?
   end
 
   def build_metrics(entity_id, entity_name)
@@ -60,6 +61,7 @@ class DevelopmentMetricsController < ApplicationController
                                                      .call(entity_id, @from, @to)
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
+    @review_coverage = metrics[:review_coverage]
   end
 
   def build_product_metrics(entity_id, entity_name)
@@ -84,6 +86,7 @@ class DevelopmentMetricsController < ApplicationController
     @review_turnaround_definition = MetricDefinition.find_by(code: :review_turnaround)
     @merge_time_definition = MetricDefinition.find_by(code: :merge_time)
     @pull_request_size_definition = MetricDefinition.find_by(code: :pull_request_size)
+    @review_coverage_definition = MetricDefinition.find_by(code: :review_coverage)
   end
 
   def set_metrics_to_show

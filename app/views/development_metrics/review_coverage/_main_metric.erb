@@ -1,0 +1,7 @@
+<%= render partial: 'shared/column-chart',
+           locals: {
+             chart_id: 'review-coverage',
+             metric_name: 'Distribution',
+             suffix: " pull requests",
+             metric: review_coverage[:per_repository_distribution]
+           } if review_coverage && review_coverage[:per_repository_distribution] %>
