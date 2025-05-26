@@ -229,6 +229,17 @@ describe DevelopmentMetricsController, type: :controller do
           end
         end
       end
+
+      context '#departments' do
+        before { params[:department_name] = repository.language.department.name }
+
+        it 'calls CodeClimate summary retriever class' do
+          expect(CodeClimate::RepositoriesSummaryService)
+            .to receive(:call).and_return(code_climate_metric)
+
+          get :departments, params: params
+        end
+      end
     end
   end
 end

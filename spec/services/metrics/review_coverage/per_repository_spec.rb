@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Metrics::ReviewCoverage::PerRepository do
   describe '.call' do
-    let(:subject) { described_class.call(repository.id) }
+    subject { described_class.call(repository.id) }
+
     let(:repository) { create(:repository) }
     let(:beginning_of_day) { Time.zone.today.beginning_of_day }
     let(:entity_type) { 'Repository' }
@@ -37,8 +38,9 @@ RSpec.describe Metrics::ReviewCoverage::PerRepository do
       end
 
       context 'when interval is set' do
+        subject { described_class.call(repository.id, interval) }
+
         let(:interval) { 4.weeks.ago.beginning_of_week..Time.current.end_of_week }
-        let(:subject) { described_class.call(repository.id, interval) }
 
         before do
           pull_request = create(
@@ -50,7 +52,7 @@ RSpec.describe Metrics::ReviewCoverage::PerRepository do
           pull_request.review_coverage.update!(coverage_percentage: 85.0)
         end
 
-        it 'does not change metric value' do
+        it 'returns the average value correctly' do
           metric = subject.first
           expect(metric.value).to eq 85.0
         end

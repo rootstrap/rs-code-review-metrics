@@ -107,7 +107,7 @@ RSpec.describe Builders::Distribution::PullRequests::ReviewCoverageRepository do
       end
 
       it 'does not include pull requests from ignored users' do
-        expect(subject['20-40'].pluck(:html_url)).not_to include('ignored_pr_url')
+        expect(subject['20-40'].pluck(:html_url)).not_to include(ignored_pull_request.html_url)
       end
     end
   end
