@@ -8,19 +8,19 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
     let(:node_repository) { create(:repository, language: Language.find_by(name: 'nodejs')) }
 
     let!(:first_ruby_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: ruby_repository,
              opened_at: 6.hours.ago)
     end
 
     let!(:node_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: node_repository,
              opened_at: 14.hours.ago)
     end
 
     let!(:second_ruby_pull_request) do
-      create(:pull_request,
+      create(:pull_request, :merged,
              repository: ruby_repository,
              opened_at: 26.hours.ago)
     end
@@ -32,12 +32,6 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
           from: 4,
           languages: []
         )
-      end
-
-      before do
-        first_ruby_pull_request.update!(merged_at: Time.zone.now)
-        node_pull_request.update!(merged_at: Time.zone.now)
-        second_ruby_pull_request.update!(merged_at: Time.zone.now)
       end
 
       it 'returns data for 1-12 hours' do
@@ -60,12 +54,6 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
         )
       end
 
-      before do
-        first_ruby_pull_request.update!(merged_at: Time.zone.now)
-        node_pull_request.update!(merged_at: Time.zone.now)
-        second_ruby_pull_request.update!(merged_at: Time.zone.now)
-      end
-
       it 'returns data for 1-12 hours' do
         expect(subject).to have_key('1-12')
       end
@@ -81,17 +69,10 @@ RSpec.describe Builders::Distribution::PullRequests::TimeToMerge do
 
     context 'when pull request has html_url attribute nil' do
       let!(:third_ruby_pull_request_html_url_nil) do
-        create(:pull_request,
+        create(:pull_request, :merged,
                repository: ruby_repository,
                html_url: nil,
                opened_at: 40.hours.ago)
-      end
-
-      before do
-        first_ruby_pull_request.update!(merged_at: Time.zone.now)
-        node_pull_request.update!(merged_at: Time.zone.now)
-        second_ruby_pull_request.update!(merged_at: Time.zone.now)
-        third_ruby_pull_request_html_url_nil.update!(merged_at: Time.zone.now)
       end
 
       subject do

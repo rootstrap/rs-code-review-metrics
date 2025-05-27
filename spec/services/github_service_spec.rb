@@ -48,8 +48,16 @@ RSpec.describe GithubService do
         context 'and the pull request is merged' do
           let(:merged) { true }
 
+          before do
+            allow_any_instance_of(GithubClient::PullRequest).to receive(:comments).and_return([])
+          end
+
           it 'sets state merged' do
             expect { subject }.to change { pull_request.reload.merged_at }.from(nil).to(Time)
+          end
+
+          it 'creates a review coverage' do
+            expect { subject }.to change { pull_request.reload.review_coverage }.to be_present
           end
         end
 

@@ -47,11 +47,32 @@ FactoryBot.define do
     size { Faker::Number.within(range: 0..10_000) }
     state { 'open' }
     html_url { 'https://github.com/Codertocat/Hello-World/pull/2' }
-    opened_at { Faker::Date.between(from: 1.month.ago, to: Time.zone.now) }
+    opened_at { Faker::Time.between(from: 1.month.ago, to: Time.zone.now) }
     locked { false }
     draft { false }
     repository
 
     association :owner, factory: :user
+
+    trait :merged do
+      state { 'closed' }
+      merged_at { Time.current }
+
+      transient do
+        merge_time { (merged_at - opened_at).to_i }
+      end
+
+      after(:create) do |pull_request, evaluator|
+        create(
+          :merge_time,
+          pull_request: pull_request,
+          value: evaluator.merge_time
+        )
+        create(
+          :review_coverage,
+          pull_request: pull_request
+        )
+      end
+    end
   end
 end
