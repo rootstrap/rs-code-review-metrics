@@ -71,7 +71,8 @@ module Builders
           metrics = {
             review_turnaround: %w[repository users_repository repository_distribution],
             merge_time: %w[repository users_repository repository_distribution],
-            pull_request_size: %w[repository_distribution]
+            pull_request_size: %w[repository_distribution],
+            review_coverage: %w[repository repository_distribution]
           }
           metrics
         end
