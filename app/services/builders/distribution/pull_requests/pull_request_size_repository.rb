@@ -26,6 +26,7 @@ module Builders
                                              .where.not(
                                                events_pull_requests: { html_url: nil }
                                              )
+                                             .where.not(owner: User.ignored_users)
                                              .where.not(size: nil)
                                              .order(:size)
         end
