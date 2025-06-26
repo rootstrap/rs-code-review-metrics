@@ -1,10 +1,11 @@
 module Builders
   module Chartkick
     class DevelopmentMetrics < BaseService
-      def initialize(entity_id, from, to)
+      def initialize(entity_id, from, to, base_branch = nil)
         @entity_id = entity_id
         @from = from&.to_datetime&.beginning_of_day
         @to = to&.to_datetime&.end_of_day
+        @base_branch = base_branch
       end
 
       def call
@@ -25,11 +26,14 @@ module Builders
 
       def metric_data(metric_name)
         Builders::Chartkick::MetricData.call(
-          @entity_id,
-          entities_by_metric[metric_name],
-          metric_name,
-          @from,
-          @to
+          entity_id: @entity_id,
+          entities: entities_by_metric[metric_name],
+          metric_name: metric_name,
+          params: {
+            from: @from,
+            to: @to,
+            base_branch: @base_branch
+          }
         )
       end
 

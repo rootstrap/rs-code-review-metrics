@@ -7,13 +7,16 @@
   %>
 
   <div class="metrics-container">
-    <div class="row title_sidebar">
-        <div class="col-md-6">
-          <strong class="rute_title_grey"><%= @repository.product[:name] +'/'%></strong>
-          <strong class="rute_title"><%= @repository.name  if @repository.product.present? %></strong>
-        </div>
-        <div class="col-md-6 interval d-flex flex-row-reverse">
+      <div class="row title_sidebar">
+      <div class="col-md-12">
+        <strong class="rute_title_grey"><%= @repository.product[:name] +'/'%></strong>
+        <strong class="rute_title"><%= @repository.name  if @repository.product.present? %></strong>
+      </div>
+    </div>
+    <div class="row filters-bar">
+        <div class="col-md-12 interval d-flex flex-row-reverse">
           <%= render 'shared/repository/nav-filter' do |f| %>
+              <%= render 'shared/base-branch-filter', form: f, available_base_branches: @available_base_branches %>
               <%= hidden_field_tag 'repository_name', @repository.name  %>
               <%= render 'shared/interval-filter', form: f %>
           <% end %>
@@ -35,7 +38,7 @@
           <div class="col-md-6">
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
-                          repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
+                          repository_time_to_merge_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to), base_branch: params&.dig(:metric, :base_branch) }}),
                           class: 'btn btn-detail' if merge_time_presenter.per_repository_distribution_has_data_to_display?
               %>
             </div>
@@ -107,7 +110,7 @@
           <div class="col-md-1">
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
-                        repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
+                        repository_pull_request_size_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to), base_branch: params&.dig(:metric, :base_branch) }}),
                         class: 'btn btn-detail' if pull_request_size_presenter.per_repository_distribution_has_data_to_display?
               %>
             </div>
@@ -144,7 +147,7 @@
           <div class="col-md-1">
             <div class="distribution-report-button mr-5">
               <%= link_to 'See details',
-                          repository_review_coverage_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to) }}),
+                          repository_review_coverage_prs_repository_index_path(@repository.name, { metric: { from: params&.dig(:metric, :from), to: params&.dig(:metric, :to), base_branch: params&.dig(:metric, :base_branch) }}),
                           class: 'btn btn-detail' if review_coverage_presenter.per_repository_distribution_has_data_to_display?
               %>
             </div>

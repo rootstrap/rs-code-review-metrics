@@ -1,10 +1,11 @@
 module Metrics
   module Group
     class Base < BaseService
-      def initialize(entity_name:, entity_id:, metric_name:)
+      def initialize(entity_name:, entity_id:, metric_name:, base_branch: nil)
         @entity_name = entity_name
         @entity_id = entity_id
         @metric_name = metric_name
+        @base_branch = base_branch
       end
 
       def call
@@ -17,7 +18,8 @@ module Metrics
         {
           name: @metric_name,
           value_timestamp: value_timestamp,
-          interval: interval
+          interval: interval,
+          base_branch: @base_branch
         }
       end
 

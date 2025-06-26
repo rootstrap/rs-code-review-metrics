@@ -12,7 +12,8 @@ module PullRequests
       @pull_requests = repository.call(
         from: @from,
         to: @to,
-        repository_name: @repository_name
+        repository_name: @repository_name,
+        base_branch: metric_params[:base_branch]
       )
       respond_to do |format|
         format.html { render :index }
@@ -23,7 +24,7 @@ module PullRequests
     private
 
     def metric_params
-      params.require(:metric).permit(:to, :from)
+      params.require(:metric).permit(:to, :from, :base_branch)
     end
   end
 end

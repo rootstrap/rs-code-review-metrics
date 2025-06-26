@@ -13,4 +13,8 @@ module FiltersHelper
   def chosen_contribution_period
     params[:from] || 4
   end
+
+  def base_branch_chosen
+    params.dig(:metric, :base_branch) || ''
+  end
 end

@@ -1,0 +1,9 @@
+.base-branch-selection {
+  display: flex;
+  align-items: baseline;
+  
+  select {
+    margin: 0 0.2rem;
+    width: 120px;
+  }
+}

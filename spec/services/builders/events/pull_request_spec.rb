@@ -16,17 +16,30 @@ RSpec.describe Builders::Events::PullRequest do
           .by(1)
       end
 
-      it 'assigns the correct attributes to it' do
+      it 'assigns the correct basic attributes' do
         built_pull_request = described_class.call(payload: payload)
         expect(built_pull_request.number).to eq(pull_request_payload['number'])
         expect(built_pull_request.state).to eq(pull_request_payload['state'])
         expect(built_pull_request.node_id).to eq(pull_request_payload['node_id'])
         expect(built_pull_request.title).to eq(pull_request_payload['title'])
-        expect(built_pull_request.locked).to eq(boolean_of(pull_request_payload['locked']))
-        expect(built_pull_request.draft).to eq(boolean_of(pull_request_payload['draft']))
         expect(built_pull_request.html_url).to eq(pull_request_payload['html_url'])
         expect(built_pull_request.opened_at).to eq(pull_request_payload['created_at'])
+      end
+
+      it 'assigns the correct configuration flags' do
+        built_pull_request = described_class.call(payload: payload)
+        expect(built_pull_request.locked).to eq(boolean_of(pull_request_payload['locked']))
+        expect(built_pull_request.draft).to eq(boolean_of(pull_request_payload['draft']))
+      end
+
+      it 'assigns the correct branch information' do
+        built_pull_request = described_class.call(payload: payload)
         expect(built_pull_request.branch).to eq(pull_request_payload['head']['ref'])
+        expect(built_pull_request.base_branch).to eq(pull_request_payload['base']['ref'])
+      end
+
+      it 'calculates and assigns the pull request size' do
+        built_pull_request = described_class.call(payload: payload)
         expect(built_pull_request.size).to be_present
       end
 

@@ -2,10 +2,11 @@ module Builders
   module Distribution
     module PullRequests
       class PullRequestSizeRepository < BaseService
-        def initialize(repository_name:, from:, to:)
+        def initialize(repository_name:, from:, to:, base_branch: nil)
           @repository_name = repository_name
           @from = from&.to_datetime&.beginning_of_day
           @to = to&.to_datetime&.end_of_day
+          @base_branch = base_branch
         end
 
         def call
@@ -20,15 +21,22 @@ module Builders
         private
 
         def pr_sizes
-          @pr_sizes ||= ::Events::PullRequest.where(created_at: @from..@to)
-                                             .joins(:repository)
-                                             .where(repositories: { name: @repository_name })
-                                             .where.not(
-                                               events_pull_requests: { html_url: nil }
-                                             )
-                                             .where.not(owner: User.ignored_users)
-                                             .where.not(size: nil)
-                                             .order(:size)
+          @pr_sizes ||= build_pr_sizes_query
+        end
+
+        def build_pr_sizes_query
+          query = ::Events::PullRequest.where(created_at: @from..@to)
+                                       .joins(:repository)
+                                       .where(repositories: { name: @repository_name })
+                                       .where.not(
+                                         events_pull_requests: { html_url: nil }
+                                       )
+                                       .where.not(owner: User.ignored_users)
+                                       .where.not(size: nil)
+                                       .order(:size)
+
+          query = query.where(base_branch: @base_branch) if @base_branch.present?
+          query
         end
 
         def hash_of_arrays

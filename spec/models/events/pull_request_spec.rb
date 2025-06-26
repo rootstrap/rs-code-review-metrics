@@ -3,6 +3,7 @@
 # Table name: events_pull_requests
 #
 #  id            :bigint           not null, primary key
+#  base_branch   :string
 #  body          :text
 #  branch        :string
 #  closed_at     :datetime

@@ -11,10 +11,18 @@ RSpec.describe Builders::Chartkick::MetricData do
       entities.each do |entity|
         expect(Metrics::Group::Weekly)
           .to receive(:call).with(
-            entity_id: entity_id, entity_name: entity, metric_name: metric_name, from: from, to: to
+            entity_id: entity_id,
+            entity_name: entity,
+            metric_name: metric_name,
+            params: { from: from, to: to, base_branch: nil }
           ).once
       end
-      described_class.call(entity_id, entities, metric_name, from, to)
+      described_class.call(
+        entity_id: entity_id,
+        entities: entities,
+        metric_name: metric_name,
+        params: { from: from, to: to }
+      )
     end
   end
 end

@@ -2,10 +2,11 @@ module Builders
   module Distribution
     module PullRequests
       class TimeToSecondReviewRepository < BaseService
-        def initialize(repository_name:, from:, to:)
+        def initialize(repository_name:, from:, to:, base_branch: nil)
           @repository_name = repository_name
           @from = from.to_datetime.beginning_of_day
           @to = to.to_datetime.end_of_day
+          @base_branch = base_branch
         end
 
         def call
