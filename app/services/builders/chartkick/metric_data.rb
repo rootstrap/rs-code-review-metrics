@@ -1,12 +1,13 @@
 module Builders
   module Chartkick
     class MetricData < BaseService
-      def initialize(entity_id, entities, metric_name, from, to)
+      def initialize(entity_id:, entities:, metric_name:, params: {})
         @entity_id = entity_id
         @entities = entities
         @metric_name = metric_name
-        @from = from
-        @to = to
+        @from = params[:from]
+        @to = params[:to]
+        @base_branch = params[:base_branch]
       end
 
       def call
@@ -15,9 +16,11 @@ module Builders
             entity_name: entity,
             entity_id: @entity_id,
             metric_name: @metric_name,
-            from: @from,
-            to: @to
-            # prev: (@to.to_date - @from.to_date).to_i / 7
+            params: {
+              from: @from,
+              to: @to,
+              base_branch: @base_branch
+            }
           )
         end
       end

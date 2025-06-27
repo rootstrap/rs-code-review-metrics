@@ -8,8 +8,12 @@ RSpec.describe Metrics::Group::Weekly do
     context 'when querying metrics per department' do
       let(:department) { Department.find_by(name: 'backend') }
       let(:subject) do
-        described_class.call(entity_name: 'department', entity_id: department.id,
-                             metric_name: 'review_turnaround', from: from, to: to)
+        described_class.call(
+          entity_name: 'department',
+          entity_id: department.id,
+          metric_name: 'review_turnaround',
+          params: { from: from, to: to }
+        )
       end
 
       it 'calls service' do
@@ -23,8 +27,12 @@ RSpec.describe Metrics::Group::Weekly do
     context 'when querying metrics per language' do
       let(:lang) { Language.find_by(name: 'ruby') }
       let(:subject) do
-        described_class.call(entity_name: 'language', entity_id: lang.id,
-                             metric_name: 'review_turnaround', from: from, to: to)
+        described_class.call(
+          entity_name: 'language',
+          entity_id: lang.id,
+          metric_name: 'review_turnaround',
+          params: { from: from, to: to }
+        )
       end
 
       it 'calls service' do
@@ -38,8 +46,12 @@ RSpec.describe Metrics::Group::Weekly do
     context 'when querying metrics per repository' do
       let(:repository) { create(:repository) }
       let(:subject) do
-        described_class.call(entity_name: 'repository', entity_id: repository.id,
-                             metric_name: 'review_turnaround', from: from, to: to)
+        described_class.call(
+          entity_name: 'repository',
+          entity_id: repository.id,
+          metric_name: 'review_turnaround',
+          params: { from: from, to: to }
+        )
       end
 
       it 'calls service' do
@@ -53,8 +65,12 @@ RSpec.describe Metrics::Group::Weekly do
     context 'when querying metrics per user repository' do
       let(:users_repository) { create(:users_repository) }
       let(:subject) do
-        described_class.call(entity_name: 'users_repository', entity_id: users_repository.id,
-                             metric_name: 'review_turnaround', from: from, to: to)
+        described_class.call(
+          entity_name: 'users_repository',
+          entity_id: users_repository.id,
+          metric_name: 'review_turnaround',
+          params: { from: from, to: to }
+        )
       end
 
       it 'calls service' do

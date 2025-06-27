@@ -21,7 +21,8 @@ module Builders
       def retrieve_records
         @retrieve_records ||= metric.retrieve_records(
           entity_id: @entity_id,
-          time_range: @query[:value_timestamp]
+          time_range: @query[:value_timestamp],
+          base_branch: @query[:base_branch]
         )
       end
 

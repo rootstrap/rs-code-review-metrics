@@ -624,7 +624,8 @@ CREATE TABLE public.events_pull_requests (
     owner_id bigint,
     html_url character varying,
     branch character varying,
-    size integer
+    size integer,
+    base_branch character varying
 );
 
 
@@ -2997,6 +2998,7 @@ ALTER TABLE ONLY public.review_requests
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250625181210'),
 ('20250430195706'),
 ('20250430195700'),
 ('20250430195657'),

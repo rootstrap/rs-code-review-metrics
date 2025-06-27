@@ -30,6 +30,9 @@ FactoryBot.define do
         updated_at: updated_at.to_time.iso8601,
         head: {
           ref: branch
+        },
+        base: {
+          ref: 'main'
         }
       }
     end

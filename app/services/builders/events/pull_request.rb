@@ -13,6 +13,7 @@ module Builders
             pull_request.public_send("#{key}=", pull_request_data.fetch(value))
           end
           pull_request.branch = pull_request_data.dig('head', 'ref')
+          pull_request.base_branch = pull_request_data.dig('base', 'ref')
 
           assign_attrs(pull_request, pull_request_data)
         end

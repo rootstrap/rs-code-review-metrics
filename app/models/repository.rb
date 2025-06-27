@@ -147,6 +147,10 @@ class Repository < ApplicationRecord
     ENV['GITHUB_ORGANIZATION']
   end
 
+  def base_branches
+    pull_requests.distinct.pluck(:base_branch).sort
+  end
+
   private
 
   def set_default_language

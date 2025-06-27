@@ -22,6 +22,7 @@ class DevelopmentMetricsController < ApplicationController
     build_overall_calculations(entity_name)
 
     @code_owners = repository.code_owners.pluck(:login)
+    @available_base_branches = repository.base_branches
   end
 
   def departments
@@ -57,8 +58,14 @@ class DevelopmentMetricsController < ApplicationController
 
   def build_metrics(entity_id, entity_name)
     validate_from_to(from: metric_params[:from], to: metric_params[:to])
-    metrics = Builders::Chartkick::DevelopmentMetrics.const_get(entity_name)
-                                                     .call(entity_id, @from, @to)
+    metrics = Builders::Chartkick::DevelopmentMetrics
+              .const_get(entity_name)
+              .call(
+                entity_id,
+                @from,
+                @to,
+                metric_params[:base_branch]
+              )
     @merge_time = metrics[:merge_time]
     @pull_request_size = metrics[:pull_request_size]
     @review_coverage = metrics[:review_coverage]

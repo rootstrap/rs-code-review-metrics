@@ -1,0 +1,9 @@
+<%= form.input :base_branch,
+  label: 'Branch',
+  collection: available_base_branches,
+  include_blank: 'All branches',
+  wrapper_html: { class: 'base-branch-selection rute_title' },
+  selected: base_branch_chosen,
+  as: :select,
+  required: false
+%>
