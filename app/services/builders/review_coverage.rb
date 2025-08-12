@@ -25,6 +25,8 @@ module Builders
     end
 
     def coverage_percentage
+      return 0 if total_files.zero?
+      
       (files_with_comments_count.to_f / total_files).round(2)
     end
 
