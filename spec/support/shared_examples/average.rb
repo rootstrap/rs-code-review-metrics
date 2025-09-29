@@ -15,16 +15,16 @@ RSpec.shared_examples 'average' do
     query.merge!(name: metric_name)
   end
 
-  it 'returns an array with avg key' do
-    expect(subject.first).to have_key(:avg)
+  it 'returns an array with interval_metrics key' do
+    expect(subject.first).to have_key(:interval_metrics)
   end
 
   it 'returns an array with filled value' do
-    expect(subject.first[:avg][:avg_number]).to eq(average_value)
+    expect(subject.first[:interval_metrics][:avg_number]).to eq(average_value)
   end
 
   it 'returns total number of records' do
-    expect(subject.first[:avg][:total]).to eq(values_for_average.count)
+    expect(subject.first[:interval_metrics][:total]).to eq(values_for_average.count)
   end
 
   context 'when there is an ignored user' do
@@ -42,15 +42,15 @@ RSpec.shared_examples 'average' do
     end
 
     it 'does not include ignored user in the total' do
-      expect(subject.first[:avg][:total]).to eq(values_for_average.count)
+      expect(subject.first[:interval_metrics][:total]).to eq(values_for_average.count)
     end
   end
 
   context 'when there are no records' do
     let(:values_for_average) { [] }
 
-    it 'returns nil for avg' do
-      expect(subject.first[:avg]).to be_nil
+    it 'returns nil for interval_metrics' do
+      expect(subject.first[:interval_metrics]).to be_nil
     end
   end
 end

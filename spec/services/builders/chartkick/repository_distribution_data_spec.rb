@@ -45,6 +45,38 @@ RSpec.describe Builders::Chartkick::RepositoryDistributionData do
         it_behaves_like 'pull request size data distribution'
         it_behaves_like 'average'
       end
+
+      context 'when name is review coverage' do
+        let(:metric_name) { :review_coverage }
+
+        before do
+          pr_with_zero = create(
+            :pull_request,
+            :merged,
+            repository: repository,
+            merged_at: range.begin + 1.hour
+          )
+          pr_with_zero.review_coverage.update!(coverage_percentage: 0.0)
+
+          pr_with_coverage = create(
+            :pull_request,
+            :merged,
+            repository: repository,
+            merged_at: range.begin + 2.hours
+          )
+          pr_with_coverage.review_coverage.update!(coverage_percentage: 0.5)
+        end
+
+        it 'includes zero_coverage_percentage in interval_metrics data' do
+          result = subject.first
+          expect(result[:interval_metrics]).to include(:zero_coverage_percentage)
+        end
+
+        it 'calculates zero coverage percentage correctly' do
+          result = subject.first
+          expect(result[:interval_metrics][:zero_coverage_percentage]).to eq(50)
+        end
+      end
     end
   end
 end

@@ -7,7 +7,11 @@ RSpec.describe RepositoryMetricPresenter do
       per_users_repository: [{ name: 'horacio', data: { "2022-10-24": 3.0 } },
                              { name: 'hvilloria', data: { "2022-10-24": 5.0 } },
                              { name: 'sandro', data: { "2022-10-24": 14.0 } }],
-      per_repository_distribution: [{ name: 'forecast', data: [], success_rate: nil }]
+      per_repository_distribution: [{
+        name: 'forecast',
+        data: [],
+        interval_metrics: { success_rate: nil }
+      }]
     }
   end
   let(:metric_def) { build(:metric_definition) }

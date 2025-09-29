@@ -22,6 +22,15 @@ module Builders
         def value_for_average(entity)
           entity.coverage_percentage * 100
         end
+
+        def zero_coverage_percentage(records)
+          return 0 if records.empty?
+
+          zero_coverage_count = records.with_zero_coverage.count
+          total_count = records.count
+
+          ((zero_coverage_count.to_f / total_count) * 100).round
+        end
       end
     end
   end
