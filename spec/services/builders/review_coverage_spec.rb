@@ -38,5 +38,15 @@ RSpec.describe Builders::ReviewCoverage do
         expect(review_coverage.coverage_percentage).to eq(0)
       end
     end
+
+    context 'when the pull request has no files' do
+      let(:total_files) { 0 }
+
+      it 'creates a review coverage with zero coverage' do
+        review_coverage = subject
+        expect(review_coverage.total_files_changed).to eq(0)
+        expect(review_coverage.coverage_percentage).to eq(0)
+      end
+    end
   end
 end
