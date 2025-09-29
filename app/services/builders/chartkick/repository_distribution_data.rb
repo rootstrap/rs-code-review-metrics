@@ -44,7 +44,7 @@ module Builders
       end
 
       def total_records
-        @total_records ||= retrieve_records.count
+        @total_records ||= retrieve_records.size
       end
 
       def success_rate

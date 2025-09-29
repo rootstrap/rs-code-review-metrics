@@ -24,10 +24,10 @@ module Builders
         end
 
         def zero_coverage_percentage(records)
-          return 0 if records.empty?
+          total_count = records.count
+          return 0 if total_count.zero?
 
           zero_coverage_count = records.with_zero_coverage.count
-          total_count = records.count
 
           ((zero_coverage_count.to_f / total_count) * 100).round
         end
