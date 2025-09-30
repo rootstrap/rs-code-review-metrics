@@ -49,11 +49,12 @@ class DevelopmentMetricsController < ApplicationController
   def build_overall_calculations(entity_name)
     key = "per_#{entity_name.downcase}_distribution".to_sym
 
-    merge_time = @merge_time[key].first
-    @merge_time_success_rate = merge_time[:success_rate]
-    @merge_time_avg = merge_time[:avg]
-    @pull_request_size_avg = @pull_request_size[key].first[:avg]
-    @review_coverage_avg = @review_coverage[key].first[:avg] if @review_coverage.present?
+    @merge_time_interval_metrics = @merge_time[key].first[:interval_metrics]
+    @pull_request_size_interval_metrics = @pull_request_size[key].first[:interval_metrics]
+
+    return if @review_coverage.blank?
+
+    @review_coverage_interval_metrics = @review_coverage[key].first[:interval_metrics]
   end
 
   def build_metrics(entity_id, entity_name)

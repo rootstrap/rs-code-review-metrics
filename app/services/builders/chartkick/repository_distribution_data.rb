@@ -2,13 +2,10 @@ module Builders
   module Chartkick
     class RepositoryDistributionData < Builders::Chartkick::Base
       def call
-        intervals = build_distribution_data(retrieve_records)
-
         [{
           name: repository_name,
           data: intervals,
-          success_rate: build_success_rate(repository_name, metric_name, intervals),
-          avg: build_average
+          interval_metrics: build_interval_metrics
         }]
       end
 
@@ -34,20 +31,41 @@ module Builders
         @metric ||= RepositoryDistributionDataMetrics.const_get(metric_name.to_s.camelize).new
       end
 
+      def intervals
+        @intervals ||= build_distribution_data(retrieve_records)
+      end
+
       def resolve_interval(entity)
         metric.resolve_interval(entity)
       end
 
-      def build_average
+      def total_value
+        @total_value ||= retrieve_records.sum { |record| metric.value_for_average(record) }
+      end
+
+      def total_records
+        @total_records ||= retrieve_records.size
+      end
+
+      def success_rate
+        build_success_rate(repository_name, metric_name, intervals)
+      end
+
+      def build_interval_metrics
         return if retrieve_records.empty?
 
-        total_value = retrieve_records.sum { |record| metric.value_for_average(record) }
-        total_records = retrieve_records.count
-
-        {
+        interval_data = {
+          success_rate: success_rate,
           avg_number: (total_value.to_f / total_records).round(1),
           total: total_records
         }
+
+        if metric_name == :review_coverage
+          interval_data[:zero_coverage_percentage] =
+            metric.zero_coverage_percentage(retrieve_records)
+        end
+
+        interval_data
       end
     end
   end

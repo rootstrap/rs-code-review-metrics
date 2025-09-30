@@ -47,19 +47,19 @@
         <div class='row'>
           <div class="col-md-12">
             <div class="box-title" >
-              <% if @merge_time_avg.present? %>
+              <% if @merge_time_interval_metrics.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Average: <%= @merge_time_avg[:avg_number] %> hours
+                  Average: <%= @merge_time_interval_metrics[:avg_number] %> hours
                 </span>
               <% end %>
-              <% if @merge_time_success_rate.present? %>
+              <% if @merge_time_interval_metrics.present? && @merge_time_interval_metrics[:success_rate].present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Success rate: <%= @merge_time_success_rate[:rate] %>%
+                  Success rate: <%= @merge_time_interval_metrics[:success_rate][:rate] %>%
                 </span>
               <% end %>
-              <% if @merge_time_avg.present? %>
+              <% if @merge_time_interval_metrics.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Total: <%= @merge_time_avg[:total] %> PRs (bots excluded)
+                  Total: <%= @merge_time_interval_metrics[:total] %> PRs (bots excluded)
                 </span>
               <% end %>
             </div>
@@ -88,12 +88,12 @@
               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= pull_request_size_presenter.metric_explanation %>'>¡</span>
             </div>
             <div class="box-title" >
-              <% if @pull_request_size_avg.present? %>
+              <% if @pull_request_size_interval_metrics.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Average: <%= @pull_request_size_avg[:avg_number].round %> lines
+                  Average: <%= @pull_request_size_interval_metrics[:avg_number].round %> lines
                 </span>
                 <span class="badge badge-info success_rate_btn">
-                  Total: <%= @pull_request_size_avg[:total] %> PRs (bots excluded)
+                  Total: <%= @pull_request_size_interval_metrics[:total] %> PRs (bots excluded)
                 </span>
               <% end %>
             </div>
@@ -125,12 +125,17 @@
               <span data-placement='right' class='metric_tooltip' aria-hidden='true' data-toggle='tooltip' title='<%= review_coverage_presenter.metric_explanation %>'>¡</span>
             </div>
             <div class="box-title" >
-              <% if @review_coverage_avg.present? %>
+              <% if @review_coverage_interval_metrics.present? %>
                 <span class="badge badge-info success_rate_btn">
-                  Average: <%= @review_coverage_avg[:avg_number] %>%
+                  Average: <%= @review_coverage_interval_metrics[:avg_number] %>%
                 </span>
+                <% if @review_coverage_interval_metrics[:zero_coverage_percentage].present? %>
+                  <span class="badge badge-warning success_rate_btn">
+                    PRs with 0 Comments: <%= @review_coverage_interval_metrics[:zero_coverage_percentage] %>%
+                  </span>
+                <% end %>
                 <span class="badge badge-info success_rate_btn">
-                  Total: <%= @review_coverage_avg[:total] %> PRs (bots excluded)
+                  Total: <%= @review_coverage_interval_metrics[:total] %> PRs (bots excluded)
                 </span>
               <% end %>
             </div>

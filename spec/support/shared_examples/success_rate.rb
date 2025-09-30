@@ -9,27 +9,27 @@ RSpec.shared_examples 'success rate' do
     query.merge!(name: :merge_time)
   end
 
-  it 'returns an array with success_rate key' do
-    expect(subject.first).to have_key(:success_rate)
+  it 'returns an array with interval_metrics key' do
+    expect(subject.first).to have_key(:interval_metrics)
   end
 
-  it 'returns an array with filled value' do
-    expect(subject.first[:success_rate]).to be_present
+  it 'returns success_rate nested inside interval_metrics' do
+    expect(subject.first[:interval_metrics][:success_rate]).to be_present
   end
 
   it 'returns rate value' do
-    expect(subject.first[:success_rate][:rate]).to be_present
+    expect(subject.first[:interval_metrics][:success_rate][:rate]).to be_present
   end
 
   it 'returns number of items on the first 24hs' do
-    expect(subject.first[:success_rate][:successful]).to be_present
+    expect(subject.first[:interval_metrics][:success_rate][:successful]).to be_present
   end
 
   it 'returns total of items' do
-    expect(subject.first[:success_rate][:total]).to be_present
+    expect(subject.first[:interval_metrics][:success_rate][:total]).to be_present
   end
 
   it 'returns metric settings' do
-    expect(subject.first[:success_rate][:metric_detail]).to be_present
+    expect(subject.first[:interval_metrics][:success_rate][:metric_detail]).to be_present
   end
 end

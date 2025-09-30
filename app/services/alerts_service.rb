@@ -40,7 +40,7 @@ class AlertsService
 
     data = distribution_data.first
 
-    success_rate = data[:success_rate] if data.present?
+    success_rate = data[:interval_metrics][:success_rate] if data.present?
 
     success_rate[:rate] if success_rate
   end

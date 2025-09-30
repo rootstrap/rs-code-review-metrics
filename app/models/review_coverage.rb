@@ -29,4 +29,6 @@ class ReviewCoverage < ApplicationRecord
   validates :pull_request_id, uniqueness: true
   validates :total_files_changed, :files_with_comments_count,
             numericality: { greater_than_or_equal_to: 0 }
+
+  scope :with_zero_coverage, -> { where(coverage_percentage: 0) }
 end
