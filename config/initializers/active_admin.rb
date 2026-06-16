@@ -46,6 +46,14 @@ ActiveAdmin.setup do |config|
   # This will ONLY change the title for the admin section. Other
   # namespaces will continue to use the main "site_title" configuration.
 
+  # Add a top-bar menu item so admins can navigate from the admin panel back to
+  # the (now authenticated) Engineering Metrics dashboard.
+  config.namespace :admin do |admin|
+    admin.build_menu :default do |menu|
+      menu.add label: 'Engineering Metrics', url: '/', priority: 0
+    end
+  end
+
   # == User Authentication
   #
   # Active Admin will automatically call an authentication

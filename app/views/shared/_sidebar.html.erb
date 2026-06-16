@@ -7,6 +7,12 @@
   </div>
 
 
+  <% if admin_user_signed_in? %>
+    <div class="sidebar-admin-link">
+      <%= link_to 'Admin Panel', admin_root_path %>
+    </div>
+  <% end %>
+
   <%= yield(:development_metrics_sidebar) %>
   <% # yield(:open_source_sidebar) %>
 
