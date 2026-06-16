@@ -38,7 +38,7 @@ ActiveAdmin.register FileIgnoringRule do
     end
 
     def create_rule_for_all_languages(regex)
-      Language.where.not(name: 'unassigned').each do |language|
+      Language.where.not(name: 'unassigned').find_each do |language|
         FileIgnoringRule.create!(
           language: language,
           regex: regex

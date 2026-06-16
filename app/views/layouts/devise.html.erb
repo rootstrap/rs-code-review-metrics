@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Engineering Metrics</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <div class="login-page">
+      <div class="login-card">
+        <%= image_tag('logo-nav.svg', class: 'login-logo', alt: 'Rootstrap') %>
+        <h1 class="login-title">Engineering Metrics</h1>
+
+        <% if notice.present? %>
+          <div class="alert alert-success" role="alert"><%= notice %></div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="alert alert-danger" role="alert"><%= alert %></div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

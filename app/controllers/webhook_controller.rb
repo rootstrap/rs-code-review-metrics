@@ -1,5 +1,6 @@
 class WebhookController < ApplicationController
   skip_before_action :verify_authenticity_token
+  skip_before_action :authenticate_admin_user!
   before_action :set_params
 
   def handle

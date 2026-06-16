@@ -120,7 +120,7 @@ class Repository < ApplicationRecord
   }
 
   scope :without_cc, lambda {
-    left_joins(:code_climate_repository_metric).where(code_climate_repository_metrics: { id: nil })
+    where.missing(:code_climate_repository_metric)
   }
 
   scope :without_cc_rate, lambda {

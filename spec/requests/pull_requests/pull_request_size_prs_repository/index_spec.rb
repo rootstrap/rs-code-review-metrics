@@ -95,7 +95,7 @@ RSpec.describe 'PullRequests::PullRequestSizePrsRepositoryController' do
     end
 
     it 'returns data with the correct keys' do
-      data = JSON.parse(response.body)
+      data = response.parsed_body
 
       expect(data.keys).to match_array(['100-199', '1000+', '500-599'])
     end

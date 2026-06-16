@@ -3,7 +3,9 @@ require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
   root to: 'development_metrics#index'
-  devise_for :admin_users, ActiveAdmin::Devise.config
+  devise_for :admin_users, ActiveAdmin::Devise.config.deep_merge(
+    controllers: { sessions: 'admin_users/sessions' }
+  )
   # TODO: Remove or update ExceptionHunter
   # authenticate :admin_user do
   #   ExceptionHunter.routes(self)

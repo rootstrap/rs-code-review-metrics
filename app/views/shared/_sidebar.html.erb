@@ -9,3 +9,12 @@
 
   <%= yield(:development_metrics_sidebar) %>
   <% # yield(:open_source_sidebar) %>
+
+  <% if admin_user_signed_in? %>
+    <div class="sidebar-logout">
+      <%= link_to 'Log out',
+                  destroy_admin_user_session_path,
+                  method: :delete,
+                  class: 'btn btn-primary w-100' %>
+    </div>
+  <% end %>

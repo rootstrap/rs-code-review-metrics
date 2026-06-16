@@ -76,9 +76,12 @@ canvas[style] {
   float:left;
   height: 100vh;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   padding-left: 50px;
   padding-right: 50px;
   padding-top: 53px;
+  padding-bottom: 2rem;
 
 }
 

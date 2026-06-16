@@ -19,7 +19,7 @@ RSpec.describe 'CodeOwnersRepositoriesController' do
     context 'when user has repositories as code owner' do
       before do
         create_list(:repository, repositories_count)
-        Repository.all.each { |repository| repository.code_owners << user }
+        Repository.find_each { |repository| repository.code_owners << user }
         subject
       end
 
