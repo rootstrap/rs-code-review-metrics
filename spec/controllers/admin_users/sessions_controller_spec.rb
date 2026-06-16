@@ -9,5 +9,11 @@ RSpec.describe AdminUsers::SessionsController, :unauthenticated, type: :controll
 
       expect(response).to have_http_status(:ok)
     end
+
+    it 'tells crawlers not to index the login page' do
+      get :new
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow, noarchive')
+    end
   end
 end

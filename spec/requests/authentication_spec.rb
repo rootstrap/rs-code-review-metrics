@@ -15,6 +15,14 @@ describe 'Endpoint authentication', :unauthenticated, type: :request do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it 'tells crawlers not to index served pages' do
+      sign_in create(:admin_user)
+
+      get root_path
+
+      expect(response.headers['X-Robots-Tag']).to eq('noindex, nofollow, noarchive')
+    end
   end
 
   describe 'the GitHub webhook endpoint' do
