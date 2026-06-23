@@ -26,7 +26,7 @@ module Builders
         end
 
         def total
-          @total ||= intervals.map { |interval| interval[1] }.sum
+          @total ||= intervals.pluck(1).sum
         end
 
         def successful
@@ -36,7 +36,7 @@ module Builders
         end
 
         def time_interval_range
-          intervals.map { |tuple| tuple[0] }
+          intervals.pluck(0)
                    .reject { |range| range.include?('+') }
                    .select { |range| range.split('-')[1].to_i <= metric_setting }
         end

@@ -8,7 +8,7 @@ module CodeClimate
 
       def ratings
         ratings_json = @json.dig('attributes', 'ratings')
-        ratings_json ? ratings_json.map { |json| json['letter'] } : []
+        ratings_json ? ratings_json.pluck('letter') : []
       end
 
       def snapshot_time

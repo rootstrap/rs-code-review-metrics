@@ -42,9 +42,9 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersRepository.create!(user: user, repository: repository) }
+    User.find_each { |user| UsersRepository.create!(user: user, repository: repository) }
 
-    UsersRepository.all.each do |uspr|
+    UsersRepository.find_each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
       end
@@ -59,7 +59,7 @@ if Rails.env.development?
       end
     end
 
-    Repository.all.each do |uspr|
+    Repository.find_each do |uspr|
       20.times do |v|
         FactoryBot.create(:metric, ownable: uspr, value_timestamp: Time.zone.now - v.days)
       end
@@ -90,7 +90,7 @@ if Rails.env.development?
       FactoryBot.create(:user, login: name)
     end
 
-    User.all.each { |user| UsersRepository.create!(user: user, repository: second_repository) }
+    User.find_each { |user| UsersRepository.create!(user: user, repository: second_repository) }
 
     Technology.create_with(keyword_string: 'ruby,rails').find_or_create_by!(name: 'ruby')
     Technology.create_with(keyword_string: 'python,django').find_or_create_by!(name: 'python')

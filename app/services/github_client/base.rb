@@ -41,7 +41,7 @@ module GithubClient
         request.params = request_params
       end
 
-      new_users = JSON.parse(response.body).map { |user| user['login'] }
+      new_users = JSON.parse(response.body).pluck('login')
 
       return accumulated_users if new_users.empty?
 

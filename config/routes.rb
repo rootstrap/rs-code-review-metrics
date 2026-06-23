@@ -3,13 +3,17 @@ require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
   root to: 'development_metrics#index'
-  devise_for :admin_users, ActiveAdmin::Devise.config
+  devise_for :admin_users, ActiveAdmin::Devise.config.deep_merge(
+    controllers: { sessions: 'admin_users/sessions' }
+  )
   # TODO: Remove or update ExceptionHunter
   # authenticate :admin_user do
   #   ExceptionHunter.routes(self)
   # end
   ActiveAdmin.routes(self)
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :admin_user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   post '/github_event_handler', to: 'webhook#handle'
   resources :development_metrics, only: [] do
     collection do

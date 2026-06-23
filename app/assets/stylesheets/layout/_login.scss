@@ -1,0 +1,31 @@
+.login-page {
+  align-items: center;
+  background-color: $primary-color;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  background-color: $white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+
+  .login-logo {
+    display: block;
+    height: 48px;
+    margin: 0 auto 1rem;
+  }
+
+  .login-title {
+    color: $primary-color;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+}

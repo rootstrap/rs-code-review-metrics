@@ -46,7 +46,7 @@ RSpec.describe GithubClient::Organization do
       end
 
       it 'returns the members from all pages' do
-        expect(subject.members).to match_array(members_payloads.map { |user| user['login'] })
+        expect(subject.members).to match_array(members_payloads.pluck('login'))
       end
     end
   end

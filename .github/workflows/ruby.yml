@@ -131,21 +131,20 @@ jobs:
       - name: Run tests
         run: |
           bundle exec rspec
-      - name: Setup sonar scanner
-        uses: warchant/setup-sonar-scanner@v3
       - name: Run Sonarqube analysis
-        run: |
-          sonar-scanner \
-            -Dsonar.qualitygate.wait=true \
-            -Dsonar.host.url=$SONAR_URL \
-            -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-            -Dsonar.scm.provider=git \
-            -Dsonar.nodejs.executable=$(which node) \
-            -Dsonar.projectVersion=$(echo $GITHUB_SHA | cut -c1-8) \
-            -Dsonar.sources=app/controllers,app/jobs,app/mailers,app/models,app/views \
-            -Dsonar.tests=spec \
-            -Dsonar.test.inclusions=**/*_spec.rb \
-            -Dsonar.test.exclusions=bin,config,db,app/javascript,app/assets \
-            -Dsonar.projectBaseDir=. \
-            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json \
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.scm.provider=git
+            -Dsonar.projectVersion=${{ github.sha }}
+            -Dsonar.sources=app/controllers,app/jobs,app/mailers,app/models,app/views
+            -Dsonar.tests=spec
+            -Dsonar.test.inclusions=**/*_spec.rb
+            -Dsonar.test.exclusions=bin,config,db,app/javascript,app/assets
+            -Dsonar.projectBaseDir=.
+            -Dsonar.ruby.coverage.reportPaths=coverage/coverage.json

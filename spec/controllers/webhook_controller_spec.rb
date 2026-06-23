@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe WebhookController, type: :controller do
+RSpec.describe WebhookController, :unauthenticated, type: :controller do
   subject { post :handle, params: params }
   let(:headers) { { 'X-GitHub-Event': 'pull_request', 'X-Hub-Signature': '' } }
   let(:params) { { payload: (create :pull_request_payload).to_json } }

@@ -1,1 +1,8 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+#
+# We deliberately DO NOT `Disallow: /` here: blocking crawling would stop
+# search engines from re-fetching the pages and seeing the `noindex`, so any
+# already-indexed URLs would linger in results. Once the pages have dropped
+# out of the index, this can be tightened to `Disallow: /`.
+User-agent: *
+Allow: /
