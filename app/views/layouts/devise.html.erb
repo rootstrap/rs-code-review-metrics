@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Engineering Metrics</title>
+    <title><%= t('admin_panel.title') %></title>
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -14,7 +14,7 @@
     <div class="login-page">
       <div class="login-card">
         <%= image_tag('logo-nav.svg', class: 'login-logo', alt: 'Rootstrap') %>
-        <h1 class="login-title">Engineering Metrics</h1>
+        <h1 class="login-title"><%= t('admin_panel.title') %></h1>
 
         <% if notice.present? %>
           <div class="alert alert-success" role="alert"><%= notice %></div>

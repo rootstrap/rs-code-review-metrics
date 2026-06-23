@@ -1,10 +1,5 @@
 # See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
 #
-# This is an internal, admin-only application. We want every page removed from
-# search engines. Removal is driven by the `noindex` directive sent on every
-# response (the `X-Robots-Tag` header in ApplicationController and the
-# `<meta name="robots">` tag in the layouts).
-#
 # We deliberately DO NOT `Disallow: /` here: blocking crawling would stop
 # search engines from re-fetching the pages and seeing the `noindex`, so any
 # already-indexed URLs would linger in results. Once the pages have dropped

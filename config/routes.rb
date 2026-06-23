@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   #   ExceptionHunter.routes(self)
   # end
   ActiveAdmin.routes(self)
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :admin_user do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   post '/github_event_handler', to: 'webhook#handle'
   resources :development_metrics, only: [] do
     collection do
